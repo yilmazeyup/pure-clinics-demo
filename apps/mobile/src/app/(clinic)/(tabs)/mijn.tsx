@@ -21,7 +21,7 @@ import { useDemo, type Order } from '@/state/demo';
 import { useTheme } from '@/theme';
 
 /** The help page with the explainer video and common questions, on the demo site. */
-const HELP_URL = 'https://yilmazeyup.github.io/pure-clinics-demo/hulp/';
+const HELP_URL = 'https://pureclinics.savastana.com/hulp/';
 
 /** Everything the member has planned or bought, the membership, and how to reach both clinics. */
 export default function MyPure() {

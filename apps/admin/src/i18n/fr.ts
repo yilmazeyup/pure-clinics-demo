@@ -67,6 +67,7 @@ export const fr: Messages = {
   'room.closed': 'Clinique fermée aujourd’hui',
   'role.therapist': 'thérapeute de la peau',
   'role.beauty': 'esthéticienne',
+  'role.reception': 'accueil',
   'appt.free': 'gratuit',
   'appt.new': 'première visite',
   'appt.tipTitle': '{treatment} · {price}',

@@ -1,0 +1,467 @@
+/* Team & rechten: the 3D lineup with portrait cards, and the tables below it. */
+
+.scene-host.pk-tm-stage {
+  height: 430px;
+}
+
+.scene-host.pk-tm-stage.is-compact {
+  height: 250px;
+}
+
+/* The portrait cards hang in the 3D label layer, which otherwise ignores the pointer. */
+.scene-labels .pk-tm-anchor,
+.scene-labels .pk-tm-anchor * {
+  pointer-events: auto;
+}
+
+.pk-tm-anchor {
+  display: flex;
+  justify-content: center;
+}
+
+.pk-tm-card {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  width: 116px;
+  min-height: 118px;
+  align-content: start;
+  padding: 8px 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 6px 18px rgba(30, 30, 28, 0.08);
+  text-align: center;
+  transition:
+    transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.pk-tm-card .pk-avatar {
+  margin-bottom: 4px;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 1px var(--line);
+}
+
+.pk-tm-card strong {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 1.05;
+}
+
+.pk-tm-card small {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+.pk-tm-card .pk-tm-place {
+  color: var(--brand);
+}
+
+.pk-tm-card.is-hover {
+  transform: translateY(-3px);
+  border-color: var(--line-strong);
+  box-shadow: 0 10px 24px rgba(30, 30, 28, 0.14);
+}
+
+.pk-tm-card.is-chosen {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 1px var(--ink), 0 10px 24px rgba(30, 30, 28, 0.14);
+}
+
+.pk-tm-card.is-off {
+  opacity: 0.55;
+}
+
+@media (max-width: 640px) {
+  .pk-tm-card {
+    width: 42px;
+    min-height: 0;
+    padding: 5px 2px;
+    border-radius: 9px;
+    gap: 0;
+  }
+
+  .pk-tm-card .pk-avatar {
+    margin-bottom: 2px;
+  }
+
+  .pk-tm-card strong {
+    font-family: var(--body);
+    font-weight: 500;
+    font-size: 9.5px;
+    letter-spacing: -0.01em;
+  }
+}
+
+/* ---------- Tables ---------- */
+
+.pk-tm-who {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.pk-tm-code {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: var(--sand-soft);
+  color: var(--brand);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
+
+.pk-input.pk-tm-select {
+  width: auto;
+  height: 30px;
+  padding-inline: 8px 26px;
+  font-size: 12.5px;
+}
+
+.pk-table tr.pk-tm-off td {
+  color: var(--muted);
+}
+
+.pk-table tr.pk-tm-off .pk-avatar {
+  filter: grayscale(1);
+  opacity: 0.6;
+}
+
+.pk-tm-employees tbody tr {
+  cursor: pointer;
+}
+
+.pk-tm-center {
+  text-align: center !important;
+}
+
+.pk-tm-box {
+  width: 17px;
+  height: 17px;
+  margin: 0;
+  accent-color: var(--now);
+  cursor: pointer;
+}
+
+.pk-tm-box:disabled {
+  cursor: not-allowed;
+}
+
+.pk-tm-note {
+  margin-top: 14px;
+}
+
+/* ---------- Chosen member, bookkeeper, calendar ---------- */
+
+.pk-tm-chosen-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.pk-tm-chosen-actions {
+  margin-top: 14px;
+}
+
+.pk-stack.pk-tm-bk {
+  gap: 2px;
+  min-width: 0;
+}
+
+.pk-tm-bk .pk-mono {
+  overflow-wrap: anywhere;
+}
+
+.pk-tm-bk-chips {
+  margin-bottom: 10px;
+}
+
+.pk-list.pk-tm-cal > li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 56px 56px;
+  justify-items: center;
+}
+
+.pk-list.pk-tm-cal > li > :first-child {
+  justify-self: start;
+}
+
+.pk-tm-cal-head {
+  padding-block: 0 6px !important;
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pk-stack.pk-tm-cal-name {
+  gap: 0;
+  min-width: 0;
+}
+
+.pk-tm-cal-name small {
+  font-size: 11.5px;
+  white-space: normal;
+}
+
+/* ---------- Profiles ---------- */
+
+.pk-tm-prof-top {
+  margin-bottom: 14px;
+}
+
+.pk-tm-prof-top .pk-field {
+  width: min(320px, 100%);
+}
+
+.pk-tm-prof {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  gap: 18px;
+}
+
+.pk-tm-prof-list {
+  display: grid;
+  align-content: start;
+  gap: 4px;
+}
+
+.pk-tm-prof-list button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-control);
+  text-align: start;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.pk-tm-prof-list button > span:first-child {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+
+.pk-tm-prof-list small {
+  color: var(--muted);
+  font-size: 11.5px;
+}
+
+.pk-tm-prof-list button:hover {
+  background: var(--soft);
+}
+
+.pk-tm-prof-list button[aria-selected='true'] {
+  border-color: var(--ink);
+  background: var(--sand-soft);
+}
+
+.pk-tm-level {
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.pk-tm-prof-main {
+  min-width: 0;
+}
+
+.pk-tm-locked,
+.pk-tm-rule {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: var(--radius-control);
+  background: #f7eddc;
+  color: #8a5a14;
+  font-size: 13px;
+}
+
+.pk-tm-rule {
+  margin: 4px 0 18px;
+  background: var(--soft);
+  color: var(--ink);
+}
+
+.pk-table.pk-tm-matrix td,
+.pk-table.pk-tm-matrix th {
+  padding-block: 8px;
+}
+
+.pk-tm-agenda-head {
+  display: grid;
+  gap: 1px;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 12px;
+  color: var(--ink);
+}
+
+.pk-tm-agenda-head small {
+  color: var(--muted);
+  font-size: 10.5px;
+  font-weight: 400;
+}
+
+.pk-tm-legend {
+  margin-top: 12px;
+}
+
+/* ---------- Two-step login ---------- */
+
+.pk-tm-tf {
+  margin-top: 4px;
+}
+
+.pk-tm-tf > li {
+  justify-content: space-between;
+}
+
+.pk-tm-qr-wrap {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.pk-tm-qr {
+  width: 180px;
+  height: 180px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #ffffff;
+  fill: var(--ink);
+  shape-rendering: crispEdges;
+}
+
+.pk-tm-steps {
+  display: grid;
+  gap: 6px;
+  padding-inline-start: 18px;
+  font-size: 13.5px;
+}
+
+.pk-tm-steps li {
+  list-style: decimal;
+}
+
+.pk-input.pk-tm-code-input {
+  max-width: 180px;
+  font-size: 20px;
+  letter-spacing: 0.3em;
+  height: 44px;
+}
+
+.pk-tm-lock-form {
+  margin-bottom: 12px;
+}
+
+.pk-tm-gap,
+.pk-subtitle.pk-tm-gap {
+  margin-top: 20px;
+}
+
+/* ---------- Schedules ---------- */
+
+.pk-tm-week tbody tr {
+  cursor: pointer;
+}
+
+.pk-tm-slot {
+  min-width: 56px;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: 6px;
+  border: 1px dashed var(--line-strong);
+  color: var(--muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.pk-tm-slot.on {
+  border: 1px solid transparent;
+  background: var(--sage);
+  color: var(--now);
+  font-weight: 500;
+}
+
+.pk-tm-slot:hover {
+  border-color: var(--ink);
+}
+
+.pk-tm-edit-who {
+  margin-bottom: 8px;
+}
+
+.pk-list.pk-tm-edit > li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  gap: 8px;
+}
+
+.pk-tm-day {
+  min-width: 0;
+  text-transform: lowercase;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pk-tm-day::first-letter {
+  text-transform: uppercase;
+}
+
+.pk-tm-edit + .btn {
+  margin-top: 12px;
+}
+
+@media (max-width: 900px) {
+  .pk-tm-prof {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pk-tm-prof-list {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+
+  .pk-tm-qr-wrap {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+  }
+}
+
+/* Seven people by six agendas fit the narrow card when the cells stay tight. */
+.pk-table.pk-tm-access th,
+.pk-table.pk-tm-access td {
+  padding-inline: 3px;
+}
+
+.pk-table.pk-tm-access th:first-child,
+.pk-table.pk-tm-access td:first-child {
+  padding-inline: 12px 6px;
+}
+
+.pk-table.pk-tm-access .pk-tm-agenda-head {
+  font-size: 11.5px;
+}

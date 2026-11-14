@@ -1,0 +1,275 @@
+/* Voorraad: stock per location, order list, suppliers and the product list. */
+
+.pk-st .pk-tabs {
+  margin-bottom: 0;
+}
+
+.pk-st-access {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 12px;
+  padding: 12px 14px;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-control);
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.pk-st-access p {
+  flex: 1 1 260px;
+  min-width: 0;
+}
+
+.pk-st-access svg {
+  flex: none;
+}
+
+[dir='rtl'] .pk-st-access .btn svg {
+  transform: scaleX(-1);
+}
+
+.pk-st-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px 16px;
+  margin-bottom: 14px;
+}
+
+.pk-st-search {
+  flex: 1 1 200px;
+  max-width: 320px;
+}
+
+.pk-st-past {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px 10px;
+  margin-inline-start: auto;
+  padding: 2px;
+}
+
+.pk-st-past .pk-field {
+  width: 168px;
+}
+
+.pk-st-past small {
+  max-width: 190px;
+  padding-bottom: 2px;
+}
+
+.pk-st-product {
+  display: grid;
+  gap: 1px;
+  min-width: 190px;
+}
+
+.pk-st-product strong {
+  font-weight: 500;
+}
+
+.pk-st-level {
+  display: inline-block;
+  min-width: 26px;
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 19px;
+  line-height: 1;
+}
+
+.pk-st-level--low {
+  color: #8a5a14;
+}
+
+.pk-st-level--out {
+  color: var(--bad);
+}
+
+.pk-st-level--unavailable {
+  color: var(--muted);
+}
+
+.pk-st-min {
+  display: block;
+  font-size: 11px;
+}
+
+.pk-st-plus {
+  color: var(--good);
+  font-weight: 500;
+}
+
+.pk-st-minus {
+  color: var(--ink);
+}
+
+.pk-st-actions {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.pk-st-fresh {
+  background: color-mix(in srgb, var(--good-bg) 60%, transparent);
+}
+
+.pk-st-more {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.pk-st-note {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.pk-st-inline {
+  margin: 0;
+}
+
+.pk-st .pk-table .pk-mono {
+  white-space: nowrap;
+}
+
+.pk-st-supplier-order td:first-child,
+.pk-st-wide {
+  min-width: 180px;
+}
+
+.pk-st-supplier-order {
+  display: grid;
+  gap: 10px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.pk-st-supplier-order:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.pk-input.pk-st-qty {
+  width: 68px;
+  height: 32px;
+  text-align: end;
+}
+
+.pk-input.pk-st-price {
+  width: 92px;
+  height: 32px;
+  text-align: end;
+}
+
+.pk-st-contents {
+  display: grid;
+  gap: 2px;
+  min-width: 220px;
+  font-size: 12.5px;
+}
+
+.pk-st-history {
+  display: grid;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.pk-st-history strong {
+  font-weight: 500;
+}
+
+/* A supplier: contact details beside the products, stacked on smaller screens. */
+.pk-st-supplier {
+  display: grid;
+  grid-template-columns: minmax(270px, 1fr) minmax(0, 2.4fr);
+  gap: 12px 22px;
+  align-items: start;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: calc(var(--radius-card) - 4px);
+  background: #fdfbf8;
+}
+
+.pk-st-supplier > .pk-row {
+  grid-column: 1 / -1;
+}
+
+.pk-st-supplier-table td:first-child {
+  min-width: 170px;
+}
+
+.pk-st-suppliers {
+  display: grid;
+  gap: 14px;
+}
+
+.pk-st-block {
+  display: block;
+}
+
+.pk-st-bulk {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  border-radius: var(--radius-control);
+  background: var(--soft);
+}
+
+.pk-st-bulk-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pk-st-bulk-group select.pk-input {
+  width: auto;
+  height: 32px;
+}
+
+.pk-st-pct {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--muted);
+}
+
+.pk-st-box {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--now);
+}
+
+.pk-st-delete {
+  display: inline-grid;
+  justify-items: end;
+  gap: 3px;
+}
+
+.pk-st-delete small {
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+@media (max-width: 1100px) {
+  .pk-st-supplier {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .pk-st-past {
+    margin-inline-start: 0;
+  }
+
+  .pk-st-search {
+    max-width: none;
+  }
+}

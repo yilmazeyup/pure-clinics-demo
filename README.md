@@ -2,19 +2,19 @@
 
 One app for **Pure Clinics**, the skin clinic in Nijmegen and Uden: free intakes, skin therapy and
 permanent hair removal by skin therapists, Blanche Beauty Studio (brows, lashes, nails) and the
-aftercare webshop. This is a demo with test data only: fictional clients, schedules and specialists,
+aftercare webshop. This is a demo with test data only: fictional clients and schedules (the specialists carry the first names of Pure's own team, but who works when is made up),
 and no real payments. Treatments, prices, deals, locations and opening hours follow pureclinics.nl
 (October 2026).
 
-- Live demo: https://yilmazeyup.github.io/pure-clinics-demo/ (the app and the admin panel, in Dutch, English, Arabic, French, German and Italian)
-- Help page with a Dutch explainer video (subtitles in Dutch and English) and common questions: https://yilmazeyup.github.io/pure-clinics-demo/hulp/
+- Live demo: https://pureclinics.savastana.com/ (the app, the admin panel, the website and the Instagram examples, in Dutch, English, Arabic, French, German, Italian and Spanish)
+- Help page with a Dutch explainer video (subtitles in Dutch and English) and common questions: https://pureclinics.savastana.com/hulp/
 
 ## Structure
 
 ```
 apps/mobile/       Expo (SDK 58) member app, Expo Router
 apps/admin/        Admin panel (Vite, React, Three.js): both clinics live in 3D, the day's agenda, treatment series, the webshop and a guided tour
-packages/shared/   languages (nl, en, ar, fr, de, it), formatting, brand data and demo data (treatments and
+packages/shared/   languages (nl, en, ar, fr, de, it, es), formatting, brand data and demo data (treatments and
                    their details, laser zones, deals, webshop products)
 ```
 
@@ -47,7 +47,7 @@ All payments are iDEAL test payments; Instellingen → "Demo opnieuw beginnen" r
 
 ## Languages
 
-Dutch is the source language. English, Arabic (right to left), French, German and Italian live in
+Dutch is the source language. English, Arabic (right to left), French, German, Italian and Spanish live in
 `packages/shared/src/i18n/messages/`; every file must provide the same keys as `nl.ts`.
 
 In the app, switch language under Instellingen (the person icon). A link can also open a screen in a

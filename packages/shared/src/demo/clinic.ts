@@ -34,7 +34,7 @@ export type TreatmentId =
   | 'peel'
   | 'brows'
   | 'nails';
-export type SpecialistId = 'sanne' | 'eva' | 'jade' | 'yara' | 'fien' | 'nina';
+export type SpecialistId = 'loubna' | 'margot' | 'maud' | 'hawin' | 'nadila' | 'sam';
 export type ConcernId = 'removal' | 'acne' | 'scars' | 'pigment' | 'redness' | 'aging' | 'eyes' | 'hairloss';
 export type LocationId = 'nijmegen' | 'uden';
 
@@ -121,14 +121,14 @@ export const LOCATIONS: ClinicLocation[] = [
   },
 ];
 
-const t = (nl: string, en: string, ar: string, fr: string, de: string, it: string): L10n => ({ nl, en, ar, fr, de, it });
-const same = (text: string): L10n => ({ nl: text, en: text, ar: text, fr: text, de: text, it: text });
+const t = (nl: string, en: string, ar: string, fr: string, de: string, it: string, es: string): L10n => ({ nl, en, ar, fr, de, it, es });
+const same = (text: string): L10n => ({ nl: text, en: text, ar: text, fr: text, de: text, it: text, es: text });
 
 export const TREATMENTS: Treatment[] = [
   {
     id: 'consult',
     category: 'consult',
-    name: t('Gratis intake', 'Free intake', 'جلسة تعارف مجانية', 'Consultation gratuite', 'Kostenloses Erstgespräch', 'Consulenza gratuita'),
+    name: t('Gratis intake', 'Free intake', 'جلسة تعارف مجانية', 'Consultation gratuite', 'Kostenloses Erstgespräch', 'Consulenza gratuita', 'Consulta gratuita'),
     description: t(
       'Een huidtherapeut bekijkt je huid, bespreekt je wensen en geeft eerlijk advies over resultaat, risico’s en herstel.',
       'A skin therapist looks at your skin, talks through your wishes and gives honest advice on results, risks and recovery.',
@@ -136,6 +136,7 @@ export const TREATMENTS: Treatment[] = [
       'Une thérapeute de la peau examine ta peau, écoute tes envies et te conseille honnêtement sur le résultat, les risques et la récupération.',
       'Eine Hauttherapeutin schaut sich deine Haut an, bespricht deine Wünsche und berät ehrlich zu Ergebnis, Risiken und Erholung.',
       'Una terapista della pelle esamina la tua pelle, ascolta i tuoi desideri e ti consiglia onestamente su risultati, rischi e recupero.',
+      'Una terapeuta de la piel revisa tu piel, habla contigo de lo que buscas y te aconseja con sinceridad sobre el resultado, los riesgos y la recuperación.',
     ),
     minutes: 30,
     priceFrom: 0,
@@ -145,7 +146,7 @@ export const TREATMENTS: Treatment[] = [
   {
     id: 'laser',
     category: 'removal',
-    name: t('Laser ontharen', 'Laser hair removal', 'إزالة الشعر بالليزر', 'Épilation laser', 'Laser-Haarentfernung', 'Epilazione laser'),
+    name: t('Laser ontharen', 'Laser hair removal', 'إزالة الشعر بالليزر', 'Épilation laser', 'Laser-Haarentfernung', 'Epilazione laser', 'Depilación láser'),
     description: t(
       'Definitief ontharen met de Soprano ICE Platinum. Per zone, met 5+1 gratis in een pakket.',
       'Permanent hair removal with the Soprano ICE Platinum. Per zone, with 5+1 free in a package.',
@@ -153,6 +154,7 @@ export const TREATMENTS: Treatment[] = [
       'Épilation définitive avec le Soprano ICE Platinum. Par zone, 5+1 offerte en forfait.',
       'Dauerhafte Haarentfernung mit dem Soprano ICE Platinum. Pro Zone, im Paket 5+1 gratis.',
       'Epilazione definitiva con Soprano ICE Platinum. Per zona, con 5+1 gratis nel pacchetto.',
+      'Depilación definitiva con el Soprano ICE Platinum. Por zona, con 5+1 gratis en bono.',
     ),
     minutes: 30,
     priceFrom: 35,
@@ -162,7 +164,7 @@ export const TREATMENTS: Treatment[] = [
   {
     id: 'epilation',
     category: 'removal',
-    name: t('Elektrische epilatie', 'Electrolysis', 'إزالة الشعر بالكهرباء', 'Épilation électrique', 'Elektrische Epilation', 'Elettrocoagulazione'),
+    name: t('Elektrische epilatie', 'Electrolysis', 'إزالة الشعر بالكهرباء', 'Épilation électrique', 'Elektrische Epilation', 'Elettrocoagulazione', 'Depilación eléctrica'),
     description: t(
       'Haartje voor haartje, ook voor licht en grijs haar dat de laser niet ziet.',
       'Hair by hair, also for light and grey hair that a laser cannot see.',
@@ -170,6 +172,7 @@ export const TREATMENTS: Treatment[] = [
       'Poil par poil, même pour les poils clairs et gris que le laser ne voit pas.',
       'Haar für Haar, auch für helles und graues Haar, das der Laser nicht erkennt.',
       'Pelo per pelo, anche per i peli chiari e grigi che il laser non vede.',
+      'Pelo a pelo, también para el vello claro y canoso que el láser no ve.',
     ),
     minutes: 30,
     priceFrom: 60,
@@ -180,7 +183,7 @@ export const TREATMENTS: Treatment[] = [
   {
     id: 'tattoo',
     category: 'conditions',
-    name: t('Tatoeage verwijderen', 'Tattoo removal', 'إزالة الوشم', 'Détatouage', 'Tattooentfernung', 'Rimozione tatuaggi'),
+    name: t('Tatoeage verwijderen', 'Tattoo removal', 'إزالة الوشم', 'Détatouage', 'Tattooentfernung', 'Rimozione tatuaggi', 'Eliminación de tatuajes'),
     description: t(
       'Een tatoeage of permanente make-up laten vervagen met de laser. Prijs naar grootte.',
       'Fade a tattoo or permanent make-up with the laser. Priced by size.',
@@ -188,6 +191,7 @@ export const TREATMENTS: Treatment[] = [
       'Estomper un tatouage ou un maquillage permanent au laser. Prix selon la taille.',
       'Ein Tattoo oder Permanent-Make-up mit dem Laser verblassen lassen. Preis nach Größe.',
       'Schiarire un tatuaggio o il trucco permanente con il laser. Prezzo in base alla misura.',
+      'Aclarar un tatuaje o un maquillaje permanente con el láser. Precio según el tamaño.',
     ),
     minutes: 30,
     priceFrom: 49,
@@ -197,7 +201,7 @@ export const TREATMENTS: Treatment[] = [
   {
     id: 'acne',
     category: 'conditions',
-    name: t('Acnétherapie', 'Acne therapy', 'علاج حب الشباب', 'Thérapie de l’acné', 'Aknetherapie', 'Terapia per l’acne'),
+    name: t('Acnétherapie', 'Acne therapy', 'علاج حب الشباب', 'Thérapie de l’acné', 'Aknetherapie', 'Terapia per l’acne', 'Terapia del acné'),
     description: t(
       'Dieptereiniging en een plan om je acne blijvend te verminderen.',
       'A deep cleanse and a plan to reduce your acne for good.',
@@ -205,6 +209,7 @@ export const TREATMENTS: Treatment[] = [
       'Un nettoyage en profondeur et un plan pour réduire durablement ton acné.',
       'Eine Tiefenreinigung und ein Plan, um deine Akne dauerhaft zu verringern.',
       'Una pulizia profonda e un piano per ridurre l’acne in modo duraturo.',
+      'Una limpieza profunda y un plan para reducir tu acné de forma duradera.',
     ),
     minutes: 45,
     priceFrom: 65,
@@ -215,7 +220,7 @@ export const TREATMENTS: Treatment[] = [
   {
     id: 'couperose',
     category: 'conditions',
-    name: t('Couperose · vaatlaser', 'Couperose · vascular laser', 'الشعيرات الدموية · ليزر الأوعية', 'Couperose · laser vasculaire', 'Couperose · Gefäßlaser', 'Couperose · laser vascolare'),
+    name: t('Couperose · vaatlaser', 'Couperose · vascular laser', 'الشعيرات الدموية · ليزر الأوعية', 'Couperose · laser vasculaire', 'Couperose · Gefäßlaser', 'Couperose · laser vascolare', 'Cuperosis · láser vascular'),
     description: t(
       'Zichtbare bloedvaatjes in gezicht en decolleté wegwerken met de vaatlaser.',
       'Clear visible blood vessels on the face and chest with the vascular laser.',
@@ -223,6 +228,7 @@ export const TREATMENTS: Treatment[] = [
       'Atténuer les petits vaisseaux visibles du visage et du décolleté au laser vasculaire.',
       'Sichtbare Äderchen im Gesicht und Dekolleté mit dem Gefäßlaser entfernen.',
       'Eliminare i capillari visibili su viso e décolleté con il laser vascolare.',
+      'Eliminar los vasitos visibles de la cara y el escote con el láser vascular.',
     ),
     minutes: 30,
     priceFrom: 95,
@@ -233,7 +239,7 @@ export const TREATMENTS: Treatment[] = [
   {
     id: 'pigment',
     category: 'conditions',
-    name: t('Pigmentlaser', 'Pigment laser', 'ليزر التصبغات', 'Laser pigmentaire', 'Pigmentlaser', 'Laser per le macchie'),
+    name: t('Pigmentlaser', 'Pigment laser', 'ليزر التصبغات', 'Laser pigmentaire', 'Pigmentlaser', 'Laser per le macchie', 'Láser de pigmentación'),
     description: t(
       'Pigmentvlekken en verkleuringen lichter maken, per vlekje of per zone.',
       'Lighten pigment spots and discolouration, per spot or per zone.',
@@ -241,6 +247,7 @@ export const TREATMENTS: Treatment[] = [
       'Éclaircir taches et irrégularités pigmentaires, par tache ou par zone.',
       'Pigmentflecken und Verfärbungen aufhellen, pro Fleck oder pro Zone.',
       'Schiarire macchie e discromie, per macchia o per zona.',
+      'Aclarar manchas de pigmentación y otras alteraciones del color, por mancha o por zona.',
     ),
     minutes: 30,
     priceFrom: 75,
@@ -250,7 +257,7 @@ export const TREATMENTS: Treatment[] = [
   {
     id: 'legveins',
     category: 'conditions',
-    name: t('Beenvaten', 'Leg veins', 'أوردة الساقين', 'Varicosités des jambes', 'Besenreiser', 'Capillari delle gambe'),
+    name: t('Beenvaten', 'Leg veins', 'أوردة الساقين', 'Varicosités des jambes', 'Besenreiser', 'Capillari delle gambe', 'Venitas de las piernas'),
     description: t(
       'Kleine adertjes op de benen behandelen met de vaatlaser.',
       'Treat small veins on the legs with the vascular laser.',
@@ -258,6 +265,7 @@ export const TREATMENTS: Treatment[] = [
       'Traiter les petites veines des jambes au laser vasculaire.',
       'Kleine Äderchen an den Beinen mit dem Gefäßlaser behandeln.',
       'Trattare i piccoli capillari delle gambe con il laser vascolare.',
+      'Tratar las venitas de las piernas con el láser vascular.',
     ),
     minutes: 30,
     priceFrom: 95,
@@ -267,7 +275,7 @@ export const TREATMENTS: Treatment[] = [
   {
     id: 'eyes',
     category: 'conditions',
-    name: t('Wallen & donkere kringen', 'Under-eye bags & dark circles', 'الانتفاخات والهالات السوداء', 'Poches & cernes', 'Tränensäcke & Augenringe', 'Borse & occhiaie'),
+    name: t('Wallen & donkere kringen', 'Under-eye bags & dark circles', 'الانتفاخات والهالات السوداء', 'Poches & cernes', 'Tränensäcke & Augenringe', 'Borse & occhiaie', 'Bolsas & ojeras'),
     description: t(
       'RRS Eyes: een frissere oogopslag in een kuur van vier behandelingen.',
       'RRS Eyes: a fresher look in a course of four treatments.',
@@ -275,6 +283,7 @@ export const TREATMENTS: Treatment[] = [
       'RRS Eyes : un regard plus frais en une cure de quatre séances.',
       'RRS Eyes: ein frischerer Blick mit einer Kur aus vier Behandlungen.',
       'RRS Eyes: uno sguardo più fresco in un ciclo di quattro trattamenti.',
+      'RRS Eyes: una mirada más fresca en un ciclo de cuatro sesiones.',
     ),
     minutes: 45,
     priceFrom: 150,
@@ -284,7 +293,7 @@ export const TREATMENTS: Treatment[] = [
   {
     id: 'skinpen',
     category: 'skin',
-    name: t('SkinPen microneedling', 'SkinPen microneedling', 'ميكرونيدلنغ SkinPen', 'Microneedling SkinPen', 'SkinPen Microneedling', 'Microneedling SkinPen'),
+    name: t('SkinPen microneedling', 'SkinPen microneedling', 'ميكرونيدلنغ SkinPen', 'Microneedling SkinPen', 'SkinPen Microneedling', 'Microneedling SkinPen', 'Microneedling SkinPen'),
     description: t(
       'Maakt de huid steviger en egaler, bijvoorbeeld bij littekens en grove poriën.',
       'Makes skin firmer and smoother, for example with scars and large pores.',
@@ -292,6 +301,7 @@ export const TREATMENTS: Treatment[] = [
       'Raffermit et lisse la peau, par exemple en cas de cicatrices et de pores dilatés.',
       'Macht die Haut straffer und ebenmäßiger, etwa bei Narben und großen Poren.',
       'Rende la pelle più compatta e uniforme, per esempio con cicatrici e pori dilatati.',
+      'Deja la piel más firme y uniforme, por ejemplo con cicatrices y poros dilatados.',
     ),
     minutes: 60,
     priceFrom: 195,
@@ -301,7 +311,7 @@ export const TREATMENTS: Treatment[] = [
   {
     id: 'tixel',
     category: 'skin',
-    name: t('Tixel huidverjonging', 'Tixel skin rejuvenation', 'تجديد البشرة بتقنية Tixel', 'Rajeunissement Tixel', 'Tixel Hautverjüngung', 'Ringiovanimento Tixel'),
+    name: t('Tixel huidverjonging', 'Tixel skin rejuvenation', 'تجديد البشرة بتقنية Tixel', 'Rajeunissement Tixel', 'Tixel Hautverjüngung', 'Ringiovanimento Tixel', 'Rejuvenecimiento Tixel'),
     description: t(
       'Warmtebehandeling voor fijne lijntjes rond ogen en mond, hals en decolleté.',
       'A heat treatment for fine lines around the eyes and mouth, neck and chest.',
@@ -309,6 +319,7 @@ export const TREATMENTS: Treatment[] = [
       'Un soin par la chaleur pour les ridules autour des yeux et de la bouche, le cou et le décolleté.',
       'Wärmebehandlung für feine Linien um Augen und Mund, Hals und Dekolleté.',
       'Un trattamento termico per le rughe sottili attorno a occhi e bocca, collo e décolleté.',
+      'Tratamiento con calor para las líneas finas alrededor de los ojos y la boca, el cuello y el escote.',
     ),
     minutes: 30,
     priceFrom: 65,
@@ -326,6 +337,7 @@ export const TREATMENTS: Treatment[] = [
       'Microneedling par radiofréquence contre pigment, rougeurs et relâchement.',
       'Radiofrequenz-Microneedling gegen Pigment, Rötungen und Erschlaffung.',
       'Microneedling a radiofrequenza contro macchie, rossori e rilassamento.',
+      'Microneedling con radiofrecuencia contra la pigmentación, el enrojecimiento y la flacidez.',
     ),
     minutes: 60,
     priceFrom: 325,
@@ -335,7 +347,7 @@ export const TREATMENTS: Treatment[] = [
   {
     id: 'skinbooster',
     category: 'skin',
-    name: t('Skinboosters', 'Skin boosters', 'معززات البشرة', 'Skinboosters', 'Skinbooster', 'Skinbooster'),
+    name: t('Skinboosters', 'Skin boosters', 'معززات البشرة', 'Skinboosters', 'Skinbooster', 'Skinbooster', 'Skinboosters'),
     description: t(
       'Een vitamineboost die de huid van binnenuit hydrateert. Ook als kuur van vier.',
       'A vitamin boost that hydrates the skin from within. Also as a course of four.',
@@ -343,6 +355,7 @@ export const TREATMENTS: Treatment[] = [
       'Un boost de vitamines qui hydrate la peau de l’intérieur. Aussi en cure de quatre.',
       'Ein Vitaminboost, der die Haut von innen mit Feuchtigkeit versorgt. Auch als Kur mit vier Terminen.',
       'Un boost di vitamine che idrata la pelle dall’interno. Anche in un ciclo di quattro.',
+      'Un aporte de vitaminas que hidrata la piel desde dentro. También en un ciclo de cuatro sesiones.',
     ),
     minutes: 30,
     priceFrom: 150,
@@ -352,7 +365,7 @@ export const TREATMENTS: Treatment[] = [
   {
     id: 'exosomes',
     category: 'skin',
-    name: t('Exosomen', 'Exosomes', 'الإكسوسومات', 'Exosomes', 'Exosomen', 'Esosomi'),
+    name: t('Exosomen', 'Exosomes', 'الإكسوسومات', 'Exosomes', 'Exosomen', 'Esosomi', 'Exosomas'),
     description: t(
       'Ingeneedld over het hele gezicht voor herstel en een egale, stralende huid.',
       'Needled in across the whole face for recovery and an even, glowing skin.',
@@ -360,6 +373,7 @@ export const TREATMENTS: Treatment[] = [
       'Appliqués par microneedling sur tout le visage pour réparer et unifier la peau.',
       'Im ganzen Gesicht eingeneedelt, für Regeneration und einen ebenmäßigen Teint.',
       'Applicati con microneedling su tutto il viso per una pelle uniforme e luminosa.',
+      'Aplicados con microagujas en todo el rostro para regenerar la piel y dejarla uniforme y luminosa.',
     ),
     minutes: 60,
     priceFrom: 325,
@@ -369,7 +383,7 @@ export const TREATMENTS: Treatment[] = [
   {
     id: 'pdrn',
     category: 'skin',
-    name: t('PDRN · zalm-DNA', 'PDRN · salmon DNA', 'PDRN · حمض السلمون النووي', 'PDRN · ADN de saumon', 'PDRN · Lachs-DNA', 'PDRN · DNA di salmone'),
+    name: t('PDRN · zalm-DNA', 'PDRN · salmon DNA', 'PDRN · حمض السلمون النووي', 'PDRN · ADN de saumon', 'PDRN · Lachs-DNA', 'PDRN · DNA di salmone', 'PDRN · ADN de salmón'),
     description: t(
       'Polynucleotiden die het herstel van de huid ondersteunen, als losse behandeling of kuur.',
       'Polynucleotides that support the skin’s recovery, as a single treatment or a course.',
@@ -377,6 +391,7 @@ export const TREATMENTS: Treatment[] = [
       'Des polynucléotides qui soutiennent la réparation de la peau, en séance unique ou en cure.',
       'Polynukleotide, die die Regeneration der Haut unterstützen, einzeln oder als Kur.',
       'Polinucleotidi che sostengono il recupero della pelle, singolarmente o in un ciclo.',
+      'Polinucleótidos que ayudan a la piel a recuperarse, como sesión suelta o en ciclo.',
     ),
     minutes: 60,
     priceFrom: 295,
@@ -386,7 +401,7 @@ export const TREATMENTS: Treatment[] = [
   {
     id: 'tca',
     category: 'skin',
-    name: t('TCA peeling', 'TCA peel', 'تقشير TCA', 'Peeling TCA', 'TCA-Peeling', 'Peeling TCA'),
+    name: t('TCA peeling', 'TCA peel', 'تقشير TCA', 'Peeling TCA', 'TCA-Peeling', 'Peeling TCA', 'Peeling TCA'),
     description: t(
       'Een middeldiepe peeling tegen pigmentvlekken, littekens en een doffe huid.',
       'A medium-depth peel for pigment spots, scars and dull skin.',
@@ -394,6 +409,7 @@ export const TREATMENTS: Treatment[] = [
       'Un peeling moyen contre les taches, les cicatrices et le teint terne.',
       'Ein mitteltiefes Peeling gegen Pigmentflecken, Narben und fahle Haut.',
       'Un peeling di media profondità contro macchie, cicatrici e pelle spenta.',
+      'Un peeling de profundidad media contra las manchas de pigmentación, las cicatrices y la piel apagada.',
     ),
     minutes: 45,
     priceFrom: 195,
@@ -403,7 +419,7 @@ export const TREATMENTS: Treatment[] = [
   {
     id: 'deepclean',
     category: 'skin',
-    name: t('Dieptereiniging met peeling', 'Deep cleanse with peel', 'تنظيف عميق مع تقشير', 'Nettoyage profond avec peeling', 'Tiefenreinigung mit Peeling', 'Pulizia profonda con peeling'),
+    name: t('Dieptereiniging met peeling', 'Deep cleanse with peel', 'تنظيف عميق مع تقشير', 'Nettoyage profond avec peeling', 'Tiefenreinigung mit Peeling', 'Pulizia profonda con peeling', 'Limpieza profunda con peeling'),
     description: t(
       'Een frisse, schone huid: reinigen, peelen en verzorgen in één afspraak.',
       'Fresh, clean skin: cleanse, peel and care in one appointment.',
@@ -411,6 +427,7 @@ export const TREATMENTS: Treatment[] = [
       'Une peau nette et fraîche : nettoyage, peeling et soin en un rendez-vous.',
       'Frische, klare Haut: reinigen, peelen und pflegen in einem Termin.',
       'Una pelle fresca e pulita: detersione, peeling e cura in un solo appuntamento.',
+      'Una piel fresca y limpia: limpiar, exfoliar y cuidar en una sola cita.',
     ),
     minutes: 45,
     priceFrom: 65,
@@ -421,7 +438,7 @@ export const TREATMENTS: Treatment[] = [
   {
     id: 'xlhair',
     category: 'hair',
-    name: t('XL Hair · haaruitval', 'XL Hair · hair loss', 'XL Hair · تساقط الشعر', 'XL Hair · chute de cheveux', 'XL Hair · Haarausfall', 'XL Hair · caduta dei capelli'),
+    name: t('XL Hair · haaruitval', 'XL Hair · hair loss', 'XL Hair · تساقط الشعر', 'XL Hair · chute de cheveux', 'XL Hair · Haarausfall', 'XL Hair · caduta dei capelli', 'XL Hair · caída del cabello'),
     description: t(
       'Behandeling tegen haaruitval met zichtbaar resultaat, met een startpakket incl. producten.',
       'A treatment for hair loss with visible results, with a starter package including products.',
@@ -429,6 +446,7 @@ export const TREATMENTS: Treatment[] = [
       'Un soin contre la chute de cheveux aux résultats visibles, avec un forfait de départ produits inclus.',
       'Behandlung gegen Haarausfall mit sichtbarem Ergebnis, mit Startpaket inklusive Produkten.',
       'Un trattamento contro la caduta dei capelli con risultati visibili, con pacchetto iniziale e prodotti.',
+      'Tratamiento contra la caída del cabello con resultados visibles, con un pack de inicio que incluye productos.',
     ),
     minutes: 30,
     priceFrom: 150,
@@ -438,7 +456,7 @@ export const TREATMENTS: Treatment[] = [
   {
     id: 'camouflage',
     category: 'conditions',
-    name: t('Camouflagetherapie', 'Camouflage therapy', 'علاج التمويه', 'Thérapie de camouflage', 'Camouflage-Therapie', 'Terapia camouflage'),
+    name: t('Camouflagetherapie', 'Camouflage therapy', 'علاج التمويه', 'Thérapie de camouflage', 'Camouflage-Therapie', 'Terapia camouflage', 'Terapia de camuflaje'),
     description: t(
       'Je leert littekens, pigment of vlekken onzichtbaar maken, met producten in jouw eigen kleur.',
       'Learn to hide scars, pigment or birthmarks, with products in your own shade.',
@@ -446,6 +464,7 @@ export const TREATMENTS: Treatment[] = [
       'Apprends à masquer cicatrices, taches ou pigment, avec des produits à ta teinte.',
       'Du lernst, Narben, Pigment oder Flecken unsichtbar zu machen, mit Produkten in deinem Farbton.',
       'Impari a nascondere cicatrici, macchie o discromie, con prodotti nella tua tonalità.',
+      'Aprendes a disimular cicatrices, pigmentación o manchas, con productos en tu propio tono.',
     ),
     minutes: 30,
     priceFrom: 100,
@@ -456,7 +475,7 @@ export const TREATMENTS: Treatment[] = [
   {
     id: 'ipl',
     category: 'skin',
-    name: t('IPL huidverbetering', 'IPL skin improvement', 'تحسين البشرة بتقنية IPL', 'Amélioration de la peau IPL', 'IPL-Hautverbesserung', 'Miglioramento della pelle IPL'),
+    name: t('IPL huidverbetering', 'IPL skin improvement', 'تحسين البشرة بتقنية IPL', 'Amélioration de la peau IPL', 'IPL-Hautverbesserung', 'Miglioramento della pelle IPL', 'Mejora de la piel con IPL'),
     description: t(
       'Lichtbehandeling tegen roodheid, pigment en een ongelijke teint.',
       'A light treatment for redness, pigment and an uneven skin tone.',
@@ -464,6 +483,7 @@ export const TREATMENTS: Treatment[] = [
       'Un soin par la lumière contre les rougeurs, le pigment et un teint irrégulier.',
       'Lichtbehandlung gegen Rötungen, Pigment und einen unebenen Teint.',
       'Un trattamento con la luce contro rossori, macchie e incarnato irregolare.',
+      'Tratamiento con luz contra el enrojecimiento, la pigmentación y un tono desigual.',
     ),
     minutes: 30,
     priceFrom: 95,
@@ -473,7 +493,7 @@ export const TREATMENTS: Treatment[] = [
   {
     id: 'massage',
     category: 'conditions',
-    name: t('Bindweefselmassage', 'Connective tissue massage', 'تدليك النسيج الضام', 'Massage du tissu conjonctif', 'Bindegewebsmassage', 'Massaggio del tessuto connettivo'),
+    name: t('Bindweefselmassage', 'Connective tissue massage', 'تدليك النسيج الضام', 'Massage du tissu conjonctif', 'Bindegewebsmassage', 'Massaggio del tessuto connettivo', 'Masaje del tejido conjuntivo'),
     description: t(
       'Maakt littekens en verkleefd weefsel soepeler. Ook als pakket van 5+1.',
       'Makes scars and adhered tissue more supple. Also as a 5+1 package.',
@@ -481,6 +501,7 @@ export const TREATMENTS: Treatment[] = [
       'Assouplit les cicatrices et les tissus adhérents. Aussi en forfait 5+1.',
       'Macht Narben und verklebtes Gewebe geschmeidiger. Auch als 5+1-Paket.',
       'Rende più morbide cicatrici e tessuti aderenti. Anche in pacchetto 5+1.',
+      'Da flexibilidad a las cicatrices y al tejido adherido. También en bono 5+1.',
     ),
     minutes: 30,
     priceFrom: 60,
@@ -498,6 +519,7 @@ export const TREATMENTS: Treatment[] = [
       'Un skinbooster sans aiguilles pour un éclat immédiat : une peau plus pleine, plus lisse et lumineuse, sans desquamation.',
       'Ein nadelfreier Skinbooster für sofortigen Glow: praller, glatter und strahlender, ohne Schälen.',
       'Uno skinbooster senza aghi per un glow immediato: pelle più piena, liscia e luminosa, senza desquamazione.',
+      'Skinbooster sin agujas para un glow inmediato: piel más jugosa, más lisa y más luminosa, sin descamación.',
     ),
     minutes: 30,
     priceFrom: 125,
@@ -507,7 +529,7 @@ export const TREATMENTS: Treatment[] = [
   {
     id: 'facial',
     category: 'skin',
-    name: t('Facial', 'Facial', 'فيشل للوجه', 'Soin du visage', 'Gesichtsbehandlung', 'Trattamento viso'),
+    name: t('Facial', 'Facial', 'فيشل للوجه', 'Soin du visage', 'Gesichtsbehandlung', 'Trattamento viso', 'Facial'),
     description: t(
       'Reinigen, hydrateren en laten stralen: gezicht, hals en decolleté, afgestemd op je huid.',
       'Cleanse, hydrate and glow: face, neck and décolleté, tailored to your skin.',
@@ -515,6 +537,7 @@ export const TREATMENTS: Treatment[] = [
       'Nettoyer, hydrater, illuminer : visage, cou et décolleté, adaptés à ta peau.',
       'Reinigen, Feuchtigkeit und Glow: Gesicht, Hals und Dekolleté, abgestimmt auf deine Haut.',
       'Pulire, idratare e illuminare: viso, collo e décolleté, su misura per la tua pelle.',
+      'Limpiar, hidratar y dar luz: rostro, cuello y escote, adaptado a tu piel.',
     ),
     minutes: 60,
     priceFrom: 59,
@@ -524,7 +547,7 @@ export const TREATMENTS: Treatment[] = [
   {
     id: 'peel',
     category: 'skin',
-    name: t('Chemische peeling', 'Chemical peel', 'التقشير الكيميائي', 'Peeling chimique', 'Chemisches Peeling', 'Peeling chimico'),
+    name: t('Chemische peeling', 'Chemical peel', 'التقشير الكيميائي', 'Peeling chimique', 'Chemisches Peeling', 'Peeling chimico', 'Peeling químico'),
     description: t(
       'Amandel-, melk-, glycol- of salicylzuur: het zuur dat bij jouw huid past, voor een gladdere en frissere huid.',
       'Mandelic, lactic, glycolic or salicylic acid: the acid that suits your skin, for smoother, fresher skin.',
@@ -532,6 +555,7 @@ export const TREATMENTS: Treatment[] = [
       'Acide mandélique, lactique, glycolique ou salicylique : l’acide adapté à ta peau, pour une peau plus lisse et plus fraîche.',
       'Mandel-, Milch-, Glykol- oder Salicylsäure: die Säure, die zu deiner Haut passt, für glattere, frischere Haut.',
       'Acido mandelico, lattico, glicolico o salicilico: l’acido giusto per la tua pelle, per una pelle più liscia e fresca.',
+      'Ácido mandélico, láctico, glicólico o salicílico: el ácido que va con tu piel, para una piel más lisa y fresca.',
     ),
     minutes: 45,
     priceFrom: 85,
@@ -541,7 +565,7 @@ export const TREATMENTS: Treatment[] = [
   {
     id: 'brows',
     category: 'beauty',
-    name: t('Wenkbrauwen & wimpers', 'Brows & lashes', 'الحواجب والرموش', 'Sourcils & cils', 'Augenbrauen & Wimpern', 'Sopracciglia & ciglia'),
+    name: t('Wenkbrauwen & wimpers', 'Brows & lashes', 'الحواجب والرموش', 'Sourcils & cils', 'Augenbrauen & Wimpern', 'Sopracciglia & ciglia', 'Cejas & pestañas'),
     description: t(
       'Bij Blanche Beauty Studio: verven, epileren, lifting en laminatie.',
       'At Blanche Beauty Studio: tinting, shaping, lifting and lamination.',
@@ -549,6 +573,7 @@ export const TREATMENTS: Treatment[] = [
       'Chez Blanche Beauty Studio : teinture, épilation, rehaussement et lamination.',
       'Im Blanche Beauty Studio: Färben, Zupfen, Lifting und Laminierung.',
       'Da Blanche Beauty Studio: tinta, depilazione, laminazione e lifting.',
+      'En Blanche Beauty Studio: tinte, depilación, lifting y laminado.',
     ),
     minutes: 30,
     priceFrom: 35,
@@ -558,7 +583,7 @@ export const TREATMENTS: Treatment[] = [
   {
     id: 'nails',
     category: 'beauty',
-    name: t('Nagels · BIAB', 'Nails · BIAB', 'الأظافر · BIAB', 'Ongles · BIAB', 'Nägel · BIAB', 'Unghie · BIAB'),
+    name: t('Nagels · BIAB', 'Nails · BIAB', 'الأظافر · BIAB', 'Ongles · BIAB', 'Nägel · BIAB', 'Unghie · BIAB', 'Uñas · BIAB'),
     description: t(
       'Bij Blanche Beauty Studio: BIAB, gellak en verzorging van handen en voeten.',
       'At Blanche Beauty Studio: BIAB, gel polish and care for hands and feet.',
@@ -566,6 +591,7 @@ export const TREATMENTS: Treatment[] = [
       'Chez Blanche Beauty Studio : BIAB, vernis gel et soin des mains et des pieds.',
       'Im Blanche Beauty Studio: BIAB, Gel-Lack und Pflege für Hände und Füße.',
       'Da Blanche Beauty Studio: BIAB, smalto semipermanente e cura di mani e piedi.',
+      'En Blanche Beauty Studio: BIAB, esmalte semipermanente y cuidado de manos y pies.',
     ),
     minutes: 60,
     priceFrom: 45,
@@ -589,20 +615,20 @@ export const CONCERNS: Concern[] = [
 /** Laser hair removal is priced per zone, as on pureclinics.nl/tarieven; a package gives the sixth time free. */
 export type LaserZone = { id: string; name: L10n; price: number };
 export const LASER_ZONES: LaserZone[] = [
-  { id: 'brows', name: t('Wenkbrauwen', 'Eyebrows', 'الحاجبان', 'Sourcils', 'Augenbrauen', 'Sopracciglia'), price: 35 },
-  { id: 'upperlip', name: t('Bovenlip', 'Upper lip', 'الشفة العليا', 'Lèvre supérieure', 'Oberlippe', 'Labbro superiore'), price: 55 },
-  { id: 'chin', name: t('Kin', 'Chin', 'الذقن', 'Menton', 'Kinn', 'Mento'), price: 60 },
-  { id: 'cheeks', name: t('Wangen', 'Cheeks', 'الخدان', 'Joues', 'Wangen', 'Guance'), price: 75 },
-  { id: 'neck', name: t('Hals', 'Neck', 'الرقبة', 'Cou', 'Hals', 'Collo'), price: 85 },
-  { id: 'armpits', name: t('Oksels', 'Underarms', 'الإبطان', 'Aisselles', 'Achseln', 'Ascelle'), price: 65 },
-  { id: 'bikini', name: t('Bikinilijn', 'Bikini line', 'خط البكيني', 'Maillot', 'Bikinizone', 'Inguine'), price: 75 },
-  { id: 'fullbikini', name: t('Bikini geheel', 'Full bikini', 'البكيني كاملًا', 'Maillot intégral', 'Ganze Bikinizone', 'Inguine completo'), price: 125 },
-  { id: 'stomach', name: t('Buik', 'Stomach', 'البطن', 'Ventre', 'Bauch', 'Addome'), price: 125 },
-  { id: 'halflegs', name: t('Onder- of bovenbenen', 'Lower or upper legs', 'أسفل أو أعلى الساقين', 'Demi-jambes', 'Unter- oder Oberschenkel', 'Mezza gamba'), price: 195 },
-  { id: 'legs', name: t('Gehele benen', 'Full legs', 'الساقان كاملتان', 'Jambes entières', 'Ganze Beine', 'Gambe intere'), price: 350 },
-  { id: 'forearms', name: t('Onderarmen', 'Forearms', 'الساعدان', 'Avant-bras', 'Unterarme', 'Avambracci'), price: 125 },
-  { id: 'arms', name: t('Gehele armen', 'Full arms', 'الذراعان كاملتان', 'Bras entiers', 'Ganze Arme', 'Braccia intere'), price: 140 },
-  { id: 'back', name: t('Gehele rug', 'Full back', 'الظهر كاملًا', 'Dos entier', 'Ganzer Rücken', 'Schiena intera'), price: 175 },
+  { id: 'brows', name: t('Wenkbrauwen', 'Eyebrows', 'الحاجبان', 'Sourcils', 'Augenbrauen', 'Sopracciglia', 'Cejas'), price: 35 },
+  { id: 'upperlip', name: t('Bovenlip', 'Upper lip', 'الشفة العليا', 'Lèvre supérieure', 'Oberlippe', 'Labbro superiore', 'Labio superior'), price: 55 },
+  { id: 'chin', name: t('Kin', 'Chin', 'الذقن', 'Menton', 'Kinn', 'Mento', 'Barbilla'), price: 60 },
+  { id: 'cheeks', name: t('Wangen', 'Cheeks', 'الخدان', 'Joues', 'Wangen', 'Guance', 'Mejillas'), price: 75 },
+  { id: 'neck', name: t('Hals', 'Neck', 'الرقبة', 'Cou', 'Hals', 'Collo', 'Cuello'), price: 85 },
+  { id: 'armpits', name: t('Oksels', 'Underarms', 'الإبطان', 'Aisselles', 'Achseln', 'Ascelle', 'Axilas'), price: 65 },
+  { id: 'bikini', name: t('Bikinilijn', 'Bikini line', 'خط البكيني', 'Maillot', 'Bikinizone', 'Inguine', 'Ingles'), price: 75 },
+  { id: 'fullbikini', name: t('Bikini geheel', 'Full bikini', 'البكيني كاملًا', 'Maillot intégral', 'Ganze Bikinizone', 'Inguine completo', 'Ingles completas'), price: 125 },
+  { id: 'stomach', name: t('Buik', 'Stomach', 'البطن', 'Ventre', 'Bauch', 'Addome', 'Abdomen'), price: 125 },
+  { id: 'halflegs', name: t('Onder- of bovenbenen', 'Lower or upper legs', 'أسفل أو أعلى الساقين', 'Demi-jambes', 'Unter- oder Oberschenkel', 'Mezza gamba', 'Medias piernas o muslos'), price: 195 },
+  { id: 'legs', name: t('Gehele benen', 'Full legs', 'الساقان كاملتان', 'Jambes entières', 'Ganze Beine', 'Gambe intere', 'Piernas completas'), price: 350 },
+  { id: 'forearms', name: t('Onderarmen', 'Forearms', 'الساعدان', 'Avant-bras', 'Unterarme', 'Avambracci', 'Antebrazos'), price: 125 },
+  { id: 'arms', name: t('Gehele armen', 'Full arms', 'الذراعان كاملتان', 'Bras entiers', 'Ganze Arme', 'Braccia intere', 'Brazos completos'), price: 140 },
+  { id: 'back', name: t('Gehele rug', 'Full back', 'الظهر كاملًا', 'Dos entier', 'Ganzer Rücken', 'Schiena intera', 'Espalda completa'), price: 175 },
 ];
 /** Price per time in a 5+1 package: pay for five, the sixth is free. */
 export const packagePrice = (price: number) => Math.round(((price * 5) / 6) * 100) / 100;
@@ -610,23 +636,24 @@ export const packagePrice = (price: number) => Math.round(((price * 5) / 6) * 10
 /** The deals on pureclinics.nl/deals: combined laser zones, per treatment. */
 export type Deal = { id: string; group: 'women' | 'men' | 'students'; zones: L10n; price: number; was: number | null };
 export const DEALS: Deal[] = [
-  { id: 'w1', group: 'women', zones: t('Oksels & bikinilijn', 'Underarms & bikini line', 'الإبطان وخط البكيني', 'Aisselles & maillot', 'Achseln & Bikinizone', 'Ascelle & inguine'), price: 120, was: 140 },
-  { id: 'w2', group: 'women', zones: t('Oksels & bikini geheel', 'Underarms & full bikini', 'الإبطان والبكيني كاملًا', 'Aisselles & maillot intégral', 'Achseln & ganze Bikinizone', 'Ascelle & inguine completo'), price: 140, was: 190 },
-  { id: 'w3', group: 'women', zones: t('Oksels, bikinilijn & onder- of bovenbenen', 'Underarms, bikini line & lower or upper legs', 'الإبطان وخط البكيني وأسفل أو أعلى الساقين', 'Aisselles, maillot & demi-jambes', 'Achseln, Bikinizone & Unter- oder Oberschenkel', 'Ascelle, inguine & mezza gamba'), price: 225, was: 335 },
-  { id: 'w4', group: 'women', zones: t('Oksels, bikini geheel & onder- of bovenbenen', 'Underarms, full bikini & lower or upper legs', 'الإبطان والبكيني كاملًا وأسفل أو أعلى الساقين', 'Aisselles, maillot intégral & demi-jambes', 'Achseln, ganze Bikinizone & Unter- oder Oberschenkel', 'Ascelle, inguine completo & mezza gamba'), price: 255, was: 385 },
-  { id: 'm1', group: 'men', zones: t('Buik & borst + hals gratis', 'Stomach & chest + neck free', 'البطن والصدر + الرقبة مجانًا', 'Ventre & torse + cou offert', 'Bauch & Brust + Hals gratis', 'Addome & petto + collo gratis'), price: 295, was: null },
-  { id: 'm2', group: 'men', zones: t('Gehele rug + nek gratis', 'Full back + neck free', 'الظهر كاملًا + الرقبة مجانًا', 'Dos entier + nuque offerte', 'Ganzer Rücken + Nacken gratis', 'Schiena intera + nuca gratis'), price: 295, was: null },
-  { id: 's1', group: 'students', zones: t('Oksels', 'Underarms', 'الإبطان', 'Aisselles', 'Achseln', 'Ascelle'), price: 35, was: 52 },
+  { id: 'w1', group: 'women', zones: t('Oksels & bikinilijn', 'Underarms & bikini line', 'الإبطان وخط البكيني', 'Aisselles & maillot', 'Achseln & Bikinizone', 'Ascelle & inguine', 'Axilas & ingles'), price: 120, was: 140 },
+  { id: 'w2', group: 'women', zones: t('Oksels & bikini geheel', 'Underarms & full bikini', 'الإبطان والبكيني كاملًا', 'Aisselles & maillot intégral', 'Achseln & ganze Bikinizone', 'Ascelle & inguine completo', 'Axilas & ingles completas'), price: 140, was: 190 },
+  { id: 'w3', group: 'women', zones: t('Oksels, bikinilijn & onder- of bovenbenen', 'Underarms, bikini line & lower or upper legs', 'الإبطان وخط البكيني وأسفل أو أعلى الساقين', 'Aisselles, maillot & demi-jambes', 'Achseln, Bikinizone & Unter- oder Oberschenkel', 'Ascelle, inguine & mezza gamba', 'Axilas, ingles & medias piernas o muslos'), price: 225, was: 335 },
+  { id: 'w4', group: 'women', zones: t('Oksels, bikini geheel & onder- of bovenbenen', 'Underarms, full bikini & lower or upper legs', 'الإبطان والبكيني كاملًا وأسفل أو أعلى الساقين', 'Aisselles, maillot intégral & demi-jambes', 'Achseln, ganze Bikinizone & Unter- oder Oberschenkel', 'Ascelle, inguine completo & mezza gamba', 'Axilas, ingles completas & medias piernas o muslos'), price: 255, was: 385 },
+  { id: 'm1', group: 'men', zones: t('Buik & borst + hals gratis', 'Stomach & chest + neck free', 'البطن والصدر + الرقبة مجانًا', 'Ventre & torse + cou offert', 'Bauch & Brust + Hals gratis', 'Addome & petto + collo gratis', 'Abdomen & pecho + cuello gratis'), price: 295, was: null },
+  { id: 'm2', group: 'men', zones: t('Gehele rug + nek gratis', 'Full back + neck free', 'الظهر كاملًا + الرقبة مجانًا', 'Dos entier + nuque offerte', 'Ganzer Rücken + Nacken gratis', 'Schiena intera + nuca gratis', 'Espalda completa + nuca gratis'), price: 295, was: null },
+  { id: 's1', group: 'students', zones: t('Oksels', 'Underarms', 'الإبطان', 'Aisselles', 'Achseln', 'Ascelle', 'Axilas'), price: 35, was: 52 },
 ];
 
-// Fictional team of HBO-trained skin therapists, plus a beauty specialist for Blanche Beauty Studio in Nijmegen.
+// Pure's own team (first names as on pureclinics.nl, and Loubna from the clinic's Google reviews), plus Hawin of
+// Blanche Beauty Studio in Nijmegen. Who works where, on which days and with which treatments is demo data.
 export const SPECIALISTS: Specialist[] = [
-  { id: 'sanne', name: 'Sanne', role: 'therapist', locationId: 'nijmegen', categories: ['consult', 'removal', 'conditions', 'hair'], days: [1, 2, 3, 5] },
-  { id: 'eva', name: 'Eva', role: 'therapist', locationId: 'nijmegen', categories: ['consult', 'conditions', 'skin'], days: [2, 3, 4, 6] },
-  { id: 'jade', name: 'Jade', role: 'therapist', locationId: 'nijmegen', categories: ['consult', 'removal', 'skin', 'hair'], days: [1, 3, 4, 5, 6] },
-  { id: 'yara', name: 'Yara', role: 'beauty', locationId: 'nijmegen', categories: ['beauty'], days: [2, 3, 4, 5, 6] },
-  { id: 'fien', name: 'Fien', role: 'therapist', locationId: 'uden', categories: ['consult', 'removal', 'conditions', 'skin'], days: [2, 3, 5, 6] },
-  { id: 'nina', name: 'Nina', role: 'therapist', locationId: 'uden', categories: ['consult', 'removal', 'conditions', 'skin', 'hair'], days: [2, 3, 6] },
+  { id: 'loubna', name: 'Loubna', role: 'therapist', locationId: 'nijmegen', categories: ['consult', 'removal', 'conditions', 'hair'], days: [1, 2, 3, 5] },
+  { id: 'margot', name: 'Margot', role: 'therapist', locationId: 'nijmegen', categories: ['consult', 'conditions', 'skin'], days: [2, 3, 4, 6] },
+  { id: 'maud', name: 'Maud', role: 'therapist', locationId: 'nijmegen', categories: ['consult', 'removal', 'skin', 'hair'], days: [1, 3, 4, 5, 6] },
+  { id: 'hawin', name: 'Hawin', role: 'beauty', locationId: 'nijmegen', categories: ['beauty'], days: [2, 3, 4, 5, 6] },
+  { id: 'nadila', name: 'Nadila', role: 'therapist', locationId: 'uden', categories: ['consult', 'removal', 'conditions', 'skin'], days: [2, 3, 5, 6] },
+  { id: 'sam', name: 'Sam', role: 'therapist', locationId: 'uden', categories: ['consult', 'removal', 'conditions', 'skin', 'hair'], days: [2, 3, 6] },
 ];
 
 /** Which greeting fits the hour: good morning, afternoon or evening. */
@@ -732,11 +759,11 @@ export function freeSlots(
 export function initialAppointments(now: Date): Appointment[] {
   const today = startOfDay(now);
   let next = addDays(today, 3);
-  while (!specialistById('eva').days.includes(next.getDay())) next = addDays(next, 1);
+  while (!specialistById('margot').days.includes(next.getDay())) next = addDays(next, 1);
   return [
-    { id: 'appt-next', treatmentId: 'acne', specialistId: 'eva', locationId: 'nijmegen', start: atTime(next, '10:30') },
-    { id: 'appt-laser-2', treatmentId: 'laser', specialistId: 'sanne', locationId: 'nijmegen', start: atTime(addDays(today, -49), '16:00') },
-    { id: 'appt-laser-1', treatmentId: 'laser', specialistId: 'sanne', locationId: 'nijmegen', start: atTime(addDays(today, -98), '16:00') },
+    { id: 'appt-next', treatmentId: 'acne', specialistId: 'margot', locationId: 'nijmegen', start: atTime(next, '10:30') },
+    { id: 'appt-laser-2', treatmentId: 'laser', specialistId: 'loubna', locationId: 'nijmegen', start: atTime(addDays(today, -49), '16:00') },
+    { id: 'appt-laser-1', treatmentId: 'laser', specialistId: 'loubna', locationId: 'nijmegen', start: atTime(addDays(today, -98), '16:00') },
   ];
 }
 

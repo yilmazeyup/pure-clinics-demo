@@ -40,8 +40,8 @@ export const SHIPPING_FEE = 4.95;
 /** Orders ship within five working days; members get free delivery from € 40 (pureclinics.nl/membership). */
 export const DELIVERY_DAYS = 5;
 
-const same = (text: string): L10n => ({ nl: text, en: text, ar: text, fr: text, de: text, it: text });
-const t = (nl: string, en: string, ar: string, fr: string, de: string, it: string): L10n => ({ nl, en, ar, fr, de, it });
+const same = (text: string): L10n => ({ nl: text, en: text, ar: text, fr: text, de: text, it: text, es: text });
+const t = (nl: string, en: string, ar: string, fr: string, de: string, it: string, es: string): L10n => ({ nl, en, ar, fr, de, it, es });
 
 export const PRODUCTS: Product[] = [
   {
@@ -57,6 +57,7 @@ export const PRODUCTS: Product[] = [
       'Un nettoyant doux qui élimine impuretés et maquillage sans dessécher ta peau. La base de chaque protocole ZO.',
       'Milder Reiniger, der Schmutz und Make-up entfernt, ohne deine Haut auszutrocknen. Die Basis jedes ZO-Protokolls.',
       'Detergente delicato che rimuove impurità e trucco senza seccare la pelle. La base di ogni protocollo ZO.',
+      'Limpiador suave que elimina la suciedad y el maquillaje sin resecar tu piel. La base de todo protocolo ZO.',
     ),
     texture: { photo: 'stock-cream', zoom: 1.8, x: 0.25, y: 0.55 },
     after: ['acne', 'deepclean', 'peel', 'pigment'],
@@ -74,6 +75,7 @@ export const PRODUCTS: Product[] = [
       'Un sérum qui protège et répare ta peau chaque jour ; souvent au programme à la maison contre les taches et l’acné.',
       'Serum, das deine Haut täglich schützt und repariert; oft Teil des Heimprotokolls bei Pigmentflecken und Akne.',
       'Siero che protegge e ripara la pelle ogni giorno; spesso parte del protocollo a casa per macchie e acne.',
+      'Sérum que protege y repara tu piel cada día; suele formar parte del protocolo en casa para la pigmentación y el acné.',
     ),
     texture: { photo: 'stock-serum', zoom: 1.6, x: 0.35, y: 0.6 },
     after: ['pigment', 'acne', 'tca', 'skinpen'],
@@ -91,6 +93,7 @@ export const PRODUCTS: Product[] = [
       'Une protection solaire légèrement teintée, pour tous les jours et surtout après un laser, l’IPL ou un peeling.',
       'Leicht getönter Sonnenschutz für jeden Tag, vor allem nach Laser, IPL und Peelings.',
       'Protezione solare leggermente colorata, per ogni giorno e soprattutto dopo laser, IPL e peeling.',
+      'Protección solar con un ligero toque de color, para cada día y sobre todo después del láser, el IPL y los peelings.',
     ),
     texture: { photo: 'stock-cream', zoom: 1.4, x: 0.5, y: 0.5 },
     after: ['laser', 'ipl', 'couperose', 'pigment', 'tca', 'peel', 'skinpen', 'sylfirm', 'tixel', 'tattoo'],
@@ -108,6 +111,7 @@ export const PRODUCTS: Product[] = [
       'Une crème de camouflage respirante SPF 30 qui couvre rougeurs et différences de teinte, même juste après un soin.',
       'Atmungsaktive Camouflage-Creme mit SPF 30, die Rötungen und Farbunterschiede abdeckt, auch direkt nach einer Behandlung.',
       'Crema coprente traspirante con SPF 30 che copre rossori e discromie, anche subito dopo un trattamento.',
+      'Crema de camuflaje transpirable con SPF 30 que cubre el enrojecimiento y las diferencias de tono, incluso justo después de un tratamiento.',
     ),
     texture: { photo: 'stock-cream', zoom: 2, x: 0.7, y: 0.4 },
     after: ['camouflage', 'couperose', 'ipl', 'eyes'],
@@ -125,6 +129,7 @@ export const PRODUCTS: Product[] = [
       'Une crème nourrissante à utiliser deux fois par jour pendant une semaine après un soin PRX.',
       'Pflegende Creme, die du nach einer PRX-Behandlung eine Woche lang zweimal täglich verwendest.',
       'Crema nutriente da usare due volte al giorno per una settimana dopo un trattamento PRX.',
+      'Crema nutritiva que usas dos veces al día durante una semana después de un tratamiento PRX.',
     ),
     texture: { photo: 'stock-cream', zoom: 1.2, x: 0.4, y: 0.6 },
     after: ['prx', 'facial'],
@@ -142,6 +147,7 @@ export const PRODUCTS: Product[] = [
       'Un shampooing doux qui renforce le cuir chevelu pendant ton traitement XL Hair.',
       'Milde Shampoo, das die Kopfhaut während deiner XL-Hair-Behandlung stärkt.',
       'Shampoo delicato che rinforza il cuoio capelluto durante il trattamento XL Hair.',
+      'Champú suave que fortalece el cuero cabelludo durante tu programa XL Hair.',
     ),
     texture: { photo: 'stock-serum', zoom: 2.2, x: 0.6, y: 0.35 },
     after: ['xlhair'],
@@ -159,6 +165,7 @@ export const PRODUCTS: Product[] = [
       'Pour un cuir chevelu sain, la base de cheveux plus forts.',
       'Für eine gesunde Kopfhaut, die Basis für kräftigeres Haar.',
       'Per un cuoio capelluto sano, la base di capelli più forti.',
+      'Para un cuero cabelludo sano, la base de un cabello más fuerte.',
     ),
     texture: { photo: 'stock-serum', zoom: 1.8, x: 0.8, y: 0.6 },
     after: ['xlhair'],
@@ -176,6 +183,7 @@ export const PRODUCTS: Product[] = [
       'Un spray nourrissant pour le cuir chevelu, chaque jour entre les séances.',
       'Pflegendes Spray für die Kopfhaut, täglich zwischen den Behandlungen.',
       'Spray nutriente per il cuoio capelluto, ogni giorno tra un trattamento e l’altro.',
+      'Spray que cuida el cuero cabelludo, a diario entre sesión y sesión.',
     ),
     texture: { photo: 'stock-serum', zoom: 1.3, x: 0.5, y: 0.5 },
     soldOut: true,
@@ -184,7 +192,7 @@ export const PRODUCTS: Product[] = [
   {
     id: 'camouflage-set',
     brand: null,
-    name: t('Camouflageset', 'Camouflage set', 'مجموعة التمويه', 'Coffret camouflage', 'Camouflage-Set', 'Set camouflage'),
+    name: t('Camouflageset', 'Camouflage set', 'مجموعة التمويه', 'Coffret camouflage', 'Camouflage-Set', 'Set camouflage', 'Set de camuflaje'),
     category: 'kits',
     price: 95,
     description: t(
@@ -194,13 +202,14 @@ export const PRODUCTS: Product[] = [
       'Les produits de ta thérapie de camouflage, mélangés à ta teinte.',
       'Die Produkte aus deiner Camouflage-Therapie, in deinem Farbton gemischt.',
       'I prodotti della tua terapia camouflage, miscelati nella tua tonalità.',
+      'Los productos de tu terapia de camuflaje, mezclados en tu propio tono.',
     ),
     texture: { photo: 'stock-cream', zoom: 1.1, x: 0.5, y: 0.45 },
   },
   {
     id: 'laser-aftercare-set',
     brand: null,
-    name: t('Nazorgset laser', 'Laser aftercare set', 'مجموعة العناية بعد الليزر', 'Coffret après-laser', 'Laser-Nachsorge-Set', 'Set post-laser'),
+    name: t('Nazorgset laser', 'Laser aftercare set', 'مجموعة العناية بعد الليزر', 'Coffret après-laser', 'Laser-Nachsorge-Set', 'Set post-laser', 'Set de cuidados posteriores láser'),
     category: 'kits',
     price: 64.95,
     description: t(
@@ -210,6 +219,7 @@ export const PRODUCTS: Product[] = [
       'Le Gentle Cleanser et le Smart Tone SPF 50 de ZO Skin Health ensemble : tout pour les semaines après ton laser.',
       'Gentle Cleanser und Smart Tone SPF 50 von ZO Skin Health zusammen: alles für die Wochen nach deiner Laserbehandlung.',
       'Gentle Cleanser e Smart Tone SPF 50 di ZO Skin Health insieme: tutto per le settimane dopo il laser.',
+      'Gentle Cleanser y Smart Tone SPF 50 de ZO Skin Health juntos: todo lo que necesitas para las semanas después de tu sesión de láser.',
     ),
     texture: { photo: 'stock-serum', zoom: 1, x: 0.5, y: 0.5 },
     after: ['laser'],

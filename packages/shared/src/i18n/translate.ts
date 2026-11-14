@@ -2,11 +2,12 @@ import type { Locale } from './locales';
 import { ar } from './messages/ar';
 import { de } from './messages/de';
 import { en } from './messages/en';
+import { es } from './messages/es';
 import { fr } from './messages/fr';
 import { it } from './messages/it';
 import { nl, type MessageKey, type Messages } from './messages/nl';
 
-const MESSAGES: Record<Locale, Messages> = { nl, en, ar, fr, de, it };
+const MESSAGES: Record<Locale, Messages> = { nl, en, ar, fr, de, it, es };
 
 export type Vars = Record<string, string | number>;
 

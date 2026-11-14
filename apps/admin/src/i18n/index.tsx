@@ -4,16 +4,31 @@ import { createContext, useContext, useEffect, useMemo, useState, type ReactNode
 import { ar } from './ar';
 import { de } from './de';
 import { en } from './en';
+import { es } from './es';
 import { fr } from './fr';
 import { it } from './it';
-import { nl, type MessageKey, type Messages } from './nl';
+import { nl, type MessageKey as PanelKey, type Messages } from './nl';
+import { loadPraktijkTexts, PRAKTIJK_SHELL, type PraktijkKey } from './praktijk';
 
-export type { MessageKey };
+/** The panel's own texts and those of Pure Praktijk, the practice module, which keeps its texts in i18n/praktijk/. */
+export type MessageKey = PanelKey | PraktijkKey;
 
-const MESSAGES: Record<Locale, Messages> = { nl, en, ar, fr, de, it };
+const PANEL: Record<Locale, Messages> = { nl, en, ar, fr, de, it, es };
+const MESSAGES = Object.fromEntries(LOCALES.map((l) => [l, { ...PANEL[l], ...PRAKTIJK_SHELL[l] }])) as Record<Locale, Record<MessageKey, string>>;
+
+/** Pure Praktijk's texts arrive when the module opens; until a language is in, its words fall back to Dutch. */
+const praktijkIn = new Map<Locale, Promise<void>>();
+export function loadPraktijk(locale: Locale): Promise<void> {
+  let loading = praktijkIn.get(locale);
+  if (!loading) {
+    loading = loadPraktijkTexts(locale).then((texts) => void Object.assign(MESSAGES[locale], texts));
+    praktijkIn.set(locale, loading);
+  }
+  return loading;
+}
 
 /** Number and date formats per language; Arabic keeps Western digits, like the member app. */
-const INTL: Record<Locale, string> = { nl: 'nl-NL', en: 'en-GB', ar: 'ar-u-nu-latn', fr: 'fr-FR', de: 'de-DE', it: 'it-IT' };
+const INTL: Record<Locale, string> = { nl: 'nl-NL', en: 'en-GB', ar: 'ar-u-nu-latn', fr: 'fr-FR', de: 'de-DE', it: 'it-IT', es: 'es-ES' };
 
 /** A value in a translated sentence; dates, treatments and products are localized when shown. */
 export type Arg =
@@ -49,7 +64,7 @@ function makeI18n(locale: Locale) {
   const resolve = (arg: Arg): string => {
     if (arg instanceof Date) return clock(arg);
     if (typeof arg === 'object' && 'treatment' in arg) return treatmentById(arg.treatment).name[locale];
-    if (typeof arg === 'object' && 'msg' in arg) return MESSAGES[locale][arg.msg];
+    if (typeof arg === 'object' && 'msg' in arg) return MESSAGES[locale][arg.msg] ?? MESSAGES.nl[arg.msg] ?? arg.msg;
     if (typeof arg === 'object' && 'date' in arg) return dateShort(arg.date);
     if (typeof arg === 'object' && 'product' in arg) {
       const product = productById(arg.product);
@@ -60,7 +75,7 @@ function makeI18n(locale: Locale) {
   };
 
   const t = (key: MessageKey, args?: Record<string, Arg>) =>
-    (MESSAGES[locale][key] ?? nl[key]).replace(/\{(\w+)\}/g, (match, name: string) => (args && args[name] !== undefined ? resolve(args[name]) : match));
+    (MESSAGES[locale][key] ?? MESSAGES.nl[key] ?? key).replace(/\{(\w+)\}/g, (match, name: string) => (args && args[name] !== undefined ? resolve(args[name]) : match));
 
   return {
     locale,

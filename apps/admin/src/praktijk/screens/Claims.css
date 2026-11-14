@@ -1,0 +1,297 @@
+/* Declaraties. Shares the row and list styles of Billing.css. */
+
+.pk-dc-progress {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border-radius: calc(var(--radius-card) - 4px);
+  background: #fbf8f3;
+  border: 1px solid var(--line);
+}
+
+.pk-dc-progress .pk-bar {
+  height: 8px;
+}
+
+.pk-dc-bulk {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.pk-dc-group {
+  margin-bottom: 18px;
+}
+
+.pk-dc-group-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-bottom: 8px;
+}
+
+.pk-dc-group-head strong {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 19px;
+}
+
+.pk-dc-group-send {
+  margin-inline-start: auto;
+}
+
+.pk-dc-table td {
+  white-space: nowrap;
+}
+
+.pk-dc-table td:nth-child(5) {
+  white-space: normal;
+  min-width: 140px;
+}
+
+.pk-dc-table .btn-small {
+  padding: 0 9px;
+}
+
+.pk-dc-pick {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--now);
+}
+
+.pk-dc-approved,
+.pk-dc-reasonline {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.35;
+  white-space: normal;
+}
+
+.pk-dc-actions {
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.pk-dc-legend {
+  display: grid;
+  gap: 10px;
+  margin-top: 6px;
+  padding: 14px;
+  border: 1px dashed var(--line-strong);
+  border-radius: calc(var(--radius-card) - 4px);
+}
+
+.pk-dc-codes-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+  gap: 6px 18px;
+  font-size: 12.5px;
+}
+
+.pk-dc-codes-list li {
+  display: flex;
+  gap: 8px;
+}
+
+.pk-dc-codes-list b {
+  flex: none;
+}
+
+.pk-dc-ways {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.pk-dc-ways > div {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+  justify-items: start;
+  padding: 14px;
+  border-radius: calc(var(--radius-card) - 4px);
+  background: #fbf8f3;
+  border: 1px solid var(--line);
+}
+
+.pk-dc-ways strong {
+  font-weight: 500;
+}
+
+.pk-dc-ways p {
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+/* ---------- Coding panel ---------- */
+
+.pk-dc-side {
+  position: sticky;
+  top: 112px;
+  max-height: calc(100vh - 128px);
+  overflow-y: auto;
+  border-radius: var(--radius-card);
+  scrollbar-width: thin;
+}
+
+.pk-dc-coding .card-head {
+  margin-bottom: 4px;
+}
+
+.pk-dc-coding-sub {
+  margin-bottom: 10px;
+}
+
+.pk-dc-reason {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-control);
+  background: var(--bad-bg);
+  color: var(--bad);
+  font-size: 12.5px;
+}
+
+.pk-dc-reason svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+.pk-dc-codes {
+  display: grid;
+  margin: 0 0 14px;
+}
+
+.pk-dc-codes > div {
+  display: grid;
+  grid-template-columns: minmax(104px, 36%) minmax(0, 1fr);
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.pk-dc-codes dt {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.pk-dc-codes dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.pk-dc-fields {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.pk-dc-ok {
+  color: var(--good);
+}
+
+.pk-dc-bad {
+  color: var(--bad);
+}
+
+.pk-dc-008,
+.pk-dc-vat {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.pk-dc-vat {
+  justify-items: start;
+}
+
+.pk-dc-coding-actions {
+  margin-top: 16px;
+}
+
+/* ---------- Other tabs ---------- */
+
+.pk-dc-notas {
+  max-height: 620px;
+  overflow-y: auto;
+}
+
+.pk-dc-notas > li {
+  padding: 0;
+}
+
+.pk-dc-nota {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  width: 100%;
+  padding: 11px 8px;
+  border-radius: var(--radius-control);
+  text-align: start;
+}
+
+.pk-dc-nota:hover {
+  background: #fcfaf7;
+}
+
+.pk-dc-nota[aria-pressed='true'] {
+  background: var(--sand-soft);
+}
+
+.pk-dc-up {
+  display: block;
+  color: var(--good);
+  font-size: 11px;
+}
+
+.pk-dc-changelog {
+  margin-top: 16px;
+}
+
+.pk-dc-changelog li {
+  justify-content: space-between;
+}
+
+.pk-dc-note {
+  margin-top: 12px;
+}
+
+.pk-dc-anbos-code {
+  flex: none;
+  padding: 3px 7px;
+  border-radius: 6px;
+  background: var(--soft);
+}
+
+.pk-dc-gph {
+  margin-top: 12px;
+}
+
+@media (max-width: 1100px) {
+  .pk-dc-side {
+    position: static;
+    max-height: none;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 900px) {
+  .pk-dc-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pk-dc-group-send {
+    margin-inline-start: 0;
+  }
+}

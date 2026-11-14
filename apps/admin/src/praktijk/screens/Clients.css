@@ -1,0 +1,279 @@
+/* Pure Praktijk · Cliënten. Logical properties only, so Arabic mirrors on its own. */
+
+.pk-cl-searchbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  margin-bottom: 14px;
+}
+
+.pk-cl-searchbar .pk-search {
+  flex: 1 1 260px;
+}
+
+.pk-cl-table tbody tr {
+  cursor: pointer;
+}
+
+.pk-cl-name {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  text-align: start;
+}
+
+.pk-cl-name strong {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.pk-cl-name .pk-chip {
+  height: 20px;
+  padding: 0 7px;
+  font-size: 11px;
+}
+
+.pk-cl-on {
+  display: block;
+  margin-top: 2px;
+  color: var(--good);
+  font-size: 11.5px;
+}
+
+.pk-cl-flags {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.pk-cl-flags i {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  color: var(--line-strong);
+}
+
+.pk-cl-flags i.on {
+  color: var(--now);
+  background: var(--sage);
+}
+
+.pk-cl-more {
+  margin-top: 12px;
+}
+
+.pk-cl-section {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.pk-cl-h {
+  margin: 0 0 2px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pk-cl-flag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pk-cl-member {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: var(--radius-control);
+  border: 1px dashed var(--line-strong);
+  color: var(--muted);
+}
+
+.pk-cl-member.is-member {
+  border-style: solid;
+  border-color: transparent;
+  background: var(--sand-soft);
+  color: var(--brand);
+}
+
+.pk-cl-member div {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.pk-cl-member strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.pk-cl-member span {
+  font-size: 12.5px;
+}
+
+.pk-cl-link {
+  justify-self: start;
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-size: 12.5px;
+}
+
+.pk-cl-delete {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.pk-cl-delete small {
+  flex: 1 1 200px;
+  font-size: 12px;
+}
+
+.pk-cl-ok {
+  color: var(--good);
+}
+
+.pk-cl-channel {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.pk-cl-dup {
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.pk-cl-dup-text {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  flex: 1 1 220px;
+}
+
+.pk-cl-dup-text strong {
+  font-weight: 500;
+}
+
+.pk-cl-error {
+  color: var(--bad);
+  font-size: 13px;
+}
+
+.pk-cl-found {
+  display: grid;
+  gap: 6px;
+  padding: 14px 16px;
+  border-radius: var(--radius-control);
+  background: #fbf8f3;
+  border: 1px solid var(--line);
+}
+
+.pk-cl-found strong {
+  font-weight: 500;
+}
+
+.pk-cl-warn {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  margin-top: 6px;
+  padding: 10px 12px;
+  border-radius: var(--radius-control);
+  background: #f7eddc;
+  color: #8a5a14;
+  font-size: 13px;
+}
+
+.pk-cl-warn span {
+  flex: 1 1 220px;
+}
+
+.pk-cl-result {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  border-radius: var(--radius-control);
+  background: var(--sage);
+  color: var(--now);
+  font-size: 13px;
+}
+
+.pk-cl-result svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+.pk-row--end {
+  justify-content: flex-end;
+}
+
+.pk-cl-pick {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  min-width: 140px;
+}
+
+.pk-cl-pick.on {
+  background: var(--sage);
+}
+
+.pk-cl-pick input {
+  accent-color: var(--now);
+  margin: 0;
+}
+
+.pk-cl-transfer {
+  margin-top: 12px;
+}
+
+.pk-cl-city {
+  display: block;
+  color: var(--muted);
+  font-size: 11.5px;
+}
+
+.pk-cl-open {
+  border: 1px solid var(--line-strong);
+  color: var(--ink);
+}
+
+.pk-cl-open:hover {
+  background: var(--soft);
+}
+
+/* A segmented control keeps its own width inside a form field. */
+.pk-cl-cov .pk-field > .pk-seg {
+  justify-self: start;
+}
+
+.pk-cl-file {
+  justify-content: flex-start;
+  width: 100%;
+  min-width: 0;
+}
+
+.pk-cl-file-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

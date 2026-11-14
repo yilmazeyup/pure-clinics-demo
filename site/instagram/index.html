@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="robots" content="noindex, nofollow" />
     <title>Pure Clinics · Instagram-voorbeelden</title>
-    <meta name="description" content="Negen voorbeeldposts voor Pure Clinics in drie looks: kleur, warm en zwart-wit." />
+    <meta name="description" content="Negen voorbeeldposts voor Pure Clinics in vier looks: kleur, warm, zwart-wit en van licht naar donker." />
     <meta name="theme-color" content="#F6F1EA" />
     <link rel="icon" href="../website/img/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -112,6 +112,7 @@
           <button type="button" data-look="kleur" aria-pressed="true" title="Kleur, iets warmer en met meer contrast">Kleur</button>
           <button type="button" data-look="warm" aria-pressed="false" title="Warme duotoon, van espresso tot ivoor">Warm</button>
           <button type="button" data-look="zwart-wit" aria-pressed="false" title="Neutraal zwart-wit">Zwart-wit</button>
+          <button type="button" data-look="kahve" aria-pressed="false" title="De feed loopt van latte naar espresso">Licht → donker</button>
         </div>
         <a class="back" href="../">Terug naar de demo</a>
       </div>
@@ -121,9 +122,9 @@
       <section class="wrap intro">
         <div>
           <p class="mono">Pure Clinics · Instagram</p>
-          <h1>een rustige feed, <em>in drie looks</em></h1>
+          <h1>een rustige feed, <em>in vier looks</em></h1>
           <p class="lead">Negen voorbeeldposts in een redactionele stijl: grote beelden, weinig woorden, één post die je meeneemt naar de volgende.</p>
-          <p class="hint">Kies bovenaan Kleur, Warm of Zwart-wit. De hele pagina wisselt mee, ook de downloads.</p>
+          <p class="hint">Kies bovenaan Kleur, Warm, Zwart-wit of Licht → donker. De hele pagina wisselt mee, ook de downloads. In Licht → donker loopt de feed van latte bovenaan naar espresso onderaan, dus staan de posts in een andere volgorde.</p>
           <ul class="facts">
             <li><b>9</b>posts</li>
             <li><b>1</b>carrousel van 4 slides</li>
@@ -264,9 +265,23 @@
 
     <script>
       // The look lives in ?look=, so a shared link opens in the look that was chosen.
-      const LOOKS = ["kleur","warm","zwart-wit"];
+      const LOOKS = ["kleur","warm","zwart-wit","kahve"];
+      // In the light-to-dark look the light posts come first, then ever darker ones.
+      const ORDER = { kahve: ['02', '04', '06', '08', '01', '03', '05', '07', '09'] };
+      const grid = document.querySelector('.grid');
+      const postsBox = document.querySelector('.posts');
+      const tiles = [...grid.children];
+      const articles = [...postsBox.querySelectorAll('article.post')];
+      const num = (el) => (el.getAttribute('href') || '#' + el.id).slice(-2);
+      function arrange(look) {
+        const order = ORDER[look] || ['01', '02', '03', '04', '05', '06', '07', '08', '09'];
+        const by = (list) => order.map((n) => list.find((el) => num(el) === n));
+        grid.append(...by(tiles));
+        postsBox.append(...by(articles));
+      }
       function setLook(look, push) {
         if (!LOOKS.includes(look)) look = 'kleur';
+        arrange(look);
         document.documentElement.dataset.look = look;
         for (const b of document.querySelectorAll('.looks button')) b.setAttribute('aria-pressed', String(b.dataset.look === look));
         for (const el of document.querySelectorAll('[data-file]')) {

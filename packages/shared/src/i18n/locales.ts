@@ -1,4 +1,4 @@
-export const LOCALES = ['nl', 'en', 'ar', 'fr', 'de', 'it'] as const;
+export const LOCALES = ['nl', 'en', 'ar', 'fr', 'de', 'it', 'es'] as const;
 
 export type Locale = (typeof LOCALES)[number];
 
@@ -12,6 +12,7 @@ export const LOCALE_NAMES: Record<Locale, string> = {
   fr: 'Français',
   de: 'Deutsch',
   it: 'Italiano',
+  es: 'Español',
 };
 
 export function isRTL(locale: Locale): boolean {

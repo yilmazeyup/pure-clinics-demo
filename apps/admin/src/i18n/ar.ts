@@ -68,6 +68,7 @@ export const ar: Messages = {
   'room.closed': 'العيادة مغلقة اليوم',
   'role.therapist': 'أخصائية بشرة',
   'role.beauty': 'أخصائية تجميل',
+  'role.reception': 'الاستقبال',
   'appt.free': 'مجانًا',
   'appt.new': 'الزيارة الأولى',
   'appt.tipTitle': '{treatment} · {price}',

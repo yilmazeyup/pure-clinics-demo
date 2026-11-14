@@ -1,0 +1,351 @@
+/* Pure Praktijk · Planner & middelen. */
+
+.pk-pl {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.pk-pl > .pk-tabs {
+  margin-bottom: var(--gap);
+}
+
+.pk-pl-when {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+/* Mon–Sat across, morning/afternoon/evening down: a tick per part of the day the client can come. */
+.pk-pl-parts {
+  display: grid;
+  grid-template-columns: minmax(64px, auto) repeat(6, minmax(34px, 1fr));
+  gap: 5px;
+  align-items: center;
+  max-width: 560px;
+}
+
+.pk-pl-parts-day {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.pk-pl-parts-label {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.pk-pl-part {
+  display: grid;
+  place-items: center;
+  height: 30px;
+  border-radius: 6px;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: #ffffff;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.pk-pl-part:hover {
+  border-color: var(--ink);
+}
+
+.pk-pl-part.is-on {
+  background: var(--now);
+  border-color: var(--now);
+}
+
+.pk-pl-items {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.pk-pl-item {
+  display: grid;
+  grid-template-columns: 26px minmax(160px, 1.3fr) minmax(100px, 0.6fr) minmax(150px, 1.4fr) 32px;
+  gap: 10px;
+  align-items: end;
+}
+
+.pk-pl-item-n {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  margin-bottom: 5px;
+  border-radius: 50%;
+  background: var(--soft);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.pk-pl-machines {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  min-height: 36px;
+  align-items: center;
+}
+
+.pk-pl-results {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.pk-pl-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: var(--radius-control);
+  background: #f7eddc;
+  color: #8a5a14;
+  font-size: 12.5px;
+}
+
+.pk-pl-row {
+  cursor: pointer;
+}
+
+.pk-pl-wd {
+  display: inline-block;
+  min-width: 26px;
+  color: var(--muted);
+}
+
+.pk-pl-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.pk-pl-who {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.pk-pl-who strong {
+  font-weight: 500;
+}
+
+.pk-pl-pos {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  border: 1px dashed var(--line-strong);
+  color: var(--ink);
+}
+
+.pk-pl-pos--fill {
+  border: 0;
+  background: var(--good-bg);
+  color: var(--good);
+}
+
+.pk-pl-pos--before,
+.pk-pl-pos--after {
+  border-style: solid;
+  background: var(--sand-soft);
+}
+
+.pk-pl-actions {
+  gap: 10px;
+}
+
+.pk-pl-poslegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.pk-pl-poslegend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.pk-pl-planned li {
+  align-items: flex-start;
+}
+
+.pk-pl-planned-text {
+  display: grid;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
+
+.pk-pl-planned-text strong {
+  font-weight: 500;
+}
+
+.pk-pl-planned-text > span {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.pk-pl-followed {
+  color: var(--good);
+  font-size: 12px;
+}
+
+.pk-pl-moving {
+  margin-bottom: 12px;
+  font-size: 13.5px;
+}
+
+.pk-pl-choices {
+  display: grid;
+  gap: 6px;
+}
+
+.pk-pl-choice {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  gap: 10px;
+  align-items: center;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-control);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.pk-pl-choice.is-on {
+  border-color: var(--ink);
+  background: var(--sand-soft);
+}
+
+.pk-pl-choice input {
+  accent-color: var(--now);
+}
+
+.pk-pl-dev {
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  flex: none;
+  border-radius: 7px;
+  background: var(--sand-soft);
+  color: var(--brand);
+}
+
+.pk-pl-for {
+  min-width: 180px;
+  color: var(--muted);
+}
+
+.pk-pl-checks-label {
+  margin: 16px 0 8px;
+}
+
+.pk-pl-checks {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(170px, 100%), 1fr));
+  gap: 8px 12px;
+}
+
+.pk-pl-weeknav {
+  margin-bottom: 12px;
+}
+
+.pk-pl-step {
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.pk-pl-av td.pk-pl-cell {
+  min-width: 96px;
+}
+
+.pk-pl-cell {
+  vertical-align: top;
+}
+
+.pk-pl-cell .pk-bar {
+  margin: 5px 0 3px;
+}
+
+.pk-pl-hours {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.pk-pl-dim {
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+.pk-pl-day {
+  margin: -4px 0 16px;
+  font-size: 14px;
+}
+
+.pk-pl-day::first-letter {
+  text-transform: uppercase;
+}
+
+.pk-pl-occ li {
+  gap: 12px;
+}
+
+.pk-pl-occ-text {
+  display: grid;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.pk-pl-occ-text strong {
+  font-weight: 500;
+}
+
+.pk-pl-occ-pct {
+  min-width: 42px;
+  text-align: end;
+  font-family: var(--display);
+  font-size: 19px;
+  font-weight: 500;
+  font-variant-numeric: lining-nums;
+}
+
+@media (max-width: 900px) {
+  .pk-pl-item {
+    grid-template-columns: 26px minmax(0, 1fr) 32px;
+  }
+
+  .pk-pl-item > .pk-field:nth-of-type(2),
+  .pk-pl-item > .pk-field:nth-of-type(3) {
+    grid-column: 2 / 3;
+  }
+
+  .pk-pl-item > :last-child {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .pk-pl-parts {
+    grid-template-columns: minmax(56px, auto) repeat(6, minmax(0, 1fr));
+  }
+}

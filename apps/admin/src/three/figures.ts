@@ -14,13 +14,31 @@ const TROUSERS = '#4A433D';
 const SOCKS = '#EDE6DC';
 const DEVICE = '#BFB3A5';
 
-export type HairStyle = 'bun' | 'bob' | 'tail' | 'crop';
-export type Look = { skin: string; hair: string; style: HairStyle; top: string; bottom: string };
+export type HairStyle = 'bun' | 'bob' | 'tail' | 'crop' | 'long';
+export type Look = { skin: string; hair: string; style: HairStyle; top: string; bottom: string; coat?: string; trousers?: string };
 
 /** The same look for the same name, every time: skin, hair and clothes. */
 export function lookFor(name: string, styles: HairStyle[]): Look {
   const r = rng(`look-${name}`);
   return { skin: pick(r, SKIN), hair: pick(r, HAIR), style: pick(r, styles), top: pick(r, TOPS), bottom: pick(r, BOTTOMS) };
+}
+
+// Pure's own team, read from their portraits on pureclinics.nl: skin, hair colour and style, and what they wear
+// (mint jackets, white coats, or the black blazer of reception and Blanche Beauty Studio).
+const MINT = '#D3E6E5';
+const BLACK = '#24201D';
+const TEAM: Record<string, Look> = {
+  maud: { skin: '#EFD6C2', hair: '#6B4E3A', style: 'tail', top: '', bottom: '', coat: MINT },
+  margot: { skin: '#F1DAC5', hair: '#CDAE7E', style: 'bun', top: '', bottom: '', coat: MINT },
+  nadila: { skin: '#D7AE8C', hair: '#241C18', style: 'long', top: '', bottom: '' },
+  sam: { skin: '#EACBB2', hair: '#5E4331', style: 'long', top: '', bottom: '' },
+  hawin: { skin: '#DDB797', hair: '#1F1916', style: 'long', top: '', bottom: '', coat: BLACK, trousers: BLACK },
+  husna: { skin: '#D3A985', hair: '#221A16', style: 'long', top: '', bottom: '', coat: BLACK, trousers: BLACK },
+};
+
+/** A team member's own look when we know it from a photo; otherwise a look from the name. */
+export function teamLook(name: string, styles: HairStyle[]): Look {
+  return TEAM[name.toLowerCase()] ?? lookFor(name, styles);
 }
 
 /** Where the therapist stands along the chair: by the head, the middle or the hands. */
@@ -45,6 +63,7 @@ export function figureKit() {
     bob: new THREE.SphereGeometry(0.118, 28, 16, 0, Math.PI * 2, 0, 2.08),
     bun: new THREE.SphereGeometry(0.056, 16, 12),
     tail: new THREE.CapsuleGeometry(0.034, 0.15, 6, 10),
+    long: new THREE.CapsuleGeometry(0.1, 0.3, 8, 18),
     torso: new THREE.CapsuleGeometry(0.14, 0.34, 8, 18),
     pelvis: new THREE.SphereGeometry(0.13, 20, 14),
     shin: new THREE.CapsuleGeometry(0.066, 0.86, 6, 14),
@@ -83,8 +102,13 @@ class Head {
     const tail = mesh(kit.tail, hair);
     tail.position.set(0, -0.03, -0.125);
     tail.rotation.x = 0.32;
-    this.group.add(skull, cap, bob, bun, tail);
-    this.styles = { crop: [cap], bun: [cap, bun], tail: [cap, tail], bob: [bob] };
+    // Long hair falls down the back to below the shoulders.
+    const long = mesh(kit.long, hair);
+    long.position.set(0, -0.14, -0.07);
+    long.scale.set(1.22, 1, 0.62);
+    long.rotation.x = 0.12;
+    this.group.add(skull, cap, bob, bun, tail, long);
+    this.styles = { crop: [cap], bun: [cap, bun], tail: [cap, tail], bob: [bob], long: [cap, long] };
   }
 
   set style(style: HairStyle) {
@@ -124,8 +148,8 @@ export class Therapist extends Figure {
 
   constructor(kit: FigureKit, look: Look) {
     super();
-    const coat = this.own(COAT, 0.7);
-    const trousers = this.own(TROUSERS);
+    const coat = this.own(look.coat ?? COAT, look.coat === BLACK ? 0.85 : 0.7);
+    const trousers = this.own(look.trousers ?? TROUSERS);
     const skin = this.own(look.skin);
     const hair = this.own(look.hair, 0.9);
     const device = this.own(DEVICE, 0.45);

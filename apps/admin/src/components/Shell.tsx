@@ -7,28 +7,43 @@ import { useToast } from './ui';
 /** The help page with the explainer video and common questions, on the demo site. */
 const HELP_URL = 'https://pureclinics.savastana.com/hulp/';
 
-/** Agenda, Trajecten and Webshop jump to their part of the overview; Hulp opens the help page; the rest follow later. */
-const NAV: { icon: IconName; label: MessageKey; section?: string; help?: boolean }[] = [
+/**
+ * Agenda, Trajecten and Webshop jump to their part of the overview; Praktijk opens the practice module (its own
+ * subscription); Hulp opens the help page; the rest follow later.
+ */
+const NAV: { icon: IconName; label: MessageKey; section?: string; help?: boolean; praktijk?: boolean }[] = [
   { icon: 'grid', label: 'nav.overview' },
   { icon: 'calendar', label: 'nav.agenda', section: 'agenda' },
   { icon: 'repeat', label: 'nav.courses', section: 'trajecten' },
   { icon: 'bag', label: 'nav.webshop', section: 'webshop' },
+  { icon: 'clipboard', label: 'pk.nav.label', praktijk: true },
   { icon: 'users', label: 'nav.clients' },
   { icon: 'mail', label: 'nav.campaigns' },
   { icon: 'sliders', label: 'nav.settings' },
   { icon: 'help', label: 'nav.help', help: true },
 ];
 
-export function Sidebar() {
+type View = 'overview' | 'praktijk';
+
+export function Sidebar({ view, onView }: { view: View; onView: (view: View) => void }) {
   const { t, locale } = useI18n();
   const toast = useToast();
   const go = (index: number) => {
     const item = NAV[index];
-    if (index === 0) window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (item.praktijk) onView('praktijk');
+    else if (index === 0 && view !== 'overview') onView('overview');
+    else if (index === 0) window.scrollTo({ top: 0, behavior: 'smooth' });
     else if (item.help) window.open(`${HELP_URL}?lang=${locale}`, '_blank', 'noopener');
-    else if (item.section) document.getElementById(item.section)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    else toast(t('nav.soon', { label: t(item.label) }));
+    else if (item.section) {
+      const scroll = () => document.getElementById(item.section!)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (view === 'overview') scroll();
+      else {
+        onView('overview');
+        window.setTimeout(scroll, 120);
+      }
+    } else toast(t('nav.soon', { label: t(item.label) }));
   };
+  const current = (index: number) => (view === 'praktijk' ? Boolean(NAV[index].praktijk) : index === 0);
   return (
     <aside className="sidebar">
       <div className="logo" role="img" aria-label="Pure Clinics">
@@ -39,9 +54,10 @@ export function Sidebar() {
 
       <nav className="nav" aria-label={t('nav.label')}>
         {NAV.map((item, index) => (
-          <button key={item.label} aria-current={index === 0 ? 'page' : undefined} onClick={() => go(index)}>
+          <button key={item.label} aria-current={current(index) ? 'page' : undefined} onClick={() => go(index)}>
             <Icon name={item.icon} />
             {t(item.label)}
+            {item.praktijk ? <span className="pk-nav-chip">{t('pk.nav.chip')}</span> : null}
           </button>
         ))}
       </nav>

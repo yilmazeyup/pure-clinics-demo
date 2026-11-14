@@ -1,124 +1,110 @@
-// The Pure Clinics website: loads the clinic's own data, builds the sections and runs the motion.
+// Pure Clinics website, second round: three design studies, seven languages, every section the meeting of November 2026 asked for.
 import { logoSvg } from './logo.js';
-import { startHeroGL, daylight } from './gl.js';
-import { startHero } from './hero.js';
-import { buildLogoFromSquares } from './loader.js';
-import { startToc } from './features/toc.js';
-import { startParticles } from './features/particles.js';
-import { startLoupe } from './features/loupe.js';
-import { startDrop } from './features/drop.js';
-import { startLayers } from './features/layers.js';
-import { startFilm } from './features/film.js';
-import { startLeaves } from './features/leaves.js';
-import { startMirror } from './features/mirror.js';
-import { startTilt } from './features/tilt.js';
-import { $, $$, clamp, lerp, smoothstep, REDUCED, FINE, scroll, pointer, onFrame, transition } from './core.js';
+import { LANGS, LANG_NAMES, STRINGS } from './i18n.js';
 
-const APP = '../app/';
-
-const CONCERN_NAMES = {
-  removal: 'Definitief ontharen',
-  acne: 'Acne',
-  scars: 'Acnelittekens',
-  pigment: 'Pigmentvlekken',
-  redness: 'Couperose en adertjes',
-  aging: 'Huidverjonging',
-  eyes: 'Wallen en kringen',
-  hairloss: 'Haaruitval',
-};
-const CATEGORY_NAMES = {
-  consult: 'Intake',
-  removal: 'Ontharen',
-  conditions: 'Huidproblemen',
-  skin: 'Huidverbetering',
-  hair: 'Haaruitval',
-};
-const DAYS = ['zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag'];
-
-const photo = (key, small = true) => `img/${key}${small && !key.startsWith('ba-') ? '-s' : ''}.webp`;
-const price = (t) => (t.priceFrom === 0 ? 'Gratis' : `vanaf €${t.priceFrom}`);
-// "3–6" becomes "3–6 behandelingen"; "Kuur van 4+1" stays as it is.
-const sessions = (s) => (s ? (/^[\d–\s]+$/.test(s) ? `${s} behandelingen` : s) : '');
-
-/* ---------- Logo ---------- */
-
-for (const el of $$('[data-logo]')) el.innerHTML = logoSvg();
-
-// In-page links glide to their section.
-document.addEventListener('click', (e) => {
-  const a = e.target.closest('a[href^="#"]');
-  if (!a) return;
-  const id = a.getAttribute('href').slice(1);
-  const el = id === 'top' ? document.body : document.getElementById(id);
-  if (!el) return;
-  e.preventDefault();
-  closeMenu();
-  const top = id === 'top' ? 0 : el.getBoundingClientRect().top + scrollY - (id === 'behandelingen' ? 0 : 8);
-  scroll.to(top);
-  history.replaceState(null, '', `#${id}`);
-});
-
-/* ---------- Header ---------- */
-
-const header = $('#header');
-let heroPassed = false;
-startHero({ onSolid: (v) => (heroPassed = v) });
-onFrame((_, y) => {
-  header.classList.toggle('solid', heroPassed || menuOpen);
-  // Hidden while reading down, back as soon as the visitor scrolls up.
-  header.classList.toggle('hide', !menuOpen && y > innerHeight * 0.8 && scroll.velocity > 1.5);
-  if (scroll.velocity < -1.5 || y < innerHeight * 0.8) header.classList.remove('hide');
-});
-
-// The nav underlines the section on screen.
-const navLinks = $$('.nav a');
-const navObserver = new IntersectionObserver(
-  (entries) => {
-    for (const e of entries) {
-      if (!e.isIntersecting) continue;
-      for (const a of navLinks) a.setAttribute('aria-current', String(a.hash === `#${e.target.id}`));
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const root = document.documentElement;
+const params = new URLSearchParams(location.search);
+const store = {
+  get(k) {
+    try {
+      return localStorage.getItem(k);
+    } catch {
+      return null;
     }
   },
-  { rootMargin: '-45% 0px -50% 0px' },
-);
-for (const id of ['huidscan', 'behandelingen', 'resultaten', 'kliniek']) navObserver.observe(document.getElementById(id));
+  set(k, v) {
+    try {
+      localStorage.setItem(k, v);
+    } catch {
+      /* private mode */
+    }
+  },
+};
 
-/* ---------- Menu ---------- */
+/* ---------- Study and language ---------- */
 
-const menu = $('#menu');
-const menuButton = $('#menu-button');
-let menuOpen = false;
-function setMenu(open) {
-  menuOpen = open;
-  menuButton.setAttribute('aria-expanded', String(open));
-  document.documentElement.classList.toggle('locked', open);
-  if (open) {
-    menu.hidden = false;
-    requestAnimationFrame(() => menu.classList.add('open'));
-  } else {
-    menu.classList.remove('open');
-    setTimeout(() => !menuOpen && (menu.hidden = true), 900);
-  }
+const STUDIES = ['latte', 'mokka', 'espresso'];
+const HERO = { latte: 'c-web81-hero', mokka: 'c-mature-hero', espresso: 'c-up-hero' };
+const THEME = { latte: '#f4ede4', mokka: '#ebe0d3', espresso: '#1c1612' };
+const pickFrom = (list, ...values) => values.find((v) => list.includes(v)) ?? list[0];
+
+let study = pickFrom(STUDIES, params.get('studie'), store.get('pure-web-study'));
+let lang = pickFrom(LANGS, params.get('lang'), store.get('pure-web-lang'));
+
+const S = (key, vars = {}) => {
+  let s = STRINGS[lang]?.[key] ?? STRINGS.nl[key] ?? key;
+  for (const [k, v] of Object.entries(vars)) s = s.replaceAll(`{${k}}`, v);
+  return s;
+};
+const L = (text) => (text ? (text[lang] ?? text.nl ?? '') : '');
+const LOCALE = { nl: 'nl-NL', en: 'en-GB', es: 'es-ES', fr: 'fr-FR', de: 'de-DE', it: 'it-IT', ar: 'ar-u-nu-latn' };
+const money = (n) =>
+  new Intl.NumberFormat(LOCALE[lang], { style: 'currency', currency: 'EUR', minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 }).format(n);
+const priceLine = (t) => (t.priceFrom === 0 ? S('free') : S('from', { p: money(t.priceFrom) }));
+const appUrl = (path) => `../app/${path}?lang=${lang}`;
+const photo = (key, small = true) => `img/${key}${small ? '-s' : ''}.webp`;
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+
+const data = await fetch('data/pure.json').then((r) => r.json());
+const treatments = data.treatments;
+const byId = Object.fromEntries(treatments.map((t) => [t.id, t]));
+
+/* ---------- Static pieces ---------- */
+
+$$('[data-logo]').forEach((el) => (el.innerHTML = logoSvg()));
+
+const LOGOS = {
+  obagi: 2.34,
+  'zo-skin-health': 2.77,
+  'synergie-skin': 7.38,
+  skinpen: 2.96,
+  alma: 2.69,
+  picoway: 1.95,
+  tixel: 3.28,
+  'sure-medical': 3.05,
+  kp: 3.66,
+  nvh: 2.24,
+  rie: 1.3,
+};
+const LOGO_NAMES = {
+  obagi: 'Obagi Medical',
+  'zo-skin-health': 'ZO Skin Health',
+  'synergie-skin': 'Synergie Skin',
+  skinpen: 'SkinPen',
+  alma: 'Alma',
+  picoway: 'PicoWay',
+  tixel: 'Tixel',
+  'sure-medical': 'SURE Medical',
+  kp: 'Kwaliteitsregister Paramedici',
+  nvh: 'Nederlandse Vereniging van Huidtherapeuten',
+  rie: 'RIE Specialist',
+};
+function setMask(el, name) {
+  el.style.setProperty('--m', `url("${new URL(`img/logos/${name}.png`, location.href).href}")`);
+  el.style.setProperty('--ratio', LOGOS[name]);
+  if (LOGOS[name] > 5) el.style.height = '18px';
 }
-function closeMenu() {
-  if (menuOpen) setMenu(false);
-}
-menuButton.addEventListener('click', () => setMenu(!menuOpen));
-addEventListener('keydown', (e) => e.key === 'Escape' && closeMenu());
-for (const a of $$('.menu-links a')) {
-  const swap = () => ($('#menu-photo').src = photo(a.dataset.photo));
-  a.addEventListener('pointerenter', swap);
-  a.addEventListener('focus', swap);
-}
+$$('[data-mask]').forEach((el) => setMask(el, el.dataset.mask));
 
-/* ---------- Split headlines into lines that rise one after another ---------- */
+const brandTrack = $('#brand-track');
+const brandItems = Object.keys(LOGOS)
+  .map((name) => `<li><i class="mask" data-brand="${name}"></i><span class="sr">${LOGO_NAMES[name]}</span></li>`)
+  .join('');
+brandTrack.innerHTML = brandItems + brandItems.replaceAll('<li>', '<li aria-hidden="true">');
+$$('[data-brand]', brandTrack).forEach((el) => setMask(el, el.dataset.brand));
 
-function splitLines(el) {
-  if (!el.dataset.source) el.dataset.source = el.innerHTML;
-  el.innerHTML = el.dataset.source;
-  // Wrap every word, keeping <em> around the words it held.
-  const words = [];
-  const wrap = (node, parentEm) => {
+const langSelect = $('#lang');
+langSelect.innerHTML = LANGS.map((l) => `<option value="${l}">${LANG_NAMES[l]}</option>`).join('');
+
+/* ---------- Words that rise line by line, and a statement that lights up word by word ---------- */
+
+function splitWords(el, className) {
+  let i = 0;
+  const walk = (node) => {
     for (const child of [...node.childNodes]) {
       if (child.nodeType === 3) {
         const frag = document.createDocumentFragment();
@@ -128,48 +114,24 @@ function splitLines(el) {
             frag.append(' ');
             continue;
           }
-          const w = document.createElement('span');
-          w.className = 'w';
-          w.textContent = part;
-          w.dataset.em = parentEm ? '1' : '';
-          words.push(w);
-          frag.append(w);
+          const outer = document.createElement('span');
+          outer.className = className;
+          if (className === 'wd') {
+            const inner = document.createElement('span');
+            inner.textContent = part;
+            inner.style.setProperty('--i', i++);
+            outer.append(inner);
+          } else {
+            outer.textContent = part;
+          }
+          frag.append(outer);
         }
         child.replaceWith(frag);
-      } else if (child.nodeType === 1) {
-        wrap(child, parentEm || child.tagName === 'EM');
-      }
+      } else if (child.nodeType === 1) walk(child);
     }
   };
-  wrap(el, false);
-  const lines = [];
-  let top = null;
-  for (const w of words) {
-    const t = w.offsetTop;
-    if (top === null || Math.abs(t - top) > 4) {
-      lines.push([]);
-      top = t;
-    }
-    lines.at(-1).push(w);
-  }
-  el.innerHTML = lines
-    .map((ws, i) => {
-      let html = '';
-      let inEm = false;
-      ws.forEach((w, j) => {
-        const em = w.dataset.em === '1';
-        if (em && !inEm) html += '<em>';
-        if (!em && inEm) html += '</em>';
-        inEm = em;
-        html += (j ? ' ' : '') + w.textContent;
-      });
-      if (inEm) html += '</em>';
-      return `<span class="line" style="--l:${i}"><span>${html}</span></span>`;
-    })
-    .join('');
+  walk(el);
 }
-const splits = $$('.split');
-const runSplits = () => splits.forEach(splitLines);
 
 /* ---------- Reveal on scroll ---------- */
 
@@ -182,551 +144,563 @@ const revealer = new IntersectionObserver(
       }
     }
   },
-  { rootMargin: '0px 0px -12% 0px' },
+  { rootMargin: '0px 0px -8% 0px', threshold: 0.12 },
 );
-const watch = (els) => els.forEach((el) => revealer.observe(el));
-
-/* ---------- Ticker: drifts on its own and speeds up with the scroll ---------- */
-
-const ticker = $('#ticker');
-ticker.innerHTML += ticker.innerHTML;
-let tickerX = 0;
-let tickerDir = -1;
-onFrame(() => {
-  const v = scroll.velocity;
-  if (Math.abs(v) > 0.4) tickerDir = v > 0 ? -1 : 1;
-  tickerX += tickerDir * (0.55 + Math.min(Math.abs(v) * 0.35, 14));
-  const half = ticker.scrollWidth / 2;
-  if (tickerX <= -half) tickerX += half;
-  if (tickerX > 0) tickerX -= half;
-  ticker.style.transform = `translate3d(${tickerX}px,0,0) skewX(${clamp(-v * 0.25, -8, 8)}deg)`;
-});
-
-/* ---------- Cursor and magnetic buttons ---------- */
-
-const cursor = $('#cursor');
-const cur = { x: pointer.x, y: pointer.y };
-if (FINE) {
-  addEventListener('pointermove', (e) => {
-    document.body.classList.add('has-cursor');
-    const target = e.target.closest?.('[data-cursor]');
-    cursor.classList.toggle('label', !!target);
-    if (target) cursor.firstElementChild.textContent = target.dataset.cursor;
+function watch(scope = document) {
+  $$('.rise, .lines, .unveil, .card', scope).forEach((el) => {
+    if (el.classList.contains('in')) return;
+    if (el.classList.contains('rise') && !el.style.getPropertyValue('--d')) {
+      const sibs = [...el.parentElement.children].filter((c) => c.classList.contains('rise'));
+      el.style.setProperty('--d', `${Math.max(0, sibs.indexOf(el)) * 90}ms`);
+    }
+    revealer.observe(el);
   });
-  document.addEventListener('pointerleave', () => document.body.classList.remove('has-cursor'));
-  onFrame(() => {
-    cur.x = lerp(cur.x, pointer.x, 0.22);
-    cur.y = lerp(cur.y, pointer.y, 0.22);
-    cursor.style.transform = `translate3d(${cur.x}px, ${cur.y}px, 0)`;
-  });
-  for (const el of $$('.magnetic')) {
-    el.addEventListener('pointermove', (e) => {
-      const r = el.getBoundingClientRect();
-      const dx = e.clientX - (r.left + r.width / 2);
-      const dy = e.clientY - (r.top + r.height / 2);
-      el.style.transform = `translate(${dx * 0.22}px, ${dy * 0.32}px)`;
-      el.firstElementChild.style.transform = `translate(${dx * 0.08}px, ${dy * 0.12}px)`;
-    });
-    el.addEventListener('pointerleave', () => {
-      el.style.transform = '';
-      el.firstElementChild.style.transform = '';
-    });
-  }
 }
 
-/* ---------- Data ---------- */
+/* ---------- Texts ---------- */
 
-const data = await fetch('data/pure.json').then((r) => r.json());
-const treatments = data.treatments.filter((t) => t.category !== 'beauty');
-const byId = Object.fromEntries(treatments.map((t) => [t.id, t]));
+function applyTexts() {
+  root.lang = lang;
+  root.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  document.title = S('pageTitle');
+  $$('[data-t]').forEach((el) => {
+    const v = S(el.dataset.t);
+    if (el.hasAttribute('data-html')) el.innerHTML = v;
+    else el.textContent = v;
+  });
+  $$('.lines').forEach((el) => {
+    splitWords(el, 'wd');
+    if (revealed.has(el.id)) el.classList.add('in');
+  });
+  const statement = $('.statement');
+  splitWords(statement, 'w');
+  statementWords = $$('.w', statement);
+  langSelect.value = lang;
+  langSelect.setAttribute('aria-label', S('language'));
+  $$('[data-book]').forEach((a) => (a.href = appUrl('afspraak/consult')));
+  $$('[data-app]').forEach((a) => {
+    a.dataset.path ??= a.getAttribute('href').replace('../app/', '');
+    a.href = appUrl(a.dataset.path);
+  });
+  $$('#car-prev, #rev-prev').forEach((b) => b.setAttribute('aria-label', S('prev')));
+  $$('#car-next, #rev-next').forEach((b) => b.setAttribute('aria-label', S('next')));
+  $('#sheet-close').setAttribute('aria-label', S('close'));
+  $('#compare-handle').setAttribute('aria-label', S('compareLabel'));
+  $('#studies-note').textContent = S('study' + study[0].toUpperCase() + study.slice(1));
+  $('#studies-toggle').setAttribute('aria-label', S(studies.classList.contains('collapsed') ? 'expand' : 'collapse'));
+}
+const revealed = new Set();
+let statementWords = [];
 
-/* ---------- Huidscan ---------- */
+/* ---------- Highlights and treatment cards ---------- */
 
-const concernList = $('#concerns');
-concernList.innerHTML = data.concerns
-  .map(
-    (c, i) => `<li class="concern">
-      <button type="button" aria-pressed="false" data-id="${c.id}" data-photo="${c.photo}">
-        <span class="idx">${String(i + 1).padStart(2, '0')}</span>
-        <span class="name">${CONCERN_NAMES[c.id]}</span>
-        <span class="tick" aria-hidden="true"></span>
-      </button>
-      <div class="concern-text"><p>${c.text}</p></div>
-    </li>`,
-  )
-  .join('');
+const HIGHLIGHTS = ['laser', 'acne', 'pigment'];
+const CATEGORIES = ['all', 'removal', 'conditions', 'skin', 'hair'];
+let category = 'all';
 
-const picked = new Set();
-function renderRoute() {
-  const score = new Map();
-  for (const c of data.concerns) {
-    if (!picked.has(c.id)) continue;
-    c.treatments.forEach((id, rank) => {
-      if (!byId[id]) return;
-      // Treatments named for more of the chosen concerns, and named earlier, come first.
-      score.set(id, (score.get(id) ?? 0) + 10 - rank);
-    });
-  }
-  const list = [...score.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5).map(([id]) => byId[id]);
-  $('#route-empty').hidden = list.length > 0;
-  $('#route-full').hidden = list.length === 0;
-  $('#route-count').textContent = `${picked.size} ${picked.size === 1 ? 'onderwerp' : 'onderwerpen'}`;
-  $('#route-list').innerHTML = list
+function renderTreatments() {
+  $('#highlights').innerHTML = HIGHLIGHTS.map((id) => {
+    const t = byId[id];
+    return `<div class="rise"><h3>${esc(L(t.name))}</h3><p>${esc(L(t.description))}</p><button type="button" data-open="${id}">${S('readMore')}</button></div>`;
+  }).join('');
+  $('#filters').innerHTML = CATEGORIES.map(
+    (c) => `<button type="button" role="tab" data-cat="${c}" aria-selected="${c === category}">${S(c === 'all' ? 'catAll' : 'cat_' + c)}</button>`,
+  ).join('');
+  $('#cards').innerHTML = treatments
     .map(
-      (t, i) => `<li class="route-item" style="--i:${i}">
-        <button type="button" data-open="${t.id}" aria-label="Meer over ${t.name}">
-          <img src="${photo(t.photo)}" alt="" loading="lazy" />
-          <span><strong>${t.name}</strong><small>${[sessions(t.info?.sessions), t.info?.downtime && `herstel: ${t.info.downtime.toLowerCase()}`].filter(Boolean).join(' · ')}</small><span class="price">${price(t)}</span></span>
+      (t) => `<li class="card" data-cat="${t.category}">
+        <button type="button" data-open="${t.id}">
+          <figure><img src="${photo(t.photo)}" alt="" loading="lazy" /></figure>
+          <h3>${esc(L(t.name))}</h3>
+          <p>${esc(L(t.description))}</p>
+          <span class="card-meta"><span>${priceLine(t)} · ${S('minutes', { m: t.minutes })}</span><b>${S('readMore')} ${lang === 'ar' ? '←' : '→'}</b></span>
         </button>
       </li>`,
     )
     .join('');
+  filterCards(false);
+  watch($('#behandelingen'));
 }
-concernList.addEventListener('click', (e) => {
-  const b = e.target.closest('button[data-id]');
+
+function filterCards(animate = true) {
+  let n = 0;
+  $$('#cards .card').forEach((card) => {
+    const show = category === 'all' || card.dataset.cat === category || card.dataset.cat === 'consult';
+    card.hidden = !show;
+    if (show && animate) {
+      card.classList.remove('in');
+      card.style.setProperty('--d', `${Math.min(n, 8) * 60}ms`);
+      requestAnimationFrame(() => requestAnimationFrame(() => card.classList.add('in')));
+    }
+    if (show) n++;
+  });
+  $$('#filters button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.cat === category)));
+}
+
+$('#filters').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-cat]');
   if (!b) return;
-  const on = b.getAttribute('aria-pressed') !== 'true';
-  b.setAttribute('aria-pressed', String(on));
-  on ? picked.add(b.dataset.id) : picked.delete(b.dataset.id);
-  renderRoute();
+  category = b.dataset.cat;
+  filterCards();
 });
 
-// The concern's photo follows the pointer, leaning into the direction it moves.
-const float = $('#scan-float');
-const floatImg = float.firstElementChild;
-const fp = { x: 0, y: 0, vx: 0 };
-if (FINE) {
-  concernList.addEventListener('pointerover', (e) => {
-    const b = e.target.closest('button[data-photo]');
-    if (!b) return;
-    floatImg.src = photo(b.dataset.photo);
-    float.classList.add('on');
-  });
-  concernList.addEventListener('pointerleave', () => float.classList.remove('on'));
-  onFrame(() => {
-    if (!float.classList.contains('on')) {
-      fp.x = pointer.x;
-      fp.y = pointer.y;
-      return;
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-open]');
+  if (b) openSheet(b.dataset.open);
+});
+
+/* ---------- Treatment sheet: everything the clinic tells about one treatment ---------- */
+
+const sheet = $('#sheet');
+function openSheet(id) {
+  const t = byId[id];
+  if (!t) return;
+  const i = t.info ?? {};
+  $('#sheet-img').src = photo(t.photo, false);
+  const facts = [
+    i.sessions && [S('sessions'), L(i.sessions)],
+    i.interval && [S('interval'), L(i.interval)],
+    i.downtime && [S('downtime'), L(i.downtime)],
+    [S('duration'), S('minutes', { m: t.minutes })],
+    [S('price'), priceLine(t)],
+  ].filter(Boolean);
+  const cat = t.category === 'consult' ? S('cat_consult') : S('cat_' + t.category);
+  $('#sheet-body').innerHTML = `
+    <p class="eyebrow">${cat}</p>
+    <h2 class="title" id="sheet-title">${esc(L(t.name))}</h2>
+    ${t.insurable ? `<span class="insured">${S('insurable')}</span>` : ''}
+    <p class="sheet-intro">${esc(L(i.intro) || L(t.description))}</p>
+    <dl class="facts">${facts.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
+    ${i.how ? `<h3>${S('howH')}</h3><p>${esc(L(i.how))}</p>` : ''}
+    ${i.results ? `<h3>${S('resultH')}</h3><p>${esc(L(i.results))}</p>` : ''}
+    ${i.aftercare?.length ? `<h3>${S('aftercareH')}</h3><ul>${i.aftercare.map((a) => `<li>${esc(L(a))}</li>`).join('')}</ul>` : ''}
+    ${t.ba.length ? `<h3>${S('baH')}</h3><div class="sheet-ba">${t.ba.map((k) => `<img src="img/${k}.webp" alt="" loading="lazy" />`).join('')}</div>` : ''}
+    ${
+      i.faq?.length
+        ? `<h3>${S('faqH')}</h3><div class="sheet-faq">${i.faq.map((f) => `<details><summary>${esc(L(f.q))}</summary><p>${esc(L(f.a))}</p></details>`).join('')}</div>`
+        : ''
     }
-    const nx = lerp(fp.x, pointer.x + 150, 0.12);
-    fp.vx = lerp(fp.vx, nx - fp.x, 0.2);
-    fp.x = nx;
-    fp.y = lerp(fp.y, pointer.y, 0.12);
-    float.style.transform = `translate3d(${fp.x}px, ${fp.y}px, 0) translate(-50%, -50%) rotate(${clamp(fp.vx * 0.6, -12, 12)}deg)`;
-  });
+    <div class="sheet-cta">
+      <a class="btn btn-solid" href="${appUrl('afspraak/' + t.id)}">${t.id === 'consult' ? S('ctaIntakePlan') : S('bookThis')}</a>
+      ${t.id === 'consult' ? '' : `<a class="btn btn-line" href="${appUrl('afspraak/consult')}">${S('ctaIntake')}</a>`}
+      <span class="price-from">${priceLine(t)}</span>
+    </div>`;
+  sheet.setAttribute('aria-labelledby', 'sheet-title');
+  $('.sheet-inner', sheet).scrollTop = 0;
+  if (!sheet.open) sheet.showModal();
 }
-
-/* ---------- Behandelkamers: a row that moves sideways while the page scrolls ---------- */
-
-const roomsSection = $('#behandelingen');
-const track = $('#rooms-track');
-const roomList = treatments.filter((t) => t.id !== 'consult');
-track.innerHTML = roomList
-  .map(
-    (t) => `<button type="button" class="room" data-open="${t.id}" data-cat="${t.category}" data-cursor="Bekijk">
-      <div class="room-photo">
-        <img src="${photo(t.photo)}" alt="" loading="lazy" />
-        <span class="room-tag">${t.insurable ? 'Soms vergoed' : CATEGORY_NAMES[t.category]}</span>
-      </div>
-      <div class="room-meta"><span class="room-name">${t.name}</span><span class="room-price">${price(t)}</span></div>
-      <p class="room-desc">${t.description}</p>
-    </button>`,
-  )
-  .join('');
-
-const filters = ['all', 'removal', 'conditions', 'skin', 'hair'];
-$('#rooms-filter').innerHTML = filters
-  .map((f, i) => `<button type="button" class="chip" role="tab" aria-selected="${i === 0}" data-f="${f}">${f === 'all' ? 'Alles' : CATEGORY_NAMES[f]}</button>`)
-  .join('');
-$('#rooms-filter').addEventListener('click', (e) => {
-  const chip = e.target.closest('.chip');
-  if (!chip) return;
-  for (const c of $$('.chip')) c.setAttribute('aria-selected', String(c === chip));
-  const f = chip.dataset.f;
-  const apply = () => {
-    for (const r of $$('.room', track)) r.hidden = f !== 'all' && r.dataset.cat !== f;
-    sizeRooms();
-  };
-  transition(apply);
-  scroll.to(roomsSection.offsetTop, true);
+$('#sheet-close').addEventListener('click', () => sheet.close());
+sheet.addEventListener('click', (e) => {
+  if (e.target === sheet) sheet.close();
 });
 
-let roomsTravel = 0;
-function sizeRooms() {
-  const wide = innerWidth > 900;
-  roomsTravel = Math.max(0, track.scrollWidth - innerWidth);
-  roomsSection.style.setProperty('--rooms-h', wide ? `${innerHeight + roomsTravel}px` : `${innerHeight + roomsTravel}px`);
-}
-// The reel and its headline lean with the speed of the scroll and spring back upright when it stops
-// (after AUGE Experience, CSS Design Awards Website of the Day, 20 October 2026).
-const roomsTitle = $('#rooms-title');
-let lean = 0;
-let leanV = 0;
-onFrame((_, y) => {
-  const top = roomsSection.offsetTop;
-  const p = roomsTravel ? clamp((y - top) / roomsTravel, 0, 1) : 0;
-  const inside = y > top - innerHeight && y < top + roomsSection.offsetHeight;
-  const target = inside && !REDUCED ? clamp(-scroll.velocity * 0.35, -6, 6) : 0;
-  leanV += (target - lean) * 0.09;
-  leanV *= 0.78;
-  lean += leanV;
-  track.style.transform = `translate3d(${-p * roomsTravel}px, 0, 0) skewX(${lean.toFixed(2)}deg)`;
-  roomsTitle.style.transform = `skewX(${(lean * 0.6).toFixed(2)}deg)`;
-  $('#rooms-bar').parentElement.style.setProperty('--p', p.toFixed(4));
-  // Each photo drifts a little inside its frame: a window onto the room, not a flat card.
-  if (y + innerHeight > top && y < top + roomsSection.offsetHeight) {
-    for (const img of track.querySelectorAll('.room:not([hidden]) img')) {
-      const r = img.parentElement.getBoundingClientRect();
-      const c = (r.left + r.width / 2 - innerWidth / 2) / innerWidth;
-      img.style.setProperty('--px', `${(-c * 30).toFixed(1)}px`);
-    }
-  }
-});
+/* ---------- Before and after ---------- */
 
-/* ---------- Prijskaart: a menu card, with a round photo that peeks out at the pointer ---------- */
-
-$('#menu-card').innerHTML = ['consult', 'removal', 'conditions', 'skin', 'hair']
-  .map(
-    (cat) => `<div class="menu-group"><h3>${CATEGORY_NAMES[cat]}</h3>${treatments
-      .filter((t) => t.category === cat)
-      .map(
-        (t) => `<button type="button" class="menu-row" data-open="${t.id}" data-photo="${t.photo}">
-          <span class="n">${t.name}</span>${t.insurable ? '<span class="v">soms vergoed</span>' : ''}<span class="dots"></span><span class="p">${t.priceFrom === 0 ? 'gratis' : `v.a. €${t.priceFrom}`}</span>
-        </button>`,
-      )
-      .join('')}</div>`,
-  )
-  .join('');
-const peek = $('#price-peek');
-const pk = { x: 0, y: 0 };
-if (FINE) {
-  $('#menu-card').addEventListener('pointerover', (e) => {
-    const row = e.target.closest('.menu-row');
-    if (!row) return;
-    peek.firstElementChild.src = photo(row.dataset.photo);
-    peek.classList.add('on');
-  });
-  $('#menu-card').addEventListener('pointerleave', () => peek.classList.remove('on'));
-  onFrame(() => {
-    pk.x = lerp(pk.x, pointer.x + 140, 0.14);
-    pk.y = lerp(pk.y, pointer.y - 40, 0.14);
-    peek.style.transform = `translate3d(${pk.x}px, ${pk.y}px, 0) translate(-50%, -50%) scale(${peek.classList.contains('on') ? 1 : 0.4})`;
-  });
-}
-
-/* ---------- Booking bar on phones: there after the opening, gone near the end ---------- */
-
-const bookBar = $('#book-bar');
-const intake = $('#intake');
-onFrame((_, y) => {
-  bookBar.classList.toggle('on', y > innerHeight * 0.7 && y + innerHeight < intake.offsetTop + 80 && !menuOpen);
-});
-
-/* ---------- Resultaten ---------- */
-
-// Faces first: they show the difference best at a glance.
 const RESULT_ORDER = ['acne', 'pigment', 'couperose', 'prx', 'sylfirm', 'skinpen', 'ipl', 'xlhair', 'peel', 'legveins', 'tattoo'];
-const results = RESULT_ORDER.flatMap((id) => (byId[id]?.ba ?? []).map((key) => ({ key, t: byId[id] })));
-const seen = new Set();
-const uniqueResults = results.filter((r) => !seen.has(r.key) && seen.add(r.key));
-const pick = $('#compare-pick');
-pick.innerHTML = uniqueResults
-  .map(
-    (r, i) => `<button type="button" class="pick" role="option" aria-selected="${i === 0}" data-key="${r.key}" data-name="${r.t.name}">
-      <img src="img/${r.key}-na.webp" alt="" loading="lazy" /><span>${r.t.name}</span>
-    </button>`,
-  )
-  .join('');
-const compare = $('#compare');
-const voor = $('#compare-voor');
-const na = $('#compare-na');
-const handle = $('#compare-handle');
-function showResult(key, name) {
-  na.src = `img/${key}-na.webp`;
-  voor.firstElementChild.src = `img/${key}-voor.webp`;
-  na.alt = `${name}: na de behandeling`;
-  voor.firstElementChild.alt = `${name}: voor de behandeling`;
-  na.onload = () => compare.style.setProperty('--ratio', `${na.naturalWidth} / ${na.naturalHeight}`);
-  $('#compare-caption').textContent = `${name} · cliënt van Pure Clinics`;
-  for (const p of $$('.pick', pick)) p.setAttribute('aria-selected', String(p.dataset.key === key));
-  sweep();
-}
-let split = 50;
-function setSplit(v) {
-  split = clamp(v, 0, 100);
-  compare.style.setProperty('--split', `${split}%`);
-  handle.setAttribute('aria-valuenow', String(Math.round(split)));
-}
-// A new result opens with a slow sweep, so the difference shows itself.
-let sweepAnim = 0;
-function sweep() {
-  if (REDUCED) return setSplit(50);
-  const start = performance.now();
-  cancelAnimationFrame(sweepAnim);
-  const step = (now) => {
-    const t = Math.min((now - start) / 1800, 1);
-    setSplit(50 + Math.sin(t * Math.PI * 2) * 32 * (1 - t));
-    if (t < 1) sweepAnim = requestAnimationFrame(step);
-  };
-  sweepAnim = requestAnimationFrame(step);
-}
-pick.addEventListener('click', (e) => {
-  const b = e.target.closest('.pick');
-  if (b) showResult(b.dataset.key, b.dataset.name);
+const results = [];
+const seenBa = new Set();
+// Two per treatment for the first four, one for the rest: twelve pictures, not twenty-six.
+RESULT_ORDER.forEach((id, n) => {
+  for (const key of (byId[id]?.ba ?? []).slice(0, n < 4 ? 2 : 1)) if (!seenBa.has(key) && seenBa.add(key)) results.push({ key, id });
 });
+let resultIndex = 0;
+const compare = $('#compare');
+const handle = $('#compare-handle');
 
-// The words in the headline are the switch: "voor" shows the photo before, "na" the one after (after ERA Residence's
-// "by day / by night", Site of the Month August 2026).
-const eraButtons = $$('.era-switch button');
-function glideTo(target) {
-  cancelAnimationFrame(sweepAnim);
-  const from = split;
-  const start = performance.now();
-  const step = (now) => {
-    const t = Math.min((now - start) / (REDUCED ? 1 : 900), 1);
-    setSplit(from + (target - from) * (1 - Math.pow(1 - t, 3)));
-    if (t < 1) sweepAnim = requestAnimationFrame(step);
-  };
-  sweepAnim = requestAnimationFrame(step);
+function renderResults() {
+  $('#compare-pick').innerHTML = results
+    .map((r, i) => `<button type="button" role="option" data-r="${i}" aria-selected="${i === resultIndex}" aria-label="${esc(L(byId[r.id].name))}"><img src="img/${r.key}-na.webp" alt="" loading="lazy" /></button>`)
+    .join('');
+  showResult(resultIndex);
 }
-for (const b of eraButtons) {
-  b.setAttribute('aria-pressed', 'false');
-  b.addEventListener('click', () => {
-    for (const o of eraButtons) o.setAttribute('aria-pressed', String(o === b));
-    glideTo(b.dataset.side === 'voor' ? 100 : 0);
-  });
+function showResult(i) {
+  resultIndex = i;
+  const r = results[i];
+  $('#compare-na').src = `img/${r.key}-na.webp`;
+  $('.compare-voor img').src = `img/${r.key}-voor.webp`;
+  $('#compare-caption').textContent = L(byId[r.id].name);
+  $$('#compare-pick button').forEach((b) => b.setAttribute('aria-selected', String(+b.dataset.r === i)));
 }
+function setSplit(v) {
+  v = clamp(v, 0.02, 0.98);
+  compare.style.setProperty('--split', `${v * 100}%`);
+  handle.setAttribute('aria-valuenow', String(Math.round(v * 100)));
+  split = v;
+}
+let split = 0.5;
+$('#compare-pick').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-r]');
+  if (b) showResult(+b.dataset.r);
+});
 let dragging = false;
 const fromEvent = (e) => {
   const r = compare.getBoundingClientRect();
-  setSplit(((e.clientX - r.left) / r.width) * 100);
+  return (e.clientX - r.left) / r.width;
 };
 compare.addEventListener('pointerdown', (e) => {
   dragging = true;
-  for (const o of eraButtons) o.setAttribute('aria-pressed', 'false');
-  cancelAnimationFrame(sweepAnim);
   compare.setPointerCapture(e.pointerId);
-  fromEvent(e);
+  setSplit(fromEvent(e));
 });
-compare.addEventListener('pointermove', (e) => dragging && fromEvent(e));
+compare.addEventListener('pointermove', (e) => dragging && setSplit(fromEvent(e)));
 compare.addEventListener('pointerup', () => (dragging = false));
 handle.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowLeft') setSplit(split - 5);
-  if (e.key === 'ArrowRight') setSplit(split + 5);
+  if (e.key === 'ArrowLeft') setSplit(split - 0.05);
+  if (e.key === 'ArrowRight') setSplit(split + 0.05);
 });
-const first = uniqueResults[0];
-showResult(first.key, first.t.name);
-new IntersectionObserver(([e], o) => {
-  if (e.isIntersecting) {
-    sweep();
-    o.disconnect();
-  }
-}).observe(compare);
-
-/* ---------- Kliniek: opening hours and whether the door is open now ---------- */
-
-function amsterdamNow() {
-  const parts = Object.fromEntries(
-    new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Amsterdam', weekday: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
-      .formatToParts(new Date())
-      .map((p) => [p.type, p.value]),
-  );
-  const day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(parts.weekday);
-  return { day, hour: Number(parts.hour) + Number(parts.minute) / 60 };
-}
-const hh = (h) => `${String(Math.floor(h)).padStart(2, '0')}:${String(Math.round((h % 1) * 60)).padStart(2, '0')}`;
-function statusFor(loc) {
-  const { day, hour } = amsterdamNow();
-  const today = loc.hours[day];
-  if (today && hour >= today.open && hour < today.close) return { open: true, text: `Nu open · tot ${hh(today.close)}` };
-  for (let i = 0; i < 8; i++) {
-    const d = (day + i) % 7;
-    const h = loc.hours[d];
-    if (h && (i > 0 || hour < h.open)) return { open: false, text: `Gesloten · opent ${i === 0 ? 'vandaag' : i === 1 ? 'morgen' : DAYS[d]} om ${hh(h.open)}` };
-  }
-  return { open: false, text: 'Gesloten' };
-}
-const PLACE_PHOTOS = { nijmegen: 'pc-room', uden: 'pc-consult' };
-function renderPlaces() {
-  const { day } = amsterdamNow();
-  const shown = $$('.place.in').length > 0;
-  $('#places').innerHTML = data.locations
-    .map((loc) => {
-      const s = statusFor(loc);
-      const order = [1, 2, 3, 4, 5, 6, 0];
-      return `<article class="place">
-        <div class="place-photo">
-          <img src="${photo(PLACE_PHOTOS[loc.id], false)}" alt="" loading="lazy" />
-          <span class="status ${s.open ? 'open' : ''}"><i></i>${s.text}</span>
-          <h3>${loc.city}</h3>
-        </div>
-        <div class="place-info">
-          <dl class="hours">${order
-            .map((d) => {
-              const h = loc.hours[d];
-              const cls = d === day ? ' class="today"' : '';
-              return `<dt${cls}>${DAYS[d]}</dt><dd${cls}>${h ? `${hh(h.open)} – ${hh(h.close)}` : 'gesloten'}</dd>`;
-            })
-            .join('')}</dl>
-          <p class="place-links"><span>${loc.address}<br />${loc.city}</span><a href="tel:${loc.phone.replace(/\s/g, '')}">${loc.phone}</a><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`Pure Clinics ${loc.address} ${loc.city}`)}" target="_blank" rel="noopener">Route plannen</a></p>
-        </div>
-      </article>`;
-    })
-    .join('');
-  for (const p of $$('.place')) shown ? p.classList.add('in') : revealer.observe(p);
-  // The same light for everyone at the same moment: the hour in Nijmegen, and what the photo shows of it.
-  const nij = statusFor(data.locations[0]);
-  const light = daylight();
-  $('#hero-clock').textContent = `Nijmegen ${light.time} · ${light.name} · ${nij.open ? 'nu open' : 'nu gesloten'}`;
-}
-renderPlaces();
-setInterval(renderPlaces, 60_000);
-
-/* ---------- Numbers count up when they come into view ---------- */
-
-const counter = new IntersectionObserver(
-  (entries) => {
-    for (const e of entries) {
-      if (!e.isIntersecting) continue;
-      counter.unobserve(e.target);
-      const end = Number(e.target.dataset.count);
-      const start = performance.now();
-      const tick = (now) => {
-        const t = Math.min((now - start) / 1600, 1);
-        e.target.textContent = Math.round(end * (1 - Math.pow(1 - t, 4))).toLocaleString('nl-NL');
-        if (t < 1) requestAnimationFrame(tick);
-      };
-      if (!REDUCED) requestAnimationFrame(tick);
-    }
+new IntersectionObserver(
+  ([e], obs) => {
+    if (!e.isIntersecting || REDUCED) return;
+    obs.disconnect();
+    const keys = [0.5, 0.18, 0.82, 0.5];
+    const start = performance.now();
+    const step = (now) => {
+      const p = clamp((now - start) / 2600);
+      const seg = Math.min(2, Math.floor(p * 3));
+      const local = p * 3 - seg;
+      const ease = local < 0.5 ? 2 * local * local : 1 - (-2 * local + 2) ** 2 / 2;
+      if (!dragging) setSplit(keys[seg] + (keys[seg + 1] - keys[seg]) * ease);
+      if (p < 1 && !dragging) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
   },
-  { threshold: 0.6 },
-);
-$$('.numbers [data-count]').forEach((el) => counter.observe(el));
+  { threshold: 0.5 },
+).observe(compare);
 
-/* ---------- Treatment sheet ---------- */
+/* ---------- Carousels: products and reviews ---------- */
 
-const sheet = $('#sheet');
-function fillSheet(t) {
-  $('#sheet-img').src = photo(t.photo, false);
-  $('#sheet-img').alt = '';
-  $('#sheet-cat').textContent = `${CATEGORY_NAMES[t.category]}${t.insurable ? ' · soms vergoed' : ''}`;
-  $('#sheet-title').textContent = t.name;
-  $('#sheet-intro').textContent = t.info?.intro ?? t.description;
-  const facts = [
-    ['Prijs', price(t)],
-    ['Duur', `${t.minutes} min`],
-    ['Behandelingen', t.info?.sessions],
-    ['Herstel', t.info?.downtime],
-  ].filter(([, v]) => v);
-  $('#sheet-facts').innerHTML = facts.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('');
-  $('#sheet-how').textContent = t.info?.how ?? '';
-  const ba = t.ba[0];
-  $('#sheet-ba').innerHTML = ba
-    ? `<figure><img src="img/${ba}-voor.webp" alt="Voor de behandeling" loading="lazy" /><figcaption>Voor</figcaption></figure><figure><img src="img/${ba}-na.webp" alt="Na de behandeling" loading="lazy" /><figcaption>Na</figcaption></figure>`
-    : '';
-  $('#sheet-book').href = `${APP}afspraak/${t.id}`;
-  sheet.querySelector('.sheet-body').scrollTop = 0;
-}
-function openSheet(id, fromImg) {
-  const t = byId[id];
-  if (!t) return;
-  const show = () => {
-    fillSheet(t);
-    if (fromImg) fromImg.style.viewTransitionName = '';
-    sheet.showModal();
-    document.documentElement.classList.add('locked');
+function carousel({ track, prev, next, dots, perView, auto }) {
+  let index = 0;
+  let timer;
+  const count = () => track.children.length;
+  const pages = () => Math.max(1, count() - perView() + 1);
+  const go = (i) => {
+    index = (i + pages()) % pages();
+    const first = track.children[0];
+    if (!first) return;
+    const step = first.getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap || '20');
+    track.style.transform = `translateX(${(root.dir === 'rtl' ? 1 : -1) * index * step}px)`;
+    $$('button', dots).forEach((d, j) => d.setAttribute('aria-current', String(j === index)));
   };
-  // The photo grows from its card into the sheet when the card is on screen.
-  const r = fromImg?.getBoundingClientRect();
-  const visible = r && r.bottom > 0 && r.top < innerHeight && r.right > 0 && r.left < innerWidth;
-  if (document.startViewTransition && visible && !REDUCED) {
-    fromImg.style.viewTransitionName = 'sheet-photo';
-    transition(show);
-  } else show();
+  const drawDots = () => {
+    dots.innerHTML = Array.from({ length: pages() }, (_, j) => `<button type="button" aria-label="${j + 1}"></button>`).join('');
+    go(Math.min(index, pages() - 1));
+  };
+  prev.addEventListener('click', () => go(index - 1));
+  next.addEventListener('click', () => go(index + 1));
+  dots.addEventListener('click', (e) => {
+    const b = e.target.closest('button');
+    if (b) go([...dots.children].indexOf(b));
+  });
+  const play = () => {
+    clearInterval(timer);
+    if (!REDUCED && auto) timer = setInterval(() => go(index + 1), auto);
+  };
+  const box = track.parentElement;
+  box.addEventListener('pointerenter', () => clearInterval(timer));
+  box.addEventListener('pointerleave', play);
+  box.addEventListener('focusin', () => clearInterval(timer));
+  let sx = null;
+  box.addEventListener('pointerdown', (e) => (sx = e.clientX));
+  box.addEventListener('pointerup', (e) => {
+    if (sx === null) return;
+    const dx = e.clientX - sx;
+    if (Math.abs(dx) > 40) go(index + ((dx < 0) !== (root.dir === 'rtl') ? 1 : -1));
+    sx = null;
+  });
+  addEventListener('resize', drawDots);
+  play();
+  return { refresh: drawDots };
 }
 
-function closeSheet() {
-  const done = () => {
-    sheet.close();
-    document.documentElement.classList.remove('locked');
-  };
-  transition(done);
+const RENDER = {
+  'zo-cleanser': 'pump',
+  'zo-defense': 'dropper',
+  'zo-spf': 'tube',
+  'lycogel-camouflage': 'tube',
+  'wiqo-cream': 'jar',
+  'xlhair-revitalix': 'serum',
+  'xlhair-scalpfit': 'serum',
+  'xlhair-spray': 'spray',
+  'camouflage-set': 'jar',
+  'laser-aftercare-set': 'pump',
+};
+const wide = () => innerWidth > 1100;
+const mid = () => innerWidth > 520;
+
+function renderProducts() {
+  $('#carousel-track').innerHTML = data.products
+    .map(
+      (p) => `<article class="product">
+        <a href="${appUrl('product/' + p.id)}" title="${S('viewInApp')}">
+          <figure><img src="img/products/${RENDER[p.id] ?? 'jar'}.webp" alt="" loading="lazy" /></figure>
+          <p class="brand-name">${esc(p.brand ?? 'Pure Clinics')}</p>
+          <h3>${esc(L(p.name))}</h3>
+          <p class="price">${money(p.price)}</p>
+        </a>
+      </article>`,
+    )
+    .join('');
+  productCarousel.refresh();
 }
-document.addEventListener('click', (e) => {
-  const b = e.target.closest('[data-open]');
+const productCarousel = carousel({
+  track: $('#carousel-track'),
+  prev: $('#car-prev'),
+  next: $('#car-next'),
+  dots: $('#car-dots'),
+  perView: () => (wide() ? 3 : mid() ? 2 : 1),
+  auto: 4800,
+});
+
+// Real Google reviews of Pure Clinics Nijmegen, as shown on Google Maps on 14 November 2026 (texts cut where Google cuts them).
+const REVIEWS = [
+  { name: 'Tessa', months: 5, text: 'Super tevreden klant hier! Nu drie laserbehandelingen gehad voor een tatoeage, al een heel fijn resultaat tot dusver. Maar bovenal heel blij met de vriendelijkheid, kundigheid en goede uitleg en zorg van Loubna! Altijd vrolijk de deur uit :)' },
+  { name: 'Lisa J.', months: 5, text: 'Ik word geholpen door Loubna voor mijn laserontharing en ik ben ontzettend tevreden! Inmiddels zit ik in de onderhoudsfase en het resultaat is echt fantastisch. Ik had veel eerder moeten beginnen.' },
+  { name: 'Samantha F.', months: 4, text: 'Hele fijne kliniek! Super lieve meiden stuk voor stuk. Ik word altijd warm ontvangen en goed geïnformeerd over mijn behandeling. Qua prijs/kwaliteit verhouding, dikke prima!' },
+  { name: 'D.', months: 4, text: 'Vandaag een Glow-behandeling gehad bij Nadila en ik ben ontzettend tevreden met het resultaat. Nadila is erg vriendelijk, professioneel en stelt je direct op je gemak. Ze nam de tijd om alles duidelijk uit te leggen en werkte zorgvuldig.' },
+  { name: 'Julia S.', months: 5, text: 'Heel blij met mijn ervaringen hier. De behandeling wordt steeds goed afgestemd op mijn wensen en vragen. Voorafgaand aan de start van de behandeling wordt een intakegesprek ingepland, waardoor je goed geïnformeerd aan de behandelingen …' },
+];
+function renderReviews() {
+  $('#review-track').innerHTML = REVIEWS.map(
+    (r) => `<article class="review">
+      <header><span class="initial" aria-hidden="true">${r.name[0]}</span><span class="who">${esc(r.name)}<span class="when">${S('monthsAgo', { n: r.months })}</span></span><span class="g-logo" aria-hidden="true"></span></header>
+      <span class="stars" aria-label="5/5">★★★★★</span>
+      <blockquote lang="nl" dir="ltr">${esc(r.text)}</blockquote>
+      ${lang === 'nl' ? '' : `<p class="orig">${S('originalDutch')}</p>`}
+    </article>`,
+  ).join('');
+  reviewCarousel.refresh();
+}
+const reviewCarousel = carousel({
+  track: $('#review-track'),
+  prev: $('#rev-prev'),
+  next: $('#rev-next'),
+  dots: $('#rev-dots'),
+  perView: () => (innerWidth > 860 ? 2 : 1),
+  auto: 6500,
+});
+
+/* ---------- Team ---------- */
+
+// The team as pureclinics.nl shows it, with the clinic's own portraits.
+const TEAM = [
+  { id: 'maud', name: 'Maud', role: 'roleTherapist' },
+  { id: 'margot', name: 'Margot', role: 'roleTherapist' },
+  { id: 'nadila', name: 'Nadila', role: 'roleTherapist' },
+  { id: 'sam', name: 'Sam', role: 'roleTherapist' },
+  { id: 'husna', name: 'Husna', role: 'roleReception' },
+  { id: 'hawin', name: 'Hawin', role: 'roleBeauty' },
+];
+function renderTeam() {
+  $('#people').innerHTML = TEAM.map(
+    (p, i) => `<li class="person rise" style="--d:${(i % 3) * 110}ms"><figure><img src="img/team/${p.id}.webp" alt="${p.name}" loading="lazy" /></figure><h3>${p.name}</h3><p>${S(p.role)}</p></li>`,
+  ).join('');
+  watch($('#team'));
+}
+
+/* ---------- FAQ: the clinic's own questions per treatment, grouped ---------- */
+
+const FAQ_GROUPS = [
+  { key: 'faqIntake', ids: ['consult'] },
+  { key: 'faqLaser', ids: ['laser', 'epilation'] },
+  { key: 'faqConditions', ids: ['acne', 'pigment', 'couperose', 'legveins', 'eyes', 'tattoo', 'ipl'] },
+  { key: 'faqSkin', ids: ['skinpen', 'sylfirm', 'tixel', 'prx', 'skinbooster', 'exosomes', 'pdrn', 'tca', 'peel', 'deepclean', 'facial', 'massage'] },
+  { key: 'faqHair', ids: ['xlhair', 'camouflage'] },
+];
+let faqGroup = 'faqAll';
+function faqEntries() {
+  const list = [];
+  for (const g of FAQ_GROUPS)
+    for (const id of g.ids) for (const f of byId[id]?.info?.faq ?? []) list.push({ group: g.key, id, q: L(f.q), a: L(f.a), tag: L(byId[id].name) });
+  list.push({ group: 'faqGeneral', q: S('faqInsuranceQ'), a: S('q2Body'), tag: S('faqGeneral') });
+  list.push({ group: 'faqGeneral', q: S('faqWhereQ'), a: S('faqWhereA'), tag: S('faqGeneral') });
+  return list;
+}
+function renderFaq() {
+  const tabs = ['faqAll', ...FAQ_GROUPS.map((g) => g.key), 'faqGeneral'];
+  $('#faq-filters').innerHTML = tabs.map((k) => `<button type="button" role="tab" data-g="${k}" aria-selected="${k === faqGroup}">${S(k)}</button>`).join('');
+  const all = faqEntries();
+  let shown;
+  if (faqGroup === 'faqAll') {
+    const per = {};
+    shown = all.filter((f) => (per[f.group] = (per[f.group] ?? 0) + 1) <= 2);
+  } else shown = all.filter((f) => f.group === faqGroup);
+  $('#faq-list').innerHTML = shown
+    .map(
+      (f) => `<details><summary><small>${esc(f.tag)}</small><span>${esc(f.q)}</span></summary><div class="faq-answer"><p>${esc(f.a)}</p>${
+        f.id ? `<button type="button" class="btn btn-line" data-open="${f.id}">${S('faqMore', { t: esc(f.tag) })}</button>` : ''
+      }</div></details>`,
+    )
+    .join('');
+}
+$('#faq-filters').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-g]');
   if (!b) return;
-  openSheet(b.dataset.open, b.querySelector('img'));
-});
-$('#sheet-close').addEventListener('click', closeSheet);
-sheet.addEventListener('cancel', (e) => {
-  e.preventDefault();
-  closeSheet();
-});
-sheet.addEventListener('click', (e) => e.target === sheet && closeSheet());
-
-/* ---------- The parts borrowed from 2026's award winners ---------- */
-
-startToc();
-startParticles(concernList, CONCERN_NAMES);
-startLoupe();
-startDrop();
-startLayers(byId);
-startFilm();
-startLeaves();
-startMirror();
-startTilt();
-
-// The booking button rises out of its rings as the last section comes in (after Aether 1, Webby 2026 Best Use of
-// Animation or Motion Graphics).
-const ringCta = $('#ring-cta');
-onFrame((_, y) => {
-  const r = ringCta.getBoundingClientRect();
-  if (r.top > innerHeight || r.bottom < 0) return;
-  const p = smoothstep(innerHeight, innerHeight * 0.55, r.top);
-  ringCta.style.transform = `translate3d(0, ${((1 - p) * 60).toFixed(1)}px, 0) scale(${(0.9 + p * 0.1).toFixed(3)})`;
+  faqGroup = b.dataset.g;
+  renderFaq();
 });
 
-/* ---------- Start: the loader counts while the fonts and the first photo arrive ---------- */
+/* ---------- Footer: both clinics with their hours ---------- */
 
-const loader = $('#loader');
-const count = $('#loader-count');
+function renderPlaces() {
+  const fmt = new Intl.DateTimeFormat(LOCALE[lang], { weekday: 'long' });
+  const dayName = (d) => fmt.format(new Date(2026, 10, 15 + d)); // 15 November 2026 is a Sunday
+  const hh = (h) => `${String(Math.floor(h)).padStart(2, '0')}:${String(Math.round((h % 1) * 60)).padStart(2, '0')}`;
+  $('#footer-places').innerHTML = data.locations
+    .map(
+      (l) => `<div><p class="footer-kicker">${l.city}</p><p>${esc(l.address)}<br /><a href="tel:${l.phone.replace(/\s/g, '')}">${l.phone}</a></p>
+      <table aria-label="${S('hours')}">${[1, 2, 3, 4, 5, 6, 0]
+        .map((d) => `<tr><td>${dayName(d)}</td><td>${l.hours[d] ? `${hh(l.hours[d].open)} – ${hh(l.hours[d].close)}` : S('closed')}</td></tr>`)
+        .join('')}</table></div>`,
+    )
+    .concat(
+      `<div><p class="footer-kicker">Contact</p><p><a href="mailto:${data.clinic.email}">${data.clinic.email}</a><br /><a href="tel:+31246792236">${data.clinic.phone}</a></p></div>`,
+    )
+    .join('');
+}
+
+/* ---------- Everything that follows the language ---------- */
+
+function renderAll() {
+  applyTexts();
+  renderTreatments();
+  renderResults();
+  renderProducts();
+  renderReviews();
+  renderTeam();
+  renderFaq();
+  renderPlaces();
+  watch();
+}
+
+langSelect.addEventListener('change', () => {
+  lang = langSelect.value;
+  store.set('pure-web-lang', lang);
+  $$('.lines.in').forEach((el) => revealed.add(el.id));
+  renderAll();
+  syncUrl();
+});
+
+/* ---------- Studies ---------- */
+
+const studies = $('#studies');
 const heroImg = $('#hero-img');
-const ready = Promise.all([document.fonts.ready, heroImg.decode().catch(() => {})]);
-const t0 = performance.now();
-let loaded = false;
-ready.then(() => (loaded = true));
-const squares = REDUCED ? Promise.resolve() : buildLogoFromSquares($('.loader-logo')).catch(() => $('.loader-logo').classList.add('crisp'));
-if (REDUCED) $('.loader-logo').classList.add('crisp');
-await new Promise((resolve) => {
-  const step = (now) => {
-    const t = Math.min((now - t0) / (REDUCED ? 200 : 1500), 1);
-    const n = Math.round((loaded ? t : Math.min(t, 0.86)) * 100);
-    count.textContent = String(n);
-    if (n >= 100) resolve();
-    else requestAnimationFrame(step);
-  };
-  requestAnimationFrame(step);
+function setStudy(next, first = false) {
+  study = next;
+  root.dataset.study = study;
+  store.set('pure-web-study', study);
+  $('meta[name="theme-color"]').content = THEME[study];
+  $$('.studies-buttons button').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.study === study)));
+  $('#studies-note').textContent = S('study' + study[0].toUpperCase() + study.slice(1));
+  const src = `img/close/${HERO[study]}.webp`;
+  if (first) heroImg.src = src;
+  else if (!heroImg.src.endsWith(src)) {
+    heroImg.style.opacity = '0';
+    setTimeout(() => {
+      heroImg.src = src;
+      heroImg.onload = () => (heroImg.style.opacity = '1');
+    }, 300);
+  }
+  syncUrl();
+  onScroll();
+}
+$('.studies-buttons').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-study]');
+  if (b) setStudy(b.dataset.study);
 });
-await squares;
-// The dots are on screen before the loader lifts; they sharpen into the photo as it does.
-const heroGL = await startHeroGL($('#hero-gl'), heroImg, pointer, onFrame).catch(() => null);
-runSplits();
-loader.classList.add('done');
-heroGL?.reveal();
-setTimeout(() => loader.remove(), 1400);
-watch($$('.split, .reveal, .step, .place'));
-sizeRooms();
+function collapseStudies(c) {
+  studies.classList.toggle('collapsed', c);
+  $('#studies-toggle').textContent = c ? '+' : '–';
+  $('#studies-toggle').setAttribute('aria-expanded', String(!c));
+  $('#studies-toggle').setAttribute('aria-label', S(c ? 'expand' : 'collapse'));
+}
+$('#studies-toggle').addEventListener('click', () => collapseStudies(!studies.classList.contains('collapsed')));
+// On a phone the panel starts folded, so it does not cover the page.
+if (innerWidth < 860) collapseStudies(true);
+function syncUrl() {
+  const u = new URL(location.href);
+  u.searchParams.set('studie', study);
+  if (lang === 'nl') u.searchParams.delete('lang');
+  else u.searchParams.set('lang', lang);
+  history.replaceState(null, '', u);
+}
 
-let resizeTimer;
-addEventListener('resize', () => {
-  clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(() => {
-    for (const el of splits) {
-      const wasIn = el.classList.contains('in');
-      splitLines(el);
-      if (wasIn) el.classList.add('in');
-    }
-    sizeRooms();
-  }, 200);
+/* ---------- Header, menu, booking bar ---------- */
+
+const header = $('#header');
+const hero = $('.hero');
+const menu = $('#menu');
+const menuButton = $('#menu-button');
+function setMenu(open) {
+  menu.hidden = !open;
+  menuButton.setAttribute('aria-expanded', String(open));
+  document.body.style.overflow = open ? 'hidden' : '';
+  header.classList.toggle('solid', open || scrollY > hero.offsetHeight - 80);
+}
+menuButton.addEventListener('click', () => setMenu(menu.hidden));
+menu.addEventListener('click', (e) => e.target.closest('a') && setMenu(false));
+
+const navLinks = $$('.nav a');
+const navObserver = new IntersectionObserver(
+  (entries) => {
+    for (const e of entries) if (e.isIntersecting) navLinks.forEach((a) => a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id));
+  },
+  { rootMargin: '-45% 0px -50% 0px' },
+);
+navLinks.forEach((a) => {
+  const s = $(a.getAttribute('href'));
+  if (s) navObserver.observe(s);
 });
+
+/* ---------- Scroll-linked motion ---------- */
+
+const statement = $('.statement');
+const drift = $('#drift');
+const driftTrack = $('.drift-track');
+const bookBar = $('#book-bar');
+const bookSection = $('.book');
+let lastY = scrollY;
+let driftNow = 0;
+let driftTarget = 0;
+
+function onScroll() {
+  const y = scrollY;
+  const vh = innerHeight;
+  const heroH = hero.offsetHeight;
+  const photoBehind = study !== 'mokka' && y < heroH - 80;
+  header.classList.toggle('over-photo', photoBehind && menu.hidden);
+  header.classList.toggle('solid', !photoBehind || !menu.hidden);
+  header.classList.toggle('hide', y > lastY && y > vh && menu.hidden);
+  lastY = y;
+
+  if (!REDUCED && y < heroH) root.style.setProperty('--hero-shift', `${y * 0.22}px`);
+
+  const r = statement.getBoundingClientRect();
+  const p = clamp((vh * 0.82 - r.top) / (r.height + vh * 0.3));
+  const n = statementWords.length;
+  statementWords.forEach((w, i) => w.style.setProperty('--o', REDUCED ? 1 : clamp(p * (n + 2) - i, 0.16, 1)));
+
+  const dr = drift.getBoundingClientRect();
+  const dp = clamp((vh - dr.top) / (vh + dr.height));
+  driftTarget = -dp * Math.max(0, driftTrack.scrollWidth - innerWidth);
+
+  const br = bookSection.getBoundingClientRect();
+  bookBar.classList.toggle('show', y > heroH * 0.8 && br.top > vh);
+}
+addEventListener('scroll', onScroll, { passive: true });
+addEventListener('resize', onScroll);
+
+(function loop() {
+  driftNow += (driftTarget - driftNow) * (REDUCED ? 1 : 0.08);
+  driftTrack.style.setProperty('--drift', `${driftNow.toFixed(1)}px`);
+  requestAnimationFrame(loop);
+})();
+
+/* ---------- Start ---------- */
+
+setStudy(study, true);
+renderAll();
+onScroll();
+const ready = () => requestAnimationFrame(() => document.body.classList.add('loaded'));
+if (heroImg.complete) ready();
+else heroImg.addEventListener('load', ready, { once: true });

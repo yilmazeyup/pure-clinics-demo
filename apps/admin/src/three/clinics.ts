@@ -3,14 +3,18 @@ import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 
-import { Client, figureKit, lookFor, SPOT_X, Therapist, type Spot } from './figures';
+import { Client, figureKit, lookFor, SPOT_X, teamLook, Therapist, type Spot } from './figures';
 import { floatTag, Tokens } from './fx';
 import { damp, easeOutCubic, el, type Stage, type Tip, type Vec } from './stage';
 
 export type RoomState = 'busy' | 'free' | 'done' | 'off';
 
 /** One clinic as the scene shows it: a name, a detail line and the specialist of each treatment room. */
-export type ClinicSpec = { name: string; detail: string; rooms: string[] };
+export type ClinicSpec = { name: string; detail: string; rooms: string[]; /** Who stands at the reception desk, if anyone. */ reception?: string };
+
+/** A team member's portrait from pureclinics.nl, shown in the hover tip next to her 3D figure. */
+const portrait = (name: string) =>
+  `<img class="scene-tip-photo" src="${import.meta.env.BASE_URL}team/${name.toLowerCase()}.webp" alt="" onerror="this.remove()">`;
 
 /**
  * Who is in the chair right now. The sign says "met Noor V." and, in narrow rooms, the treatment and "tot 14:15" on lines
@@ -112,12 +116,16 @@ export class ClinicsScene {
   private readonly tokens: Tokens;
   /** Where each clinic's reception desk is: payments fly there. */
   private readonly desks: THREE.Vector3[] = [];
+  /** The receptionist behind each desk that has one; she is there while the clinic's rooms are staffed. */
+  private readonly receptionists: { clinic: number; name: string; figure: Therapist; shown: number }[] = [];
 
   constructor(
     private readonly stage: Stage,
     clinics: ClinicSpec[],
     private readonly describe: (clinic: number, room: number) => Tip | null,
     private readonly select: (room: RoomRef | null) => void,
+    /** "Reception", in the panel's language. */
+    private readonly receptionLabel = 'Receptie',
   ) {
     stage.scene.add(this.root);
     this.count = clinics.length;
@@ -165,6 +173,16 @@ export class ClinicsScene {
       desk.position.set(-W / 2 + 1.25, 0.4, D / 2 - 0.75);
       tile.add(desk);
       this.desks.push(tile.position.clone().add(new THREE.Vector3(-W / 2 + 1.25, 0.9, D / 2 - 0.75)));
+      if (clinic.reception) {
+        const figure = new Therapist(kit, teamLook(clinic.reception, ['long']));
+        figure.group.position.set(-W / 2 + 1.25, 0, D / 2 - 1.2);
+        figure.group.userData = { reception: clinic.reception, clinic: c };
+        figure.pose(0, 0);
+        figure.opacity = 0;
+        tile.add(figure.group);
+        targets.push(figure.group);
+        this.receptionists.push({ clinic: c, name: clinic.reception, figure, shown: 0 });
+      }
       for (const z of [D / 2 - 1.6, D / 2 - 0.8]) {
         const seat = new THREE.Mesh(geo.stool, cart);
         seat.position.set(W / 2 - 0.7, 0.18, z);
@@ -224,7 +242,7 @@ export class ClinicsScene {
         client.opacity = 0;
         chair.add(pedestal, seat, backrest, head, client.group);
         // The specialist stands behind the chair, facing the client and the viewer.
-        const therapist = new Therapist(kit, lookFor(clinic.rooms[r], ['bun', 'tail', 'bob', 'crop']));
+        const therapist = new Therapist(kit, teamLook(clinic.rooms[r], ['bun', 'tail', 'bob', 'crop']));
         therapist.group.position.set(SPOT_X.idle, 0, -0.64);
         therapist.opacity = 0;
         station.add(chair, therapist.group);
@@ -310,13 +328,26 @@ export class ClinicsScene {
     this.tip = stage.label(this.tipEl, this.root, [0, 0, 0]);
     this.tip.visible = false;
     stage.setHoverTargets(targets, (object) => {
+      if (object?.userData.reception) {
+        const desk = this.receptionists.find((d) => d.figure.group === object);
+        if (!desk || desk.shown < 0.5) {
+          this.tip.visible = false;
+          return;
+        }
+        this.tipEl.innerHTML = `${portrait(desk.name)}<strong>${desk.name}</strong><span>${this.receptionLabel}</span>`;
+        const world = new THREE.Vector3();
+        object.getWorldPosition(world);
+        this.tip.position.set(world.x, 2.3, world.z);
+        this.tip.visible = true;
+        return;
+      }
       const room = object ? this.rooms[object.userData.room as number] : undefined;
       const info = room ? this.describe(room.clinic, room.index) : null;
       if (!object || !room || !info) {
         this.tip.visible = false;
         return;
       }
-      this.tipEl.innerHTML = `<strong>${info.title}</strong><span>${info.detail}</span>${info.hint ? `<em>${info.hint}</em>` : ''}`;
+      this.tipEl.innerHTML = `${room.staffed ? portrait(room.name) : ''}<strong>${info.title}</strong><span>${info.detail}</span>${info.hint ? `<em>${info.hint}</em>` : ''}`;
       const world = new THREE.Vector3();
       object.getWorldPosition(world);
       this.tip.position.set(world.x, 2.1, world.z);
@@ -558,6 +589,16 @@ export class ClinicsScene {
       const ready = room.drop >= 1;
       this.moveClient(room, ready, delta, instant);
       this.moveTherapist(room, ready, time, delta, instant);
+    }
+    for (const desk of this.receptionists) {
+      const open = this.rooms.some((r) => r.clinic === desk.clinic && r.staffed && r.drop >= 1);
+      desk.shown = instant ? (open ? 1 : 0) : Math.min(1, Math.max(0, desk.shown + (open ? delta : -delta) * 1.4));
+      const eased = easeOutCubic(desk.shown);
+      desk.figure.opacity = eased;
+      desk.figure.body.position.y = (eased - 1) * 0.16;
+      // A small turn now and then, toward the waiting chairs and back.
+      desk.figure.group.rotation.y = Math.sin(time * 0.35 + desk.clinic) * 0.35;
+      desk.figure.pose(0, time);
     }
   }
 

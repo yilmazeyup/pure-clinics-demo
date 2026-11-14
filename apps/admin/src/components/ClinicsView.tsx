@@ -158,12 +158,15 @@ export function ClinicsView({ appts, day, now, focus, onFocus, events, fast }: P
       name: l.city,
       detail: `${l.address.split(',')[0]} · ${t('clinics.rooms', { n: ROOMS[l.id].length })}`,
       rooms: ROOMS[l.id].map((s) => s.name),
+      // Husna is at the front desk in Nijmegen, as on pureclinics.nl.
+      reception: l.id === 'nijmegen' ? 'Husna' : undefined,
     }));
     const clinicsScene = new ClinicsScene(
       stage,
       clinics,
       (clinic, room) => describe.current(clinic, room),
       (room) => select.current(room),
+      t('role.reception'),
     );
     scene.current = clinicsScene;
     setCardHost(clinicsScene.cardElement);

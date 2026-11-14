@@ -721,6 +721,24 @@ li {
   font-weight: 500;
 }
 
+/* The team member's own portrait from pureclinics.nl, beside her name. */
+.scene-tip:has(.scene-tip-photo) {
+  grid-template-columns: 46px auto;
+  column-gap: 12px;
+  align-items: center;
+}
+.scene-tip-photo {
+  grid-row: 1 / span 3;
+  width: 46px;
+  height: 58px;
+  object-fit: cover;
+  object-position: 50% 15%;
+  border-radius: 6px;
+}
+.scene-tip:has(.scene-tip-photo) > :not(.scene-tip-photo) {
+  grid-column: 2;
+}
+
 /* Clinics: a sign for every treatment room, and the clinic's name on its floor. */
 /* Signs get a little smaller when the camera is far out (--label-scale, set by the scene); sizing the type rather than
    transforming the sign keeps it anchored exactly to its room. */
@@ -2219,4 +2237,9 @@ li {
   .scene-hint {
     display: none;
   }
+}
+
+/* While Pure Praktijk loads for the first time: hold the space so the page does not jump. */
+.pk-loading {
+  min-height: 70vh;
 }

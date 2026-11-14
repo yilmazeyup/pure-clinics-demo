@@ -46,6 +46,12 @@ const CALENDARS: Record<Locale, Calendar> = {
     monthsShort: ['gen', 'feb', 'mar', 'apr', 'mag', 'giu', 'lug', 'ago', 'set', 'ott', 'nov', 'dic'],
     monthsLong: ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'],
   },
+  es: {
+    weekdaysShort: ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'],
+    weekdaysLong: ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'],
+    monthsShort: ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sept', 'oct', 'nov', 'dic'],
+    monthsLong: ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
+  },
 };
 
 export function weekdayShort(date: Date, locale: Locale): string {
@@ -69,13 +75,14 @@ export function formatDayShort(date: Date, locale: Locale): string {
   }
 }
 
-/** "donderdag 29 oktober", "Thursday 29 October", "Donnerstag, 29. Oktober" */
+/** "donderdag 29 oktober", "Thursday 29 October", "Donnerstag, 29. Oktober", "jueves 29 de octubre" */
 export function formatDayLong(date: Date, locale: Locale): string {
   const c = CALENDARS[locale];
   const day = c.weekdaysLong[date.getDay()];
   const d = date.getDate();
   const month = c.monthsLong[date.getMonth()];
   if (locale === 'de') return `${day}, ${d}. ${month}`;
+  if (locale === 'es') return `${day} ${d} de ${month}`;
   return `${day} ${d} ${month}`;
 }
 

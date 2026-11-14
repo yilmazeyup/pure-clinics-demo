@@ -1,9 +1,9 @@
-// Treatment details and concern explanations in six languages, written for the app from pureclinics.nl (October 2026).
+// Treatment details and concern explanations in seven languages, written for the app from pureclinics.nl (October 2026).
 import type { L10n } from '../i18n/locales';
 import type { ConcernId, TreatmentId } from './clinic';
 import type { TreatmentInfo } from './treatment-info';
 
-const t = (nl: string, en: string, ar: string, fr: string, de: string, it: string): L10n => ({ nl, en, ar, fr, de, it });
+const t = (nl: string, en: string, ar: string, fr: string, de: string, it: string, es: string): L10n => ({ nl, en, ar, fr, de, it, es });
 
 export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
   consult: {
@@ -14,6 +14,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Chaque parcours commence par une consultation gratuite de 30 minutes avec une thérapeute de la peau diplômée. Tu reçois des conseils honnêtes et un plan de soins adapté à ta peau.',
       'Jede Behandlung beginnt mit einem kostenlosen Erstgespräch von 30 Minuten bei einer akademisch ausgebildeten Hauttherapeutin. Du wirst ehrlich beraten und bekommst einen Behandlungsplan, der zu deiner Haut passt.',
       'Ogni percorso inizia con una consulenza gratuita di 30 minuti con una terapista della pelle qualificata. Ricevi consigli onesti e un piano di trattamento adatto alla tua pelle.',
+      'Cada programa empieza con una consulta gratuita de 30 minutos con una terapeuta de la piel con formación universitaria. Recibes un consejo sincero y un plan de tratamiento adaptado a tu piel.',
     ),
     how: t(
       'De huidtherapeut bekijkt je huidtype en huidconditie en vraagt naar je medische achtergrond, medicijnen en verzorging. Daarna bespreken jullie welke behandeling past, wat je mag verwachten, het herstel en de prijs. Vaak worden er foto\'s gemaakt om je voortgang te volgen.',
@@ -22,9 +23,10 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'La thérapeute de la peau examine ton type de peau et son état, et te pose des questions sur tes antécédents médicaux, tes médicaments et tes produits de soin. Ensuite, vous voyez ensemble le soin qui te convient, ce que tu peux en attendre, la récupération et le prix. Souvent, des photos sont prises pour suivre tes progrès.',
       'Die Hauttherapeutin schaut sich deinen Hauttyp und Hautzustand an und fragt nach deiner medizinischen Vorgeschichte, deinen Medikamenten und deiner Hautpflege. Danach besprecht ihr die passende Behandlung, was du erwarten kannst, die Erholung und den Preis. Oft werden Fotos gemacht, um deinen Fortschritt zu verfolgen.',
       'La terapista della pelle valuta il tuo tipo di pelle e le sue condizioni, e ti fa domande sulla tua storia clinica, sui farmaci e sui prodotti per la pelle che usi. Poi parlate insieme del trattamento più adatto, di cosa aspettarti, del recupero e del prezzo. Spesso si scattano foto per seguire i tuoi progressi.',
+      'La terapeuta de la piel examina tu tipo de piel y su estado, y te pregunta por tus antecedentes médicos, tus medicamentos y tus cuidados. Después habláis de qué tratamiento te conviene, qué puedes esperar, la recuperación y el precio. A menudo se hacen fotos para seguir tu evolución.',
     ),
-    sessions: t('1', '1', '1', '1', '1', '1'),
-    downtime: t('Geen', 'None', 'لا يوجد', 'Aucune', 'Keine', 'Nessuno'),
+    sessions: t('1', '1', '1', '1', '1', '1', '1'),
+    downtime: t('Geen', 'None', 'لا يوجد', 'Aucune', 'Keine', 'Nessuno', 'Ninguna'),
     results: t(
       'Je gaat naar huis met een persoonlijk behandelplan en een duidelijke prijsafspraak, per behandeling of per pakket.',
       'You go home with a personal treatment plan and a clear price agreement, per treatment or per package.',
@@ -32,6 +34,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Tu repars avec un plan de soins personnalisé et un accord clair sur le prix, par séance ou en forfait.',
       'Du gehst mit einem persönlichen Behandlungsplan und einer klaren Preisabsprache nach Hause, pro Behandlung oder pro Paket.',
       'Torni a casa con un piano di trattamento personalizzato e un accordo chiaro sul prezzo, a seduta o a pacchetto.',
+      'Te vas a casa con un plan de tratamiento personal y un precio claro, por sesión o por bono.',
     ),
     faq: [
       {
@@ -42,6 +45,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Combien coûte la consultation ?',
           'Was kostet das Erstgespräch?',
           'Quanto costa la consulenza?',
+          '¿Cuánto cuesta la consulta?',
         ),
         a: t(
           'Niets. De intake is gratis en vrijblijvend; daarna beslis je zelf of je start.',
@@ -50,6 +54,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Rien. La consultation est gratuite et sans engagement ; ensuite, c’est toi qui décides si tu commences.',
           'Nichts. Das Erstgespräch ist kostenlos und unverbindlich; danach entscheidest du selbst, ob du beginnst.',
           'Niente. La consulenza è gratuita e senza impegno; poi decidi tu se iniziare.',
+          'Nada. La consulta es gratuita y sin compromiso; después decides tú si empiezas.',
         ),
       },
       {
@@ -60,6 +65,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Dois-je préparer quelque chose ?',
           'Muss ich etwas vorbereiten?',
           'Devo preparare qualcosa?',
+          '¿Tengo que preparar algo?',
         ),
         a: t(
           'Kom je voor laser ontharen, laat de haren dan juist staan. Weet verder welke medicijnen en huidverzorging je gebruikt; daar vraagt de huidtherapeut naar.',
@@ -68,6 +74,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Si tu viens pour l’épilation laser, laisse tes poils tels quels. Pense aussi aux médicaments et aux produits de soin que tu utilises ; la thérapeute de la peau te posera la question.',
           'Kommst du zur Laser-Haarentfernung, dann entferne die Haare vorher nicht. Überleg dir außerdem, welche Medikamente und Hautpflege du verwendest; danach fragt die Hauttherapeutin.',
           'Se vieni per l’epilazione laser, lascia i peli come sono. Pensa anche ai farmaci e ai prodotti per la pelle che usi; la terapista della pelle te lo chiederà.',
+          'Si vienes para depilación láser, no te quites el vello antes. Ten claro también qué medicamentos y productos para la piel usas; la terapeuta de la piel te lo preguntará.',
         ),
       },
     ],
@@ -80,6 +87,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Définitivement moins de poils grâce à des lasers médicaux certifiés : le Soprano ICE Platinum et le GentleMax Pro Plus. Pour les femmes et les hommes, et pour les peaux claires comme foncées.',
       'Dauerhaft weniger Haarwuchs mit medizinisch zertifizierten Lasern: dem Soprano ICE Platinum und dem GentleMax Pro Plus. Für Frauen und Männer sowie für helle und dunkle Hauttypen.',
       'Meno peli in modo definitivo con laser medicali certificati: Soprano ICE Platinum e GentleMax Pro Plus. Per donne e uomini, e per pelli chiare e scure.',
+      'Mucho menos vello para siempre con láseres con certificación médica: el Soprano ICE Platinum y el GentleMax Pro Plus. Para mujeres y hombres, y para pieles claras y oscuras.',
     ),
     how: t(
       'Het laserlicht wordt opgenomen door het pigment in de haar en omgezet in warmte, die het haarzakje uitschakelt zonder de huid eromheen te beschadigen. Beide lasers koelen je huid tijdens de behandeling. Omdat niet alle haren tegelijk groeien, heb je een reeks behandelingen nodig.',
@@ -88,10 +96,11 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'La lumière du laser est absorbée par le pigment du poil et transformée en chaleur, qui neutralise le follicule pileux sans abîmer la peau autour. Les deux lasers refroidissent ta peau pendant le soin. Comme tous les poils ne poussent pas en même temps, il te faut une série de séances.',
       'Das Laserlicht wird vom Pigment im Haar aufgenommen und in Wärme umgewandelt, die den Haarfollikel ausschaltet, ohne die umliegende Haut zu schädigen. Beide Laser kühlen deine Haut während der Behandlung. Da nicht alle Haare gleichzeitig wachsen, brauchst du eine Reihe von Behandlungen.',
       'La luce del laser viene assorbita dal pigmento del pelo e trasformata in calore, che disattiva il follicolo pilifero senza danneggiare la pelle intorno. Entrambi i laser raffreddano la pelle durante il trattamento. Poiché non tutti i peli crescono nello stesso momento, ti serve una serie di sedute.',
+      'El pigmento del pelo absorbe la luz del láser y la convierte en calor, que desactiva el folículo sin dañar la piel de alrededor. Los dos láseres enfrían tu piel durante el tratamiento. Como no todos los pelos crecen a la vez, necesitas una serie de sesiones.',
     ),
-    sessions: t('8–10', '8–10', '\u200E8–10', '8–10', '8–10', '8–10'),
-    interval: t('4–6 weken', '4–6 weeks', '\u200E4–6 أسابيع', '4–6 semaines', '4–6 Wochen', '4–6 settimane'),
-    downtime: t('Geen', 'None', 'لا يوجد', 'Aucune', 'Keine', 'Nessuno'),
+    sessions: t('8–10', '8–10', '\u200E8–10', '8–10', '8–10', '8–10', '8–10'),
+    interval: t('4–6 weken', '4–6 weeks', '\u200E4–6 أسابيع', '4–6 semaines', '4–6 Wochen', '4–6 settimane', '4–6 semanas'),
+    downtime: t('Geen', 'None', 'لا يوجد', 'Aucune', 'Keine', 'Nessuno', 'Ninguna'),
     results: t(
       'Het doel is minstens 70 tot 80% minder haar. Behandelde haren vallen na ongeveer twee weken uit; door hormonen kunnen later nieuwe haren actief worden.',
       'The goal is at least 70 to 80% less hair. Treated hairs fall out after about two weeks; hormones can activate new hairs later on.',
@@ -99,6 +108,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'L’objectif est d’obtenir au moins 70 à 80 % de poils en moins. Les poils traités tombent après environ deux semaines ; sous l’effet des hormones, de nouveaux poils peuvent s’activer plus tard.',
       'Ziel sind mindestens 70 bis 80 % weniger Haare. Behandelte Haare fallen nach etwa zwei Wochen aus; durch Hormone können später neue Haare aktiv werden.',
       'L’obiettivo è avere almeno il 70–80% di peli in meno. I peli trattati cadono dopo circa due settimane; a causa degli ormoni, più avanti possono attivarsi nuovi peli.',
+      'El objetivo es al menos un 70 a 80% menos de vello. Los pelos tratados se caen al cabo de unas dos semanas; por las hormonas, más adelante pueden activarse pelos nuevos.',
     ),
     aftercare: [
       t(
@@ -108,6 +118,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         '48 heures sans sauna, douche chaude ni sport intensif.',
         '48 Stunden auf Sauna, heiße Duschen und intensiven Sport verzichten.',
         'Per 48 ore niente sauna, doccia calda o sport intenso.',
+        '48 horas sin sauna, duchas calientes ni deporte intenso.',
       ),
       t(
         'Tijdens het traject niet epileren, harsen of waxen; scheren mag.',
@@ -116,6 +127,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Pendant le parcours, pas d’épilation à la pince ni à la cire ; tu peux te raser.',
         'Während der Behandlungszeit nicht zupfen, epilieren oder waxen; Rasieren ist erlaubt.',
         'Durante il percorso niente pinzetta o ceretta; puoi raderti.',
+        'Durante el programa, no te depiles con pinzas, depiladora ni cera; afeitarte sí puedes.',
       ),
       t(
         'Dagelijks zonnebrand met minstens SPF 30, en twee weken voor en na geen zonnebank.',
@@ -124,11 +136,12 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Chaque jour, une crème solaire d’au moins SPF 30, et pas de cabine de bronzage deux semaines avant et après.',
         'Täglich Sonnenschutz mit mindestens SPF 30 und zwei Wochen vor und nach der Behandlung kein Solarium.',
         'Ogni giorno crema solare con almeno SPF 30, e niente lettino abbronzante nelle due settimane prima e dopo.',
+        'Protector solar a diario con al menos SPF 30, y nada de rayos UVA dos semanas antes y después.',
       ),
     ],
     faq: [
       {
-        q: t('Doet het pijn?', 'Does it hurt?', 'هل يؤلم؟', 'Ça fait mal ?', 'Tut es weh?', 'Fa male?'),
+        q: t('Doet het pijn?', 'Does it hurt?', 'هل يؤلم؟', 'Ça fait mal ?', 'Tut es weh?', 'Fa male?', '¿Duele?'),
         a: t(
           'Je voelt per puls een kort prikje dat meteen wegtrekt. De gekoelde laserkop maakt het goed te verdragen.',
           'With each pulse you feel a brief sting that fades straight away. The cooled laser head makes it very bearable.',
@@ -136,6 +149,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'À chaque impulsion, tu sens un bref picotement qui disparaît aussitôt. La tête refroidie du laser rend le soin bien supportable.',
           'Bei jedem Impuls spürst du einen kurzen Pieks, der sofort wieder vergeht. Der gekühlte Laserkopf macht es gut erträglich.',
           'A ogni impulso senti una breve puntura che passa subito. La testina raffreddata del laser lo rende ben sopportabile.',
+          'Con cada pulso notas un pinchazo breve que desaparece enseguida. El cabezal refrigerado del láser hace que se tolere bien.',
         ),
       },
       {
@@ -146,6 +160,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Ça marche aussi sur les poils blonds ou gris ?',
           'Funktioniert es auch bei blonden oder grauen Haaren?',
           'Funziona anche sui peli biondi o grigi?',
+          '¿Funciona también con el vello rubio o canoso?',
         ),
         a: t(
           'Nee, die hebben te weinig pigment. Voor lichte haren is elektrische epilatie de oplossing.',
@@ -154,6 +169,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Non, ils ont trop peu de pigment. Pour les poils clairs, la solution est l’épilation électrique.',
           'Nein, sie haben zu wenig Pigment. Für helle Haare ist die elektrische Epilation die Lösung.',
           'No, hanno troppo poco pigmento. Per i peli chiari la soluzione è l’elettrocoagulazione.',
+          'No, tiene demasiado poco pigmento. Para el vello claro, la solución es la depilación eléctrica.',
         ),
       },
       {
@@ -164,6 +180,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Est-ce remboursé ?',
           'Wird es erstattet?',
           'È rimborsato?',
+          '¿Lo cubre el seguro?',
         ),
         a: t(
           'Alleen overbeharing in het gezicht bij vrouwen, uit de aanvullende verzekering. Lichaamszones worden niet vergoed.',
@@ -172,6 +189,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Uniquement la pilosité excessive du visage chez les femmes, par l’assurance complémentaire. Les zones du corps ne sont pas remboursées.',
           'Nur übermäßige Gesichtsbehaarung bei Frauen, über die Zusatzversicherung. Körperzonen werden nicht erstattet.',
           'Solo l’eccesso di peli sul viso nelle donne, tramite l’assicurazione integrativa. Le zone del corpo non sono rimborsate.',
+          'Solo el exceso de vello facial en mujeres, a través del seguro complementario. Las zonas del cuerpo no están cubiertas.',
         ),
       },
     ],
@@ -184,6 +202,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Une épilation définitive, follicule par follicule, avec une fine aiguille et une petite impulsion électrique. La solution pour les poils clairs que le laser ne voit pas.',
       'Dauerhafte Haarentfernung Follikel für Follikel, mit einer feinen Nadel und einem kleinen Stromimpuls. Die Lösung für helle Haare, die der Laser nicht erkennt.',
       'Epilazione definitiva follicolo per follicolo, con un ago sottile e un piccolo impulso elettrico. La soluzione per i peli chiari che il laser non vede.',
+      'Depilación permanente folículo a folículo, con una aguja finísima y una pequeña descarga eléctrica. La solución para el vello claro que el láser no ve.',
     ),
     how: t(
       'Een dun, steriel naaldje gaat langs de haar het haarzakje in, waarna een kleine stroom de haarwortel uitschakelt. Omdat elk haarzakje apart wordt behandeld, is het vooral geschikt voor kleine gebieden zoals het gezicht.',
@@ -192,9 +211,10 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Une fine aiguille stérile glisse le long du poil jusque dans le follicule, puis un faible courant neutralise la racine du poil. Comme chaque follicule est traité séparément, c’est surtout adapté aux petites zones comme le visage.',
       'Eine feine, sterile Nadel wird am Haar entlang in den Follikel geführt, dann schaltet ein schwacher Strom die Haarwurzel aus. Da jeder Follikel einzeln behandelt wird, eignet sich das vor allem für kleine Bereiche wie das Gesicht.',
       'Un ago sottile e sterile entra nel follicolo lungo il pelo, poi una piccola corrente disattiva la radice del pelo. Poiché ogni follicolo viene trattato singolarmente, si presta soprattutto a piccole zone come il viso.',
+      'Una aguja fina y estéril entra en el folículo siguiendo el pelo, y después una pequeña corriente desactiva la raíz. Como cada folículo se trata por separado, es ideal sobre todo para zonas pequeñas como la cara.',
     ),
-    sessions: t('Meerdere', 'Several', 'متعددة', 'Plusieurs', 'Mehrere', 'Più sedute'),
-    downtime: t('Enkele uren', 'A few hours', 'بضع ساعات', 'Quelques heures', 'Wenige Stunden', 'Poche ore'),
+    sessions: t('Meerdere', 'Several', 'متعددة', 'Plusieurs', 'Mehrere', 'Più sedute', 'Varias'),
+    downtime: t('Enkele uren', 'A few hours', 'بضع ساعات', 'Quelques heures', 'Wenige Stunden', 'Poche ore', 'Unas horas'),
     results: t(
       'Behandelde haarzakjes groeien niet meer terug, en de haargroei neemt per behandeling verder af.',
       'Treated follicles won’t grow hair again, and hair growth decreases further with each treatment.',
@@ -202,6 +222,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Les poils traités ne repoussent plus, et la pousse diminue encore à chaque séance.',
       'Behandelte Follikel bilden kein Haar mehr, und der Haarwuchs nimmt mit jeder Behandlung weiter ab.',
       'I peli trattati non ricrescono più e la crescita continua a diminuire a ogni seduta.',
+      'Los folículos tratados ya no vuelven a crecer, y el vello disminuye un poco más con cada sesión.',
     ),
     aftercare: [
       t(
@@ -211,6 +232,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'À la maison, refroidis la zone pendant une dizaine de minutes.',
         'Kühle zu Hause etwa zehn Minuten nach.',
         'A casa raffredda la zona per circa dieci minuti.',
+        'En casa, enfría la zona durante unos diez minutos.',
       ),
       t(
         'Eerste 24 uur geen sauna, hete douche of intensief sporten.',
@@ -219,6 +241,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Les 24 premières heures, pas de sauna, de douche chaude ni de sport intensif.',
         'In den ersten 24 Stunden auf Sauna, heiße Duschen und intensiven Sport verzichten.',
         'Nelle prime 24 ore niente sauna, doccia calda o sport intenso.',
+        'Las primeras 24 horas, sin sauna, duchas calientes ni deporte intenso.',
       ),
       t(
         'Tussen de behandelingen niet harsen of epileren; scheren of knippen mag.',
@@ -227,6 +250,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Entre les séances, pas de cire ni de pince ; tu peux raser ou couper les poils.',
         'Zwischen den Behandlungen nicht waxen oder zupfen; Rasieren oder Kürzen ist erlaubt.',
         'Tra una seduta e l’altra niente ceretta o pinzetta; puoi radere o tagliare i peli.',
+        'Entre sesiones, no te depiles con cera ni con pinzas; afeitarte o recortar sí puedes.',
       ),
     ],
     faq: [
@@ -238,6 +262,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Quelle différence avec le laser ?',
           'Was ist der Unterschied zum Laser?',
           'Che differenza c’è con il laser?',
+          '¿En qué se diferencia del láser?',
         ),
         a: t(
           'De laser werkt alleen op donkere haren. Elektrische epilatie behandelt elk haarzakje met stroom en werkt dus ook bij blond, grijs of rood haar.',
@@ -246,10 +271,11 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Le laser n’agit que sur les poils foncés. L’épilation électrique traite chaque follicule avec du courant, et fonctionne donc aussi sur les poils blonds, gris ou roux.',
           'Der Laser wirkt nur bei dunklen Haaren. Die elektrische Epilation behandelt jeden Follikel mit Strom und wirkt daher auch bei blondem, grauem oder rotem Haar.',
           'Il laser funziona solo sui peli scuri. L’elettrocoagulazione tratta ogni follicolo con la corrente, quindi funziona anche su peli biondi, grigi o rossi.',
+          'El láser solo funciona con el vello oscuro. La depilación eléctrica trata cada folículo con corriente, así que también funciona con el vello rubio, canoso o pelirrojo.',
         ),
       },
       {
-        q: t('Doet het pijn?', 'Does it hurt?', 'هل يؤلم؟', 'Ça fait mal ?', 'Tut es weh?', 'Fa male?'),
+        q: t('Doet het pijn?', 'Does it hurt?', 'هل يؤلم؟', 'Ça fait mal ?', 'Tut es weh?', 'Fa male?', '¿Duele?'),
         a: t(
           'Het kan branderig voelen. De huidtherapeut stemt de sterkte af op wat jij prettig vindt.',
           'It may feel like a mild burning sensation. The skin therapist adjusts the strength to what feels comfortable for you.',
@@ -257,6 +283,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Ça peut donner une sensation de brûlure. La thérapeute de la peau adapte l’intensité à ce qui est confortable pour toi.',
           'Es kann sich etwas brennend anfühlen. Die Hauttherapeutin passt die Stärke an das an, was für dich angenehm ist.',
           'Può dare una sensazione di bruciore. La terapista della pelle regola l’intensità in base a ciò che per te è confortevole.',
+          'Puede notarse como una ligera quemazón. La terapeuta de la piel ajusta la intensidad a lo que te resulte cómodo.',
         ),
       },
       {
@@ -267,6 +294,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Est-ce remboursé ?',
           'Wird es erstattet?',
           'È rimborsato?',
+          '¿Lo cubre el seguro?',
         ),
         a: t(
           'Overbeharing in het gezicht wordt vaak (deels) vergoed uit de aanvullende verzekering.',
@@ -275,6 +303,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'La pilosité excessive du visage est souvent (en partie) remboursée par l’assurance complémentaire.',
           'Übermäßige Gesichtsbehaarung wird oft (teilweise) von der Zusatzversicherung erstattet.',
           'L’eccesso di peli sul viso è spesso rimborsato (in parte) dall’assicurazione integrativa.',
+          'El exceso de vello facial suele estar cubierto (en parte) por el seguro complementario.',
         ),
       },
     ],
@@ -287,6 +316,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Faire retirer un tatouage ou un maquillage permanent, ou l’estomper pour un cover-up. Pure Clinics utilise le PicoWay, un laser picoseconde pour l’encre noire comme pour la couleur.',
       'Ein Tattoo oder Permanent-Make-up entfernen oder für ein Cover-up verblassen lassen. Pure Clinics arbeitet mit dem PicoWay, einem Pikosekundenlaser für schwarze wie auch farbige Tinte.',
       'Rimuovere un tatuaggio o un trucco permanente, oppure schiarirlo per un cover-up. Pure Clinics usa PicoWay, un laser a picosecondi per inchiostro sia nero sia colorato.',
+      'Quitar un tatuaje o un maquillaje permanente, o aclararlo para un cover-up. Pure Clinics trabaja con el PicoWay, un láser de picosegundos para tinta negra y también de color.',
     ),
     how: t(
       'De PicoWay geeft ultrakorte pulsen in vier golflengtes, zodat ook rood, groen en blauw goed te behandelen zijn, op lichte en donkere huid. De inkt valt uiteen in piepkleine deeltjes die je lichaam daarna zelf afvoert.',
@@ -295,10 +325,11 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Le PicoWay émet des impulsions ultracourtes sur quatre longueurs d’onde, ce qui permet de bien traiter aussi le rouge, le vert et le bleu, sur peau claire comme foncée. L’encre se fragmente en minuscules particules que ton corps élimine ensuite de lui-même.',
       'Der PicoWay gibt ultrakurze Impulse in vier Wellenlängen ab, sodass auf heller und dunkler Haut auch Rot, Grün und Blau gut behandelbar sind. Die Tinte zerfällt in winzige Partikel, die dein Körper danach selbst abtransportiert.',
       'PicoWay emette impulsi ultracorti in quattro lunghezze d’onda, così si trattano bene anche rosso, verde e blu, su pelle chiara e scura. L’inchiostro si frantuma in particelle minuscole che poi il tuo corpo elimina da solo.',
+      'El PicoWay emite pulsos ultracortos en cuatro longitudes de onda, así que también el rojo, el verde y el azul se tratan bien, en pieles claras y oscuras. La tinta se rompe en partículas diminutas que tu cuerpo elimina después por sí solo.',
     ),
-    sessions: t('6–10', '6–10', '\u200E6–10', '6–10', '6–10', '6–10'),
-    interval: t('8–12 weken', '8–12 weeks', '\u200E8–12 أسبوعًا', '8–12 semaines', '8–12 Wochen', '8–12 settimane'),
-    downtime: t('Enkele dagen', 'A few days', 'بضعة أيام', 'Quelques jours', 'Wenige Tage', 'Pochi giorni'),
+    sessions: t('6–10', '6–10', '\u200E6–10', '6–10', '6–10', '6–10', '6–10'),
+    interval: t('8–12 weken', '8–12 weeks', '\u200E8–12 أسبوعًا', '8–12 semaines', '8–12 Wochen', '8–12 settimane', '8–12 semanas'),
+    downtime: t('Enkele dagen', 'A few days', 'بضعة أيام', 'Quelques jours', 'Wenige Tage', 'Pochi giorni', 'Unos días'),
     results: t(
       'De tatoeage kleurt na een puls even wit. Het vervagen zie je pas in de weken erna; vaak gaat hij helemaal weg, of genoeg voor een cover-up.',
       'After a pulse, the tattoo briefly turns white. You only see it fade in the weeks that follow; often it goes away completely, or enough for a cover-up.',
@@ -306,6 +337,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Après une impulsion, le tatouage blanchit un instant. Tu ne le vois s’estomper que dans les semaines qui suivent ; souvent, il disparaît complètement, ou assez pour un cover-up.',
       'Das Tattoo färbt sich nach einem Impuls kurz weiß. Das Verblassen siehst du erst in den Wochen danach; oft verschwindet es ganz oder wird blass genug für ein Cover-up.',
       'Dopo un impulso il tatuaggio diventa bianco per un attimo. Lo vedi schiarirsi solo nelle settimane successive; spesso sparisce del tutto, o abbastanza per un cover-up.',
+      'Tras un pulso, el tatuaje se vuelve blanco un momento. Cómo se aclara lo ves en las semanas siguientes; a menudo desaparece del todo, o lo suficiente para un cover-up.',
     ),
     aftercare: [
       t(
@@ -315,6 +347,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Pas de soleil direct pendant au moins 4 semaines ; ensuite SPF 30+.',
         'Mindestens 4 Wochen keine direkte Sonne; danach SPF 30+.',
         'Niente sole diretto per almeno 4 settimane; poi SPF 30+.',
+        'Al menos 4 semanas sin sol directo; después, SPF 30+.',
       ),
       t(
         'Niet krabben of aan korstjes zitten.',
@@ -323,6 +356,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Ne gratte pas et ne touche pas aux croûtes.',
         'Nicht kratzen und nicht an Krusten zupfen.',
         'Non grattare e non toccare le crosticine.',
+        'No te rasques ni toques las costras.',
       ),
       t(
         'Pas zwemmen als de huid helemaal dicht is.',
@@ -331,6 +365,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Attends que ta peau soit complètement refermée avant de nager.',
         'Erst schwimmen gehen, wenn die Haut vollständig verheilt ist.',
         'Prima di nuotare, aspetta che la pelle sia del tutto rimarginata.',
+        'No vuelvas a nadar hasta que la piel esté totalmente cerrada.',
       ),
     ],
     faq: [
@@ -342,6 +377,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Pourquoi autant de temps entre les séances ?',
           'Warum so viel Zeit zwischen den Behandlungen?',
           'Perché così tanto tempo tra una seduta e l’altra?',
+          '¿Por qué tanto tiempo entre sesiones?',
         ),
         a: t(
           'Je huid moet herstellen en je lichaam heeft tijd nodig om de inkt af te voeren. Daarom zitten er 8 tot 12 weken tussen.',
@@ -350,6 +386,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Ta peau doit récupérer et ton corps a besoin de temps pour éliminer l’encre. C’est pourquoi on laisse 8 à 12 semaines entre deux séances.',
           'Deine Haut muss sich erholen, und dein Körper braucht Zeit, um die Tinte abzutransportieren. Deshalb liegen 8 bis 12 Wochen dazwischen.',
           'La tua pelle deve riprendersi e il tuo corpo ha bisogno di tempo per eliminare l’inchiostro. Per questo tra una seduta e l’altra passano 8–12 settimane.',
+          'Tu piel tiene que recuperarse y tu cuerpo necesita tiempo para eliminar la tinta. Por eso pasan de 8 a 12 semanas entre una y otra.',
         ),
       },
       {
@@ -360,6 +397,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Reste-t-il une cicatrice ?',
           'Bleibt eine Narbe zurück?',
           'Rimane una cicatrice?',
+          '¿Queda alguna cicatriz?',
         ),
         a: t(
           'Meestal niet. Het duurt langer dan een operatie, maar de huid blijft gaaf.',
@@ -368,6 +406,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'En général, non. C’est plus long qu’une opération, mais la peau reste intacte.',
           'Meistens nicht. Es dauert länger als eine Operation, aber die Haut bleibt intakt.',
           'Di solito no. Richiede più tempo di un’operazione, ma la pelle resta integra.',
+          'Normalmente no. Lleva más tiempo que una operación, pero la piel queda intacta.',
         ),
       },
       {
@@ -378,6 +417,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'De quoi dépend le nombre de séances ?',
           'Wovon hängt die Anzahl der Behandlungen ab?',
           'Da cosa dipende il numero di sedute?',
+          '¿De qué depende el número de sesiones?',
         ),
         a: t(
           'Van de grootte, de kleuren, de diepte van de inkt, de leeftijd van de tatoeage en de plek op je lichaam.',
@@ -386,6 +426,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'De la taille, des couleurs, de la profondeur de l’encre, de l’âge du tatouage et de son emplacement sur ton corps.',
           'Von der Größe, den Farben, der Tiefe der Tinte, dem Alter des Tattoos und der Stelle an deinem Körper.',
           'Dalla dimensione, dai colori, dalla profondità dell’inchiostro, dall’età del tatuaggio e dalla zona del corpo.',
+          'Del tamaño, los colores, la profundidad de la tinta, la antigüedad del tatuaje y la zona del cuerpo.',
         ),
       },
     ],
@@ -398,6 +439,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Un parcours personnalisé contre l’acné et les imperfections : nettoyages en profondeur et peelings à la clinique, et à la maison un protocole avec ZO Skin Health.',
       'Ein persönlicher Behandlungsplan gegen Akne und unruhige Haut: Tiefenreinigungen und Peelings in der Klinik und zu Hause eine Pflegeroutine mit ZO Skin Health.',
       'Un percorso personalizzato contro l’acne e la pelle impura: pulizie profonde e peeling in clinica, e a casa un protocollo con ZO Skin Health.',
+      'Un programa personal contra el acné y la piel alterada: limpiezas profundas y peelings en la clínica, y en casa un protocolo con ZO Skin Health.',
     ),
     how: t(
       'Na een uitgebreide huidanalyse maakt de huidtherapeut een behandelplan. Eerst worden verstoppingen en ontstekingen aangepakt met dieptereinigingen en chemische peelings. Is de acne onder controle, dan kunnen IPL en SkinPen roodheid, pigment en littekens verminderen.',
@@ -406,9 +448,10 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Après une analyse cutanée complète, la thérapeute de la peau établit un plan de soins. On traite d’abord les pores bouchés et les inflammations avec des nettoyages en profondeur et des peelings chimiques. Une fois l’acné sous contrôle, l’IPL et le SkinPen peuvent atténuer les rougeurs, les taches et les cicatrices.',
       'Nach einer ausführlichen Hautanalyse erstellt die Hauttherapeutin einen Behandlungsplan. Zuerst werden verstopfte Poren und Entzündungen mit Tiefenreinigungen und chemischen Peelings behandelt. Ist die Akne unter Kontrolle, können IPL und SkinPen Rötungen, Pigment und Narben verringern.',
       'Dopo un’analisi cutanea approfondita, la terapista della pelle prepara un piano di trattamento. Prima si trattano pori ostruiti e infiammazioni con pulizie profonde e peeling chimici. Quando l’acne è sotto controllo, IPL e SkinPen possono ridurre rossori, macchie e cicatrici.',
+      'Tras un análisis completo de la piel, la terapeuta de la piel prepara un plan de tratamiento. Primero se tratan los poros obstruidos y las inflamaciones con limpiezas profundas y peelings químicos. Cuando el acné está bajo control, el IPL y el SkinPen pueden reducir rojeces, manchas y cicatrices.',
     ),
-    sessions: t('Kuur van 4+1', 'Course of 4+1', 'سلسلة من 4+1', 'Cure de 4+1', 'Kur mit 4+1', 'Ciclo di 4+1'),
-    downtime: t('1–2 dagen', '1–2 days', '\u200E1–2 يوم', '1–2 jours', '1–2 Tage', '1–2 giorni'),
+    sessions: t('Kuur van 4+1', 'Course of 4+1', 'سلسلة من 4+1', 'Cure de 4+1', 'Kur mit 4+1', 'Ciclo di 4+1', 'Ciclo de 4+1'),
+    downtime: t('1–2 dagen', '1–2 days', '\u200E1–2 يوم', '1–2 jours', '1–2 Tage', '1–2 giorni', '1–2 días'),
     results: t(
       'Je huid wordt stap voor stap rustiger. In het begin kan acne even opvlammen, doordat diepere verstoppingen naar boven komen.',
       'Your skin calms down step by step. At first, acne can briefly flare up as deeper congestion comes to the surface.',
@@ -416,6 +459,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Ta peau s’apaise pas à pas. Au début, l’acné peut connaître une poussée passagère, car des impuretés plus profondes remontent à la surface.',
       'Deine Haut wird Schritt für Schritt ruhiger. Anfangs kann die Akne kurz aufflammen, weil tiefer liegende Unreinheiten an die Oberfläche kommen.',
       'La tua pelle si calma passo dopo passo. All’inizio l’acne può riacutizzarsi per un po’, perché le impurità più profonde salgono in superficie.',
+      'Tu piel se va calmando paso a paso. Al principio el acné puede empeorar un poco, porque salen a la superficie obstrucciones más profundas.',
     ),
     aftercare: [
       t(
@@ -425,6 +469,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Les 24 premières heures, pas de sport et pas d’eau sur le visage.',
         'In den ersten 24 Stunden keinen Sport treiben und dein Gesicht nicht nass machen.',
         'Nelle prime 24 ore niente sport e non bagnare il viso.',
+        'Las primeras 24 horas, no hagas deporte ni te mojes la cara.',
       ),
       t(
         'Niet aan velletjes of korstjes trekken.',
@@ -433,6 +478,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Ne tire pas sur les petites peaux ni sur les croûtes.',
         'Nicht an Hautschüppchen oder Krusten zupfen.',
         'Non tirare pellicine o crosticine.',
+        'No tires de las pieles ni de las costras.',
       ),
       t(
         'Geen zuren of retinol tot je huid hersteld is.',
@@ -441,6 +487,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Pas d’acides ni de rétinol tant que ta peau n’a pas récupéré.',
         'Keine Säuren und kein Retinol, bis sich deine Haut erholt hat.',
         'Niente acidi o retinolo finché la pelle non si è ripresa.',
+        'Nada de ácidos ni retinol hasta que tu piel se haya recuperado.',
       ),
       t(
         'Thuis het advies met ZO Skin Health volgen.',
@@ -449,6 +496,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'À la maison, suis la routine ZO Skin Health conseillée.',
         'Zu Hause die Pflegeempfehlung mit ZO Skin Health befolgen.',
         'A casa segui la routine ZO Skin Health consigliata.',
+        'En casa, sigue los consejos con ZO Skin Health.',
       ),
     ],
     faq: [
@@ -460,6 +508,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Une seule séance suffit-elle ?',
           'Reicht eine Behandlung?',
           'Basta una seduta?',
+          '¿Basta con una sesión?',
         ),
         a: t(
           'Nee. Zeker in het begin heb je meerdere behandelingen nodig; daarom is er een pakket van 4+1.',
@@ -468,6 +517,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Non. Surtout au début, il te faut plusieurs séances ; c’est pour ça qu’il existe un forfait de 4+1.',
           'Nein. Gerade am Anfang brauchst du mehrere Behandlungen; deshalb gibt es ein 4+1-Paket.',
           'No. Soprattutto all’inizio ti servono più sedute; per questo c’è un pacchetto di 4+1.',
+          'No. Sobre todo al principio necesitas varias sesiones; por eso hay un bono de 4+1.',
         ),
       },
       {
@@ -478,6 +528,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'L’acné disparaît-elle ensuite ?',
           'Bin ich danach die Akne los?',
           'L’acne poi sparisce?',
+          '¿Me libraré del acné después?',
         ),
         a: t(
           'Niet altijd helemaal, maar met behandeling en de juiste verzorging is het goed onder controle te houden.',
@@ -486,6 +537,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Pas toujours complètement, mais avec un traitement et une bonne routine, elle se contrôle bien.',
           'Nicht immer ganz, aber mit Behandlung und der richtigen Pflege lässt sie sich gut unter Kontrolle halten.',
           'Non sempre del tutto, ma con il trattamento e la cura giusta si tiene bene sotto controllo.',
+          'No siempre del todo, pero con tratamiento y los cuidados adecuados se puede mantener bien bajo control.',
         ),
       },
       {
@@ -496,6 +548,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Est-ce remboursé ?',
           'Wird es erstattet?',
           'È rimborsato?',
+          '¿Lo cubre el seguro?',
         ),
         a: t(
           'Acnetherapie wordt soms vergoed uit de aanvullende verzekering, vaak met een verwijzing. Check je polis.',
@@ -504,6 +557,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'La thérapie de l’acné est parfois remboursée par l’assurance complémentaire, souvent sur prescription médicale. Vérifie ton contrat.',
           'Aknetherapie wird manchmal von der Zusatzversicherung erstattet, oft mit Überweisung. Prüf deinen Tarif.',
           'La terapia per l’acne a volte è rimborsata dall’assicurazione integrativa, spesso con prescrizione medica. Controlla la tua polizza.',
+          'La terapia del acné a veces la cubre el seguro complementario, a menudo con derivación médica. Consulta tu póliza.',
         ),
       },
     ],
@@ -516,6 +570,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Atténuer les petits vaisseaux rouges et les rougeurs persistantes de ton visage, avec l’IPL pour les vaisseaux fins et le laser vasculaire Nd:YAG pour ceux situés plus en profondeur.',
       'Rote Äderchen und dauerhafte Rötungen in deinem Gesicht verringern, mit IPL für feine und dem Nd:YAG-Gefäßlaser für tiefer liegende Äderchen.',
       'Ridurre i capillari rossi e il rossore persistente del viso, con l’IPL per i capillari sottili e il laser vascolare Nd:YAG per quelli più profondi.',
+      'Reducir las venitas rojas y la rojez persistente de la cara, con IPL para los vasitos finos y el láser vascular Nd:YAG para los más profundos.',
     ),
     how: t(
       'Je huid wordt gereinigd en je ogen worden beschermd. Het licht wordt opgenomen door het bloed in het vaatje; de warmte sluit het vaatje af, waarna je lichaam het in de weken erna opruimt.',
@@ -524,10 +579,11 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Ta peau est nettoyée et tes yeux sont protégés. La lumière est absorbée par le sang du vaisseau ; la chaleur le referme, puis ton corps l’élimine dans les semaines qui suivent.',
       'Deine Haut wird gereinigt und deine Augen werden geschützt. Das Licht wird vom Blut im Äderchen aufgenommen; die Wärme verschließt das Äderchen, und dein Körper baut es in den Wochen danach ab.',
       'La pelle viene detersa e gli occhi vengono protetti. La luce viene assorbita dal sangue nel capillare; il calore lo chiude e nelle settimane successive il tuo corpo lo elimina.',
+      'Se limpia tu piel y se protegen tus ojos. La sangre del vasito absorbe la luz; el calor lo cierra y tu cuerpo lo elimina en las semanas siguientes.',
     ),
-    sessions: t('1–3', '1–3', '\u200E1–3', '1–3', '1–3', '1–3'),
-    interval: t('4–6 weken', '4–6 weeks', '\u200E4–6 أسابيع', '4–6 semaines', '4–6 Wochen', '4–6 settimane'),
-    downtime: t('1–2 dagen', '1–2 days', '\u200E1–2 يوم', '1–2 jours', '1–2 Tage', '1–2 giorni'),
+    sessions: t('1–3', '1–3', '\u200E1–3', '1–3', '1–3', '1–3', '1–3'),
+    interval: t('4–6 weken', '4–6 weeks', '\u200E4–6 أسابيع', '4–6 semaines', '4–6 Wochen', '4–6 settimane', '4–6 semanas'),
+    downtime: t('1–2 dagen', '1–2 days', '\u200E1–2 يوم', '1–2 jours', '1–2 Tage', '1–2 giorni', '1–2 días'),
     results: t(
       'Behandelde vaatjes komen niet terug, en na elke behandeling zie je verbetering. Door aanleg of zon kunnen nieuwe vaatjes ontstaan; vaak is jaarlijks onderhoud zinvol.',
       'Treated veins don’t come back, and you’ll see improvement after every treatment. Genetics or sun can cause new ones to form; yearly maintenance is often worthwhile.',
@@ -535,6 +591,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Les vaisseaux traités ne reviennent pas, et tu vois une amélioration après chaque séance. Une prédisposition ou le soleil peuvent faire apparaître de nouveaux vaisseaux ; un entretien annuel est souvent utile.',
       'Behandelte Äderchen kommen nicht zurück, und nach jeder Behandlung siehst du eine Verbesserung. Durch Veranlagung oder Sonne können neue Äderchen entstehen; oft ist eine jährliche Auffrischung sinnvoll.',
       'I capillari trattati non tornano e dopo ogni seduta vedi un miglioramento. Per predisposizione o per il sole possono formarsi nuovi capillari; spesso è utile un mantenimento annuale.',
+      'Los vasitos tratados no vuelven, y después de cada sesión notas mejoría. Por predisposición o por el sol pueden aparecer vasitos nuevos; a menudo conviene un mantenimiento anual.',
     ),
     aftercare: [
       t(
@@ -544,6 +601,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'SPF 30+ chaque jour, même quand il n’y a pas de soleil.',
         'Täglich SPF 30+, auch wenn die Sonne nicht scheint.',
         'SPF 30+ ogni giorno, anche quando non c’è il sole.',
+        'SPF 30+ a diario, aunque no haga sol.',
       ),
       t(
         '48–72 uur geen sauna, hete douche, sport of alcohol.',
@@ -552,6 +610,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         '48–72 heures sans sauna, douche chaude, sport ni alcool.',
         '48–72 Stunden auf Sauna, heiße Duschen, Sport und Alkohol verzichten.',
         'Per 48–72 ore niente sauna, doccia calda, sport o alcol.',
+        'Durante 48–72 horas, sin sauna, duchas calientes, deporte ni alcohol.',
       ),
       t(
         'Minstens 4 weken geen zonnebank of directe zon.',
@@ -560,6 +619,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Pas de cabine de bronzage ni de soleil direct pendant au moins 4 semaines.',
         'Mindestens 4 Wochen kein Solarium und keine direkte Sonne.',
         'Per almeno 4 settimane niente lettino abbronzante o sole diretto.',
+        'Al menos 4 semanas sin rayos UVA ni sol directo.',
       ),
       t(
         'Eerste 24 uur geen make-up, daarna bij voorkeur minerale.',
@@ -568,6 +628,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Pas de maquillage les 24 premières heures, ensuite de préférence minéral.',
         'In den ersten 24 Stunden kein Make-up, danach am besten mineralisches.',
         'Niente trucco nelle prime 24 ore, poi preferibilmente minerale.',
+        'Las primeras 24 horas sin maquillaje; después, mejor mineral.',
       ),
     ],
     faq: [
@@ -579,6 +640,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'La couperose disparaît-elle d’elle-même ?',
           'Verschwindet Couperose von selbst?',
           'La couperose sparisce da sola?',
+          '¿La cuperosis desaparece sola?',
         ),
         a: t(
           'Nee, verwijde vaatjes blijven zichtbaar zonder behandeling.',
@@ -587,6 +649,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Non, sans traitement, les vaisseaux dilatés restent visibles.',
           'Nein, erweiterte Äderchen bleiben ohne Behandlung sichtbar.',
           'No, senza trattamento i capillari dilatati restano visibili.',
+          'No, los vasitos dilatados siguen viéndose si no se tratan.',
         ),
       },
       {
@@ -597,6 +660,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Est-ce possible en été ?',
           'Geht das auch im Sommer?',
           'Si può fare d’estate?',
+          '¿Se puede hacer en verano?',
         ),
         a: t(
           'Ja, met goede zonbescherming. Is je huid gebruind, plan het dan in de herfst of winter.',
@@ -605,6 +669,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Oui, avec une bonne protection solaire. Si ta peau est bronzée, programme le soin en automne ou en hiver.',
           'Ja, mit gutem Sonnenschutz. Ist deine Haut gebräunt, plane es dann für Herbst oder Winter.',
           'Sì, con una buona protezione solare. Se la tua pelle è abbronzata, programma il trattamento in autunno o in inverno.',
+          'Sí, con una buena protección solar. Si tu piel está bronceada, planéalo para el otoño o el invierno.',
         ),
       },
       {
@@ -615,6 +680,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Est-ce remboursé ?',
           'Wird es erstattet?',
           'È rimborsato?',
+          '¿Lo cubre el seguro?',
         ),
         a: t(
           'Sommige aanvullende verzekeringen vergoeden couperose bij een medische indicatie.',
@@ -623,6 +689,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Certaines assurances complémentaires remboursent la couperose en cas d’indication médicale.',
           'Manche Zusatzversicherungen erstatten Couperose bei medizinischer Indikation.',
           'Alcune assicurazioni integrative rimborsano la couperose in presenza di un’indicazione medica.',
+          'Algunos seguros complementarios cubren la cuperosis cuando hay indicación médica.',
         ),
       },
     ],
@@ -635,6 +702,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Éclaircir les taches pigmentaires et les irrégularités de teint avec une approche sur mesure : la lumière du PicoWay ou du Nordlys, un peeling TCA ou du microneedling, avec un protocole ZO Skin Health à la maison.',
       'Pigmentflecken und Verfärbungen mit einem individuellen Ansatz aufhellen: Licht vom PicoWay oder Nordlys, ein TCA-Peeling oder Microneedling, mit einer Pflegeroutine von ZO Skin Health für zu Hause.',
       'Schiarire macchie pigmentarie e discromie con un approccio su misura: la luce di PicoWay o Nordlys, un peeling TCA o il microneedling, con un protocollo domiciliare ZO Skin Health.',
+      'Aclarar manchas de pigmentación y discromías con un enfoque a medida: luz del PicoWay o del Nordlys, un peeling TCA o microneedling, con un protocolo en casa de ZO Skin Health.',
     ),
     how: t(
       'Eerst bereid je je huid 4 tot 6 weken voor met producten en strikte zonbescherming. Daarna wordt het licht van de laser of IPL opgenomen door het pigment, dat uiteenvalt en door je lichaam wordt afgevoerd.',
@@ -643,9 +711,10 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'D’abord, tu prépares ta peau pendant 4 à 6 semaines avec des produits et une protection solaire stricte. Ensuite, la lumière du laser ou de l’IPL est absorbée par le pigment, qui se fragmente et est éliminé par ton corps.',
       'Zuerst bereitest du deine Haut 4 bis 6 Wochen lang mit Produkten und strengem Sonnenschutz vor. Danach nimmt das Pigment das Licht von Laser oder IPL auf, zerfällt und wird von deinem Körper abtransportiert.',
       'Prima prepari la pelle per 4–6 settimane con dei prodotti e una protezione solare rigorosa. Poi la luce del laser o dell’IPL viene assorbita dal pigmento, che si frantuma e viene eliminato dal tuo corpo.',
+      'Primero preparas tu piel durante 4 a 6 semanas con productos y una protección solar estricta. Después, el pigmento absorbe la luz del láser o del IPL, se rompe y tu cuerpo lo elimina.',
     ),
-    sessions: t('1–3', '1–3', '\u200E1–3', '1–3', '1–3', '1–3'),
-    downtime: t('Enkele dagen', 'A few days', 'بضعة أيام', 'Quelques jours', 'Wenige Tage', 'Pochi giorni'),
+    sessions: t('1–3', '1–3', '\u200E1–3', '1–3', '1–3', '1–3', '1–3'),
+    downtime: t('Enkele dagen', 'A few days', 'بضعة أيام', 'Quelques jours', 'Wenige Tage', 'Pochi giorni', 'Unos días'),
     results: t(
       'Pigment in de bovenste huidlagen reageert meestal goed; hormonaal pigment is lastiger. Vlekken worden eerst iets donkerder en vervagen daarna.',
       'Pigment in the upper skin layers usually responds well; hormonal pigmentation is trickier. Spots first get slightly darker, then fade.',
@@ -653,6 +722,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Le pigment des couches supérieures de la peau réagit généralement bien ; le pigment d’origine hormonale est plus difficile. Les taches foncent d’abord un peu, puis s’estompent.',
       'Pigment in den oberen Hautschichten spricht meist gut an; hormonell bedingtes Pigment ist schwieriger. Flecken werden zuerst etwas dunkler und verblassen dann.',
       'Il pigmento negli strati superficiali della pelle di solito risponde bene; quello di origine ormonale è più difficile. Le macchie prima si scuriscono un po’, poi si attenuano.',
+      'El pigmento de las capas superiores de la piel suele responder bien; el pigmento hormonal es más difícil. Las manchas primero se oscurecen un poco y después se aclaran.',
     ),
     aftercare: [
       t(
@@ -662,6 +732,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'SPF 30+ toute l’année, même par temps nuageux et en hiver.',
         'Das ganze Jahr SPF 30+, auch bei Bewölkung und im Winter.',
         'SPF 30+ tutto l’anno, anche con il cielo nuvoloso e d’inverno.',
+        'SPF 30+ todo el año, también cuando está nublado y en invierno.',
       ),
       t(
         'Voor en na de behandeling geen zonnebank of zelfbruiner.',
@@ -670,6 +741,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Pas de cabine de bronzage ni d’autobronzant avant et après le soin.',
         'Vor und nach der Behandlung kein Solarium und kein Selbstbräuner.',
         'Niente lettino abbronzante o autoabbronzante prima e dopo il trattamento.',
+        'Antes y después del tratamiento, nada de rayos UVA ni autobronceador.',
       ),
     ],
     faq: [
@@ -681,6 +753,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'D’où viennent les taches pigmentaires ?',
           'Wie entstehen Pigmentflecken?',
           'Come si formano le macchie pigmentarie?',
+          '¿Por qué salen las manchas de pigmentación?',
         ),
         a: t(
           'Door een overproductie van melanine, vooral door zon en hormonen, bijvoorbeeld tijdens een zwangerschap.',
@@ -689,6 +762,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'D’une surproduction de mélanine, surtout due au soleil et aux hormones, par exemple pendant une grossesse.',
           'Durch eine Überproduktion von Melanin, vor allem durch Sonne und Hormone, zum Beispiel in der Schwangerschaft.',
           'Da una produzione eccessiva di melanina, soprattutto per il sole e gli ormoni, per esempio in gravidanza.',
+          'Por un exceso de melanina, sobre todo por el sol y las hormonas, por ejemplo durante un embarazo.',
         ),
       },
       {
@@ -699,6 +773,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Peuvent-elles revenir ?',
           'Können sie wiederkommen?',
           'Possono tornare?',
+          '¿Pueden volver?',
         ),
         a: t(
           'Ja, vooral door uv-licht. Daarom is zonbescherming het hele jaar belangrijk.',
@@ -707,6 +782,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Oui, surtout à cause des UV. C’est pourquoi la protection solaire est importante toute l’année.',
           'Ja, vor allem durch UV-Licht. Deshalb ist Sonnenschutz das ganze Jahr über wichtig.',
           'Sì, soprattutto per i raggi UV. Per questo la protezione solare è importante tutto l’anno.',
+          'Sí, sobre todo por la luz UV. Por eso la protección solar es importante todo el año.',
         ),
       },
     ],
@@ -719,6 +795,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Atténuer visiblement les varicosités rouges et violettes des jambes avec le laser Nd:YAG 1064 nm et un refroidissement juste avant chaque impulsion.',
       'Rote und violette Besenreiser sichtbar verringern, mit dem Nd:YAG-Laser von 1064 nm und Kühlung direkt vor jedem Impuls.',
       'Ridurre visibilmente i capillari rossi e viola delle gambe con il laser Nd:YAG da 1064 nm e raffreddamento subito prima di ogni impulso.',
+      'Reducir de forma visible las venitas rojas y moradas de las piernas con el láser Nd:YAG de 1064 nm, con enfriamiento justo antes de cada pulso.',
     ),
     how: t(
       'Het laserlicht wordt opgenomen door het bloed in het vaatje. De warmte sluit het vaatje af, en je lichaam ruimt het in de weken erna op. Grote spataderen horen bij een arts.',
@@ -727,10 +804,11 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'La lumière du laser est absorbée par le sang du vaisseau. La chaleur le referme, et ton corps l’élimine dans les semaines qui suivent. Les grosses varices relèvent d’un médecin.',
       'Das Laserlicht wird vom Blut im Äderchen aufgenommen. Die Wärme verschließt das Äderchen, und dein Körper baut es in den Wochen danach ab. Große Krampfadern gehören in ärztliche Hände.',
       'La luce del laser viene assorbita dal sangue nel capillare. Il calore lo chiude e nelle settimane successive il tuo corpo lo elimina. Le varici grandi vanno trattate da un medico.',
+      'La sangre del vasito absorbe la luz del láser. El calor cierra el vasito y tu cuerpo lo elimina en las semanas siguientes. Las varices grandes son cosa de un médico.',
     ),
-    sessions: t('1–3', '1–3', '\u200E1–3', '1–3', '1–3', '1–3'),
-    interval: t('12 weken', '12 weeks', '12 أسبوعًا', '12 semaines', '12 Wochen', '12 settimane'),
-    downtime: t('Geen', 'None', 'لا يوجد', 'Aucune', 'Keine', 'Nessuno'),
+    sessions: t('1–3', '1–3', '\u200E1–3', '1–3', '1–3', '1–3', '1–3'),
+    interval: t('12 weken', '12 weeks', '12 أسبوعًا', '12 semaines', '12 Wochen', '12 settimane', '12 semanas'),
+    downtime: t('Geen', 'None', 'لا يوجد', 'Aucune', 'Keine', 'Nessuno', 'Ninguna'),
     results: t(
       'De vaatjes vervagen geleidelijk. Bij erfelijke aanleg kunnen er nieuwe bijkomen; dan wordt onderhoud aangeraden.',
       'The veins fade gradually. If you’re genetically prone, new ones can appear; maintenance is then recommended.',
@@ -738,6 +816,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Les vaisseaux s’estompent progressivement. En cas de prédisposition héréditaire, il peut en apparaître de nouveaux ; un entretien est alors conseillé.',
       'Die Äderchen verblassen nach und nach. Bei erblicher Veranlagung können neue hinzukommen; dann wird eine Auffrischung empfohlen.',
       'I capillari si attenuano gradualmente. In caso di predisposizione ereditaria possono comparirne di nuovi; allora è consigliato un mantenimento.',
+      'Los vasitos se van aclarando poco a poco. Si hay predisposición hereditaria pueden aparecer otros nuevos; entonces se recomienda un mantenimiento.',
     ),
     aftercare: [
       t(
@@ -747,6 +826,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Pas de sport intensif, de sauna ni de bains chauds pendant au moins 7 jours.',
         'Mindestens 7 Tage auf intensiven Sport, Sauna und heiße Bäder verzichten.',
         'Per almeno 7 giorni niente sport intenso, sauna o bagni caldi.',
+        'Al menos 7 días sin deporte intenso, sauna ni baños calientes.',
       ),
       t(
         '1 tot 2 weken steunkousen dragen.',
@@ -755,6 +835,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Porte des bas de contention pendant 1 à 2 semaines.',
         '1 bis 2 Wochen Kompressionsstrümpfe tragen.',
         'Indossa calze a compressione per 1–2 settimane.',
+        'Lleva medias de compresión de 1 a 2 semanas.',
       ),
       t(
         '4 tot 6 weken SPF 30+ en geen zonnebank.',
@@ -763,6 +844,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'SPF 30+ et pas de cabine de bronzage pendant 4 à 6 semaines.',
         '4 bis 6 Wochen SPF 30+ und kein Solarium.',
         'Per 4–6 settimane SPF 30+ e niente lettino abbronzante.',
+        'De 4 a 6 semanas, SPF 30+ y nada de rayos UVA.',
       ),
     ],
     faq: [
@@ -774,6 +856,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'D’où viennent les varicosités des jambes ?',
           'Wie entstehen Besenreiser?',
           'Come si formano i capillari delle gambe?',
+          '¿Por qué salen las venitas en las piernas?',
         ),
         a: t(
           'Door verslapte vaatwanden. Erfelijkheid, hormonen, leeftijd en veel staan of zitten spelen mee.',
@@ -782,10 +865,11 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'D’un relâchement des parois des vaisseaux. L’hérédité, les hormones, l’âge et la station debout ou assise prolongée jouent un rôle.',
           'Durch erschlaffte Gefäßwände. Vererbung, Hormone, Alter und viel Stehen oder Sitzen spielen eine Rolle.',
           'Da un indebolimento delle pareti dei vasi. Influiscono ereditarietà, ormoni, età e lo stare molto in piedi o seduti.',
+          'Porque las paredes de los vasos se debilitan. Influyen la herencia, las hormonas, la edad y estar mucho tiempo de pie o sentado.',
         ),
       },
       {
-        q: t('Doet het pijn?', 'Does it hurt?', 'هل يؤلم؟', 'Ça fait mal ?', 'Tut es weh?', 'Fa male?'),
+        q: t('Doet het pijn?', 'Does it hurt?', 'هل يؤلم؟', 'Ça fait mal ?', 'Tut es weh?', 'Fa male?', '¿Duele?'),
         a: t(
           'Meestal valt het mee: het voelt warm of prikkend, en de koude spray helpt.',
           'Usually it’s not too bad: it feels warm or prickly, and the cold spray helps.',
@@ -793,6 +877,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'En général, c’est supportable : tu sens de la chaleur ou des picotements, et le spray froid aide.',
           'Meistens ist es halb so schlimm: Es fühlt sich warm oder prickelnd an, und das Kältespray hilft.',
           'Di solito è sopportabile: senti calore o pizzicore, e lo spray freddo aiuta.',
+          'Normalmente se lleva bien: notas calor o un leve pinchazo, y el spray frío ayuda.',
         ),
       },
     ],
@@ -805,6 +890,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Un regard plus frais avec RRS HA Eyes, un skinbooster à l’acide hyaluronique contre les poches, les cernes et les ridules autour des yeux.',
       'Ein frischerer Blick mit RRS HA Eyes, einem Skinbooster mit Hyaluronsäure gegen Schwellungen, Augenringe und feine Linien rund um die Augen.',
       'Uno sguardo più fresco con RRS HA Eyes, uno skinbooster all’acido ialuronico contro borse, occhiaie e rughette intorno agli occhi.',
+      'Una mirada más fresca con RRS HA Eyes, un skinbooster con ácido hialurónico contra las bolsas de líquido, las ojeras y las líneas finas alrededor de los ojos.',
     ),
     how: t(
       'RRS HA Eyes combineert hyaluronzuur met vitaminen en antioxidanten. Met micro-injecties wordt het in de huid rond je ogen gebracht, zodat die meer vocht vasthoudt en steviger wordt.',
@@ -813,9 +899,10 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'RRS HA Eyes associe l’acide hyaluronique à des vitamines et à des antioxydants. Il est introduit par micro-injections dans la peau autour de tes yeux, pour qu’elle retienne mieux l’hydratation et devienne plus ferme.',
       'RRS HA Eyes kombiniert Hyaluronsäure mit Vitaminen und Antioxidantien. Per Mikroinjektionen wird es in die Haut rund um deine Augen eingebracht, sodass sie mehr Feuchtigkeit speichert und straffer wird.',
       'RRS HA Eyes unisce acido ialuronico, vitamine e antiossidanti. Con microiniezioni viene introdotto nella pelle intorno ai tuoi occhi, perché trattenga più idratazione e diventi più compatta.',
+      'RRS HA Eyes combina ácido hialurónico con vitaminas y antioxidantes. Se introduce en la piel del contorno de los ojos con microinyecciones, para que retenga más hidratación y gane firmeza.',
     ),
-    sessions: t('4–6', '4–6', '\u200E4–6', '4–6', '4–6', '4–6'),
-    downtime: t('Nauwelijks', 'Hardly any', 'شبه معدوم', 'Quasi aucune', 'Kaum', 'Quasi nessuno'),
+    sessions: t('4–6', '4–6', '\u200E4–6', '4–6', '4–6', '4–6', '4–6'),
+    downtime: t('Nauwelijks', 'Hardly any', 'شبه معدوم', 'Quasi aucune', 'Kaum', 'Quasi nessuno', 'Casi ninguna'),
     results: t(
       'Het effect wordt na ongeveer twee weken zichtbaar en bouwt op tijdens de kuur.',
       'The effect becomes visible after about two weeks and builds up during the course.',
@@ -823,6 +910,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'L’effet devient visible après environ deux semaines et se renforce au fil de la cure.',
       'Die Wirkung wird nach etwa zwei Wochen sichtbar und baut sich während der Kur auf.',
       'L’effetto diventa visibile dopo circa due settimane e aumenta nel corso del ciclo.',
+      'El efecto se nota al cabo de unas dos semanas y va aumentando durante el ciclo.',
     ),
     aftercare: [
       t(
@@ -832,6 +920,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Après une heure, tu peux mettre un maquillage léger.',
         'Nach einer Stunde ist leichtes Make-up erlaubt.',
         'Dopo un’ora puoi mettere un trucco leggero.',
+        'Pasada una hora puedes ponerte un maquillaje ligero.',
       ),
       t(
         'Minstens 3 uur niet sporten en niet in het gebied wrijven.',
@@ -840,6 +929,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Pendant au moins 3 heures, pas de sport et ne frotte pas la zone.',
         'Mindestens 3 Stunden keinen Sport treiben und die Stelle nicht reiben.',
         'Per almeno 3 ore niente sport e non strofinare la zona.',
+        'Al menos 3 horas sin hacer deporte ni frotar la zona.',
       ),
       t(
         'Een oogserum ondersteunt het resultaat.',
@@ -848,6 +938,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Un sérum pour les yeux soutient le résultat.',
         'Ein Augenserum unterstützt das Ergebnis.',
         'Un siero contorno occhi sostiene il risultato.',
+        'Un sérum de ojos ayuda a mantener el resultado.',
       ),
     ],
     faq: [
@@ -859,6 +950,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'D’où viennent les poches ?',
           'Wie entstehen Tränensäcke?',
           'Come si formano le borse?',
+          '¿Por qué salen las bolsas?',
         ),
         a: t(
           'Door vocht of vet onder de ogen en een huid die verslapt. Slaapgebrek, alcohol, roken en aanleg spelen mee.',
@@ -867,6 +959,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Elles sont dues à du liquide ou de la graisse sous les yeux, et à une peau qui se relâche. Le manque de sommeil, l’alcool, le tabac et la prédisposition jouent un rôle.',
           'Durch Flüssigkeit oder Fett unter den Augen und erschlaffende Haut. Schlafmangel, Alkohol, Rauchen und Veranlagung spielen eine Rolle.',
           'Sono dovute a liquidi o grasso sotto gli occhi e a una pelle che si rilassa. Influiscono anche mancanza di sonno, alcol, fumo e predisposizione.',
+          'Por líquido o grasa bajo los ojos y una piel que pierde firmeza. Influyen la falta de sueño, el alcohol, el tabaco y la predisposición.',
         ),
       },
       {
@@ -877,6 +970,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Quand vais-je voir un résultat ?',
           'Wann sehe ich ein Ergebnis?',
           'Quando vedo i risultati?',
+          '¿Cuándo veré resultados?',
         ),
         a: t(
           'Na ongeveer twee weken, en het wordt beter naarmate de kuur vordert.',
@@ -885,6 +979,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Après environ deux semaines, et c’est de mieux en mieux au fil de la cure.',
           'Nach etwa zwei Wochen, und es wird im Verlauf der Kur immer besser.',
           'Dopo circa due settimane, e il risultato migliora man mano che il ciclo prosegue.',
+          'Al cabo de unas dos semanas, y mejora a medida que avanza el ciclo.',
         ),
       },
     ],
@@ -897,6 +992,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Du microneedling médical avec le SkinPen, le premier système approuvé par la FDA. Ta peau produit du nouveau collagène et de l’élastine, et devient plus lisse, plus uniforme et plus ferme.',
       'Medizinisches Microneedling mit dem SkinPen, dem ersten FDA-zugelassenen System. Deine Haut bildet neues Kollagen und Elastin und wird glatter, ebenmäßiger und straffer.',
       'Microneedling medicale con SkinPen, il primo sistema approvato dalla FDA. La tua pelle produce nuovo collagene ed elastina e diventa più liscia, uniforme e compatta.',
+      'Microneedling médico con el SkinPen, el primer sistema aprobado por la FDA. Tu piel produce colágeno y elastina nuevos y queda más lisa, uniforme y firme.',
     ),
     how: t(
       'De SkinPen maakt met dunne, vibrerende naaldjes gecontroleerde microkanaaltjes, op een diepte die per zone wordt ingesteld. Dat zet het herstel van je huid aan. Met PRX, PDRN of exosomen erbij wordt het effect nog sterker.',
@@ -905,10 +1001,11 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Avec de fines aiguilles vibrantes, le SkinPen crée des microcanaux contrôlés, à une profondeur réglée selon la zone. Cela stimule la réparation de ta peau. Avec du PRX, du PDRN ou des exosomes en plus, l’effet est encore plus fort.',
       'Der SkinPen erzeugt mit feinen, vibrierenden Nadeln kontrollierte Mikrokanäle, in einer Tiefe, die für jede Zone eingestellt wird. Das regt die Regeneration deiner Haut an. Kombiniert mit PRX, PDRN oder Exosomen wird die Wirkung noch stärker.',
       'Con aghi sottili e vibranti, SkinPen crea microcanali controllati, a una profondità regolata per ogni zona. Questo attiva la riparazione della pelle. Con l’aggiunta di PRX, PDRN o esosomi l’effetto è ancora più forte.',
+      'El SkinPen crea microcanales controlados con agujas finas que vibran, a una profundidad que se ajusta para cada zona. Así se activa la regeneración de tu piel. Si se añade PRX, PDRN o exosomas, el efecto es aún mayor.',
     ),
-    sessions: t('3–6', '3–6', '\u200E3–6', '3–6', '3–6', '3–6'),
-    interval: t('4–6 weken', '4–6 weeks', '\u200E4–6 أسابيع', '4–6 semaines', '4–6 Wochen', '4–6 settimane'),
-    downtime: t('1 dag rood', '1 day of redness', 'احمرار ليوم واحد', '1 jour de rougeur', '1 Tag Rötung', '1 giorno di rossore'),
+    sessions: t('3–6', '3–6', '\u200E3–6', '3–6', '3–6', '3–6', '3–6'),
+    interval: t('4–6 weken', '4–6 weeks', '\u200E4–6 أسابيع', '4–6 semaines', '4–6 Wochen', '4–6 settimane', '4–6 semanas'),
+    downtime: t('1 dag rood', '1 day of redness', 'احمرار ليوم واحد', '1 jour de rougeur', '1 Tag Rötung', '1 giorno di rossore', '1 día de rojez'),
     results: t(
       'Na een paar behandelingen is je huid egaler en zachter, en in de maanden erna wordt het nog beter door het nieuwe collageen.',
       'After a few treatments your skin is more even and softer, and it gets even better in the months after, thanks to the new collagen.',
@@ -916,6 +1013,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Après quelques séances, ta peau est plus uniforme et plus douce, et elle s’améliore encore dans les mois qui suivent grâce au nouveau collagène.',
       'Nach ein paar Behandlungen ist deine Haut ebenmäßiger und weicher, und in den Monaten danach wird sie durch das neue Kollagen noch besser.',
       'Dopo alcune sedute la pelle è più uniforme e morbida, e nei mesi successivi migliora ancora grazie al nuovo collagene.',
+      'Tras unas pocas sesiones tu piel está más uniforme y suave, y en los meses siguientes mejora todavía más gracias al nuevo colágeno.',
     ),
     aftercare: [
       t(
@@ -925,6 +1023,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Les 24 premières heures, utilise uniquement le Lift HG fourni et évite l’eau.',
         'In den ersten 24 Stunden nur das mitgegebene Lift HG verwenden, kein Wasser.',
         'Nelle prime 24 ore usa solo il Lift HG che ti diamo ed evita l’acqua.',
+        'Las primeras 24 horas, usa solo el Lift HG que te damos, y nada de agua.',
       ),
       t(
         '72 uur geen sport, zwemmen, sauna of hete douche.',
@@ -933,6 +1032,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         '72 heures sans sport, natation, sauna ni douche chaude.',
         '72 Stunden auf Sport, Schwimmen, Sauna und heiße Duschen verzichten.',
         'Per 72 ore niente sport, nuoto, sauna o doccia calda.',
+        '72 horas sin deporte, piscina, sauna ni duchas calientes.',
       ),
       t(
         'Daarna dagelijks minerale zonnebrand met SPF 30+.',
@@ -941,6 +1041,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Ensuite, une crème solaire minérale SPF 30+ chaque jour.',
         'Danach täglich mineralischer Sonnenschutz mit SPF 30+.',
         'Poi ogni giorno crema solare minerale con SPF 30+.',
+        'Después, protector solar mineral con SPF 30+ a diario.',
       ),
     ],
     faq: [
@@ -952,6 +1053,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Peut-on traiter une seule zone ?',
           'Geht das auch nur an einer Stelle?',
           'Si può trattare solo una zona?',
+          '¿Se puede tratar solo una zona?',
         ),
         a: t(
           'Nee, het hele gezicht wordt behandeld om kleurverschil te voorkomen. Littekens worden wel extra plaatselijk behandeld.',
@@ -960,6 +1062,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Non, on traite tout le visage pour éviter les différences de teinte. Les cicatrices reçoivent en plus un traitement localisé.',
           'Nein, das ganze Gesicht wird behandelt, um Farbunterschiede zu vermeiden. Narben werden aber zusätzlich lokal behandelt.',
           'No, si tratta tutto il viso per evitare differenze di colore. Le cicatrici però ricevono un trattamento locale in più.',
+          'No, se trata toda la cara para evitar diferencias de tono. Las cicatrices sí reciben un tratamiento local extra.',
         ),
       },
       {
@@ -970,6 +1073,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Est-ce adapté à tous les types de peau ?',
           'Ist es für jeden Hauttyp geeignet?',
           'Va bene per ogni tipo di pelle?',
+          '¿Es para todo tipo de piel?',
         ),
         a: t(
           'Ja, voor elk huidtype en elke leeftijd.',
@@ -978,6 +1082,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Oui, à tous les types de peau et à tous les âges.',
           'Ja, für jeden Hauttyp und jedes Alter.',
           'Sì, per ogni tipo di pelle e ogni età.',
+          'Sí, para todo tipo de piel y a cualquier edad.',
         ),
       },
     ],
@@ -990,6 +1095,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Un renouvellement intensif de la peau par la chaleur plutôt que par la lumière laser : l’effet d’un laser CO₂, avec une récupération bien plus courte.',
       'Intensive Hauterneuerung mit Wärme statt Laserlicht: die Wirkung eines CO₂-Lasers, mit viel kürzerer Erholungszeit.',
       'Un rinnovamento intenso della pelle con il calore invece della luce laser: l’effetto di un laser CO₂, con un recupero molto più breve.',
+      'Renovación intensa de la piel con calor en vez de luz láser: el efecto de un láser de CO₂, con una recuperación mucho más corta.',
     ),
     how: t(
       'Een kleine kop met titanium pinnetjes raakt heel kort je huid en brengt warmte in de diepere huidlaag. Dat zet aan tot nieuw collageen en elastine. Daardoor kunnen ook gevoelige zones zoals de oogleden worden behandeld.',
@@ -998,9 +1104,10 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Une petite tête munie de pointes en titane touche très brièvement ta peau et apporte de la chaleur dans les couches profondes. Cela stimule la production de nouveau collagène et d’élastine. Ainsi, on peut aussi traiter des zones sensibles comme les paupières.',
       'Ein kleiner Behandlungskopf mit Titanstiften berührt deine Haut ganz kurz und bringt Wärme in die tiefere Hautschicht. Das regt die Bildung von neuem Kollagen und Elastin an. Dadurch lassen sich auch empfindliche Zonen wie die Augenlider behandeln.',
       'Una piccola testina con punte in titanio tocca la pelle per un istante e porta calore negli strati più profondi. Questo stimola la produzione di nuovo collagene ed elastina. Così si possono trattare anche zone sensibili come le palpebre.',
+      'Un pequeño cabezal con puntas de titanio toca tu piel durante un instante y lleva calor a la capa más profunda. Eso estimula colágeno y elastina nuevos. Por eso también se pueden tratar zonas delicadas como los párpados.',
     ),
-    sessions: t('4 (oogleden 6)', '4 (eyelids 6)', '4 (الجفون 6)', '4 (paupières 6)', '4 (Augenlider 6)', '4 (palpebre 6)'),
-    downtime: t('4–5 dagen', '4–5 days', '\u200E4–5 أيام', '4–5 jours', '4–5 Tage', '4–5 giorni'),
+    sessions: t('4 (oogleden 6)', '4 (eyelids 6)', '4 (الجفون 6)', '4 (paupières 6)', '4 (Augenlider 6)', '4 (palpebre 6)', '4 (párpados 6)'),
+    downtime: t('4–5 dagen', '4–5 days', '\u200E4–5 أيام', '4–5 jours', '4–5 Tage', '4–5 giorni', '4–5 días'),
     results: t(
       'Na ongeveer zes weken zie je een stevigere, gladdere en egalere huid, en het blijft daarna verbeteren.',
       'After about six weeks you’ll see firmer, smoother and more even skin, and it keeps improving after that.',
@@ -1008,6 +1115,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Après environ six semaines, tu vois une peau plus ferme, plus lisse et plus uniforme, qui continue ensuite de s’améliorer.',
       'Nach etwa sechs Wochen siehst du eine straffere, glattere und ebenmäßigere Haut, und sie verbessert sich danach weiter.',
       'Dopo circa sei settimane vedi una pelle più compatta, liscia e uniforme, che poi continua a migliorare.',
+      'Al cabo de unas seis semanas ves una piel más firme, lisa y uniforme, y después sigue mejorando.',
     ),
     aftercare: [
       t(
@@ -1017,6 +1125,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Laisse les croûtes tomber d’elles-mêmes.',
         'Krusten von selbst abfallen lassen.',
         'Lascia che le crosticine si stacchino da sole.',
+        'Deja que las costras se caigan solas.',
       ),
       t(
         'Hydraterende crème bij een trekkerige huid.',
@@ -1025,6 +1134,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Une crème hydratante si ta peau tiraille.',
         'Feuchtigkeitscreme bei spannender Haut.',
         'Crema idratante se la pelle tira.',
+        'Crema hidratante si notas la piel tirante.',
       ),
       t(
         'Dagelijks SPF 30+.',
@@ -1033,11 +1143,12 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'SPF 30+ chaque jour.',
         'Täglich SPF 30+.',
         'SPF 30+ ogni giorno.',
+        'SPF 30+ a diario.',
       ),
     ],
     faq: [
       {
-        q: t('Is het pijnlijk?', 'Is it painful?', 'هل هو مؤلم؟', 'Est-ce douloureux ?', 'Ist es schmerzhaft?', 'È doloroso?'),
+        q: t('Is het pijnlijk?', 'Is it painful?', 'هل هو مؤلم؟', 'Est-ce douloureux ?', 'Ist es schmerzhaft?', 'È doloroso?', '¿Es doloroso?'),
         a: t(
           'Minder dan een CO₂-laser. Verdoving is niet nodig.',
           'Less than a CO₂ laser. No numbing is needed.',
@@ -1045,6 +1156,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Moins qu’un laser CO₂. Pas besoin d’anesthésie.',
           'Weniger als ein CO₂-Laser. Eine Betäubung ist nicht nötig.',
           'Meno di un laser CO₂. Non serve anestesia.',
+          'Menos que un láser de CO₂. No hace falta anestesia.',
         ),
       },
       {
@@ -1055,6 +1167,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Pour quel type de peau ?',
           'Für welchen Hauttyp?',
           'Per quale tipo di pelle?',
+          '¿Para qué tipo de piel?',
         ),
         a: t(
           'Tixel is geschikt voor alle huidtypes, zolang je huid niet gebruind is.',
@@ -1063,6 +1176,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Tixel convient à tous les types de peau, tant que la tienne n’est pas bronzée.',
           'Tixel eignet sich für alle Hauttypen, solange deine Haut nicht gebräunt ist.',
           'Tixel va bene per tutti i tipi di pelle, purché la tua non sia abbronzata.',
+          'Tixel es apto para todo tipo de piel, siempre que no esté bronceada.',
         ),
       },
     ],
@@ -1075,6 +1189,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Du microneedling RF avec le Sylfirm X pour une peau plus ferme, plus lisse et plus uniforme, avec une récupération minimale.',
       'RF-Microneedling mit dem Sylfirm X für eine straffere, glattere und ebenmäßigere Haut, mit minimaler Ausfallzeit.',
       'Microneedling RF con Sylfirm X per una pelle più compatta, liscia e uniforme, con tempi di recupero minimi.',
+      'Microneedling por radiofrecuencia con el Sylfirm X para una piel más firme, lisa y uniforme, con un tiempo de recuperación mínimo.',
     ),
     how: t(
       'Fijne naaldjes brengen radiofrequente energie precies op de juiste diepte in de huid. Twee golfvormen maken het mogelijk om verschillende huidproblemen te behandelen. Dat activeert het herstel en de aanmaak van collageen.',
@@ -1083,10 +1198,11 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'De fines aiguilles délivrent l’énergie de radiofréquence exactement à la bonne profondeur dans la peau. Deux formes d’onde permettent de traiter différents problèmes de peau. Cela active la réparation et la production de collagène.',
       'Feine Nadeln bringen Radiofrequenzenergie genau in der richtigen Tiefe in die Haut. Zwei Wellenformen ermöglichen es, verschiedene Hautprobleme zu behandeln. Das aktiviert die Regeneration und die Kollagenbildung.',
       'Aghi sottili portano l’energia a radiofrequenza esattamente alla giusta profondità nella pelle. Due forme d’onda permettono di trattare diversi problemi della pelle. Questo attiva la riparazione e la produzione di collagene.',
+      'Unas agujas finas llevan energía de radiofrecuencia a la profundidad justa de la piel. Dos formas de onda permiten tratar distintos problemas de la piel. Eso activa la reparación y la producción de colágeno.',
     ),
-    sessions: t('3–6', '3–6', '\u200E3–6', '3–6', '3–6', '3–6'),
-    interval: t('4 weken', '4 weeks', '4 أسابيع', '4 semaines', '4 Wochen', '4 settimane'),
-    downtime: t('Enkele dagen', 'A few days', 'بضعة أيام', 'Quelques jours', 'Wenige Tage', 'Pochi giorni'),
+    sessions: t('3–6', '3–6', '\u200E3–6', '3–6', '3–6', '3–6', '3–6'),
+    interval: t('4 weken', '4 weeks', '4 أسابيع', '4 semaines', '4 Wochen', '4 settimane', '4 semanas'),
+    downtime: t('Enkele dagen', 'A few days', 'بضعة أيام', 'Quelques jours', 'Wenige Tage', 'Pochi giorni', 'Unos días'),
     results: t(
       'Je huid wordt in weken tot maanden steviger, voller en egaler. Meerdere behandelingen geven het beste en langst houdbare resultaat.',
       'Over weeks to months, your skin becomes firmer, fuller and more even. Several treatments give the best and longest-lasting result.',
@@ -1094,6 +1210,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'En quelques semaines à quelques mois, ta peau devient plus ferme, plus repulpée et plus uniforme. Plusieurs séances donnent le meilleur résultat, et le plus durable.',
       'Über Wochen bis Monate wird deine Haut straffer, voller und ebenmäßiger. Mehrere Behandlungen bringen das beste und am längsten anhaltende Ergebnis.',
       'Nel giro di settimane o mesi la pelle diventa più compatta, rimpolpata e uniforme. Più sedute danno il risultato migliore e più duraturo.',
+      'En semanas o meses, tu piel se vuelve más firme, más llena y más uniforme. Varias sesiones dan el mejor resultado y el más duradero.',
     ),
     aftercare: [
       t(
@@ -1103,6 +1220,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Attends 12 heures avant de nettoyer ta peau en douceur.',
         'Erst nach 12 Stunden vorsichtig reinigen.',
         'Detergi la pelle con delicatezza solo dopo 12 ore.',
+        'Espera 12 horas y luego limpia con cuidado.',
       ),
       t(
         '48 uur geen hete douche, sauna, sport of zwemmen.',
@@ -1111,6 +1229,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         '48 heures sans douche chaude, sauna, sport ni natation.',
         '48 Stunden auf heiße Duschen, Sauna, Sport und Schwimmen verzichten.',
         'Per 48 ore niente doccia calda, sauna, sport o nuoto.',
+        'Nada de duchas calientes, sauna, deporte ni piscina durante 48 horas.',
       ),
       t(
         'Tot 4 weken geen intensieve zon; dagelijks SPF 30+.',
@@ -1119,6 +1238,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Pas de soleil intense pendant 4 semaines ; SPF 30+ chaque jour.',
         'Bis zu 4 Wochen keine intensive Sonne; täglich SPF 30+.',
         'Per 4 settimane niente sole intenso; SPF 30+ ogni giorno.',
+        'Nada de sol intenso hasta pasadas 4 semanas; SPF 30+ a diario.',
       ),
     ],
     faq: [
@@ -1130,6 +1250,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Aussi pour les peaux foncées ?',
           'Auch für dunkle Haut?',
           'Anche per la pelle scura?',
+          '¿También para piel oscura?',
         ),
         a: t(
           'Ja, het omliggende weefsel wordt niet beschadigd, dus het is geschikt voor alle huidtypes.',
@@ -1138,6 +1259,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Oui, les tissus autour ne sont pas abîmés, donc il convient à tous les types de peau.',
           'Ja, das umliegende Gewebe wird nicht geschädigt, daher ist es für alle Hauttypen geeignet.',
           'Sì, il tessuto circostante non viene danneggiato, quindi è adatto a tutti i tipi di pelle.',
+          'Sí, el tejido de alrededor no se daña, así que es apto para todos los tipos de piel.',
         ),
       },
       {
@@ -1148,6 +1270,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Le résultat est-il immédiat ?',
           'Sehe ich sofort ein Ergebnis?',
           'Vedo subito il risultato?',
+          '¿Veré el resultado enseguida?',
         ),
         a: t(
           'Nee, collageen opbouwen kost maanden. Meerdere behandelingen geven het beste resultaat.',
@@ -1156,6 +1279,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Non, la production de collagène prend des mois. Plusieurs séances donnent le meilleur résultat.',
           'Nein, der Aufbau von Kollagen dauert Monate. Mehrere Behandlungen bringen das beste Ergebnis.',
           'No, per formare collagene servono mesi. Più sedute danno il risultato migliore.',
+          'No, crear colágeno lleva meses. Varias sesiones dan el mejor resultado.',
         ),
       },
     ],
@@ -1168,6 +1292,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Des micro-injections d’acide hyaluronique, de vitamines et d’antioxydants qui hydratent intensément ta peau et lui donnent un éclat sain.',
       'Mikroinjektionen mit Hyaluronsäure, Vitaminen und Antioxidantien, die deiner Haut intensiv Feuchtigkeit spenden und ihr einen gesunden Glow geben.',
       'Microiniezioni di acido ialuronico, vitamine e antiossidanti che idratano intensamente la tua pelle e le donano una luminosità sana.',
+      'Microinyecciones con ácido hialurónico, vitaminas y antioxidantes que hidratan tu piel a fondo y le dan un brillo saludable.',
     ),
     how: t(
       'Met de U225 meso-injector wordt een cocktail op basis van hyaluronzuur gelijkmatig en oppervlakkig in je huid gebracht. Pure Clinics werkt met RRS-skinboosters; de keuze hangt af van je huid en je doel.',
@@ -1176,6 +1301,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Avec l’injecteur de mésothérapie U225, un cocktail à base d’acide hyaluronique est déposé de façon uniforme et superficielle dans ta peau. Pure Clinics utilise les skinboosters RRS ; le choix dépend de ta peau et de ton objectif.',
       'Mit dem Meso-Injektor U225 wird ein Cocktail auf Hyaluronsäurebasis gleichmäßig und oberflächlich in deine Haut eingebracht. Pure Clinics arbeitet mit RRS-Skinboostern; die Wahl hängt von deiner Haut und deinem Ziel ab.',
       'Con il mesoiniettore U225 un cocktail a base di acido ialuronico viene introdotto nella pelle in modo uniforme e superficiale. Pure Clinics usa gli skinbooster RRS; la scelta dipende dalla tua pelle e dal tuo obiettivo.',
+      'Con el mesoinyector U225 se introduce en tu piel, de forma uniforme y superficial, un cóctel a base de ácido hialurónico. Pure Clinics trabaja con skinboosters de RRS; la elección depende de tu piel y de tu objetivo.',
     ),
     sessions: t(
       '4, dan onderhoud',
@@ -1184,8 +1310,9 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       '4, puis entretien',
       '4, dann Auffrischung',
       '4, poi mantenimento',
+      '4, luego mantenimiento',
     ),
-    downtime: t('Nauwelijks', 'Hardly any', 'شبه معدوم', 'Quasi aucune', 'Kaum', 'Quasi nessuno'),
+    downtime: t('Nauwelijks', 'Hardly any', 'شبه معدوم', 'Quasi aucune', 'Kaum', 'Quasi nessuno', 'Casi ninguna'),
     results: t(
       'Het effect blijft weken tot maanden zichtbaar. Met onderhoud houd je het resultaat vast.',
       'The effect stays visible for weeks to months. With maintenance, you keep the result.',
@@ -1193,6 +1320,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'L’effet reste visible de quelques semaines à quelques mois. Avec un entretien, tu gardes le résultat.',
       'Die Wirkung bleibt Wochen bis Monate sichtbar. Mit Auffrischungen hältst du das Ergebnis.',
       'L’effetto resta visibile per settimane o mesi. Con il mantenimento conservi il risultato.',
+      'El efecto se ve durante semanas o meses. Con mantenimiento conservas el resultado.',
     ),
     aftercare: [
       t(
@@ -1202,6 +1330,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Évite la chaleur, comme le sauna et le soleil fort.',
         'Hitze meiden, etwa Sauna und pralle Sonne.',
         'Evita il calore, come sauna e sole forte.',
+        'Evita el calor, como la sauna y el sol fuerte.',
       ),
       t(
         'De eerste 2 uur geen make-up.',
@@ -1210,11 +1339,12 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Pas de maquillage les 2 premières heures.',
         'In den ersten 2 Stunden kein Make-up.',
         'Niente trucco nelle prime 2 ore.',
+        'Sin maquillaje las primeras 2 horas.',
       ),
     ],
     faq: [
       {
-        q: t('Doet het pijn?', 'Does it hurt?', 'هل يؤلم؟', 'Ça fait mal ?', 'Tut es weh?', 'Fa male?'),
+        q: t('Doet het pijn?', 'Does it hurt?', 'هل يؤلم؟', 'Ça fait mal ?', 'Tut es weh?', 'Fa male?', '¿Duele?'),
         a: t(
           'Nee, de vloeistof wordt heel oppervlakkig ingebracht. De meeste mensen voelen er weinig van.',
           'No, the fluid is placed very superficially. Most people barely feel it.',
@@ -1222,6 +1352,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Non, le liquide est injecté très superficiellement. La plupart des gens ne sentent pas grand-chose.',
           'Nein, die Flüssigkeit wird sehr oberflächlich eingebracht. Die meisten spüren kaum etwas.',
           'No, il liquido viene introdotto molto in superficie. La maggior parte delle persone sente poco.',
+          'No, el líquido se introduce de forma muy superficial. La mayoría de la gente apenas lo nota.',
         ),
       },
       {
@@ -1232,6 +1363,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Combien de temps dure l’effet ?',
           'Wie lange hält es?',
           'Quanto dura l’effetto?',
+          '¿Cuánto dura el efecto?',
         ),
         a: t(
           'Enkele weken tot maanden; met onderhoudsbehandelingen blijft het resultaat.',
@@ -1240,6 +1372,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'De quelques semaines à quelques mois ; avec des séances d’entretien, le résultat se maintient.',
           'Einige Wochen bis Monate; mit Auffrischungsbehandlungen bleibt das Ergebnis erhalten.',
           'Da qualche settimana a qualche mese; con i trattamenti di mantenimento il risultato resta.',
+          'De unas semanas a varios meses; con sesiones de mantenimiento, el resultado se mantiene.',
         ),
       },
     ],
@@ -1252,6 +1385,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Des exosomes végétaux issus de cellules souches de rose, qui soutiennent la réparation de ta peau et la production de collagène. En complément du SkinPen ou du Sylfirm X.',
       'Pflanzliche Exosomen aus Rosenstammzellen, die die Regeneration deiner Haut und die Kollagenbildung unterstützen. Als Extra zu SkinPen oder Sylfirm X.',
       'Esosomi vegetali ricavati dalle cellule staminali della rosa, che sostengono la riparazione della pelle e la produzione di collagene. In aggiunta a SkinPen o Sylfirm X.',
+      'Exosomas vegetales de células madre de rosa, que ayudan a tu piel a recuperarse y a producir colágeno. Como extra con SkinPen o Sylfirm X.',
     ),
     how: t(
       'Exosomen zijn piepkleine blaasjes waarmee cellen met elkaar communiceren. Tijdens een SkinPen- of Sylfirm X-behandeling worden ze via de microkanaaltjes diep in je huid opgenomen.',
@@ -1260,9 +1394,10 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Les exosomes sont de minuscules vésicules qui permettent aux cellules de communiquer entre elles. Pendant un soin SkinPen ou Sylfirm X, ils sont absorbés profondément par ta peau via les microcanaux.',
       'Exosomen sind winzige Bläschen, über die Zellen miteinander kommunizieren. Bei einer Behandlung mit SkinPen oder Sylfirm X werden sie über die Mikrokanäle tief in deine Haut aufgenommen.',
       'Gli esosomi sono vescicole minuscole con cui le cellule comunicano tra loro. Durante un trattamento SkinPen o Sylfirm X vengono assorbiti in profondità nella pelle attraverso i microcanali.',
+      'Los exosomas son vesículas diminutas con las que las células se comunican entre sí. Durante un tratamiento con SkinPen o Sylfirm X, tu piel los absorbe en profundidad a través de los microcanales.',
     ),
-    sessions: t('Meerdere', 'Several', 'متعددة', 'Plusieurs', 'Mehrere', 'Più sedute'),
-    downtime: t('1–2 dagen', '1–2 days', '\u200E1–2 يوم', '1–2 jours', '1–2 Tage', '1–2 giorni'),
+    sessions: t('Meerdere', 'Several', 'متعددة', 'Plusieurs', 'Mehrere', 'Più sedute', 'Varias'),
+    downtime: t('1–2 dagen', '1–2 days', '\u200E1–2 يوم', '1–2 jours', '1–2 Tage', '1–2 giorni', '1–2 días'),
     results: t(
       'Sneller herstel, een betere huidstructuur, een egalere teint en een stevigere huid met glow.',
       'Faster recovery, better skin texture, a more even skin tone and firmer skin with a glow.',
@@ -1270,6 +1405,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Une récupération plus rapide, une meilleure texture de peau, un teint plus uniforme et une peau plus ferme et éclatante.',
       'Schnellere Regeneration, eine bessere Hautstruktur, ein ebenmäßigerer Teint und eine straffere Haut mit Glow.',
       'Un recupero più rapido, una texture della pelle migliore, un incarnato più uniforme e una pelle più compatta e luminosa.',
+      'Una recuperación más rápida, una mejor textura, un tono más uniforme y una piel más firme y luminosa.',
     ),
     aftercare: [
       t(
@@ -1279,6 +1415,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Les 24 premières heures, pas d’eau et pas de maquillage.',
         'In den ersten 24 Stunden die Haut nicht nass machen und kein Make-up tragen.',
         'Nelle prime 24 ore non bagnare la pelle e niente trucco.',
+        'No mojes la piel ni te maquilles las primeras 24 horas.',
       ),
       t(
         'Eerste 24 uur geen sport, sauna of hete douche.',
@@ -1287,6 +1424,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Les 24 premières heures, pas de sport, de sauna ni de douche chaude.',
         'In den ersten 24 Stunden auf Sport, Sauna und heiße Duschen verzichten.',
         'Nelle prime 24 ore niente sport, sauna o doccia calda.',
+        'Nada de deporte, sauna ni duchas calientes las primeras 24 horas.',
       ),
       t(
         'Minstens 2 weken geen directe zon; dagelijks SPF 30+.',
@@ -1295,6 +1433,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Pas de soleil direct pendant au moins 2 semaines ; SPF 30+ chaque jour.',
         'Mindestens 2 Wochen keine direkte Sonne; täglich SPF 30+.',
         'Per almeno 2 settimane niente sole diretto; SPF 30+ ogni giorno.',
+        'Nada de sol directo durante al menos 2 semanas; SPF 30+ a diario.',
       ),
     ],
     faq: [
@@ -1306,6 +1445,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Pourquoi les associer au microneedling ?',
           'Warum zusammen mit Microneedling?',
           'Perché insieme al microneedling?',
+          '¿Por qué junto con microneedling?',
         ),
         a: t(
           'Via de kleine kanaaltjes die de naaldjes maken, komen de exosomen veel dieper in de huid dan met een crème.',
@@ -1314,6 +1454,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Grâce aux petits canaux créés par les aiguilles, les exosomes pénètrent bien plus profondément dans la peau qu’avec une crème.',
           'Über die kleinen Kanäle, die die Nadeln erzeugen, gelangen die Exosomen viel tiefer in die Haut als mit einer Creme.',
           'Attraverso i piccoli canali creati dagli aghi, gli esosomi arrivano molto più in profondità nella pelle rispetto a una crema.',
+          'A través de los pequeños canales que abren las agujas, los exosomas llegan mucho más hondo en la piel que con una crema.',
         ),
       },
     ],
@@ -1326,6 +1467,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Le PDRN, aussi appelé ADN de saumon : des fragments d’ADN purifiés qui soutiennent la réparation de ta peau, l’hydratent intensément et stimulent le collagène.',
       'PDRN, auch Lachs-DNA genannt: gereinigte DNA-Fragmente, die die Regeneration deiner Haut unterstützen, intensiv Feuchtigkeit spenden und Kollagen anregen.',
       'Il PDRN, detto anche DNA di salmone: frammenti di DNA purificati che sostengono la riparazione della tua pelle, la idratano intensamente e stimolano il collagene.',
+      'PDRN, también llamado ADN de salmón: fragmentos de ADN purificados que ayudan a tu piel a recuperarse, la hidratan a fondo y estimulan el colágeno.',
     ),
     how: t(
       'PDRN activeert de cellen die collageen en elastine maken. Het wordt meestal met microneedling ingebracht, zodat het via de microkanaaltjes diep in de huid komt. Goed te combineren met SkinPen of Sylfirm X.',
@@ -1334,9 +1476,10 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Le PDRN active les cellules qui produisent le collagène et l’élastine. Il est généralement introduit par microneedling, et pénètre ainsi profondément dans la peau par les microcanaux. Il se combine bien avec le SkinPen ou le Sylfirm X.',
       'PDRN aktiviert die Zellen, die Kollagen und Elastin bilden. Es wird meist per Microneedling eingebracht, damit es über die Mikrokanäle tief in die Haut gelangt. Gut kombinierbar mit SkinPen oder Sylfirm X.',
       'Il PDRN attiva le cellule che producono collagene ed elastina. Di solito viene introdotto con il microneedling, così arriva in profondità nella pelle attraverso i microcanali. Si combina bene con SkinPen o Sylfirm X.',
+      'El PDRN activa las células que producen colágeno y elastina. Suele aplicarse con microneedling, para que llegue a lo más hondo de la piel a través de los microcanales. Se combina bien con SkinPen o Sylfirm X.',
     ),
-    sessions: t('Meerdere', 'Several', 'متعددة', 'Plusieurs', 'Mehrere', 'Più sedute'),
-    downtime: t('1–2 dagen', '1–2 days', '\u200E1–2 يوم', '1–2 jours', '1–2 Tage', '1–2 giorni'),
+    sessions: t('Meerdere', 'Several', 'متعددة', 'Plusieurs', 'Mehrere', 'Più sedute', 'Varias'),
+    downtime: t('1–2 dagen', '1–2 days', '\u200E1–2 يوم', '1–2 jours', '1–2 Tage', '1–2 giorni', '1–2 días'),
     results: t(
       'Geleidelijk een vollere, stevigere en beter gehydrateerde huid met een frisse glow.',
       'Gradually fuller, firmer and better-hydrated skin with a fresh glow.',
@@ -1344,6 +1487,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Peu à peu, une peau plus repulpée, plus ferme et mieux hydratée, avec un éclat frais.',
       'Nach und nach eine vollere, straffere und besser durchfeuchtete Haut mit frischem Glow.',
       'Gradualmente una pelle più rimpolpata, compatta e meglio idratata, con una luminosità fresca.',
+      'Poco a poco, una piel más llena, más firme y mejor hidratada, con un brillo fresco.',
     ),
     aftercare: [
       t(
@@ -1353,6 +1497,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         '24–48 heures sans sport, sauna ni douche chaude.',
         '24–48 Stunden auf Sport, Sauna und heiße Duschen verzichten.',
         'Per 24–48 ore niente sport, sauna o doccia calda.',
+        'Nada de deporte, sauna ni duchas calientes durante 24–48 horas.',
       ),
       t(
         'Geen directe zon; dagelijks SPF 30+.',
@@ -1361,6 +1506,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Pas de soleil direct ; SPF 30+ chaque jour.',
         'Keine direkte Sonne; täglich SPF 30+.',
         'Niente sole diretto; SPF 30+ ogni giorno.',
+        'Nada de sol directo; SPF 30+ a diario.',
       ),
       t(
         'Alleen de geadviseerde huidverzorging gebruiken.',
@@ -1369,6 +1515,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Utilise uniquement les produits de soin conseillés.',
         'Nur die empfohlene Hautpflege verwenden.',
         'Usa solo i prodotti per la pelle consigliati.',
+        'Usa solo los productos de cuidado que te hayan recomendado.',
       ),
     ],
     faq: [
@@ -1380,6 +1527,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Ça vient vraiment du saumon ?',
           'Stammt es wirklich vom Lachs?',
           'Viene davvero dal salmone?',
+          '¿De verdad viene del salmón?',
         ),
         a: t(
           'De DNA-fragmenten komen onder andere uit zalm. Ze worden gezuiverd, zodat alleen de werkzame stoffen overblijven.',
@@ -1388,6 +1536,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Les fragments d’ADN proviennent notamment du saumon. Ils sont purifiés pour ne garder que les substances actives.',
           'Die DNA-Fragmente stammen unter anderem aus Lachs. Sie werden gereinigt, sodass nur die Wirkstoffe übrig bleiben.',
           'I frammenti di DNA provengono anche dal salmone. Vengono purificati, così restano solo le sostanze attive.',
+          'Los fragmentos de ADN proceden, entre otras fuentes, del salmón. Se purifican para que solo queden las sustancias activas.',
         ),
       },
     ],
@@ -1400,6 +1549,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Un peeling chimique plus intense à l’acide trichloracétique, qui stimule fortement le renouvellement de ta peau et la production de collagène.',
       'Ein intensiveres chemisches Peeling mit Trichloressigsäure, das die Erneuerung deiner Haut und die Kollagenbildung stark anregt.',
       'Un peeling chimico più intenso con acido tricloroacetico, che stimola fortemente il rinnovamento della pelle e la produzione di collagene.',
+      'Un peeling químico más intenso con ácido tricloroacético, que estimula mucho la renovación de tu piel y la producción de colágeno.',
     ),
     how: t(
       'Je huid wordt eerst 4 tot 6 weken voorbereid en mag niet gebruind zijn. De huidtherapeut brengt de peeling in lagen aan, afgestemd op hoe je huid reageert. Daarna kleurt je huid tijdelijk rood en vervelt hij.',
@@ -1408,8 +1558,9 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Ta peau est d’abord préparée pendant 4 à 6 semaines et ne doit pas être bronzée. La thérapeute de la peau applique le peeling en couches, selon la réaction de ta peau. Ensuite, ta peau rougit temporairement et pèle.',
       'Deine Haut wird zuerst 4 bis 6 Wochen vorbereitet und darf nicht gebräunt sein. Die Hauttherapeutin trägt das Peeling in Schichten auf, abgestimmt darauf, wie deine Haut reagiert. Danach wird deine Haut vorübergehend rot und schält sich.',
       'Prima la pelle viene preparata per 4–6 settimane e non deve essere abbronzata. La terapista della pelle applica il peeling a strati, in base a come reagisce la tua pelle. Poi la pelle si arrossa per un po’ e si spella.',
+      'Primero se prepara tu piel durante 4 a 6 semanas, y no puede estar bronceada. La terapeuta de la piel aplica el peeling en capas, según cómo reaccione tu piel. Después tu piel se enrojece durante un tiempo y se pela.',
     ),
-    sessions: t('Kuur van 3', 'Course of 3', 'سلسلة من 3', 'Cure de 3', 'Kur mit 3', 'Ciclo di 3'),
+    sessions: t('Kuur van 3', 'Course of 3', 'سلسلة من 3', 'Cure de 3', 'Kur mit 3', 'Ciclo di 3', 'Ciclo de 3'),
     downtime: t(
       '1 week vervellen',
       '1 week of peeling',
@@ -1417,6 +1568,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       '1 semaine de desquamation',
       '1 Woche Schälphase',
       '1 settimana di desquamazione',
+      '1 semana de descamación',
     ),
     results: t(
       'Een gladdere, egalere en stevigere huid. Pigment kan terugkomen, dus blijf je goed beschermen tegen de zon.',
@@ -1425,6 +1577,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Une peau plus lisse, plus uniforme et plus ferme. La pigmentation peut revenir, alors continue à bien te protéger du soleil.',
       'Eine glattere, ebenmäßigere und straffere Haut. Pigment kann zurückkommen, also schütze dich weiter gut vor der Sonne.',
       'Una pelle più liscia, uniforme e compatta. La pigmentazione può tornare, quindi continua a proteggerti bene dal sole.',
+      'Una piel más lisa, más uniforme y más firme. La pigmentación puede volver, así que sigue protegiéndote bien del sol.',
     ),
     aftercare: [
       t(
@@ -1434,6 +1587,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Pas d’eau sur la peau les 24 premières heures.',
         'In den ersten 24 Stunden die Haut nicht nass machen.',
         'Non bagnare la pelle nelle prime 24 ore.',
+        'No mojes la piel las primeras 24 horas.',
       ),
       t(
         'Niet aan velletjes trekken.',
@@ -1442,6 +1596,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Ne tire pas sur les petites peaux.',
         'Nicht an Hautschüppchen zupfen.',
         'Non tirare le pellicine.',
+        'No tires de la piel que se pela.',
       ),
       t(
         'Minstens 4 weken geen directe zon; dagelijks SPF 50.',
@@ -1450,6 +1605,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Pas de soleil direct pendant au moins 4 semaines ; SPF 50 chaque jour.',
         'Mindestens 4 Wochen keine direkte Sonne; täglich SPF 50.',
         'Per almeno 4 settimane niente sole diretto; SPF 50 ogni giorno.',
+        'Nada de sol directo durante al menos 4 semanas; SPF 50 a diario.',
       ),
     ],
     faq: [
@@ -1461,6 +1617,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Un peeling, ça fait mal ?',
           'Tut ein Peeling weh?',
           'Il peeling fa male?',
+          '¿Duele un peeling?',
         ),
         a: t(
           'Het kan branden of prikken tijdens het aanbrengen. Daarna voelt je huid nog even strak.',
@@ -1469,6 +1626,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Ça peut brûler ou picoter pendant l’application. Ensuite, ta peau tiraille encore un moment.',
           'Beim Auftragen kann es brennen oder prickeln. Danach spannt deine Haut noch eine Weile.',
           'Durante l’applicazione può bruciare o pizzicare. Dopo, la pelle tira ancora per un po’.',
+          'Puede escocer o picar mientras se aplica. Después notarás la piel tirante un rato.',
         ),
       },
       {
@@ -1479,6 +1637,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Quand la peau commence-t-elle à peler ?',
           'Wann beginnt das Schälen?',
           'Quando inizia la desquamazione?',
+          '¿Cuándo empieza la descamación?',
         ),
         a: t(
           'Meestal na 3 tot 6 dagen, en het duurt ongeveer een week.',
@@ -1487,6 +1646,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'En général après 3 à 6 jours, et ça dure environ une semaine.',
           'Meist nach 3 bis 6 Tagen, und es dauert etwa eine Woche.',
           'Di solito dopo 3–6 giorni, e dura circa una settimana.',
+          'Normalmente a los 3 a 6 días, y dura más o menos una semana.',
         ),
       },
     ],
@@ -1499,6 +1659,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Un nettoyage complet qui élimine les impuretés et les points noirs, avec un peeling pour une peau plus fraîche et plus uniforme.',
       'Eine gründliche Reinigung, bei der Unreinheiten und Mitesser entfernt werden, mit einem Peeling für eine frischere, ebenmäßigere Haut.',
       'Una pulizia accurata che elimina impurità e punti neri, con un peeling per una pelle più fresca e uniforme.',
+      'Una limpieza a fondo en la que se eliminan impurezas y puntos negros, con un peeling para una piel más fresca y uniforme.',
     ),
     how: t(
       'Na het reinigen verwijdert de huidtherapeut onzuiverheden en mee-eters, zo nodig met een dun naaldje. Daarna volgt een peeling die dode huidcellen losmaakt, bijvoorbeeld een fruitzuurpeeling die bij je huidtype past.',
@@ -1507,10 +1668,11 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Après le nettoyage, la thérapeute de la peau retire les impuretés et les points noirs, si besoin avec une fine aiguille. Vient ensuite un peeling qui décolle les cellules mortes, par exemple un peeling aux acides de fruits adapté à ton type de peau.',
       'Nach der Reinigung entfernt die Hauttherapeutin Unreinheiten und Mitesser, bei Bedarf mit einer feinen Nadel. Danach folgt ein Peeling, das abgestorbene Hautzellen löst, zum Beispiel ein Fruchtsäurepeeling, das zu deinem Hauttyp passt.',
       'Dopo la detersione, la terapista della pelle rimuove impurità e punti neri, se serve con un ago sottile. Segue un peeling che stacca le cellule morte, per esempio un peeling agli acidi della frutta adatto al tuo tipo di pelle.',
+      'Después de limpiar, la terapeuta de la piel elimina impurezas y puntos negros, si hace falta con una aguja fina. Luego viene un peeling que suelta las células muertas, por ejemplo un peeling de ácidos de frutas adecuado para tu tipo de piel.',
     ),
-    sessions: t('Een kuur', 'A course', 'سلسلة جلسات', 'Une cure', 'Eine Kur', 'Un ciclo'),
-    interval: t('8–10 dagen', '8–10 days', '\u200E8–10 أيام', '8–10 jours', '8–10 Tage', '8–10 giorni'),
-    downtime: t('Dezelfde dag', 'Same day', 'في اليوم نفسه', 'Le jour même', 'Am selben Tag', 'Lo stesso giorno'),
+    sessions: t('Een kuur', 'A course', 'سلسلة جلسات', 'Une cure', 'Eine Kur', 'Un ciclo', 'Un ciclo'),
+    interval: t('8–10 dagen', '8–10 days', '\u200E8–10 أيام', '8–10 jours', '8–10 Tage', '8–10 giorni', '8–10 días'),
+    downtime: t('Dezelfde dag', 'Same day', 'في اليوم نفسه', 'Le jour même', 'Am selben Tag', 'Lo stesso giorno', 'El mismo día'),
     results: t(
       'Schonere poriën, minder nieuwe ontstekingen en een frissere teint.',
       'Cleaner pores, fewer new breakouts and a fresher complexion.',
@@ -1518,6 +1680,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Des pores plus nets, moins de nouvelles inflammations et un teint plus frais.',
       'Sauberere Poren, weniger neue Entzündungen und ein frischerer Teint.',
       'Pori più puliti, meno nuove infiammazioni e un incarnato più fresco.',
+      'Poros más limpios, menos brotes nuevos y un cutis más fresco.',
     ),
     aftercare: [
       t(
@@ -1527,6 +1690,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'SPF 30+ chaque jour.',
         'Täglich SPF 30+.',
         'SPF 30+ ogni giorno.',
+        'SPF 30+ a diario.',
       ),
       t(
         'Korstjes met rust laten.',
@@ -1535,6 +1699,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Laisse les croûtes tranquilles.',
         'Krusten in Ruhe lassen.',
         'Lascia stare le crosticine.',
+        'Deja las costritas en paz.',
       ),
     ],
     faq: [
@@ -1546,6 +1711,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'À quelle fréquence ai-je besoin d’un soin ?',
           'Wie oft brauche ich eine Behandlung?',
           'Ogni quanto mi serve un trattamento?',
+          '¿Cada cuánto necesito una sesión?',
         ),
         a: t(
           'Dat hangt af van je huid. Vaak wordt een kuur geadviseerd, met een peeling om de 8 tot 10 dagen.',
@@ -1554,6 +1720,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Cela dépend de ta peau. On conseille souvent une cure, avec un peeling tous les 8 à 10 jours.',
           'Das hängt von deiner Haut ab. Oft wird eine Kur empfohlen, mit einem Peeling alle 8 bis 10 Tage.',
           'Dipende dalla tua pelle. Spesso si consiglia un ciclo, con un peeling ogni 8–10 giorni.',
+          'Depende de tu piel. Muchas veces se recomienda un ciclo, con un peeling cada 8 a 10 días.',
         ),
       },
     ],
@@ -1566,6 +1733,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Des injections dans le cuir chevelu à base d’acide hyaluronique, de vitamines et de facteurs de croissance, qui stimulent les follicules et freinent la chute de cheveux.',
       'Injektionen in die Kopfhaut mit Hyaluronsäure, Vitaminen und Wachstumsfaktoren, die die Haarfollikel anregen und Haarausfall bremsen.',
       'Iniezioni nel cuoio capelluto con acido ialuronico, vitamine e fattori di crescita, che stimolano i follicoli e frenano la caduta dei capelli.',
+      'Inyecciones en el cuero cabelludo con ácido hialurónico, vitaminas y factores de crecimiento, que estimulan los folículos y frenan la caída del cabello.',
     ),
     how: t(
       'Met de U225 meso-injector wordt XL Hair via kleine gaatjes in de hoofdhuid gebracht, wat ook de doorbloeding stimuleert. Hyaluronzuur hydrateert de hoofdhuid, en vitaminen en groeifactoren ondersteunen de haargroei.',
@@ -1574,10 +1742,11 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Avec l’injecteur de mésothérapie U225, XL Hair est introduit dans le cuir chevelu par de minuscules piqûres, ce qui stimule aussi la circulation sanguine. L’acide hyaluronique hydrate le cuir chevelu, et les vitamines et facteurs de croissance soutiennent la pousse des cheveux.',
       'Mit dem Meso-Injektor U225 wird XL Hair über kleine Einstiche in die Kopfhaut eingebracht, was auch die Durchblutung anregt. Hyaluronsäure spendet der Kopfhaut Feuchtigkeit, und Vitamine und Wachstumsfaktoren unterstützen das Haarwachstum.',
       'Con il mesoiniettore U225, XL Hair viene introdotto nel cuoio capelluto con piccole punture, il che stimola anche la circolazione. L’acido ialuronico idrata il cuoio capelluto, e vitamine e fattori di crescita sostengono la crescita dei capelli.',
+      'Con el mesoinyector U225 se introduce XL Hair en el cuero cabelludo a través de pequeñas punciones, lo que también estimula la circulación. El ácido hialurónico hidrata el cuero cabelludo, y las vitaminas y los factores de crecimiento favorecen el crecimiento del pelo.',
     ),
-    sessions: t('6–8', '6–8', '\u200E6–8', '6–8', '6–8', '6–8'),
-    interval: t('1–2 weken', '1–2 weeks', '\u200E1–2 أسبوع', '1–2 semaines', '1–2 Wochen', '1–2 settimane'),
-    downtime: t('Nauwelijks', 'Hardly any', 'شبه معدوم', 'Quasi aucune', 'Kaum', 'Quasi nessuno'),
+    sessions: t('6–8', '6–8', '\u200E6–8', '6–8', '6–8', '6–8', '6–8'),
+    interval: t('1–2 weken', '1–2 weeks', '\u200E1–2 أسبوع', '1–2 semaines', '1–2 Wochen', '1–2 settimane', '1–2 semanas'),
+    downtime: t('Nauwelijks', 'Hardly any', 'شبه معدوم', 'Quasi aucune', 'Kaum', 'Quasi nessuno', 'Casi ninguna'),
     results: t(
       'Actieve haaruitval stopt meestal binnen ongeveer drie maanden. Het eindresultaat zie je rond zes maanden na de laatste behandeling.',
       'Active hair loss usually stops within about three months. You’ll see the final result around six months after the last treatment.',
@@ -1585,6 +1754,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'La chute active s’arrête généralement en trois mois environ. Tu vois le résultat final autour de six mois après la dernière séance.',
       'Aktiver Haarausfall stoppt meist innerhalb von etwa drei Monaten. Das Endergebnis siehst du etwa sechs Monate nach der letzten Behandlung.',
       'La caduta attiva di solito si ferma entro circa tre mesi. Il risultato finale lo vedi circa sei mesi dopo l’ultima seduta.',
+      'La caída activa suele detenerse en unos tres meses. El resultado final lo ves unos seis meses después de la última sesión.',
     ),
     aftercare: [
       t(
@@ -1594,6 +1764,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         '24 heures sans soleil, sauna ni produits sur le cuir chevelu.',
         '24 Stunden keine Sonne, Sauna oder Produkte auf der Kopfhaut.',
         'Per 24 ore niente sole, sauna o prodotti sul cuoio capelluto.',
+        'Nada de sol, sauna ni productos en el cuero cabelludo durante 24 horas.',
       ),
       t(
         '24 uur niet intensief sporten.',
@@ -1602,6 +1773,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         '24 heures sans sport intensif.',
         '24 Stunden keinen intensiven Sport treiben.',
         'Per 24 ore niente sport intenso.',
+        'Nada de deporte intenso durante 24 horas.',
       ),
     ],
     faq: [
@@ -1613,6 +1785,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Combien de fois dois-je venir ?',
           'Wie oft muss ich kommen?',
           'Quante volte devo venire?',
+          '¿Cada cuánto tengo que venir?',
         ),
         a: t(
           'Mannen minstens 6 en vrouwen minstens 8 keer, met 1 tot 2 weken ertussen. Daarna eventueel onderhoud.',
@@ -1621,6 +1794,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Les hommes au moins 6 fois, les femmes au moins 8, avec 1 à 2 semaines d’intervalle. Ensuite, un entretien si besoin.',
           'Männer mindestens 6-mal, Frauen mindestens 8-mal, mit 1 bis 2 Wochen Abstand. Danach eventuell Auffrischungen.',
           'Gli uomini almeno 6 volte e le donne almeno 8, con 1–2 settimane di intervallo. Poi, se serve, il mantenimento.',
+          'Los hombres al menos 6 veces y las mujeres al menos 8, con 1 a 2 semanas entre medias. Después, mantenimiento si hace falta.',
         ),
       },
       {
@@ -1631,6 +1805,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Un résultat dès la première séance ?',
           'Sehe ich nach einer Behandlung ein Ergebnis?',
           'Vedo risultati dopo una sola seduta?',
+          '¿Veré resultado después de una sesión?',
         ),
         a: t(
           'Nee, haar groeit langzaam. Het effect is meestal rond zes maanden na de laatste behandeling duidelijk.',
@@ -1639,6 +1814,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Non, les cheveux poussent lentement. L’effet est généralement net environ six mois après la dernière séance.',
           'Nein, Haare wachsen langsam. Die Wirkung ist meist etwa sechs Monate nach der letzten Behandlung deutlich.',
           'No, i capelli crescono lentamente. Di solito l’effetto è evidente circa sei mesi dopo l’ultima seduta.',
+          'No, el pelo crece despacio. El efecto suele notarse claramente unos seis meses después de la última sesión.',
         ),
       },
     ],
@@ -1651,6 +1827,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Apprends à masquer naturellement, au quotidien, les différences de couleur de ta peau avec une crème de camouflage Lycogel à ta teinte.',
       'Lerne, Farbunterschiede deiner Haut täglich natürlich abzudecken, mit einer Camouflage-Creme von Lycogel in deinem Farbton.',
       'Impara a coprire ogni giorno, in modo naturale, le differenze di colore della tua pelle con una crema camouflage di Lycogel nella tua tonalità.',
+      'Aprende a disimular cada día, de forma natural, las diferencias de color de tu piel con una crema de camuflaje de Lycogel en tu tono.',
     ),
     how: t(
       'Samen met de huidtherapeut kies je de kleur die het best bij je teint past. Je leert de crème zelf aanbrengen, fixeren en verwijderen. Lycogel dekt beter dan foundation, laat je huid ademen en bevat SPF 30.',
@@ -1659,9 +1836,10 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Avec la thérapeute de la peau, tu choisis la teinte qui correspond le mieux à ton teint. Tu apprends à appliquer, fixer et retirer la crème toi-même. Lycogel couvre mieux qu’un fond de teint, laisse respirer ta peau et contient un SPF 30.',
       'Gemeinsam mit der Hauttherapeutin wählst du den Farbton, der am besten zu deinem Teint passt. Du lernst, die Creme selbst aufzutragen, zu fixieren und zu entfernen. Lycogel deckt besser ab als Foundation, lässt deine Haut atmen und enthält SPF 30.',
       'Insieme alla terapista della pelle scegli il colore più adatto al tuo incarnato. Impari ad applicare, fissare e rimuovere la crema in autonomia. Lycogel copre meglio del fondotinta, lascia respirare la pelle e contiene SPF 30.',
+      'Junto con la terapeuta de la piel eliges el tono que mejor va con tu cutis. Aprendes a aplicar, fijar y retirar la crema por tu cuenta. Lycogel cubre mejor que una base de maquillaje, deja respirar tu piel y lleva SPF 30.',
     ),
-    sessions: t('1', '1', '1', '1', '1', '1'),
-    downtime: t('Geen', 'None', 'لا يوجد', 'Aucune', 'Keine', 'Nessuno'),
+    sessions: t('1', '1', '1', '1', '1', '1', '1'),
+    downtime: t('Geen', 'None', 'لا يوجد', 'Aucune', 'Keine', 'Nessuno', 'Ninguna'),
     results: t(
       'Direct effect: zolang je de crème draagt, zijn de kleurverschillen niet te zien.',
       'Instant effect: as long as you’re wearing the cream, the colour differences don’t show.',
@@ -1669,6 +1847,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Effet immédiat : tant que tu portes la crème, les différences de couleur ne se voient pas.',
       'Sofortige Wirkung: Solange du die Creme trägst, sind die Farbunterschiede nicht zu sehen.',
       'Effetto immediato: finché porti la crema, le differenze di colore non si vedono.',
+      'Efecto inmediato: mientras llevas la crema, las diferencias de color no se ven.',
     ),
     aftercare: [
       t(
@@ -1678,6 +1857,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Applique la crème toi-même chaque jour, comme tu l’as appris.',
         'Täglich selbst auftragen, so wie du es gelernt hast.',
         'Applica la crema da te ogni giorno, come hai imparato.',
+        'Aplícala tú cada día, como has aprendido.',
       ),
     ],
     faq: [
@@ -1689,6 +1869,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Aussi pour les peaux sensibles ?',
           'Auch für empfindliche Haut?',
           'Anche per la pelle sensibile?',
+          '¿También para piel sensible?',
         ),
         a: t(
           'Ja, de producten zijn hypoallergeen en bevatten een zonnefilter.',
@@ -1697,6 +1878,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Oui, les produits sont hypoallergéniques et contiennent un filtre solaire.',
           'Ja, die Produkte sind hypoallergen und enthalten einen UV-Filter.',
           'Sì, i prodotti sono ipoallergenici e contengono un filtro solare.',
+          'Sí, los productos son hipoalergénicos y llevan filtro solar.',
         ),
       },
       {
@@ -1707,6 +1889,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Est-ce remboursé ?',
           'Wird es erstattet?',
           'È rimborsato?',
+          '¿Lo cubre el seguro?',
         ),
         a: t(
           'De meeste camouflagebehandelingen worden vergoed uit de aanvullende zorgverzekering.',
@@ -1715,6 +1898,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'La plupart des soins de camouflage sont remboursés par l’assurance complémentaire.',
           'Die meisten Camouflage-Behandlungen werden von der Zusatzversicherung erstattet.',
           'La maggior parte dei trattamenti camouflage è rimborsata dall’assicurazione integrativa.',
+          'La mayoría de los tratamientos de camuflaje los cubre el seguro complementario.',
         ),
       },
     ],
@@ -1727,6 +1911,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'L’IPL (lumière pulsée intense) contre les rougeurs superficielles, les petits vaisseaux et les taches, y compris après l’acné.',
       'IPL (Intense Pulsed Light) gegen oberflächliche Rötungen, feine Äderchen und Pigment, auch nach Akne.',
       'L’IPL (luce pulsata intensa) contro rossori superficiali, capillari sottili e macchie, anche dopo l’acne.',
+      'IPL (Intense Pulsed Light) contra el enrojecimiento superficial, los vasitos finos y la pigmentación, también después del acné.',
     ),
     how: t(
       'IPL geeft gepulseerd licht in meerdere golflengtes, dat wordt opgenomen door het bloed in kleine vaatjes of door pigment. De warmte sluit vaatjes af of breekt pigment af, waarna je lichaam het opruimt.',
@@ -1735,10 +1920,11 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'L’IPL émet une lumière pulsée sur plusieurs longueurs d’onde, absorbée par le sang des petits vaisseaux ou par le pigment. La chaleur referme les vaisseaux ou décompose le pigment, puis ton corps l’élimine.',
       'IPL gibt gepulstes Licht in mehreren Wellenlängen ab, das vom Blut in kleinen Äderchen oder vom Pigment aufgenommen wird. Die Wärme verschließt Äderchen oder spaltet Pigment auf, und dein Körper transportiert es danach ab.',
       'L’IPL emette luce pulsata in più lunghezze d’onda, che viene assorbita dal sangue nei piccoli capillari o dal pigmento. Il calore chiude i capillari o scompone il pigmento, che poi il tuo corpo elimina.',
+      'La IPL emite luz pulsada en varias longitudes de onda, que absorben la sangre de los vasitos o el pigmento. El calor cierra los vasitos o descompone el pigmento, y después tu cuerpo lo elimina.',
     ),
-    sessions: t('1–3', '1–3', '\u200E1–3', '1–3', '1–3', '1–3'),
-    interval: t('4 weken', '4 weeks', '4 أسابيع', '4 semaines', '4 Wochen', '4 settimane'),
-    downtime: t('1–2 dagen', '1–2 days', '\u200E1–2 يوم', '1–2 jours', '1–2 Tage', '1–2 giorni'),
+    sessions: t('1–3', '1–3', '\u200E1–3', '1–3', '1–3', '1–3', '1–3'),
+    interval: t('4 weken', '4 weeks', '4 أسابيع', '4 semaines', '4 Wochen', '4 settimane', '4 semanas'),
+    downtime: t('1–2 dagen', '1–2 days', '\u200E1–2 يوم', '1–2 jours', '1–2 Tage', '1–2 giorni', '1–2 días'),
     results: t(
       'Een egalere en rustigere huid. Bij aanleg is onderhoud zinvol.',
       'More even, calmer skin. If you’re prone to it, maintenance is worthwhile.',
@@ -1746,6 +1932,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Une peau plus uniforme et plus apaisée. En cas de prédisposition, un entretien est utile.',
       'Eine ebenmäßigere und ruhigere Haut. Bei Veranlagung ist eine Auffrischung sinnvoll.',
       'Una pelle più uniforme e calma. In caso di predisposizione è utile il mantenimento.',
+      'Una piel más uniforme y más tranquila. Si tienes tendencia, merece la pena hacer mantenimiento.',
     ),
     aftercare: [
       t(
@@ -1755,6 +1942,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'SPF 30+ chaque jour.',
         'Täglich SPF 30+.',
         'SPF 30+ ogni giorno.',
+        'SPF 30+ a diario.',
       ),
       t(
         '48–72 uur geen sauna, sport of alcohol.',
@@ -1763,6 +1951,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         '48–72 heures sans sauna, sport ni alcool.',
         '48–72 Stunden auf Sauna, Sport und Alkohol verzichten.',
         'Per 48–72 ore niente sauna, sport o alcol.',
+        'Nada de sauna, deporte ni alcohol durante 48–72 horas.',
       ),
       t(
         'Minstens 4 weken geen zonnebank of directe zon.',
@@ -1771,6 +1960,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Pas de cabine de bronzage ni de soleil direct pendant au moins 4 semaines.',
         'Mindestens 4 Wochen kein Solarium und keine direkte Sonne.',
         'Per almeno 4 settimane niente lettino abbronzante o sole diretto.',
+        'Nada de rayos UVA ni sol directo durante al menos 4 semanas.',
       ),
     ],
     faq: [
@@ -1782,6 +1972,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Quelle différence avec un laser ?',
           'Was ist der Unterschied zu einem Laser?',
           'Che differenza c’è con un laser?',
+          '¿En qué se diferencia de un láser?',
         ),
         a: t(
           'IPL gebruikt meerdere kleuren licht en werkt breder; een laser gebruikt één krachtige golflengte. Bij dieper gelegen vaatjes kiest de huidtherapeut de laser.',
@@ -1790,6 +1981,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'L’IPL utilise plusieurs couleurs de lumière et agit plus largement ; un laser utilise une seule longueur d’onde puissante. Pour les vaisseaux plus profonds, la thérapeute de la peau choisit le laser.',
           'IPL nutzt mehrere Lichtfarben und wirkt breiter; ein Laser nutzt eine einzige starke Wellenlänge. Bei tiefer liegenden Äderchen wählt die Hauttherapeutin den Laser.',
           'L’IPL usa più colori di luce e agisce in modo più ampio; un laser usa una sola lunghezza d’onda potente. Per i capillari più profondi la terapista della pelle sceglie il laser.',
+          'La IPL usa varios colores de luz y actúa de forma más amplia; un láser usa una sola longitud de onda potente. Para los vasitos más profundos, la terapeuta de la piel elige el láser.',
         ),
       },
     ],
@@ -1802,6 +1994,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Un massage intensif des couches profondes de la peau : du sport pour ta peau, pour une meilleure circulation, plus de collagène et tout de suite une mine plus fraîche.',
       'Eine intensive Massage der tieferen Hautschichten: Fitness für deine Haut, für eine bessere Durchblutung, mehr Kollagen und sofort eine frischere Ausstrahlung.',
       'Un massaggio intenso degli strati profondi della pelle: una palestra per la tua pelle, per una migliore circolazione, più collagene e subito un aspetto più fresco.',
+      'Un masaje intenso de las capas más profundas de la piel: un entrenamiento para tu piel, para una mejor circulación, más colágeno y un aspecto más fresco al momento.',
     ),
     how: t(
       'De massage werkt in de diepere huidlagen en stimuleert de doorbloeding, waardoor je huid meer collageen en elastine aanmaakt. Verklevingen worden losgemaakt. In een kuur werkt het het best.',
@@ -1810,6 +2003,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Le massage agit dans les couches profondes de la peau et stimule la circulation, ce qui pousse ta peau à produire plus de collagène et d’élastine. Les adhérences sont libérées. C’est en cure qu’il fonctionne le mieux.',
       'Die Massage wirkt in den tieferen Hautschichten und regt die Durchblutung an, wodurch deine Haut mehr Kollagen und Elastin bildet. Verklebungen werden gelöst. Als Kur wirkt sie am besten.',
       'Il massaggio lavora negli strati profondi della pelle e stimola la circolazione, così la pelle produce più collagene ed elastina. Le aderenze vengono sciolte. Funziona meglio in un ciclo.',
+      'El masaje actúa en las capas profundas de la piel y estimula la circulación, así tu piel produce más colágeno y elastina. Además suelta las adherencias. Funciona mejor en un ciclo.',
     ),
     sessions: t(
       '6, dan onderhoud',
@@ -1818,9 +2012,10 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       '6, puis entretien',
       '6, dann Auffrischung',
       '6, poi mantenimento',
+      '6, luego mantenimiento',
     ),
-    interval: t('1 week', '1 week', 'أسبوع', '1 semaine', '1 Woche', '1 settimana'),
-    downtime: t('Enkele uren', 'A few hours', 'بضع ساعات', 'Quelques heures', 'Wenige Stunden', 'Poche ore'),
+    interval: t('1 week', '1 week', 'أسبوع', '1 semaine', '1 Woche', '1 settimana', '1 semana'),
+    downtime: t('Enkele uren', 'A few hours', 'بضع ساعات', 'Quelques heures', 'Wenige Stunden', 'Poche ore', 'Unas horas'),
     results: t(
       'Al na de eerste keer een frissere uitstraling en een gezonde glans.',
       'A fresher look and a healthy glow from the very first session.',
@@ -1828,6 +2023,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Dès la première séance, une mine plus fraîche et un éclat sain.',
       'Schon nach dem ersten Mal eine frischere Ausstrahlung und ein gesunder Glanz.',
       'Già dopo la prima volta un aspetto più fresco e una luminosità sana.',
+      'Desde la primera vez, un aspecto más fresco y un brillo saludable.',
     ),
     aftercare: [
       t(
@@ -1837,6 +2033,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Bois beaucoup d’eau.',
         'Viel Wasser trinken.',
         'Bevi molta acqua.',
+        'Bebe mucha agua.',
       ),
       t(
         '24 uur geen alcohol.',
@@ -1845,6 +2042,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         '24 heures sans alcool.',
         '24 Stunden kein Alkohol.',
         'Per 24 ore niente alcol.',
+        'Nada de alcohol durante 24 horas.',
       ),
       t(
         'Tijdens de kuur verstevigende producten gebruiken.',
@@ -1853,11 +2051,12 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Pendant la cure, utilise des produits raffermissants.',
         'Während der Kur straffende Produkte verwenden.',
         'Durante il ciclo usa prodotti rassodanti.',
+        'Usa productos reafirmantes durante el ciclo.',
       ),
     ],
     faq: [
       {
-        q: t('Doet het pijn?', 'Does it hurt?', 'هل يؤلم؟', 'Ça fait mal ?', 'Tut es weh?', 'Fa male?'),
+        q: t('Doet het pijn?', 'Does it hurt?', 'هل يؤلم؟', 'Ça fait mal ?', 'Tut es weh?', 'Fa male?', '¿Duele?'),
         a: t(
           'Het kan wat gevoelig zijn. Je huid kan daarna even rood en beurs aanvoelen.',
           'It can feel a bit tender. Afterwards your skin may look red and feel sore for a while.',
@@ -1865,6 +2064,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Ça peut être un peu sensible. Ensuite, ta peau peut être rouge et endolorie un moment.',
           'Es kann etwas unangenehm sein. Danach kann deine Haut kurz gerötet und druckempfindlich sein.',
           'Può essere un po’ fastidioso. Dopo, la pelle può essere arrossata e indolenzita per un breve periodo.',
+          'Puede resultar algo sensible. Después tu piel puede estar un rato roja y dolorida.',
         ),
       },
     ],
@@ -1877,6 +2077,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Le PRX-T33 est un skinbooster sans aiguille qui rend ta peau immédiatement plus repulpée et lumineuse, et améliore son renouvellement et sa fermeté.',
       'PRX-T33 ist ein nadelfreier Skinbooster, der deine Haut sofort voller und strahlender macht und ihre Erneuerung und Festigkeit verbessert.',
       'PRX-T33 è uno skinbooster senza aghi che rende subito la pelle più rimpolpata e luminosa, e ne migliora rinnovamento e compattezza.',
+      'PRX-T33 es un skinbooster sin agujas que deja tu piel al momento más llena y luminosa, y mejora su renovación y firmeza.',
     ),
     how: t(
       'PRX-T33 combineert TCA met waterstofperoxide en kojinezuur. Het wordt in stappen met een intensieve massage ingemasseerd en stimuleert collageen, zonder het vervellen van een klassieke TCA-peeling.',
@@ -1885,6 +2086,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Le PRX-T33 associe le TCA au peroxyde d’hydrogène et à l’acide kojique. Il est appliqué en plusieurs étapes par un massage intensif et stimule le collagène, sans la desquamation d’un peeling TCA classique.',
       'PRX-T33 kombiniert TCA mit Wasserstoffperoxid und Kojisäure. Es wird schrittweise mit einer intensiven Massage einmassiert und regt Kollagen an, ohne das Schälen eines klassischen TCA-Peelings.',
       'PRX-T33 unisce TCA, perossido di idrogeno e acido kojico. Viene applicato in più fasi con un massaggio intenso e stimola il collagene, senza la desquamazione di un classico peeling TCA.',
+      'PRX-T33 combina TCA con peróxido de hidrógeno y ácido kójico. Se aplica por fases con un masaje intenso y estimula el colágeno, sin la descamación de un peeling de TCA clásico.',
     ),
     sessions: t(
       '1, of een kuur van 4–6',
@@ -1893,8 +2095,9 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       '1, ou une cure de 4–6',
       '1 oder eine Kur mit 4–6',
       '1, o un ciclo di 4–6',
+      '1, o un ciclo de 4–6',
     ),
-    downtime: t('Enkele uren', 'A few hours', 'بضع ساعات', 'Quelques heures', 'Wenige Stunden', 'Poche ore'),
+    downtime: t('Enkele uren', 'A few hours', 'بضع ساعات', 'Quelques heures', 'Wenige Stunden', 'Poche ore', 'Unas horas'),
     results: t(
       'Direct een vollere, gladdere en stralende huid. Ideaal voor een speciale gelegenheid.',
       'Instantly fuller, smoother, radiant skin. Ideal for a special occasion.',
@@ -1902,6 +2105,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Une peau immédiatement plus repulpée, plus lisse et plus lumineuse. Idéal pour une occasion spéciale.',
       'Sofort eine vollere, glattere und strahlende Haut. Ideal für einen besonderen Anlass.',
       'Subito una pelle più rimpolpata, liscia e luminosa. Ideale per un’occasione speciale.',
+      'Al momento, una piel más llena, más lisa y luminosa. Ideal para una ocasión especial.',
     ),
     aftercare: [
       t(
@@ -1911,6 +2115,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Applique la crème WiQo fournie deux fois par jour, pendant au moins 6 jours.',
         'Mindestens 6 Tage zweimal täglich die mitgegebene WiQo-Creme auftragen.',
         'Applica la crema WiQo che ti diamo due volte al giorno, per almeno 6 giorni.',
+        'Usa la crema WiQo que te damos dos veces al día durante al menos 6 días.',
       ),
       t(
         'Eerste 7 dagen geen directe zon; dagelijks SPF 30+.',
@@ -1919,6 +2124,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Pas de soleil direct les 7 premiers jours ; SPF 30+ chaque jour.',
         'In den ersten 7 Tagen keine direkte Sonne; täglich SPF 30+.',
         'Niente sole diretto nei primi 7 giorni; SPF 30+ ogni giorno.',
+        'Nada de sol directo los primeros 7 días; SPF 30+ a diario.',
       ),
       t(
         '48 uur geen sport, sauna of hete baden.',
@@ -1927,6 +2133,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         '48 heures sans sport, sauna ni bains chauds.',
         '48 Stunden auf Sport, Sauna und heiße Bäder verzichten.',
         'Per 48 ore niente sport, sauna o bagni caldi.',
+        'Nada de deporte, sauna ni baños calientes durante 48 horas.',
       ),
     ],
     faq: [
@@ -1938,6 +2145,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Est-ce que ça gêne longtemps ?',
           'Habe ich danach lange Beschwerden?',
           'Mi darà fastidio a lungo?',
+          '¿Me molestará mucho tiempo?',
         ),
         a: t(
           'Nee, de lichte roodheid is meestal binnen een paar uur weg.',
@@ -1946,6 +2154,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Non, la légère rougeur disparaît généralement en quelques heures.',
           'Nein, die leichte Rötung ist meist nach ein paar Stunden weg.',
           'No, il leggero rossore di solito sparisce in poche ore.',
+          'No, el ligero enrojecimiento suele desaparecer en unas horas.',
         ),
       },
       {
@@ -1956,6 +2165,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Le PRX convient-il à tout le monde ?',
           'Ist PRX für alle geeignet?',
           'PRX va bene per tutti?',
+          '¿El PRX es para todo el mundo?',
         ),
         a: t(
           'Ja, het is geschikt voor alle huidtypen.',
@@ -1964,6 +2174,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Oui, il convient à tous les types de peau.',
           'Ja, es eignet sich für alle Hauttypen.',
           'Sì, è adatto a tutti i tipi di pelle.',
+          'Sí, es apto para todos los tipos de piel.',
         ),
       },
     ],
@@ -1976,6 +2187,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Un soin du visage qui nettoie, hydrate et redonne de l’éclat au visage, au cou et au décolleté.',
       'Eine pflegende Gesichtsbehandlung, die Gesicht, Hals und Dekolleté reinigt, mit Feuchtigkeit versorgt und wieder strahlen lässt.',
       'Un trattamento viso che deterge, idrata e ridona luminosità a viso, collo e décolleté.',
+      'Un tratamiento facial nutritivo que limpia e hidrata la cara, el cuello y el escote, y les devuelve la luminosidad.',
     ),
     how: t(
       'Elke facial begint met een huidanalyse. Daarna volgen reiniging, dieptereiniging, een peeling, een masker, een serum en verzorging. Je facial kan worden uitgebreid met een van de specialistische technieken van Pure Clinics.',
@@ -1984,9 +2196,10 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Chaque soin du visage commence par une analyse de peau. Suivent le nettoyage, le nettoyage en profondeur, un peeling, un masque, un sérum et un soin final. Ton soin peut être complété par l’une des techniques spécialisées de Pure Clinics.',
       'Jedes Facial beginnt mit einer Hautanalyse. Danach folgen Reinigung, Tiefenreinigung, ein Peeling, eine Maske, ein Serum und Pflege. Dein Facial lässt sich mit einer der Spezialtechniken von Pure Clinics erweitern.',
       'Ogni trattamento viso inizia con un’analisi della pelle. Seguono detersione, pulizia profonda, peeling, maschera, siero e cura finale. Il tuo trattamento può essere arricchito con una delle tecniche specialistiche di Pure Clinics.',
+      'Cada facial empieza con un análisis de la piel. Luego vienen la limpieza, la limpieza profunda, un peeling, una mascarilla, un sérum y el cuidado final. Puedes ampliar tu facial con una de las técnicas especializadas de Pure Clinics.',
     ),
-    sessions: t('1', '1', '1', '1', '1', '1'),
-    downtime: t('Geen', 'None', 'لا يوجد', 'Aucune', 'Keine', 'Nessuno'),
+    sessions: t('1', '1', '1', '1', '1', '1', '1'),
+    downtime: t('Geen', 'None', 'لا يوجد', 'Aucune', 'Keine', 'Nessuno', 'Ninguna'),
     results: t(
       'Een grondig gereinigde, goed gehydrateerde huid met een gezonde glow.',
       'Thoroughly cleansed, well-hydrated skin with a healthy glow.',
@@ -1994,6 +2207,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Une peau nettoyée en profondeur, bien hydratée, avec un éclat sain.',
       'Eine gründlich gereinigte, gut durchfeuchtete Haut mit gesundem Glow.',
       'Una pelle pulita a fondo, ben idratata e con una luminosità sana.',
+      'Una piel limpia a fondo, bien hidratada y con un brillo saludable.',
     ),
     aftercare: [
       t(
@@ -2003,6 +2217,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Utilise les produits conseillés pour garder le résultat.',
         'Die empfohlenen Produkte verwenden, damit das Ergebnis erhalten bleibt.',
         'Usa i prodotti consigliati per mantenere il risultato.',
+        'Usa los productos recomendados para que el resultado dure.',
       ),
       t(
         'Kies minerale make-up die de huid laat ademen.',
@@ -2011,6 +2226,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Choisis un maquillage minéral qui laisse respirer la peau.',
         'Wähle mineralisches Make-up, das die Haut atmen lässt.',
         'Scegli un trucco minerale che lasci respirare la pelle.',
+        'Elige un maquillaje mineral que deje respirar la piel.',
       ),
     ],
   },
@@ -2022,6 +2238,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Des peelings chimiques aux acides de fruits qui décollent les cellules mortes, pour une peau plus lisse, plus uniforme et plus fraîche. Il existe un acide pour chaque type de peau.',
       'Chemische Peelings mit Fruchtsäuren, die abgestorbene Hautzellen lösen, für eine glattere, ebenmäßigere und frischere Haut. Es gibt eine Säure für jeden Hauttyp.',
       'Peeling chimici agli acidi della frutta che staccano le cellule morte, per una pelle più liscia, uniforme e fresca. C’è un acido per ogni tipo di pelle.',
+      'Peelings químicos con ácidos de frutas que sueltan las células muertas, para una piel más lisa, uniforme y fresca. Hay un ácido para cada tipo de piel.',
     ),
     how: t(
       'De huidtherapeut kiest het zuur dat bij je huid past: amandelzuur voor een gevoelige of acnegevoelige huid, melkzuur voor een droge huid, glycolzuur voor een doffe huid en salicylzuur voor een vette huid met verstopte poriën. Tijdens de behandeling houdt de huidtherapeut je huid in de gaten en neutraliseert de peeling op het juiste moment.',
@@ -2030,10 +2247,11 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'La thérapeute de la peau choisit l’acide adapté à ta peau : l’acide mandélique pour une peau sensible ou à tendance acnéique, l’acide lactique pour une peau sèche, l’acide glycolique pour une peau terne et l’acide salicylique pour une peau grasse aux pores obstrués. Pendant le soin, elle surveille ta peau et neutralise le peeling au bon moment.',
       'Die Hauttherapeutin wählt die Säure, die zu deiner Haut passt: Mandelsäure für empfindliche oder zu Akne neigende Haut, Milchsäure für trockene Haut, Glykolsäure für fahle Haut und Salicylsäure für fettige Haut mit verstopften Poren. Während der Behandlung behält die Hauttherapeutin deine Haut im Blick und neutralisiert das Peeling im richtigen Moment.',
       'La terapista della pelle sceglie l’acido adatto alla tua pelle: acido mandelico per pelle sensibile o a tendenza acneica, acido lattico per pelle secca, acido glicolico per pelle spenta e acido salicilico per pelle grassa con pori ostruiti. Durante il trattamento la terapista tiene d’occhio la tua pelle e neutralizza il peeling al momento giusto.',
+      'La terapeuta de la piel elige el ácido adecuado para tu piel: ácido mandélico para la piel sensible o con tendencia acneica, ácido láctico para la piel seca, ácido glicólico para la piel apagada y ácido salicílico para la piel grasa con poros obstruidos. Durante el tratamiento, la terapeuta de la piel vigila tu piel y neutraliza el peeling en el momento justo.',
     ),
-    sessions: t('Een kuur', 'A course', 'سلسلة جلسات', 'Une cure', 'Eine Kur', 'Un ciclo'),
-    interval: t('8–10 dagen', '8–10 days', '\u200E8–10 أيام', '8–10 jours', '8–10 Tage', '8–10 giorni'),
-    downtime: t('Kort', 'Short', 'قصير', 'Courte', 'Kurz', 'Breve'),
+    sessions: t('Een kuur', 'A course', 'سلسلة جلسات', 'Une cure', 'Eine Kur', 'Un ciclo', 'Un ciclo'),
+    interval: t('8–10 dagen', '8–10 days', '\u200E8–10 أيام', '8–10 jours', '8–10 Tage', '8–10 giorni', '8–10 días'),
+    downtime: t('Kort', 'Short', 'قصير', 'Courte', 'Kurz', 'Breve', 'Corta'),
     results: t(
       'Een gladdere, egalere en frissere huid.',
       'Smoother, more even and fresher skin.',
@@ -2041,6 +2259,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
       'Une peau plus lisse, plus uniforme et plus fraîche.',
       'Eine glattere, ebenmäßigere und frischere Haut.',
       'Una pelle più liscia, uniforme e fresca.',
+      'Una piel más lisa, más uniforme y más fresca.',
     ),
     aftercare: [
       t(
@@ -2050,6 +2269,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Pas de soleil direct pendant 1 à 2 semaines ; SPF 30+ chaque jour.',
         '1 bis 2 Wochen keine direkte Sonne; täglich SPF 30+.',
         'Per 1–2 settimane niente sole diretto; SPF 30+ ogni giorno.',
+        'Nada de sol directo durante 1 a 2 semanas; SPF 30+ a diario.',
       ),
       t(
         'Tijdelijk geen zuren of retinol.',
@@ -2058,6 +2278,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Pas d’acides ni de rétinol pendant quelque temps.',
         'Vorübergehend keine Säuren und kein Retinol.',
         'Per un po’ niente acidi o retinolo.',
+        'Durante un tiempo, nada de ácidos ni retinol.',
       ),
       t(
         'Niet scrubben en geen velletjes lostrekken.',
@@ -2066,6 +2287,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
         'Pas de gommage, et n’arrache pas les petites peaux.',
         'Nicht rubbeln und keine Hautschüppchen abziehen.',
         'Niente scrub e non strappare le pellicine.',
+        'No exfolies ni tires de la piel que se pela.',
       ),
     ],
     faq: [
@@ -2077,6 +2299,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Un peeling, ça fait mal ?',
           'Tut ein Peeling weh?',
           'Il peeling fa male?',
+          '¿Duele un peeling?',
         ),
         a: t(
           'Het kan prikken of branden. Hoe sterker de peeling, hoe meer je voelt.',
@@ -2085,6 +2308,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'Ça peut picoter ou brûler. Plus le peeling est fort, plus tu le sens.',
           'Es kann prickeln oder brennen. Je stärker das Peeling, desto mehr spürst du.',
           'Può pizzicare o bruciare. Più il peeling è forte, più lo senti.',
+          'Puede picar o escocer. Cuanto más fuerte es el peeling, más lo notas.',
         ),
       },
       {
@@ -2095,6 +2319,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'À quelle fréquence ai-je besoin d’un peeling ?',
           'Wie oft brauche ich ein Peeling?',
           'Ogni quanto mi serve un peeling?',
+          '¿Cada cuánto necesito un peeling?',
         ),
         a: t(
           'Vaak wordt een kuur geadviseerd, met een peeling om de 8 tot 10 dagen.',
@@ -2103,6 +2328,7 @@ export const TREATMENT_INFO: Partial<Record<TreatmentId, TreatmentInfo>> = {
           'On conseille souvent une cure, avec un peeling tous les 8 à 10 jours.',
           'Oft wird eine Kur empfohlen, mit einem Peeling alle 8 bis 10 Tage.',
           'Spesso si consiglia un ciclo, con un peeling ogni 8–10 giorni.',
+          'Muchas veces se recomienda un ciclo, con un peeling cada 8 a 10 días.',
         ),
       },
     ],
@@ -2117,6 +2343,7 @@ export const CONCERN_INFO: Record<ConcernId, L10n> = {
     'Une pilosité excessive ou indésirable sur ton visage ou ton corps, souvent avec des irritations dues au rasage. Les poils foncés peuvent être traités au laser ; les poils clairs, par épilation électrique.',
     'Übermäßiger oder unerwünschter Haarwuchs im Gesicht oder am Körper, oft mit Rasurreizungen. Dunkle Haare können gelasert werden; helle Haare werden mit elektrischer Epilation behandelt.',
     'Peli in eccesso o indesiderati sul viso o sul corpo, spesso con irritazioni da rasatura. I peli scuri si possono trattare con il laser; quelli chiari con l’elettrocoagulazione.',
+    'Crecimiento excesivo o no deseado de vello en la cara o el cuerpo, a menudo con irritación por el afeitado. El vello oscuro se puede tratar con láser; el vello claro se trata con depilación eléctrica.',
   ),
   acne: t(
     'Acne ontstaat als talg en dode huidcellen de poriën verstoppen en bacteriën ontstekingen veroorzaken. Hormonen, stress en voeding kunnen meespelen.',
@@ -2125,6 +2352,7 @@ export const CONCERN_INFO: Record<ConcernId, L10n> = {
     'L’acné apparaît quand le sébum et les cellules mortes bouchent les pores et que des bactéries provoquent des inflammations. Les hormones, le stress et l’alimentation peuvent jouer un rôle.',
     'Akne entsteht, wenn Talg und abgestorbene Hautzellen die Poren verstopfen und Bakterien Entzündungen verursachen. Hormone, Stress und Ernährung können eine Rolle spielen.',
     'L’acne si forma quando sebo e cellule morte ostruiscono i pori e i batteri causano infiammazioni. Ormoni, stress e alimentazione possono influire.',
+    'El acné aparece cuando el sebo y las células muertas obstruyen los poros y las bacterias causan inflamación. Las hormonas, el estrés y la alimentación pueden influir.',
   ),
   scars: t(
     'Ingezonken of oneffen littekens die na acne achterblijven. Behandelingen die collageen aanmaken, zoals SkinPen en Sylfirm X, maken de huid egaler.',
@@ -2133,6 +2361,7 @@ export const CONCERN_INFO: Record<ConcernId, L10n> = {
     'Des cicatrices creuses ou irrégulières laissées par l’acné. Les soins qui stimulent le collagène, comme le SkinPen et le Sylfirm X, rendent la peau plus uniforme.',
     'Eingesunkene oder unebene Narben, die nach Akne zurückbleiben. Behandlungen, die die Kollagenbildung anregen, wie SkinPen und Sylfirm X, machen die Haut ebenmäßiger.',
     'Cicatrici infossate o irregolari che restano dopo l’acne. I trattamenti che stimolano il collagene, come SkinPen e Sylfirm X, rendono la pelle più uniforme.',
+    'Cicatrices hundidas o irregulares que quedan después del acné. Los tratamientos que generan colágeno, como SkinPen y Sylfirm X, dejan la piel más uniforme.',
   ),
   pigment: t(
     'Vlekken door een te hoge of ongelijke aanmaak van pigment, vaak door zon of hormonen. Zonder zonbescherming worden ze donkerder of komen ze terug.',
@@ -2141,6 +2370,7 @@ export const CONCERN_INFO: Record<ConcernId, L10n> = {
     'Des taches dues à une production de pigment trop forte ou irrégulière, souvent à cause du soleil ou des hormones. Sans protection solaire, elles foncent ou reviennent.',
     'Flecken durch eine zu hohe oder ungleichmäßige Pigmentbildung, oft durch Sonne oder Hormone. Ohne Sonnenschutz werden sie dunkler oder kommen zurück.',
     'Macchie dovute a una produzione di pigmento eccessiva o irregolare, spesso per il sole o gli ormoni. Senza protezione solare si scuriscono o ricompaiono.',
+    'Manchas por una producción de pigmento excesiva o desigual, a menudo por el sol o las hormonas. Sin protección solar se oscurecen o vuelven a salir.',
   ),
   redness: t(
     'Kleine, blijvend verwijde vaatjes op wangen, neus en kin, die een rode gloed geven. Ze zijn onschuldig, maar verdwijnen niet vanzelf.',
@@ -2149,6 +2379,7 @@ export const CONCERN_INFO: Record<ConcernId, L10n> = {
     'De petits vaisseaux dilatés de façon permanente sur les joues, le nez et le menton, qui donnent des rougeurs. Ils sont sans danger, mais ne disparaissent pas d’eux-mêmes.',
     'Kleine, dauerhaft erweiterte Äderchen an Wangen, Nase und Kinn, die für einen roten Schimmer sorgen. Sie sind harmlos, verschwinden aber nicht von selbst.',
     'Piccoli capillari dilatati in modo permanente su guance, naso e mento, che danno un colorito arrossato. Sono innocui, ma non spariscono da soli.',
+    'Pequeños vasitos dilatados de forma permanente en mejillas, nariz y barbilla, que dan un tono rojizo. Son inofensivos, pero no desaparecen solos.',
   ),
   aging: t(
     'Met de jaren maakt je huid minder collageen, elastine en hyaluronzuur aan: lijntjes, minder stevigheid en een doffere huid. Zon en roken versnellen dit.',
@@ -2157,6 +2388,7 @@ export const CONCERN_INFO: Record<ConcernId, L10n> = {
     'Avec les années, ta peau produit moins de collagène, d’élastine et d’acide hyaluronique : ridules, perte de fermeté et teint plus terne. Le soleil et le tabac accélèrent ce processus.',
     'Mit den Jahren bildet deine Haut weniger Kollagen, Elastin und Hyaluronsäure: Fältchen, weniger Spannkraft und eine fahlere Haut. Sonne und Rauchen beschleunigen das.',
     'Con gli anni la tua pelle produce meno collagene, elastina e acido ialuronico: rughette, meno compattezza e una pelle più spenta. Sole e fumo accelerano questo processo.',
+    'Con los años, tu piel produce menos colágeno, elastina y ácido hialurónico: aparecen arruguitas, se pierde firmeza y la piel se ve más apagada. El sol y el tabaco lo aceleran.',
   ),
   eyes: t(
     'Wallen ontstaan door vocht of vet onder de ogen; wordt de huid dunner, dan schemeren vaatjes door als donkere kringen. Slaapgebrek en aanleg spelen mee.',
@@ -2165,6 +2397,7 @@ export const CONCERN_INFO: Record<ConcernId, L10n> = {
     'Les poches sont dues à du liquide ou de la graisse sous les yeux ; quand la peau s’amincit, de petits vaisseaux transparaissent et forment des cernes. Le manque de sommeil et la prédisposition jouent un rôle.',
     'Tränensäcke entstehen durch Flüssigkeit oder Fett unter den Augen; wird die Haut dünner, schimmern Äderchen als Augenringe durch. Schlafmangel und Veranlagung spielen eine Rolle.',
     'Le borse si formano per liquidi o grasso sotto gli occhi; quando la pelle si assottiglia, i capillari traspaiono come occhiaie scure. Influiscono anche mancanza di sonno e predisposizione.',
+    'Las bolsas aparecen por líquido o grasa bajo los ojos; cuando la piel se vuelve más fina, los vasitos se transparentan como ojeras. La falta de sueño y la genética influyen.',
   ),
   hairloss: t(
     'Haaruitval en dunner wordend haar, bij mannen en vrouwen. Een slechte doorbloeding van de hoofdhuid kan een van de oorzaken zijn.',
@@ -2173,5 +2406,6 @@ export const CONCERN_INFO: Record<ConcernId, L10n> = {
     'Une chute de cheveux et des cheveux qui s’affinent, chez les hommes comme chez les femmes. Une mauvaise circulation du cuir chevelu peut être l’une des causes.',
     'Haarausfall und dünner werdendes Haar, bei Männern und Frauen. Eine schlechte Durchblutung der Kopfhaut kann eine der Ursachen sein.',
     'Caduta e diradamento dei capelli, negli uomini e nelle donne. Una cattiva circolazione del cuoio capelluto può essere una delle cause.',
+    'Caída del cabello y pelo cada vez más fino, en hombres y mujeres. Una mala circulación del cuero cabelludo puede ser una de las causas.',
   ),
 };

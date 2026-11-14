@@ -67,6 +67,7 @@ export const nl = {
   'room.closed': 'Kliniek vandaag gesloten',
   'role.therapist': 'huidtherapeut',
   'role.beauty': 'beautyspecialist',
+  'role.reception': 'receptie',
   'appt.free': 'gratis',
   'appt.new': 'eerste bezoek',
   'appt.tipTitle': '{treatment} · {price}',

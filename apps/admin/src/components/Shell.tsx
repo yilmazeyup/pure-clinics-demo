@@ -9,21 +9,21 @@ const HELP_URL = 'https://pureclinics.savastana.com/hulp/';
 
 /**
  * Agenda, Trajecten and Webshop jump to their part of the overview; Praktijk opens the practice module (its own
- * subscription); Hulp opens the help page; the rest follow later.
+ * subscription); Campagnes opens the Mailchimp module; Hulp opens the help page; the rest follow later.
  */
-const NAV: { icon: IconName; label: MessageKey; section?: string; help?: boolean; praktijk?: boolean }[] = [
+const NAV: { icon: IconName; label: MessageKey; section?: string; help?: boolean; praktijk?: boolean; campagnes?: boolean }[] = [
   { icon: 'grid', label: 'nav.overview' },
   { icon: 'calendar', label: 'nav.agenda', section: 'agenda' },
   { icon: 'repeat', label: 'nav.courses', section: 'trajecten' },
   { icon: 'bag', label: 'nav.webshop', section: 'webshop' },
   { icon: 'clipboard', label: 'pk.nav.label', praktijk: true },
   { icon: 'users', label: 'nav.clients' },
-  { icon: 'mail', label: 'nav.campaigns' },
+  { icon: 'mail', label: 'nav.campaigns', campagnes: true },
   { icon: 'sliders', label: 'nav.settings' },
   { icon: 'help', label: 'nav.help', help: true },
 ];
 
-type View = 'overview' | 'praktijk';
+type View = 'overview' | 'praktijk' | 'campagnes';
 
 export function Sidebar({ view, onView }: { view: View; onView: (view: View) => void }) {
   const { t, locale } = useI18n();
@@ -31,6 +31,7 @@ export function Sidebar({ view, onView }: { view: View; onView: (view: View) => 
   const go = (index: number) => {
     const item = NAV[index];
     if (item.praktijk) onView('praktijk');
+    else if (item.campagnes) onView('campagnes');
     else if (index === 0 && view !== 'overview') onView('overview');
     else if (index === 0) window.scrollTo({ top: 0, behavior: 'smooth' });
     else if (item.help) window.open(`${HELP_URL}?lang=${locale}`, '_blank', 'noopener');
@@ -43,7 +44,8 @@ export function Sidebar({ view, onView }: { view: View; onView: (view: View) => 
       }
     } else toast(t('nav.soon', { label: t(item.label) }));
   };
-  const current = (index: number) => (view === 'praktijk' ? Boolean(NAV[index].praktijk) : index === 0);
+  const current = (index: number) =>
+    view === 'praktijk' ? Boolean(NAV[index].praktijk) : view === 'campagnes' ? Boolean(NAV[index].campagnes) : index === 0;
   return (
     <aside className="sidebar">
       <div className="logo" role="img" aria-label="Pure Clinics">

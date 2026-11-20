@@ -63,6 +63,15 @@ export function MessagesScreen() {
           { value: 'settings', label: t('pk.berichten.tab.settings'), icon: 'cog' },
         ]}
       />
+      {/* Marketing mail and SMS campaigns live in Campagnes (Mailchimp); reminders and fixed messages stay here. */}
+      <p className="pk-me-pointer pk-small">
+        <PkIcon name="send" size={15} />
+        <span>{t('pk.berichten.toCampagnes')}</span>
+        <button className="btn btn-ghost btn-small" onClick={() => (window.location.hash = 'campagnes/campagnes')}>
+          {t('pk.berichten.toCampagnesOpen')}
+          <PkIcon name="arrow" size={14} />
+        </button>
+      </p>
       {tab === 'reminders' ? <Reminders /> : null}
       {tab === 'templates' ? <Templates /> : null}
       {tab === 'ai' ? <Aftercare /> : null}

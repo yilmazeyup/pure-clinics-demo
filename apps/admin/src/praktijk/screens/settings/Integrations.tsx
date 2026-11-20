@@ -230,5 +230,20 @@ function Details({ id, on }: { id: IntegrationId; on: boolean }) {
       );
     case 'erecept':
       return <Chip tone="warn" icon="clock">{t('pk.instellingen.int.erecept.when')}</Chip>;
+    case 'mailchimp':
+      return (
+        <div className="pk-stack">
+          <Kv
+            rows={[
+              [t('pk.instellingen.int.mailchimp.audience'), 'Pure Clinics cliënten'],
+              [t('pk.instellingen.int.mailchimp.sync'), on ? t('pk.instellingen.int.mailchimp.syncValue') : t('pk.instellingen.int.status.off')],
+            ]}
+          />
+          <button className="btn btn-ghost btn-small pk-se-self" onClick={() => (window.location.hash = 'campagnes')}>
+            <PkIcon name="mail" size={14} />
+            {t('pk.instellingen.int.mailchimp.open')}
+          </button>
+        </div>
+      );
   }
 }

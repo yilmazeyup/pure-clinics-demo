@@ -1,0 +1,12 @@
+import { audience } from './audience';
+import { composer } from './composer';
+import { frame } from './frame';
+import { settings } from './settings';
+
+/** Every text of Campagnes in Dutch, the source language; one file per part. */
+export const nl = {
+  ...frame,
+  ...audience,
+  ...settings,
+  ...composer,
+};

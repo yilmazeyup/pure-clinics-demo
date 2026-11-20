@@ -10,8 +10,8 @@ import type { ConditionId, StaffId } from './core';
 
 /* ---------- Integrations ---------- */
 
-export type IntegrationId = 'vecozo' | 'zorgdomein' | 'zorgmail' | 'qualizorg' | 'boekhouding' | 'bi' | 'api' | 'suppliers' | 'teamviewer' | 'erecept';
-export type IntegrationGroup = 'care' | 'finance' | 'data' | 'support';
+export type IntegrationId = 'vecozo' | 'zorgdomein' | 'zorgmail' | 'qualizorg' | 'boekhouding' | 'bi' | 'api' | 'suppliers' | 'teamviewer' | 'erecept' | 'mailchimp';
+export type IntegrationGroup = 'care' | 'finance' | 'data' | 'support' | 'marketing';
 
 export type Integration = { id: IntegrationId; feature: string; icon: PkIconName; group: IntegrationGroup; on: boolean; planned?: boolean };
 
@@ -23,6 +23,8 @@ export const INTEGRATIONS: Integration[] = [
   { id: 'boekhouding', feature: 'w.boekhouding', icon: 'chart', group: 'finance', on: true },
   { id: 'bi', feature: 'w.bi', icon: 'layers', group: 'data', on: false },
   { id: 'api', feature: 'w.api', icon: 'wand', group: 'data', on: true },
+  // Campaigns themselves live in Campagnes (#campagnes); this is the link's switch and status.
+  { id: 'mailchimp', feature: 'w.mailchimp', icon: 'mail', group: 'marketing', on: true },
   { id: 'suppliers', feature: 'w.suppliers', icon: 'truck', group: 'finance', on: true },
   { id: 'teamviewer', feature: 'w.teamviewer', icon: 'eye', group: 'support', on: false },
   { id: 'erecept', feature: 'w.erecept', icon: 'file', group: 'care', on: false, planned: true },

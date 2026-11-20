@@ -8,6 +8,8 @@ export const berichten: Record<keyof typeof source, string> = {
   'pk.berichten.tab.news': 'Newsletter',
   'pk.berichten.tab.notepad': 'Notizblock',
   'pk.berichten.tab.settings': 'Versandeinstellungen',
+  'pk.berichten.toCampagnes': 'Marketing-Mails und SMS-Kampagnen planst, schreibst und misst du unter Kampagnen, über Mailchimp. Erinnerungen, feste Nachrichten und die Nachsorge-Mail bleiben hier.',
+  'pk.berichten.toCampagnesOpen': 'Zu den Kampagnen',
 
   'pk.berichten.token.voornaam': 'Vorname',
   'pk.berichten.token.voorletters': 'Initialen',

@@ -8,10 +8,14 @@ import { es } from './es';
 import { fr } from './fr';
 import { it } from './it';
 import { nl, type MessageKey as PanelKey, type Messages } from './nl';
+import { loadCampagnesTexts, type CampagnesKey } from './campagnes';
 import { loadPraktijkTexts, PRAKTIJK_SHELL, type PraktijkKey } from './praktijk';
 
-/** The panel's own texts and those of Pure Praktijk, the practice module, which keeps its texts in i18n/praktijk/. */
-export type MessageKey = PanelKey | PraktijkKey;
+/**
+ * The panel's own texts and those of its two lazily loaded modules: Pure Praktijk (i18n/praktijk/) and Campagnes, the
+ * Mailchimp module (i18n/campagnes/).
+ */
+export type MessageKey = PanelKey | PraktijkKey | CampagnesKey;
 
 const PANEL: Record<Locale, Messages> = { nl, en, ar, fr, de, it, es };
 const MESSAGES = Object.fromEntries(LOCALES.map((l) => [l, { ...PANEL[l], ...PRAKTIJK_SHELL[l] }])) as Record<Locale, Record<MessageKey, string>>;
@@ -23,6 +27,17 @@ export function loadPraktijk(locale: Locale): Promise<void> {
   if (!loading) {
     loading = loadPraktijkTexts(locale).then((texts) => void Object.assign(MESSAGES[locale], texts));
     praktijkIn.set(locale, loading);
+  }
+  return loading;
+}
+
+/** The same for Campagnes: its texts arrive when the module opens, Dutch first. */
+const campagnesIn = new Map<Locale, Promise<void>>();
+export function loadCampagnes(locale: Locale): Promise<void> {
+  let loading = campagnesIn.get(locale);
+  if (!loading) {
+    loading = loadCampagnesTexts(locale).then((texts) => void Object.assign(MESSAGES[locale], texts));
+    campagnesIn.set(locale, loading);
   }
   return loading;
 }

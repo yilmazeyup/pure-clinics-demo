@@ -17,11 +17,12 @@
   --on-deep: #f3ebe1;
   --on-deep-muted: #c9baa9;
   --footer: #2a211b;
-  --serif: 'Cormorant Garamond', 'Baskervville', Georgia, serif;
-  --sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
-  --serif-size: 1.08;
-  --serif-weight: 400;
-  --serif-track: -0.015em;
+  --serif: 'Lexend', ui-sans-serif, system-ui, sans-serif;
+  --wide: 'Lexend Peta', 'Lexend', ui-sans-serif, system-ui, sans-serif;
+  --sans: 'Lexend', ui-sans-serif, system-ui, sans-serif;
+  --serif-size: 0.8;
+  --serif-weight: 200;
+  --serif-track: 0.01em;
   --eyebrow-track: 0.18em;
   --photo: grayscale(1) contrast(1.06) brightness(1.03);
   --photo-hover: grayscale(0.1) contrast(1.02);
@@ -43,11 +44,12 @@
   --on-deep: #f4e9dc;
   --on-deep-muted: #d6c3ae;
   --footer: #3b2d23;
-  --serif: 'Baskervville', 'Cormorant Garamond', Georgia, serif;
-  --sans: 'Jost', ui-sans-serif, system-ui, sans-serif;
-  --serif-size: 1;
-  --serif-weight: 400;
-  --serif-track: -0.02em;
+  --serif: 'Lexend', ui-sans-serif, system-ui, sans-serif;
+  --wide: 'Lexend Peta', 'Lexend', ui-sans-serif, system-ui, sans-serif;
+  --sans: 'Lexend', ui-sans-serif, system-ui, sans-serif;
+  --serif-size: 0.8;
+  --serif-weight: 200;
+  --serif-track: 0.01em;
   --eyebrow-track: 0.22em;
   --photo: sepia(0.22) saturate(0.82) contrast(1.04);
   --photo-hover: sepia(0.05) saturate(0.95);
@@ -69,11 +71,12 @@
   --on-deep: #f1e8dc;
   --on-deep-muted: #b3a291;
   --footer: #0e0b09;
-  --serif: 'Bodoni Moda', 'Cormorant Garamond', Georgia, serif;
-  --sans: 'Figtree', ui-sans-serif, system-ui, sans-serif;
-  --serif-size: 0.9;
-  --serif-weight: 400;
-  --serif-track: -0.03em;
+  --serif: 'Lexend', ui-sans-serif, system-ui, sans-serif;
+  --wide: 'Lexend Peta', 'Lexend', ui-sans-serif, system-ui, sans-serif;
+  --sans: 'Lexend', ui-sans-serif, system-ui, sans-serif;
+  --serif-size: 0.8;
+  --serif-weight: 200;
+  --serif-track: 0.01em;
   --eyebrow-track: 0.26em;
   --photo: grayscale(1) contrast(1.16) brightness(0.9);
   --photo-hover: grayscale(0.2) contrast(1.06) brightness(0.95);
@@ -82,6 +85,7 @@
 }
 
 :root[lang='ar'] {
+  --wide: 'Noto Naskh Arabic', Georgia, serif;
   --serif: 'Noto Naskh Arabic', Georgia, serif;
   --sans: 'Noto Naskh Arabic', ui-sans-serif, system-ui, sans-serif;
   --serif-size: 0.8;
@@ -118,7 +122,7 @@ body {
   font-family: var(--sans);
   font-size: 16px;
   line-height: 1.65;
-  font-weight: 350;
+  font-weight: 300;
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
   transition: background-color 0.6s var(--ease), color 0.6s var(--ease);
@@ -196,13 +200,16 @@ section {
 }
 
 .display {
-  font-size: calc(clamp(56px, 9.5vw, 156px) * var(--serif-size));
-  line-height: 0.95;
+  font-family: var(--wide);
+  font-weight: 200;
+  letter-spacing: 0;
+  font-size: calc(clamp(40px, 6.6vw, 112px) * var(--serif-size));
+  line-height: 1.12;
 }
 
 .title {
   font-size: calc(clamp(38px, 5.4vw, 84px) * var(--serif-size));
-  line-height: 1;
+  line-height: 1.1;
 }
 
 .statement {
@@ -221,13 +228,14 @@ section {
 .statement em,
 .card-title em {
   color: var(--accent);
+  font-style: normal;
 }
 
 .eyebrow {
-  font-family: var(--sans);
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: var(--eyebrow-track);
+  font-family: var(--wide);
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
   color: var(--muted);
   margin: 0 0 18px;
@@ -273,9 +281,9 @@ section {
   padding: 0 26px;
   border: 1px solid transparent;
   border-radius: var(--radius);
-  font-size: 12.5px;
-  font-weight: 500;
-  letter-spacing: 0.14em;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   text-decoration: none;
   cursor: pointer;
@@ -642,10 +650,10 @@ section {
   gap: 10px;
   z-index: 3;
   margin-bottom: 26px;
-  transform: translateX(-28%);
+  transform: translateX(6%);
 }
 [dir='rtl'][data-study='mokka'] .hero-side {
-  transform: translateX(28%);
+  transform: translateX(-6%);
 }
 [data-study='mokka'] .hero-side img {
   width: 100%;
@@ -692,7 +700,7 @@ section {
   justify-content: center;
 }
 [data-study='espresso'] .hero .display {
-  font-size: calc(clamp(60px, 11vw, 190px) * var(--serif-size));
+  font-size: calc(clamp(42px, 7.2vw, 124px) * var(--serif-size));
 }
 
 /* ---------- Welcome ---------- */

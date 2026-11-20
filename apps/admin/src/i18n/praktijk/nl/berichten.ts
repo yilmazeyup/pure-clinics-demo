@@ -9,6 +9,8 @@ export const berichten = {
   'pk.berichten.tab.news': 'Nieuwsbrief',
   'pk.berichten.tab.notepad': 'Notitieblok',
   'pk.berichten.tab.settings': 'Verzendinstellingen',
+  'pk.berichten.toCampagnes': 'Marketingmail en sms-campagnes plan, schrijf en meet je in Campagnes, via Mailchimp. Herinneringen, vaste berichten en de nazorgmail blijven hier.',
+  'pk.berichten.toCampagnesOpen': 'Naar Campagnes',
 
   'pk.berichten.token.voornaam': 'Voornaam',
   'pk.berichten.token.voorletters': 'Voorletters',

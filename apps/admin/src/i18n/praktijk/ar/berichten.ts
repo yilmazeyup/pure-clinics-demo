@@ -8,6 +8,8 @@ export const berichten: Record<keyof typeof source, string> = {
   'pk.berichten.tab.news': 'النشرة الإخبارية',
   'pk.berichten.tab.notepad': 'المفكرة',
   'pk.berichten.tab.settings': 'إعدادات الإرسال',
+  'pk.berichten.toCampagnes': 'تُخطَّط رسائل التسويق وحملات الرسائل القصيرة وتُكتب وتُقاس في الحملات عبر Mailchimp. أما التذكيرات والرسائل الثابتة ورسالة الرعاية اللاحقة فتبقى هنا.',
+  'pk.berichten.toCampagnesOpen': 'إلى الحملات',
 
   'pk.berichten.token.voornaam': 'الاسم الأول',
   'pk.berichten.token.voorletters': 'الأحرف الأولى',

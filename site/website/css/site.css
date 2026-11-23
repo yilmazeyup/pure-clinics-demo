@@ -1,4 +1,4 @@
-/* Pure Clinics website, second round: three palettes in light brown and bordeaux, never powder pink (Pure's choice, 2026-11-23), calm motion as on MVR. */
+/* Pure Clinics website, second round: three palettes in cream and walnut brown, never powder pink (Pure's choice, 2026-11-23), calm motion as on MVR. */
 
 /* ---------- Studies ---------- */
 
@@ -11,7 +11,7 @@
   --ink: #3f3128;
   --body: #67564a;
   --muted: #948372;
-  --accent: #7e3440;
+  --accent: #6f3a22;
   --line: #e6dccf;
   --deep: #8c6e58;
   --on-deep: #fbf7f1;
@@ -38,7 +38,7 @@
   --ink: #3f3128;
   --body: #645346;
   --muted: #8f7b69;
-  --accent: #7e3440;
+  --accent: #6f3a22;
   --line: #e2d5c4;
   --deep: #9c7b63;
   --on-deep: #fbf7f1;
@@ -57,20 +57,20 @@
   --hero-shade: linear-gradient(180deg, transparent 50%, rgb(70 52 40 / 0.3));
 }
 
-:root[data-study='bordeaux'] {
+:root[data-study='walnoot'] {
   --bg: #f6f1ea;
   --surface: #fdfaf6;
-  --band: #7e3440;
+  --band: #6f3a22;
   --band-ink: #fbf5ef;
   --ink: #3f3128;
   --body: #67564a;
   --muted: #948372;
-  --accent: #7e3440;
+  --accent: #6f3a22;
   --line: #e6dccf;
-  --deep: #7e3440;
+  --deep: #6f3a22;
   --on-deep: #fbf5ef;
   --on-deep-muted: #eadbc8;
-  --footer: #7e3440;
+  --footer: #6f3a22;
   --serif: 'Lexend', ui-sans-serif, system-ui, sans-serif;
   --wide: 'Lexend Peta', 'Lexend', ui-sans-serif, system-ui, sans-serif;
   --sans: 'Lexend', ui-sans-serif, system-ui, sans-serif;
@@ -669,44 +669,44 @@ section {
   color: #f8f1e7;
 }
 
-/* Bordeaux: a centred title over a softly darkened close-up, bordeaux bands. */
-[data-study='bordeaux'] .hero {
+/* Walnoot: a centred title over a softly darkened close-up, walnut-brown bands. */
+[data-study='walnoot'] .hero {
   grid-template: 1fr / 1fr;
   color: #fbf6ef;
   text-align: center;
 }
-[data-study='bordeaux'] .hero > * {
+[data-study='walnoot'] .hero > * {
   grid-area: 1 / 1;
 }
-[data-study='bordeaux'] .hero-media::after {
+[data-study='walnoot'] .hero-media::after {
   content: '';
   position: absolute;
   inset: 0;
   background: var(--hero-shade);
 }
-[data-study='bordeaux'] .hero-copy {
+[data-study='walnoot'] .hero-copy {
   align-self: center;
   justify-self: center;
   padding: calc(var(--header-h) + 20px) var(--gut) 60px;
   max-width: 1100px;
 }
-[data-study='bordeaux'] .hero .eyebrow {
+[data-study='walnoot'] .hero .eyebrow {
   color: #e6cfa8;
 }
-[data-study='bordeaux'] .hero .display em {
+[data-study='walnoot'] .hero .display em {
   color: #e9d6b8;
 }
-[data-study='bordeaux'] .hero .btn-solid {
+[data-study='walnoot'] .hero .btn-solid {
   background: #fbf7f1;
   color: #3f3128;
 }
-[data-study='bordeaux'] .hero .lede {
+[data-study='walnoot'] .hero .lede {
   margin-inline: auto;
 }
-[data-study='bordeaux'] .hero-actions {
+[data-study='walnoot'] .hero-actions {
   justify-content: center;
 }
-[data-study='bordeaux'] .hero .display {
+[data-study='walnoot'] .hero .display {
   font-size: calc(clamp(42px, 7.2vw, 124px) * var(--serif-size));
 }
 
@@ -1190,7 +1190,7 @@ section {
 }
 
 [data-study='creme'] .strip img,
-[data-study='bordeaux'] .strip img {
+[data-study='walnoot'] .strip img {
   filter: saturate(0.75);
 }
 
@@ -2032,13 +2032,13 @@ section {
 }
 
 .studies-buttons [data-study='creme'] i {
-  background: linear-gradient(90deg, #f7f3ec 0 34%, #efe7dc 34% 67%, #7e3440 67%);
+  background: linear-gradient(90deg, #f7f3ec 0 34%, #efe7dc 34% 67%, #6f3a22 67%);
 }
 .studies-buttons [data-study='karamel'] i {
-  background: linear-gradient(90deg, #f3ece2 0 34%, #c9ae8f 34% 67%, #7e3440 67%);
+  background: linear-gradient(90deg, #f3ece2 0 34%, #c9ae8f 34% 67%, #6f3a22 67%);
 }
-.studies-buttons [data-study='bordeaux'] i {
-  background: linear-gradient(90deg, #f6f1ea 0 34%, #7e3440 34% 67%, #3f3128 67%);
+.studies-buttons [data-study='walnoot'] i {
+  background: linear-gradient(90deg, #f6f1ea 0 34%, #6f3a22 34% 67%, #3f3128 67%);
 }
 
 .studies-note {

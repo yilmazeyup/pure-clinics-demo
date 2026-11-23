@@ -164,4 +164,4 @@ export function BarList({ rows }: { rows: { key: string; label: string; value: n
 }
 
 /** The colours of the two locations in every chart: Pure's warm brown and its stone taupe. */
-export const LOCATION_COLOR = { nijmegen: '#7e3440', uden: '#d6c2a8' } as const;
+export const LOCATION_COLOR = { nijmegen: '#6f3a22', uden: '#d6c2a8' } as const;

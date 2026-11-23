@@ -8,7 +8,7 @@ import { pick, rng } from '../data/random';
 const SKIN = ['#EFDCC8', '#E2C3A5', '#CDA484', '#A98062', '#80604A', '#5F4535'];
 const HAIR = ['#2B2420', '#4A372C', '#6B4E3A', '#8E6E50', '#A88A66', '#7E6F63'];
 const TOPS = ['#E9DFD1', '#D5C2A9', '#D6C2A8', '#B8977A', '#9A7B62', '#E4D8C8', '#C8B49C'];
-const BOTTOMS = ['#67564A', '#67564A', '#7E3440', '#5E4E43', '#8C735F'];
+const BOTTOMS = ['#67564A', '#67564A', '#6F3A22', '#5E4E43', '#8C735F'];
 const COAT = '#FCF9F5';
 const TROUSERS = '#524236';
 const SOCKS = '#EDE6DB';

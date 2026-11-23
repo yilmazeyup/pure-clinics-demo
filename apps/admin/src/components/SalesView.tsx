@@ -102,7 +102,7 @@ export function SalesView({ week, now, events, fast }: { week: DaySales[]; now: 
       <div className="scene-host scene-host--sales" ref={host} role="group" aria-label={t('sales.help')}>
         <div className="scene-legend">
           <span>
-            <i style={{ background: '#7E3440' }} /> {t('week.treatments')}
+            <i style={{ background: '#6F3A22' }} /> {t('week.treatments')}
           </span>
           <span>
             <i style={{ background: '#D5C2A9' }} /> {t('week.webshop')}

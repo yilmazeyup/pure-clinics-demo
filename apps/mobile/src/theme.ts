@@ -58,7 +58,7 @@ const PALETTE: Palette = {
   muted: CLINIC_COLORS.muted,
   line: CLINIC_COLORS.line,
   lineStrong: CLINIC_COLORS.lineStrong,
-  // Pure's bordeaux carries the main call to action (brown and bordeaux, never powder pink).
+  // Pure's walnut brown carries the main call to action (cream and walnut, never bordeaux or powder pink).
   primary: CLINIC_COLORS.taupeDark,
   onPrimary: '#FFFFFF',
   accent: CLINIC_COLORS.ink,

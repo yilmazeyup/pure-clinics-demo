@@ -1,4 +1,4 @@
-// Pure Clinics website, second round: three palettes in light brown and bordeaux, seven languages, every section the meeting of November 2026 asked for.
+// Pure Clinics website, second round: three palettes in cream and walnut brown, seven languages, every section the meeting of November 2026 asked for.
 import { logoSvg } from './logo.js';
 import { LANGS, LANG_NAMES, STRINGS } from './i18n.js';
 // The first site's parts (October 2026), each after a site that won in 2026.
@@ -38,12 +38,14 @@ const store = {
 
 /* ---------- Study and language ---------- */
 
-const STUDIES = ['creme', 'karamel', 'bordeaux'];
-const HERO = { creme: 'c-web81-hero', karamel: 'c-mature-hero', bordeaux: 'c-up-hero' };
-const THEME = { creme: '#f7f3ec', karamel: '#f3ece2', bordeaux: '#f6f1ea' };
+const STUDIES = ['creme', 'karamel', 'walnoot'];
+const HERO = { creme: 'c-web81-hero', karamel: 'c-mature-hero', walnoot: 'c-up-hero' };
+const THEME = { creme: '#f7f3ec', karamel: '#f3ece2', walnoot: '#f6f1ea' };
 const pickFrom = (list, ...values) => values.find((v) => list.includes(v)) ?? list[0];
 
-let study = pickFrom(STUDIES, params.get('studie'), store.get('pure-web-study'));
+// The third palette was Bordeaux until 23 Nov 2026; old links and stored choices open Walnoot.
+const renamed = (v) => (v === 'bordeaux' ? 'walnoot' : v);
+let study = pickFrom(STUDIES, renamed(params.get('studie')), renamed(store.get('pure-web-study')));
 let lang = pickFrom(LANGS, params.get('lang'), store.get('pure-web-lang'));
 
 const S = (key, vars = {}) => {

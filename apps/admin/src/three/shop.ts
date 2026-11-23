@@ -19,7 +19,7 @@ const LOOKS: Record<ProductId, Look> = {
   'xlhair-revitalix': { kind: 'bottle', body: '#D6C2A8', cap: '#67564A', ink: '#3F3128', height: 0.66 },
   'xlhair-scalpfit': { kind: 'bottle', body: '#9A7B62', cap: '#EAE0D3', ink: '#F9F5EF', height: 0.66 },
   'xlhair-spray': { kind: 'can', body: '#E4D8C8', cap: '#67564A', ink: '#3F3128', height: 0.62 },
-  'camouflage-set': { kind: 'box', body: '#EAE0D3', cap: '#7E3440', ink: '#3F3128', height: 0.4 },
+  'camouflage-set': { kind: 'box', body: '#EAE0D3', cap: '#6F3A22', ink: '#3F3128', height: 0.4 },
   'laser-aftercare-set': { kind: 'box', body: '#F5EFE7', cap: '#B8977A', ink: '#3F3128', height: 0.4 },
 };
 

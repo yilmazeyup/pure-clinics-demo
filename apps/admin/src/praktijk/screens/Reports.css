@@ -182,7 +182,7 @@
 
 .pk-rp-path {
   fill: none;
-  stroke: #7e3440;
+  stroke: #6f3a22;
   stroke-width: 2.2;
   stroke-linejoin: round;
   stroke-linecap: round;
@@ -205,9 +205,9 @@
   margin-inline-start: -4.5px;
   margin-bottom: -4.5px;
   border-radius: 50%;
-  background: #7e3440;
+  background: #6f3a22;
   border: 2px solid var(--surface);
-  box-shadow: 0 0 0 1px #7e3440;
+  box-shadow: 0 0 0 1px #6f3a22;
 }
 
 .pk-rp-dot.is-forecast {
@@ -402,7 +402,7 @@
   border-radius: 6px;
   text-align: center;
   font-variant-numeric: tabular-nums;
-  background: color-mix(in srgb, #7e3440 calc(var(--v) * 70%), #f7f3ec);
+  background: color-mix(in srgb, #6f3a22 calc(var(--v) * 70%), #f7f3ec);
   color: var(--ink);
 }
 

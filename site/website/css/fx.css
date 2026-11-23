@@ -1625,7 +1625,7 @@
   }
 }
 
-/* ---------- In this site: the mirror sits in the light booking section, the rings in bordeaux ---------- */
+/* ---------- In this site: the mirror sits in the light booking section, the rings in walnut brown ---------- */
 .book .mirror {
   width: 100%;
   max-width: 520px;
@@ -1652,8 +1652,8 @@
   font-family: var(--sans);
 }
 
-/* In the Bordeaux palette the bands are bordeaux; the rooms keep a light ground so their words stay readable. */
-:root[data-study='bordeaux'] {
+/* In the Walnoot palette the bands are walnut brown; the rooms keep a light ground so their words stay readable. */
+:root[data-study='walnoot'] {
   --sand: #efe7dc;
 }
 /* Right to left: the price card reads from the right. */

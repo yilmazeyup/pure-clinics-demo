@@ -330,7 +330,7 @@
 /* ---------- The invoice itself ---------- */
 
 .pk-bi-doc {
-  --doc-accent: #7e3440;
+  --doc-accent: #6f3a22;
   display: grid;
   gap: 20px;
   padding: 34px 38px 28px;
@@ -731,7 +731,7 @@
   gap: 4px;
   padding: 18px 20px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #3f3128, #67564a 70%, #7e3440);
+  background: linear-gradient(135deg, #3f3128, #67564a 70%, #6f3a22);
   color: #f7f3ec;
   box-shadow: 0 14px 30px rgba(63, 49, 40, 0.2);
 }

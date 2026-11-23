@@ -270,7 +270,7 @@ export type InvoiceLayout = {
   term: number;
 };
 
-export const ACCENTS = ['#3F3128', '#7E3440', '#2F4A3C', '#9B6B5A', '#5A6B7A'];
+export const ACCENTS = ['#3F3128', '#6F3A22', '#2F4A3C', '#9B6B5A', '#5A6B7A'];
 export const DEFAULT_LAYOUT: InvoiceLayout = { logo: 'start', accent: ACCENTS[1], footer: null, showAgb: true, showIban: true, showKvk: true, term: 14 };
 
 /* ---------- Seeds ---------- */

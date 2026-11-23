@@ -18,7 +18,7 @@ const RAISED = 8;
 const FLAT = 2.5;
 
 const COLOR = {
-  done: '#7E3440',
+  done: '#6F3A22',
   rest: '#E6DCCF',
   planned: '#3F3128',
   due: '#B8977A',

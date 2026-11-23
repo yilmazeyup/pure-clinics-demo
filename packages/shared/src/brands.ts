@@ -1,4 +1,4 @@
-/** The clinic palette: ivory, cream and caramel, soft cocoa text, bordeaux for actions; green marks what is happening now. */
+/** The clinic palette: ivory, cream and caramel, soft cocoa text, walnut brown for actions; green marks what is happening now. */
 export const CLINIC_COLORS = {
   bg: '#F7F3EC',
   surface: '#FFFFFF',
@@ -10,9 +10,9 @@ export const CLINIC_COLORS = {
   sand: '#EAE0D3',
   blush: '#E9DFD1',
   now: '#2F4A3C',
-  /** Pure's soft sand-caramel accent, and the bordeaux that carries white text (brown and bordeaux, never powder pink; 2026-11-23). */
+  /** Pure's soft sand-caramel accent, and the walnut brown that carries white text (cream and walnut, never bordeaux or powder pink; 2026-11-23). */
   taupe: '#D6C2A8',
-  taupeDark: '#7E3440',
+  taupeDark: '#6F3A22',
   onPhoto: '#F6EFE6',
   dashed: '#CDBBA4',
 } as const;

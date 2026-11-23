@@ -1,18 +1,16 @@
 <!doctype html>
-<html lang="tr">
+<html lang="nl" data-lang="nl">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="robots" content="noindex, nofollow" />
-<title>Pure Paylaşım Saatleri</title>
-<meta name="description" content="Pure Clinics: 2026 Instagram paylaşımlarının saat, gün ve şekle göre analizi ve Black Friday haftasının paylaşım saatleri." />
+<title>Pure Clinics · Wanneer posten? · Ne zaman paylaşalım?</title>
+<meta name="description" content="Pure Clinics: Instagram-posts van 2026 per uur, dag en vorm, met de tijden voor de Black Friday-week. In het Nederlands en Turks." />
 <link rel="icon" href="../website/img/favicon.svg" type="image/svg+xml" />
-<style>*{box-sizing:border-box}body{margin:0}.back{display:inline-block;margin-bottom:22px;font-size:14px;color:var(--muted);text-decoration:none;border-bottom:1px solid currentColor}</style>
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@200;300;400;500&family=Lexend+Peta:wght@300&display=swap">
-<style>
+<style>*{box-sizing:border-box}body{margin:0}
   /* Layout: one calm reading column in Pure's cream and walnut; three plain answers first, then the evidence, then the week. */
   :root {
     --bg: #f6efe6;
@@ -90,21 +88,38 @@
     .row, .axis { grid-template-columns: 74px minmax(0, 1fr) 52px; gap: 8px; }
     .row .k { font-size: 13px; }
   }
-</style>
 
+  .langbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .switch { display: inline-flex; border: 1px solid var(--line); background: var(--surface); padding: 3px; gap: 2px; }
+  .switch button { appearance: none; border: 0; background: none; color: var(--muted); font: 400 13px/1 var(--text); padding: 8px 14px; cursor: pointer; }
+  .switch button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+  .switch button:focus-visible, .back:focus-visible { outline: 2px solid var(--walnut); outline-offset: 2px; }
+  .back { font-size: 14px; color: var(--muted); text-decoration: none; border-bottom: 1px solid currentColor; }
+  [data-l] { display: none; }
+  :root[data-lang="tr"] [data-l="tr"], :root[data-lang="nl"] [data-l="nl"] { display: grid; }
+  .tag.done { background: var(--walnut); color: var(--bg); }
+</style>
 </head>
 <body>
-<main class="page">
-  <header>
+<div class="page" style="padding-block:24px 0">
+  <div class="langbar">
     <a class="back" href="../">← Pure Clinics demo</a>
+    <div class="switch" role="group" aria-label="Taal · Dil">
+      <button type="button" data-set="tr" aria-pressed="false">Türkçe</button>
+      <button type="button" data-set="nl" aria-pressed="false">Nederlands</button>
+    </div>
+  </div>
+</div>
+<main class="page" data-l="tr" lang="tr">
+  <header>
     <p class="eyebrow">Pure Clinics · Instagram · 23 Kasım 2026</p>
     <h1>Ne zaman paylaşırsak <em>daha çok</em> kişi görüyor?</h1>
     <p class="lead">Bu yıl Instagram'da attığımız 45 paylaşıma tek tek baktık: hangi gün, hangi saatte ve hangi şekilde attığımızda daha çok kişi gördü ve beğendi.</p>
     <p class="source">Kaynak: Pure Clinics Meta Business Suite, 1 Ocak – 23 Kasım 2026. Saatler Hollanda saatidir.</p>
   </header>
 
-  <section aria-labelledby="kisa">
-    <h2 id="kisa">Kısaca</h2>
+  <section>
+    <h2>Kısaca</h2>
     <div class="answers">
       <div class="answer"><div><b>Saatten önce şekil önemli.</b><p>Kaydırmalı paylaşımlar ve videolar ortalamadan %25–40 daha çok beğeni ve yorum alıyor. Tek fotoğraflar ortalamanın altında kalıyor.</p></div></div>
       <div class="answer"><div><b>Sabah iyi çalışıyor.</b><p>07:00 ile 12:00 arasında atılan paylaşımlar biraz daha çok beğeni ve yorum aldı. En iyisi 10:00–12:00 arası (7 paylaşım).</p></div></div>
@@ -112,10 +127,10 @@
     </div>
   </section>
 
-  <section aria-labelledby="saat">
-    <h2 id="saat">Günün hangi saatinde?</h2>
+  <section>
+    <h2>Günün hangi saatinde?</h2>
     <p>Her çubuk, o saatlerde atılan paylaşımların ortalamadan ne kadar fazla ya da az beğeni ve yorum aldığını gösteriyor.</p>
-    <div class="chart" role="img" aria-label="Saate göre etkileşim: 07–10 artı yüzde 11, 10–12 artı yüzde 29, 12–15 eksi yüzde 1, 15–17 eksi yüzde 6, 17 sonrası veri yok">
+    <div class="chart">
       <div class="axis"><span></span><span><i>−50%</i><i>ortalama</i><i>+50%</i></span><span></span></div>
       <div class="row"><span class="k">07–10<small>16 paylaşım</small></span><span class="track"><span class="bar" style="left:50%;width:11%"></span></span><span class="v">+11%</span></div>
       <div class="row"><span class="k">10–12<small>7 paylaşım</small></span><span class="track"><span class="bar" style="left:50%;width:29%"></span></span><span class="v">+29%</span></div>
@@ -126,9 +141,9 @@
     </div>
   </section>
 
-  <section aria-labelledby="sekil">
-    <h2 id="sekil">Hangi şekilde?</h2>
-    <div class="chart" role="img" aria-label="Şekle göre etkileşim: video artı yüzde 38, kaydırmalı artı yüzde 24, tek fotoğraf eksi yüzde 14">
+  <section>
+    <h2>Hangi şekilde?</h2>
+    <div class="chart">
       <div class="axis"><span></span><span><i>−50%</i><i>ortalama</i><i>+50%</i></span><span></span></div>
       <div class="row"><span class="k">Video<small>11 paylaşım</small></span><span class="track"><span class="bar" style="left:50%;width:38%"></span></span><span class="v">+38%</span></div>
       <div class="row"><span class="k">Kaydırmalı<small>8 paylaşım</small></span><span class="track"><span class="bar" style="left:50%;width:24%"></span></span><span class="v">+24%</span></div>
@@ -137,9 +152,9 @@
     </div>
   </section>
 
-  <section aria-labelledby="gun">
-    <h2 id="gun">Haftanın hangi günü?</h2>
-    <div class="chart" role="img" aria-label="Güne göre etkileşim">
+  <section>
+    <h2>Haftanın hangi günü?</h2>
+    <div class="chart">
       <div class="axis"><span></span><span><i>−50%</i><i>ortalama</i><i>+50%</i></span><span></span></div>
       <div class="row"><span class="k">Pazartesi<small>3 paylaşım</small></span><span class="track"><span class="bar" style="left:50%;width:10%"></span></span><span class="v">+10%</span></div>
       <div class="row"><span class="k">Salı<small>12 paylaşım</small></span><span class="track"><span class="bar neg" style="left:44%;width:6%"></span></span><span class="v neg">−6%</span></div>
@@ -152,8 +167,8 @@
     </div>
   </section>
 
-  <section aria-labelledby="kim">
-    <h2 id="kim">Takipçiler kim?</h2>
+  <section>
+    <h2>Takipçiler kim?</h2>
     <div class="facts">
       <div class="fact"><b>5.824</b><span>takipçi</span></div>
       <div class="fact"><b>%71</b><span>kadın</span></div>
@@ -163,15 +178,16 @@
     <p class="warn">Takipçilerin sadece üçte biri Hollanda'da: Nijmegen %6,8, Arnhem %3,1, Uden %1,5. Geri kalanı Hindistan, Endonezya, Çin ve başka ülkelerden. Bu yüzden Meta'nın "en aktif saat" bilgisi biraz kayabilir; biz saatleri Hollanda'daki müşterilere göre seçiyoruz.</p>
   </section>
 
-  <section aria-labelledby="hafta">
-    <h2 id="hafta">Black Friday haftasının saatleri</h2>
+  <section>
+    <h2>Black Friday haftasının saatleri</h2>
     <p>Bildiğimiz iyi saati kullanıyoruz, akşamı da deniyoruz. Saatler Hollanda saati.</p>
     <div class="table-wrap">
       <table class="week">
         <thead><tr><th>Gün</th><th>Paylaşım</th><th>Saat</th></tr></thead>
         <tbody>
-          <tr><td>Pzt 23 Kasım</td><td>Black Friday postu ve hikâyesi <span class="tag">akşam denemesi</span></td><td>20:00</td></tr>
-          <tr><td>Salı 24 Kasım</td><td>4 kampanyalı kaydırmalı post</td><td>10:00</td></tr>
+          <tr><td>Salı 24 Kasım</td><td>Black Friday postu <span class="tag done">planlandı</span></td><td>10:00</td></tr>
+          <tr><td>Salı 24 Kasım</td><td>Black Friday hikâyesi <span class="tag">akşam denemesi</span> <span class="tag done">planlandı</span></td><td>21:00</td></tr>
+          <tr><td>Çarş 25 Kasım</td><td>4 kampanyalı kaydırmalı post</td><td>10:00</td></tr>
           <tr><td>Per 26 Kasım</td><td>15 saniyelik video, hikâye olarak</td><td>10:00 · 20:00</td></tr>
           <tr><td>Cuma 27 Kasım</td><td>"Black Friday başladı" hikâyesi</td><td>08:00</td></tr>
           <tr><td>Cuma 27 Kasım</td><td>"Lazer epilasyon, tüm bacak" postu <span class="tag">akşam denemesi</span></td><td>20:00</td></tr>
@@ -184,9 +200,121 @@
   </section>
 
   <footer>
-    <p>Nasıl hesapladık: Meta Business Suite'teki her Instagram akış paylaşımının görüntülenme ve etkileşim (beğeni, yorum, paylaşım, kaydetme) sayısını aldık. Bugünkü paylaşımı, Ocak çekilişini ve 4 Şubat videosunu ortalamayı bozmasın diye dışarıda bıraktık. Hikâyeler bu hesaba dahil değil.</p>
+    <p>Nasıl hesapladık: Meta Business Suite'teki her Instagram akış paylaşımının görüntülenme ve etkileşim (beğeni, yorum, paylaşım, kaydetme) sayısını aldık. 23 Kasım paylaşımını, Ocak çekilişini ve 4 Şubat videosunu ortalamayı bozmasın diye dışarıda bıraktık. Hikâyeler bu hesaba dahil değil.</p>
   </footer>
 </main>
+<main class="page" data-l="nl" lang="nl">
+  <header>
+    <p class="eyebrow">Pure Clinics · Instagram · 23 november 2026</p>
+    <h1>Wanneer zien <em>de meeste</em> mensen onze posts?</h1>
+    <p class="lead">We hebben de 45 Instagram-posts van dit jaar één voor één bekeken: op welke dag, op welk uur en in welke vorm zagen de meeste mensen ze en kregen ze de meeste likes.</p>
+    <p class="source">Bron: Meta Business Suite van Pure Clinics, 1 januari – 23 november 2026. Alle tijden in Nederlandse tijd.</p>
+  </header>
 
+  <section>
+    <h2>Kort gezegd</h2>
+    <div class="answers">
+      <div class="answer"><div><b>De vorm telt meer dan het uur.</b><p>Carrousels en video's krijgen 25–40% meer likes en reacties dan gemiddeld. Losse foto's blijven onder het gemiddelde.</p></div></div>
+      <div class="answer"><div><b>De ochtend werkt goed.</b><p>Posts tussen 07:00 en 12:00 kregen iets meer likes en reacties. Het best: tussen 10:00 en 12:00 (7 posts).</p></div></div>
+      <div class="answer"><div><b>De avond is nog niet geprobeerd.</b><p>Dit jaar is er na 17:00 bijna niets gepost. Meta zegt dat de volgers deze week het meest actief zijn op woensdag om 21:00. Laten we de avond ook proberen.</p></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Op welk uur van de dag?</h2>
+    <p>Elke balk laat zien hoeveel meer of minder likes en reacties de posts op die tijden kregen dan gemiddeld.</p>
+    <div class="chart">
+      <div class="axis"><span></span><span><i>−50%</i><i>gemiddeld</i><i>+50%</i></span><span></span></div>
+      <div class="row"><span class="k">07–10<small>16 posts</small></span><span class="track"><span class="bar" style="left:50%;width:11%"></span></span><span class="v">+11%</span></div>
+      <div class="row"><span class="k">10–12<small>7 posts</small></span><span class="track"><span class="bar" style="left:50%;width:29%"></span></span><span class="v">+29%</span></div>
+      <div class="row"><span class="k">12–15<small>13 posts</small></span><span class="track"><span class="bar neg" style="left:49%;width:1%"></span></span><span class="v neg">−1%</span></div>
+      <div class="row"><span class="k">15–17<small>8 posts</small></span><span class="track"><span class="bar neg" style="left:44%;width:6%"></span></span><span class="v neg">−6%</span></div>
+      <div class="row"><span class="k">17–22<small>1 posts</small></span><span class="track"><span class="bar none"></span></span><span class="v neg small">niet geprobeerd</span></div>
+      <p class="chart-note">Gemiddeld: het gemiddelde van de posts uit dezelfde maand. In januari kreeg alles veel meer weergaven, daarom vergelijken we elke post met zijn eigen maand.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>In welke vorm?</h2>
+    <div class="chart">
+      <div class="axis"><span></span><span><i>−50%</i><i>gemiddeld</i><i>+50%</i></span><span></span></div>
+      <div class="row"><span class="k">Video<small>11 posts</small></span><span class="track"><span class="bar" style="left:50%;width:38%"></span></span><span class="v">+38%</span></div>
+      <div class="row"><span class="k">Carrousel<small>8 posts</small></span><span class="track"><span class="bar" style="left:50%;width:24%"></span></span><span class="v">+24%</span></div>
+      <div class="row"><span class="k">Losse foto<small>26 posts</small></span><span class="track"><span class="bar neg" style="left:36%;width:14%"></span></span><span class="v neg">−14%</span></div>
+      <p class="chart-note">Bij weergaven dezelfde volgorde: carrousel +32%, video +23%, losse foto −7%.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Op welke dag van de week?</h2>
+    <div class="chart">
+      <div class="axis"><span></span><span><i>−50%</i><i>gemiddeld</i><i>+50%</i></span><span></span></div>
+      <div class="row"><span class="k">Maandag<small>3 posts</small></span><span class="track"><span class="bar" style="left:50%;width:10%"></span></span><span class="v">+10%</span></div>
+      <div class="row"><span class="k">Dinsdag<small>12 posts</small></span><span class="track"><span class="bar neg" style="left:44%;width:6%"></span></span><span class="v neg">−6%</span></div>
+      <div class="row"><span class="k">Woensdag<small>11 posts</small></span><span class="track"><span class="bar neg" style="left:42%;width:8%"></span></span><span class="v neg">−8%</span></div>
+      <div class="row"><span class="k">Donderdag<small>6 posts</small></span><span class="track"><span class="bar" style="left:50%;width:15%"></span></span><span class="v">+15%</span></div>
+      <div class="row"><span class="k">Vrijdag<small>7 posts</small></span><span class="track"><span class="bar" style="left:50%;width:14%"></span></span><span class="v">+14%</span></div>
+      <div class="row"><span class="k">Zaterdag<small>4 posts</small></span><span class="track"><span class="bar" style="left:50%;width:46%"></span></span><span class="v">+46%</span></div>
+      <div class="row"><span class="k">Zondag<small>2 posts</small></span><span class="track"><span class="bar" style="left:50%;width:0%"></span></span><span class="v">0%</span></div>
+      <p class="chart-note">Zaterdag ziet er goed uit, maar het zijn maar 4 posts; te weinig om het zeker te weten. Dinsdag en woensdag zijn de dagen met de meeste posts en zitten iets onder het gemiddelde.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Wie zijn de volgers?</h2>
+    <div class="facts">
+      <div class="fact"><b>5.824</b><span>volgers</span></div>
+      <div class="fact"><b>71%</b><span>vrouw</span></div>
+      <div class="fact"><b>25–44</b><span>grootste leeftijdsgroep</span></div>
+      <div class="fact"><b>34%</b><span>in Nederland</span></div>
+    </div>
+    <p class="warn">Maar een derde van de volgers woont in Nederland: Nijmegen 6,8%, Arnhem 3,1%, Uden 1,5%. De rest komt uit India, Indonesië, China en andere landen. Daardoor kan Meta's "meest actieve tijd" wat verschuiven; wij kiezen de tijden voor de klanten in Nederland.</p>
+  </section>
+
+  <section>
+    <h2>De tijden voor de Black Friday-week</h2>
+    <p>We gebruiken het tijdstip dat goed werkt en proberen ook de avond. Alle tijden in Nederlandse tijd.</p>
+    <div class="table-wrap">
+      <table class="week">
+        <thead><tr><th>Dag</th><th>Post</th><th>Tijd</th></tr></thead>
+        <tbody>
+          <tr><td>Di 24 november</td><td>Black Friday-post <span class="tag done">ingepland</span></td><td>10:00</td></tr>
+          <tr><td>Di 24 november</td><td>Black Friday-story <span class="tag">avondtest</span> <span class="tag done">ingepland</span></td><td>21:00</td></tr>
+          <tr><td>Wo 25 november</td><td>Carrousel met de 4 acties</td><td>10:00</td></tr>
+          <tr><td>Do 26 november</td><td>Video van 15 seconden, als story</td><td>10:00 · 20:00</td></tr>
+          <tr><td>Vr 27 november</td><td>Story "Black Friday is begonnen"</td><td>08:00</td></tr>
+          <tr><td>Vr 27 november</td><td>Post "Laserontharen gehele benen" <span class="tag">avondtest</span></td><td>20:00</td></tr>
+          <tr><td>Zo 29 november</td><td>Video "Laatste kans", als story</td><td>10:00 · 20:00</td></tr>
+          <tr><td>Di 1 december</td><td>Story "Vandaag de laatste dag"</td><td>09:00 · 20:00</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Vier weken lang wisselen we ochtend en avond af. Daarna kijken we op dezelfde manier opnieuw en kiezen we het beste tijdstip.</p>
+  </section>
+
+  <footer>
+    <p>Zo hebben we gerekend: van elke Instagram-feedpost in Meta Business Suite namen we de weergaven en de interacties (likes, reacties, delen, opslaan). De post van 23 november, de winactie van januari en de video van 4 februari laten we weg, zodat ze het gemiddelde niet vertekenen. Stories tellen hier niet mee.</p>
+  </footer>
+</main>
+<script>
+  // Language: ?lang= or #tr / #nl first, then the last choice, then the browser (Turkish browsers get Turkish, others Dutch).
+  (function () {
+    var root = document.documentElement;
+    var pick = function (v) { return v === 'tr' || v === 'nl' ? v : null; };
+    var stored = null;
+    try { stored = localStorage.getItem('pure-analyse-lang'); } catch (e) {}
+    var q = null;
+    try { q = new URLSearchParams(location.search).get('lang'); } catch (e) {}
+    var lang = pick(q) || pick(location.hash.slice(1)) || pick(stored) || (/^tr/i.test(navigator.language || '') ? 'tr' : 'nl');
+    var set = function (l) {
+      root.dataset.lang = l;
+      root.lang = l;
+      document.querySelectorAll('.switch button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.set === l)); });
+      try { localStorage.setItem('pure-analyse-lang', l); } catch (e) {}
+    };
+    document.querySelectorAll('.switch button').forEach(function (b) { b.addEventListener('click', function () { set(b.dataset.set); }); });
+    set(lang);
+  })();
+</script>
 </body>
 </html>

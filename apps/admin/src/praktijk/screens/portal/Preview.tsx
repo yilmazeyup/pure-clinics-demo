@@ -53,7 +53,7 @@ export function optionPrice(o: IntakeOption, i18n: I18n): string {
 export function inkOn(hex: string): string {
   const n = parseInt(hex.replace('#', ''), 16);
   const [r, g, b] = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((c) => c / 255);
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.6 ? '#1E1E1C' : '#FFFFFF';
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.6 ? '#3A2623' : '#FFFFFF';
 }
 
 const hoursUntil = (start: Date, now: Date) => (start.getTime() - now.getTime()) / 3600000;

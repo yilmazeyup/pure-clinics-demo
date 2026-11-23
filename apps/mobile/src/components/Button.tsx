@@ -55,7 +55,7 @@ export function Button({ label, onPress, kind = 'primary', size = 'md', icon, ic
           justifyContent: 'center',
           gap: 8,
         },
-        kind === 'primary' || kind === 'accent' ? { boxShadow: '0px 6px 18px rgba(30, 30, 28, 0.18)' } : null,
+        kind === 'primary' || kind === 'accent' ? { boxShadow: '0px 6px 18px rgba(58, 38, 35, 0.18)' } : null,
         kind === 'light' ? { boxShadow: theme.shadow.card } : null,
         style,
       ]}

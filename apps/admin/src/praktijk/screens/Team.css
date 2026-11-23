@@ -31,7 +31,7 @@
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(6px);
-  box-shadow: 0 6px 18px rgba(30, 30, 28, 0.08);
+  box-shadow: 0 6px 18px rgba(58, 38, 35, 0.08);
   text-align: center;
   transition:
     transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
@@ -65,12 +65,12 @@
 .pk-tm-card.is-hover {
   transform: translateY(-3px);
   border-color: var(--line-strong);
-  box-shadow: 0 10px 24px rgba(30, 30, 28, 0.14);
+  box-shadow: 0 10px 24px rgba(58, 38, 35, 0.14);
 }
 
 .pk-tm-card.is-chosen {
   border-color: var(--ink);
-  box-shadow: 0 0 0 1px var(--ink), 0 10px 24px rgba(30, 30, 28, 0.14);
+  box-shadow: 0 0 0 1px var(--ink), 0 10px 24px rgba(58, 38, 35, 0.14);
 }
 
 .pk-tm-card.is-off {

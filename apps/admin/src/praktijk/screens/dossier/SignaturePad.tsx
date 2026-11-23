@@ -32,7 +32,7 @@ export function SignaturePad({ onSign }: { onSign: (png: string) => void }) {
       ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
-      ctx.strokeStyle = '#1E1E1C';
+      ctx.strokeStyle = '#3A2623';
       ctx.lineWidth = 2.2;
       setEmpty(true);
     };
@@ -54,7 +54,7 @@ export function SignaturePad({ onSign }: { onSign: (png: string) => void }) {
     if (ctx) {
       ctx.beginPath();
       ctx.arc(last.current.x, last.current.y, 1.1, 0, Math.PI * 2);
-      ctx.fillStyle = '#1E1E1C';
+      ctx.fillStyle = '#3A2623';
       ctx.fill();
     }
     setEmpty(false);

@@ -218,10 +218,10 @@ function Hero({ treatment, height, price }: { treatment: Treatment; height: numb
       <Svg style={StyleSheet.absoluteFill} width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none" pointerEvents="none">
         <Defs>
           <LinearGradient id="heroShade" x1="0" y1="0" x2="0" y2="1">
-            <Stop offset="0" stopColor="#141210" stopOpacity={0.35} />
-            <Stop offset="0.3" stopColor="#141210" stopOpacity={0} />
-            <Stop offset="0.55" stopColor="#141210" stopOpacity={0.05} />
-            <Stop offset="1" stopColor="#141210" stopOpacity={0.72} />
+            <Stop offset="0" stopColor="#2B1B19" stopOpacity={0.35} />
+            <Stop offset="0.3" stopColor="#2B1B19" stopOpacity={0} />
+            <Stop offset="0.55" stopColor="#2B1B19" stopOpacity={0.05} />
+            <Stop offset="1" stopColor="#2B1B19" stopOpacity={0.72} />
           </LinearGradient>
         </Defs>
         <Rect x={0} y={0} width={100} height={100} fill="url(#heroShade)" />
@@ -291,7 +291,7 @@ function CompactBar({ title, heroHeight }: { title: string; heroHeight: number }
   return (
     <>
       <Animated.View pointerEvents="none" style={{ position: 'absolute', top: 0, start: 0, end: 0, opacity: shown }}>
-        <Glass style={{ borderWidth: 0, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: 'rgba(30, 30, 28, 0.08)' }}>
+        <Glass style={{ borderWidth: 0, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: 'rgba(58, 38, 35, 0.08)' }}>
           <View style={{ height: insets.top + 60, paddingTop: insets.top, paddingHorizontal: 72, alignItems: 'center', justifyContent: 'center' }}>
             <Animated.View style={{ transform: [{ translateY: shown.interpolate({ inputRange: [0, 1], outputRange: [8, 0] }) }] }}>
               <Txt variant="heading" numberOfLines={1}>

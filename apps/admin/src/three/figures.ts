@@ -7,12 +7,12 @@ import { pick, rng } from '../data/random';
 
 const SKIN = ['#EFDCC8', '#E2C3A5', '#CDA484', '#A98062', '#80604A', '#5F4535'];
 const HAIR = ['#2B2420', '#4A372C', '#6B4E3A', '#8E6E50', '#A88A66', '#7E6F63'];
-const TOPS = ['#EBDDD5', '#DCC9B3', '#CBBEAA', '#B29C82', '#8C7B6B', '#E4D6C8', '#C9B8AE'];
-const BOTTOMS = ['#4E463F', '#655A51', '#7A6A55', '#57504A', '#94826E'];
-const COAT = '#FAF8F4';
-const TROUSERS = '#4A433D';
-const SOCKS = '#EDE6DC';
-const DEVICE = '#BFB3A5';
+const TOPS = ['#EAD5D1', '#D9C0B6', '#CFB2AC', '#B48F8E', '#957370', '#E6D3CC', '#C9AFA9'];
+const BOTTOMS = ['#5E4743', '#5E4743', '#8A4B55', '#57423F', '#8E726A'];
+const COAT = '#FBF7F5';
+const TROUSERS = '#4B3532';
+const SOCKS = '#EEE3DE';
+const DEVICE = '#C3AAA4';
 
 export type HairStyle = 'bun' | 'bob' | 'tail' | 'crop' | 'long';
 export type Look = { skin: string; hair: string; style: HairStyle; top: string; bottom: string; coat?: string; trousers?: string };

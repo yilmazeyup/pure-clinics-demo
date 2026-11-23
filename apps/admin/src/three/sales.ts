@@ -17,7 +17,7 @@ const HEIGHT = 2.9;
 
 export const SALES_VIEW = { camera: [0, 6.55, 10.2] as Vec, target: [0, 1.5, 0.25] as Vec };
 
-const COLORS = { treatments: '#7A6A55', webshop: '#DCC9B3', booked: '#FFFFFF', edge: '#BFB3A5', plate: '#EFE7DC' };
+const COLORS = { treatments: '#8A4B55', webshop: '#D9C0B6', booked: '#FFFFFF', edge: '#C3AAA4', plate: '#F0E4DF' };
 
 type Part = 'treatments' | 'webshop' | 'booked';
 

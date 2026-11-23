@@ -254,7 +254,7 @@
   margin-top: 16px;
   padding: 14px;
   border-radius: calc(var(--radius-card) - 4px);
-  background: #fbf8f3;
+  background: #fbf6f3;
   border: 1px solid var(--line);
 }
 
@@ -330,14 +330,14 @@
 /* ---------- The invoice itself ---------- */
 
 .pk-bi-doc {
-  --doc-accent: #7a6a55;
+  --doc-accent: #8a4b55;
   display: grid;
   gap: 20px;
   padding: 34px 38px 28px;
   background: #ffffff;
   border: 1px solid var(--line);
   border-radius: 6px;
-  box-shadow: 0 18px 44px rgba(30, 30, 28, 0.08);
+  box-shadow: 0 18px 44px rgba(58, 38, 35, 0.08);
   color: var(--ink);
   font-size: 13px;
 }
@@ -535,7 +535,7 @@
   gap: 10px;
   padding: 14px 16px;
   border-radius: 6px;
-  background: #fbf8f3;
+  background: #fbf6f3;
   border: 1px solid var(--line);
 }
 
@@ -731,13 +731,13 @@
   gap: 4px;
   padding: 18px 20px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #1e1e1c, #4e463f 70%, #7a6a55);
-  color: #f6f1ea;
-  box-shadow: 0 14px 30px rgba(30, 30, 28, 0.2);
+  background: linear-gradient(135deg, #3a2623, #5e4743 70%, #8a4b55);
+  color: #f6efea;
+  box-shadow: 0 14px 30px rgba(58, 38, 35, 0.2);
 }
 
 .pk-bi-giftcard-face .pk-bi-doc-mark {
-  color: #f6f1ea;
+  color: #f6efea;
   font-size: 13px;
 }
 
@@ -807,7 +807,7 @@
   min-width: 0;
   padding: 12px;
   border-radius: calc(var(--radius-card) - 4px);
-  background: #fbf8f3;
+  background: #fbf6f3;
   border: 1px solid var(--line);
 }
 

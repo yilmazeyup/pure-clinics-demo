@@ -27,7 +27,7 @@ import { BarList, ColumnChart, ForecastChart, LOCATION_COLOR, useChartFormat } f
 import { ExportButton } from './ExportButton';
 
 /** Light category colours get a darker edge in the bar list, so white (the free intake) still shows. */
-const barColor = (c: TreatmentCategory) => (c === 'consult' ? '#e2d8cc' : CATEGORY_COLOR[c]);
+const barColor = (c: TreatmentCategory) => (c === 'consult' ? '#e8d8d2' : CATEGORY_COLOR[c]);
 
 /** Financieel: revenue, what the agenda still promises, the forecast, staff, gift cards and the doctor's share. */
 export function Finance({ period }: { period: Period }) {

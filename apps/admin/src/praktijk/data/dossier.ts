@@ -118,7 +118,7 @@ export type IcfCode = (typeof ICF_CODES)[number];
 export type ZoneId = 'forehead' | 'glabella' | 'crowsfeet' | 'cheeks' | 'nasolabial' | 'lips' | 'chin' | 'jaw';
 /** Treatment zones of the face canvas with their default colour. */
 export const ZONES: { id: ZoneId; color: string }[] = [
-  { id: 'forehead', color: '#7A6A55' },
+  { id: 'forehead', color: '#8A4B55' },
   { id: 'glabella', color: '#B0563F' },
   { id: 'crowsfeet', color: '#4F6F86' },
   { id: 'cheeks', color: '#C08A4E' },
@@ -127,8 +127,8 @@ export const ZONES: { id: ZoneId; color: string }[] = [
   { id: 'chin', color: '#4E7A58' },
   { id: 'jaw', color: '#34405C' },
 ];
-export const POINT_COLOURS = ['#7A6A55', '#B0563F', '#4F6F86', '#C08A4E', '#86587A', '#C24F68', '#4E7A58', '#34405C', '#1E1E1C'];
-export const zoneColor = (id: ZoneId) => ZONES.find((z) => z.id === id)?.color ?? '#7A6A55';
+export const POINT_COLOURS = ['#8A4B55', '#B0563F', '#4F6F86', '#C08A4E', '#86587A', '#C24F68', '#4E7A58', '#34405C', '#3A2623'];
+export const zoneColor = (id: ZoneId) => ZONES.find((z) => z.id === id)?.color ?? '#8A4B55';
 
 export const DEPTHS = ['intradermal', 'subcutaneous', 'supraperiosteal'] as const;
 export type Depth = (typeof DEPTHS)[number];

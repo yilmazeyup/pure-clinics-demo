@@ -56,7 +56,7 @@ export const SEED_STAFF: Record<SpecialistId, StaffSetting> = Object.fromEntries
 ) as Record<SpecialistId, StaffSetting>;
 
 export type Brand = { primary: string; accent: string; logo: string | null; addresses: 'all' | 'selected' };
-export const SEED_BRAND: Brand = { primary: '#1E1E1C', accent: '#CBBEAA', logo: null, addresses: 'all' };
+export const SEED_BRAND: Brand = { primary: '#3A2623', accent: '#CFB2AC', logo: null, addresses: 'all' };
 
 export type Deposit = { on: boolean; mode: 'amount' | 'percent'; value: number };
 /** Pure asks no deposit (every Treatment.deposit is 0); the switch shows what Mollie makes possible. */

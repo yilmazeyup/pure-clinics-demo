@@ -21,7 +21,7 @@ export function Glass({ tone = 'light', style, interactive, children }: Props) {
       <GlassView
         glassEffectStyle="regular"
         colorScheme={tone === 'dark' ? 'dark' : 'light'}
-        tintColor={tone === 'dark' ? 'rgba(24, 23, 21, 0.55)' : 'rgba(250, 246, 240, 0.35)'}
+        tintColor={tone === 'dark' ? 'rgba(44, 28, 26, 0.55)' : 'rgba(250, 244, 241, 0.35)'}
         isInteractive={interactive}
         style={[{ overflow: 'hidden' }, style]}
       >
@@ -36,7 +36,7 @@ export function Glass({ tone = 'light', style, interactive, children }: Props) {
       style={[
         {
           overflow: 'hidden',
-          backgroundColor: dark ? (BLUR ? 'rgba(28, 27, 25, 0.74)' : 'rgba(28, 27, 25, 0.94)') : BLUR ? 'rgba(252, 249, 244, 0.8)' : 'rgba(252, 249, 244, 0.95)',
+          backgroundColor: dark ? (BLUR ? 'rgba(48, 30, 28, 0.74)' : 'rgba(48, 30, 28, 0.94)') : BLUR ? 'rgba(252, 247, 245, 0.8)' : 'rgba(252, 247, 245, 0.95)',
           borderWidth: StyleSheet.hairlineWidth,
           borderColor: dark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.75)',
         },

@@ -1,20 +1,20 @@
 /** The clinic palette: ivory and sand, warm taupe text, black for actions; green marks what is happening now. */
 export const CLINIC_COLORS = {
-  bg: '#F6F1EA',
+  bg: '#F6EFEA',
   surface: '#FFFFFF',
-  ink: '#1E1E1C',
-  muted: '#6E6259',
-  body: '#4E463F',
-  line: '#E2D8CC',
-  lineStrong: '#D8CCBE',
-  sand: '#E9DED3',
-  blush: '#EBDDD5',
+  ink: '#3A2623',
+  muted: '#87706A',
+  body: '#5E4743',
+  line: '#E8D8D2',
+  lineStrong: '#DCC6BF',
+  sand: '#ECDCD6',
+  blush: '#EAD5D1',
   now: '#2F4A3C',
-  /** Pure Clinics' warm stone accent (pureclinics.nl), and a darker tone that carries white text. */
-  taupe: '#CBBEAA',
-  taupeDark: '#7A6A55',
-  onPhoto: '#F1E9DF',
-  dashed: '#C9BCAE',
+  /** Pure's pastel dusty-rose accent, and the soft bordeaux that carries white text (pastel brown and bordeaux, chosen 2026-11-23). */
+  taupe: '#CFB2AC',
+  taupeDark: '#8A4B55',
+  onPhoto: '#F6ECE8',
+  dashed: '#CDB3AC',
 } as const;
 
 export const PHOTO_KEYS = [

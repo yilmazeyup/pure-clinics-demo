@@ -41,14 +41,14 @@ export const OVERVIEW = { camera: [2.5, 18.1, 17.1] as Vec, target: [0, 0, 0.55]
 const CHAIR: Record<RoomState, string> = {
   busy: CLINIC_COLORS.now,
   free: '#FFFFFF',
-  done: '#F1ECE5',
-  off: '#D9D2C8',
+  done: '#F2E8E4',
+  off: '#DBCDC8',
 };
 const FLOOR: Record<RoomState, string> = {
   busy: '#DCE7DF',
-  free: '#F8F5F0',
-  done: '#F3EFE9',
-  off: '#E9E3DA',
+  free: '#F9F3F0',
+  done: '#F4ECE8',
+  off: '#EADFDA',
 };
 
 /** The chair from headrest to footend, and the room it needs, in chair units. */
@@ -135,10 +135,10 @@ export class ClinicsScene {
     this.fit = Math.min(1, (narrowest - 0.26) / (CHAIR_RIGHT - CHAIR_LEFT));
 
     const white = new THREE.MeshStandardMaterial({ color: '#FFFFFF', roughness: 0.9 });
-    const wall = new THREE.MeshStandardMaterial({ color: '#F4F1EB', roughness: 0.95 });
+    const wall = new THREE.MeshStandardMaterial({ color: '#F4EBE7', roughness: 0.95 });
     const oak = new THREE.MeshStandardMaterial({ color: '#D7BF9B', roughness: 0.72 });
-    const taupe = new THREE.MeshStandardMaterial({ color: '#BFB3A5', roughness: 0.5, metalness: 0.2 });
-    const cart = new THREE.MeshStandardMaterial({ color: '#E7E0D6', roughness: 0.6 });
+    const taupe = new THREE.MeshStandardMaterial({ color: '#C3AAA4', roughness: 0.5, metalness: 0.2 });
+    const cart = new THREE.MeshStandardMaterial({ color: '#E8DCD7', roughness: 0.6 });
     const sand = new THREE.MeshStandardMaterial({ color: CLINIC_COLORS.sand, roughness: 0.9 });
 
     const geo = {
@@ -568,7 +568,7 @@ export class ClinicsScene {
       room.chair.position.y = Math.pow(1 - room.drop, 3) * 1.8 + room.pop * 0.1;
 
       const dim = this.focused !== null && room.clinic !== this.focused;
-      room.upholstery.color.lerp(dim ? room.chairTarget.clone().lerp(new THREE.Color('#E9E3DA'), 0.7) : room.chairTarget, k);
+      room.upholstery.color.lerp(dim ? room.chairTarget.clone().lerp(new THREE.Color('#EADFDA'), 0.7) : room.chairTarget, k);
       room.floor.color.lerp(room.floorTarget, k);
       const busy = room.state === 'busy';
       room.upholstery.emissive.set(busy ? CLINIC_COLORS.now : '#000000');

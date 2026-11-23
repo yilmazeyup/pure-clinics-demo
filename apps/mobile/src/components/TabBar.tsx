@@ -152,7 +152,7 @@ function TabBadge({ count }: { count: number }) {
         borderRadius: 6,
         backgroundColor: theme.c.gold,
         borderWidth: 2,
-        borderColor: '#2A2926',
+        borderColor: '#3A2623',
         alignItems: 'center',
         justifyContent: 'center',
       }}

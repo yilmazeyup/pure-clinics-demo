@@ -127,6 +127,30 @@
       .sendbar a { flex: none; display: inline-flex; align-items: center; gap: 8px; padding: 12px 18px; border-radius: 999px; background: var(--taupe); color: var(--ivory); text-decoration: none; font: 500 15px/1 var(--sans); white-space: nowrap; }
       .sendbar a svg { width: 18px; height: 18px; }
       body { padding-bottom: 96px; }
+      /* November–december: the 32 numbered posts from the pdf, as cards. */
+      .pk-head { padding: 72px 0 32px; border-top: 1px solid var(--ink); }
+      .pk-head h1 { margin: 18px 0 0; font: 300 clamp(44px, 6.4vw, 84px)/0.95 var(--sans); letter-spacing: -0.045em; }
+      .pk-head h1 em { font: italic 300 1.1em/0.85 var(--serif); color: var(--taupe); letter-spacing: -0.01em; }
+      .pk-head .lead { max-width: 640px; margin: 24px 0 0; font: italic 300 26px/1.3 var(--serif); }
+      .pk-head .hint { max-width: 640px; margin: 16px 0 0; color: var(--muted); font-size: 15px; }
+      .pk-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 56px 32px; padding: 24px 0 88px; align-items: start; }
+      .pk-media figure { margin: 0; }
+      .pk-media img, .pk-media video { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; background: var(--paper); box-shadow: 0 30px 60px -40px rgba(63, 49, 40, .55); }
+      .pk-media .tall img, .pk-media .tall video { aspect-ratio: 9 / 16; }
+      .pk-media .tall { max-width: 300px; }
+      .pk-track { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+      .pk-track::-webkit-scrollbar { display: none; }
+      .pk-track figure { flex: 0 0 100%; scroll-snap-align: start; }
+      .pk-track.two figure { flex: 0 0 calc(50% - 5px); max-width: none; }
+      .pk-track.two figure:not(.tall) { align-self: center; }
+      .pk-count { margin: 10px 0 0; color: var(--muted); font-size: 13px; }
+      .pk-text { padding-top: 16px; }
+      .pk-num { margin: 0; font: 300 44px/1 var(--sans); color: var(--taupe); letter-spacing: -0.03em; }
+      .pk-text .mono { margin: 10px 0 0; color: var(--muted); font-size: 11px; }
+      .pk-text h3 { margin: 8px 0 0; font: 400 19px/1.3 var(--sans); }
+      .pk-note { margin: 10px 0 0; padding: 8px 12px; border-left: 2px solid var(--taupe); background: var(--paper); font-size: 14px; }
+      @media (max-width: 960px) { .pk-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+      @media (max-width: 600px) { .pk-head { padding: 44px 0 20px; } .pk-grid { grid-template-columns: 1fr; gap: 48px; } .pk-media .tall { max-width: 260px; } }
       @media (max-width: 760px) {
         .rows-head { grid-template-columns: 1fr; padding: 44px 0 28px; }
         .trio { margin: 0 -16px; }
@@ -173,27 +197,27 @@
           <button type="button" data-v="los" aria-pressed="false">Los</button>
         </div>
       </section>
-      <section class="wrap row" id="rij-zijde">
-        <div class="row-title"><h2>Zijde</h2><p>Een bordeaux zijde loopt door de drie posts.</p></div>
+      <section class="wrap row" id="rij-fluweel">
+        <div class="row-title"><h2>Fluweel</h2><p>Eén bordeaux fluwelen plank loopt door de drie posts.</p></div>
         <div class="trio">
-          <figure><img src="img/rijen/zijde/post-1-s.jpg" data-big="img/rijen/zijde/post-1.jpg" alt="Zijde, post 1: ZO Skin Health" width="540" height="720" loading="lazy"><figcaption><b>1 · Product</b><p>Exfoliating Polish en Complexion Renewal Pads van ZO Skin Health, uit de eigen fotoshoot van Pure Clinics.</p><a href="img/rijen/zijde/post-1.jpg" download>Download post 1</a></figcaption></figure>
-          <figure><img src="img/rijen/zijde/post-2-s.jpg" data-big="img/rijen/zijde/post-2.jpg" alt="Zijde, post 2: geef glow." width="540" height="720" loading="lazy"><figcaption><b>2 · Campagne</b><p>Bij aankoop van een cadeaubon t.w.v. €100 ontvang je €15 cadeau. De echte Pure-cadeaukaart.</p><a href="img/rijen/zijde/post-2.jpg" download>Download post 2</a></figcaption></figure>
-          <figure><img src="img/rijen/zijde/post-3-s.jpg" data-big="img/rijen/zijde/post-3.jpg" alt="Zijde, post 3: voor &amp; na." width="540" height="720" loading="lazy"><figcaption><b>3 · Resultaat</b><p>Een echte cliënt van Pure Clinics, in originele kleur. Resultaten verschillen per huid.</p><a href="img/rijen/zijde/post-3.jpg" download>Download post 3</a></figcaption></figure>
+          <figure><img src="img/rijen/fluweel/post-1-s.jpg" data-big="img/rijen/fluweel/post-1.jpg" alt="Fluweel, post 1: ZO Skin Health" width="540" height="720" loading="lazy"><figcaption><b>1 · Product</b><p>Exfoliating Polish en Complexion Renewal Pads van ZO Skin Health, uit de eigen fotoshoot van Pure Clinics.</p><a href="img/rijen/fluweel/post-1.jpg" download>Download post 1</a></figcaption></figure>
+          <figure><img src="img/rijen/fluweel/post-2-s.jpg" data-big="img/rijen/fluweel/post-2.jpg" alt="Fluweel, post 2: geef glow." width="540" height="720" loading="lazy"><figcaption><b>2 · Campagne</b><p>Bij aankoop van een cadeaubon t.w.v. €100 ontvang je €15 cadeau. De echte Pure-cadeaukaart.</p><a href="img/rijen/fluweel/post-2.jpg" download>Download post 2</a></figcaption></figure>
+          <figure><img src="img/rijen/fluweel/post-3-s.jpg" data-big="img/rijen/fluweel/post-3.jpg" alt="Fluweel, post 3: voor &amp; na." width="540" height="720" loading="lazy"><figcaption><b>3 · Resultaat</b><p>Een echte cliënt van Pure Clinics, in originele kleur. Resultaten verschillen per huid.</p><a href="img/rijen/fluweel/post-3.jpg" download>Download post 3</a></figcaption></figure>
         </div>
       </section>
       <section class="wrap row" id="rij-licht">
-        <div class="row-title"><h2>Licht</h2><p>Zonlicht door jaloezieën verbindt de drie posts als één foto.</p></div>
+        <div class="row-title"><h2>Licht</h2><p>Eén echte foto van de behandelkamer loopt door de drie posts.</p></div>
         <div class="trio">
-          <figure><img src="img/rijen/licht/post-1-s.jpg" data-big="img/rijen/licht/post-1.jpg" alt="Licht, post 1: licht op je huid." width="540" height="720" loading="lazy"><figcaption><b>1 · Product</b><p>Daily Power Defense van ZO Skin Health, verkrijgbaar bij Pure Clinics.</p><a href="img/rijen/licht/post-1.jpg" download>Download post 1</a></figcaption></figure>
-          <figure><img src="img/rijen/licht/post-2-s.jpg" data-big="img/rijen/licht/post-2.jpg" alt="Licht, post 2: make this christmas glow." width="540" height="720" loading="lazy"><figcaption><b>2 · Campagne</b><p>Christmas Glow: drie kerstkits van ZO Skin Health, tijdelijk bij Pure Clinics. Het gezicht is een AI-sfeerbeeld.</p><a href="img/rijen/licht/post-2.jpg" download>Download post 2</a></figcaption></figure>
-          <figure><img src="img/rijen/licht/post-3-s.jpg" data-big="img/rijen/licht/post-3.jpg" alt="Licht, post 3: nordlys ipl." width="540" height="720" loading="lazy"><figcaption><b>3 · Behandeling</b><p>Een echte behandeling met de Nordlys IPL bij Pure Clinics.</p><a href="img/rijen/licht/post-3.jpg" download>Download post 3</a></figcaption></figure>
+          <figure><img src="img/rijen/licht/post-1-s.jpg" data-big="img/rijen/licht/post-1.jpg" alt="Licht, post 1: nordlys ipl." width="540" height="720" loading="lazy"><figcaption><b>1 · Product</b><p>De Nordlys IPL in de behandelkamer van Pure Clinics.</p><a href="img/rijen/licht/post-1.jpg" download>Download post 1</a></figcaption></figure>
+          <figure><img src="img/rijen/licht/post-2-s.jpg" data-big="img/rijen/licht/post-2.jpg" alt="Licht, post 2: in goede handen." width="540" height="720" loading="lazy"><figcaption><b>2 · Campagne</b><p>Black Friday bij Pure Clinics, t/m 1 december. Een huidtherapeut van Pure Clinics, uit de eigen fotoshoot.</p><a href="img/rijen/licht/post-2.jpg" download>Download post 2</a></figcaption></figure>
+          <figure><img src="img/rijen/licht/post-3-s.jpg" data-big="img/rijen/licht/post-3.jpg" alt="Licht, post 3: bij pure." width="540" height="720" loading="lazy"><figcaption><b>3 · Behandeling</b><p>Een echte behandeling met de Nordlys IPL bij Pure Clinics.</p><a href="img/rijen/licht/post-3.jpg" download>Download post 3</a></figcaption></figure>
         </div>
       </section>
       <section class="wrap row" id="rij-bogen">
         <div class="row-title"><h2>Bogen</h2><p>Drie nissen in één muur, met één sokkel en één fijne lijn.</p></div>
         <div class="trio">
           <figure><img src="img/rijen/bogen/post-1-s.jpg" data-big="img/rijen/bogen/post-1.jpg" alt="Bogen, post 1: jouw ritueel." width="540" height="720" loading="lazy"><figcaption><b>1 · Product</b><p>ZO Skin Health uit de eigen fotoshoot van Pure Clinics.</p><a href="img/rijen/bogen/post-1.jpg" download>Download post 1</a></figcaption></figure>
-          <figure><img src="img/rijen/bogen/post-2-s.jpg" data-big="img/rijen/bogen/post-2.jpg" alt="Bogen, post 2: christmas glow." width="540" height="720" loading="lazy"><figcaption><b>2 · Campagne</b><p>De ZO-kerstkits, vanaf 2 december. Het gezicht is een AI-sfeerbeeld.</p><a href="img/rijen/bogen/post-2.jpg" download>Download post 2</a></figcaption></figure>
+          <figure><img src="img/rijen/bogen/post-2-s.jpg" data-big="img/rijen/bogen/post-2.jpg" alt="Bogen, post 2: geef glow." width="540" height="720" loading="lazy"><figcaption><b>2 · Campagne</b><p>Cadeaubon t.w.v. €100 met €15 cadeau. De echte Pure-cadeaukaart, uit de eigen fotoshoot.</p><a href="img/rijen/bogen/post-2.jpg" download>Download post 2</a></figcaption></figure>
           <figure><img src="img/rijen/bogen/post-3-s.jpg" data-big="img/rijen/bogen/post-3.jpg" alt="Bogen, post 3: cliënt van Pure." width="540" height="720" loading="lazy"><figcaption><b>3 · Resultaat</b><p>Echte voor- en nafoto van een cliënt van Pure Clinics. Resultaten verschillen per huid.</p><a href="img/rijen/bogen/post-3.jpg" download>Download post 3</a></figcaption></figure>
         </div>
       </section>
@@ -201,13 +225,151 @@
         <div class="row-title"><h2>Woord</h2><p>Eén groot woord, glow, loopt achter de drie posts langs.</p></div>
         <div class="trio">
           <figure><img src="img/rijen/woord/post-1-s.jpg" data-big="img/rijen/woord/post-1.jpg" alt="Woord, post 1: ZO Skin Health" width="540" height="720" loading="lazy"><figcaption><b>1 · Product</b><p>De eigen producten van Pure Clinics, uitgesneden uit de fotoshoot.</p><a href="img/rijen/woord/post-1.jpg" download>Download post 1</a></figcaption></figure>
-          <figure><img src="img/rijen/woord/post-2-s.jpg" data-big="img/rijen/woord/post-2.jpg" alt="Woord, post 2: Black Friday bij Pure" width="540" height="720" loading="lazy"><figcaption><b>2 · Campagne</b><p>Geldig t/m 1 december. Het gezicht is een AI-sfeerbeeld.</p><a href="img/rijen/woord/post-2.jpg" download>Download post 2</a></figcaption></figure>
+          <figure><img src="img/rijen/woord/post-2-s.jpg" data-big="img/rijen/woord/post-2.jpg" alt="Woord, post 2: Black Friday bij Pure" width="540" height="720" loading="lazy"><figcaption><b>2 · Campagne</b><p>Black Friday bij Pure, t/m 1 december. Een huidtherapeut van Pure Clinics, uit de eigen fotoshoot.</p><a href="img/rijen/woord/post-2.jpg" download>Download post 2</a></figcaption></figure>
           <figure><img src="img/rijen/woord/post-3-s.jpg" data-big="img/rijen/woord/post-3.jpg" alt="Woord, post 3: echt resultaat." width="540" height="720" loading="lazy"><figcaption><b>3 · Resultaat</b><p>Echte voor- en nafoto van een cliënt van Pure Clinics. Resultaten verschillen per huid.</p><a href="img/rijen/woord/post-3.jpg" download>Download post 3</a></figcaption></figure>
         </div>
       </section>
       <section class="wrap row">
-        <p class="note"><b>Zo plaats je een rij:</b> de drie posts altijd samen, van rechts naar links (eerst post 3, dan 2, dan 1), en geen losse post ertussen. Een vastgezette post verschuift het raster. De gezichten in de campagneposts zijn met AI gemaakt als sfeerbeeld en geen cliënten; op Instagram krijgen ze het label 'Gemaakt met AI'. Voor- en nafoto's zijn altijd echte cliënten van Pure Clinics.</p>
+        <p class="note"><b>Zo plaats je een rij:</b> de drie posts altijd samen, van rechts naar links (eerst post 3, dan 2, dan 1), en geen losse post ertussen. Een vastgezette post verschuift het raster. Alle foto's in de rijen komen uit de eigen fotoshoots van Pure Clinics; de achtergronden zijn vormgegeven in het palet. Voor- en nafoto's zijn altijd echte cliënten van Pure Clinics.</p>
       </section>
+      <!-- pakket:start -->
+      <section class="wrap pk-head" id="november-december">
+        <p class="mono">November – december · 32 posts · 11 video's</p>
+        <h1>de planning, <em>post voor post</em></h1>
+        <p class="lead">Alle posts van 22 november tot en met 31 december, op datum en met hetzelfde nummer als in de pdf.</p>
+        <p class="hint">Kies bij elke post <b>Mooi</b> of <b>Liever niet</b>. Met de knop onderaan stuur je al je keuzes in één WhatsApp-bericht.</p>
+      </section>
+      <section class="wrap pk-grid" aria-label="De posts van november en december">
+        <article class="pk" id="pk-01" data-title="Laserontharen (4 slides)">
+          <div class="pk-media"><div class="pk-track" tabindex="0" aria-label="4 slides"><figure><img src="img/pakket/01-1.jpg" alt="Laserontharen (4 slides), 1 van 4" loading="lazy"></figure><figure><img src="img/pakket/01-2.jpg" alt="Laserontharen (4 slides), 2 van 4" loading="lazy"></figure><figure><img src="img/pakket/01-3.jpg" alt="Laserontharen (4 slides), 3 van 4" loading="lazy"></figure><figure><img src="img/pakket/01-4.jpg" alt="Laserontharen (4 slides), 4 van 4" loading="lazy"></figure></div><p class="pk-count">4 slides · veeg →</p></div>
+          <div class="pk-text"><p class="pk-num">01</p><p class="mono">zo 22 nov · Carrousel</p><h3>Laserontharen (4 slides)</h3></div>
+        </article>
+        <article class="pk" id="pk-02" data-title="Black Friday: de vier deals (5 slides)">
+          <div class="pk-media"><div class="pk-track" tabindex="0" aria-label="5 slides"><figure><img src="img/pakket/02-1.jpg" alt="Black Friday: de vier deals (5 slides), 1 van 5" loading="lazy"></figure><figure><img src="img/pakket/02-2.jpg" alt="Black Friday: de vier deals (5 slides), 2 van 5" loading="lazy"></figure><figure><img src="img/pakket/02-3.jpg" alt="Black Friday: de vier deals (5 slides), 3 van 5" loading="lazy"></figure><figure><img src="img/pakket/02-4.jpg" alt="Black Friday: de vier deals (5 slides), 4 van 5" loading="lazy"></figure><figure><img src="img/pakket/02-5.jpg" alt="Black Friday: de vier deals (5 slides), 5 van 5" loading="lazy"></figure></div><p class="pk-count">5 slides · veeg →</p></div>
+          <div class="pk-text"><p class="pk-num">02</p><p class="mono">ma 23 nov · Carrousel</p><h3>Black Friday: de vier deals (5 slides)</h3></div>
+        </article>
+        <article class="pk" id="pk-03" data-title="IPL: licht op roodheid (3 slides)">
+          <div class="pk-media"><div class="pk-track" tabindex="0" aria-label="3 slides"><figure><img src="img/pakket/03-1.jpg" alt="IPL: licht op roodheid (3 slides), 1 van 3" loading="lazy"></figure><figure><img src="img/pakket/03-2.jpg" alt="IPL: licht op roodheid (3 slides), 2 van 3" loading="lazy"></figure><figure><img src="img/pakket/03-3.jpg" alt="IPL: licht op roodheid (3 slides), 3 van 3" loading="lazy"></figure></div><p class="pk-count">3 slides · veeg →</p></div>
+          <div class="pk-text"><p class="pk-num">03</p><p class="mono">di 24 nov · Carrousel</p><h3>IPL: licht op roodheid (3 slides)</h3></div>
+        </article>
+        <article class="pk" id="pk-04" data-title="In goede handen">
+          <div class="pk-media"><figure><img src="img/pakket/04-1.jpg" alt="In goede handen" loading="lazy"></figure></div>
+          <div class="pk-text"><p class="pk-num">04</p><p class="mono">do 26 nov · Post</p><h3>In goede handen</h3></div>
+        </article>
+        <article class="pk" id="pk-05" data-title="Black Friday reel">
+          <div class="pk-media"><div class="pk-track"><figure class="tall"><video controls playsinline preload="none" poster="img/pakket/05-1.jpg" src="video/05.mp4"></video></figure></div></div>
+          <div class="pk-text"><p class="pk-num">05</p><p class="mono">do 26 nov · Reel · 15 s</p><h3>Black Friday reel</h3></div>
+        </article>
+        <article class="pk" id="pk-06" data-title="Black Friday is begonnen · de deals op een rij">
+          <div class="pk-media"><div class="pk-track two" tabindex="0" aria-label="2 slides"><figure class="tall"><img src="img/pakket/06-1.jpg" alt="Black Friday is begonnen · de deals op een rij, 1 van 2" loading="lazy"></figure><figure class="tall"><img src="img/pakket/06-2.jpg" alt="Black Friday is begonnen · de deals op een rij, 2 van 2" loading="lazy"></figure></div><p class="pk-count">2 slides · veeg →</p></div>
+          <div class="pk-text"><p class="pk-num">06</p><p class="mono">vr 27 nov · Story (2)</p><h3>Black Friday is begonnen · de deals op een rij</h3></div>
+        </article>
+        <article class="pk" id="pk-07" data-title="Black Friday: laser gehele benen">
+          <div class="pk-media"><figure><img src="img/pakket/07-1.jpg" alt="Black Friday: laser gehele benen" loading="lazy"></figure></div>
+          <div class="pk-text"><p class="pk-num">07</p><p class="mono">vr 27 nov · Post</p><h3>Black Friday: laser gehele benen</h3></div>
+        </article>
+        <article class="pk" id="pk-08" data-title="Laatste kans: de jaloezieën van de kliniek draaien, elke draai een actie">
+          <div class="pk-media"><div class="pk-track"><figure class="tall"><video controls playsinline preload="none" poster="img/pakket/08-1.jpg" src="video/08.mp4"></video></figure></div></div>
+          <div class="pk-text"><p class="pk-num">08</p><p class="mono">zo 29 nov · Reel · 20 s</p><h3>Laatste kans: de jaloezieën van de kliniek draaien, elke draai een actie</h3></div>
+        </article>
+        <article class="pk" id="pk-09" data-title="Cadeaukaart, Black Friday-versie">
+          <div class="pk-media"><div class="pk-track two"><figure class="tall"><video controls playsinline preload="none" poster="img/pakket/09-1.jpg" src="video/09.mp4"></video></figure><figure><img src="img/pakket/09-2.jpg" alt="Cadeaukaart, Black Friday-versie, post" loading="lazy"></figure></div></div>
+          <div class="pk-text"><p class="pk-num">09</p><p class="mono">Black Friday · Story-loop · 10 s + post</p><h3>Cadeaukaart, Black Friday-versie</h3><p class="pk-note">Alleen als de actie €100 / €15 ook met Black Friday geldt.</p></div>
+        </article>
+        <article class="pk" id="pk-10" data-title="Cadeaubon voor Sinterklaas">
+          <div class="pk-media"><figure><img src="img/pakket/10-1.jpg" alt="Cadeaubon voor Sinterklaas" loading="lazy"></figure></div>
+          <div class="pk-text"><p class="pk-num">10</p><p class="mono">ma 30 nov · Post</p><h3>Cadeaubon voor Sinterklaas</h3></div>
+        </article>
+        <article class="pk" id="pk-11" data-title="Black Friday: laatste dag">
+          <div class="pk-media"><figure class="tall"><img src="img/pakket/11-1.jpg" alt="Black Friday: laatste dag" loading="lazy"></figure></div>
+          <div class="pk-text"><p class="pk-num">11</p><p class="mono">di 1 dec · Story</p><h3>Black Friday: laatste dag</h3></div>
+        </article>
+        <article class="pk" id="pk-12" data-title="Christmas Glow (5 slides)">
+          <div class="pk-media"><div class="pk-track" tabindex="0" aria-label="5 slides"><figure><img src="img/pakket/12-1.jpg" alt="Christmas Glow (5 slides), 1 van 5" loading="lazy"></figure><figure><img src="img/pakket/12-2.jpg" alt="Christmas Glow (5 slides), 2 van 5" loading="lazy"></figure><figure><img src="img/pakket/12-3.jpg" alt="Christmas Glow (5 slides), 3 van 5" loading="lazy"></figure><figure><img src="img/pakket/12-4.jpg" alt="Christmas Glow (5 slides), 4 van 5" loading="lazy"></figure><figure><img src="img/pakket/12-5.jpg" alt="Christmas Glow (5 slides), 5 van 5" loading="lazy"></figure></div><p class="pk-count">5 slides · veeg →</p></div>
+          <div class="pk-text"><p class="pk-num">12</p><p class="mono">wo 2 dec · Carrousel</p><h3>Christmas Glow (5 slides)</h3><p class="pk-note">Wacht op jullie akkoord: de kitprijzen en welke doos bij welke kit hoort.</p></div>
+        </article>
+        <article class="pk" id="pk-13" data-title="Cadeaubon reel">
+          <div class="pk-media"><div class="pk-track"><figure class="tall"><video controls playsinline preload="none" poster="img/pakket/13-1.jpg" src="video/13.mp4"></video></figure></div></div>
+          <div class="pk-text"><p class="pk-num">13</p><p class="mono">do 3 dec · Reel · 10 s</p><h3>Cadeaubon reel</h3></div>
+        </article>
+        <article class="pk" id="pk-14" data-title="&quot;Licht&quot;: licht, een fluwelen doos en de cadeaukaart in één shot (voorstel: in plaats van 13)">
+          <div class="pk-media"><div class="pk-track"><figure class="tall"><video controls playsinline preload="none" poster="img/pakket/14-1.jpg" src="video/14.mp4"></video></figure></div></div>
+          <div class="pk-text"><p class="pk-num">14</p><p class="mono">do 3 dec · Film · 27 s, met muziek</p><h3>&quot;Licht&quot;: licht, een fluwelen doos en de cadeaukaart in één shot (voorstel: in plaats van 13)</h3></div>
+        </article>
+        <article class="pk" id="pk-15" data-title="Pakjesavond (3 slides)">
+          <div class="pk-media"><div class="pk-track" tabindex="0" aria-label="3 slides"><figure><img src="img/pakket/15-1.jpg" alt="Pakjesavond (3 slides), 1 van 3" loading="lazy"></figure><figure><img src="img/pakket/15-2.jpg" alt="Pakjesavond (3 slides), 2 van 3" loading="lazy"></figure><figure><img src="img/pakket/15-3.jpg" alt="Pakjesavond (3 slides), 3 van 3" loading="lazy"></figure></div><p class="pk-count">3 slides · veeg →</p></div>
+          <div class="pk-text"><p class="pk-num">15</p><p class="mono">vr 4 dec · Carrousel</p><h3>Pakjesavond (3 slides)</h3><p class="pk-note">Wacht op jullie akkoord: de openingstijden.</p></div>
+        </article>
+        <article class="pk" id="pk-16" data-title="Fijne pakjesavond">
+          <div class="pk-media"><figure class="tall"><img src="img/pakket/16-1.jpg" alt="Fijne pakjesavond" loading="lazy"></figure></div>
+          <div class="pk-text"><p class="pk-num">16</p><p class="mono">za 5 dec · Story</p><h3>Fijne pakjesavond</h3></div>
+        </article>
+        <article class="pk" id="pk-17" data-title="The Clear Skin Kit">
+          <div class="pk-media"><figure><img src="img/pakket/17-1.jpg" alt="The Clear Skin Kit" loading="lazy"></figure></div>
+          <div class="pk-text"><p class="pk-num">17</p><p class="mono">ma 7 dec · Post</p><h3>The Clear Skin Kit</h3><p class="pk-note">Wacht op jullie akkoord: de prijs (€125 of €99?).</p></div>
+        </article>
+        <article class="pk" id="pk-18" data-title="Christmas Glow, met jullie eigen kerstvideo">
+          <div class="pk-media"><div class="pk-track"><figure class="tall"><video controls playsinline preload="none" poster="img/pakket/18-1.jpg" src="video/18.mp4"></video></figure></div></div>
+          <div class="pk-text"><p class="pk-num">18</p><p class="mono">wo 9 dec · Reel · 19 s</p><h3>Christmas Glow, met jullie eigen kerstvideo</h3><p class="pk-note">Wacht op jullie akkoord: de 10%-kaart in de video.</p></div>
+        </article>
+        <article class="pk" id="pk-19" data-title="The Even Skin Kit">
+          <div class="pk-media"><figure><img src="img/pakket/19-1.jpg" alt="The Even Skin Kit" loading="lazy"></figure></div>
+          <div class="pk-text"><p class="pk-num">19</p><p class="mono">vr 11 dec · Post</p><h3>The Even Skin Kit</h3></div>
+        </article>
+        <article class="pk" id="pk-20" data-title="Drie deuren, drie kits: achter elke deur een ZO-kit">
+          <div class="pk-media"><div class="pk-track"><figure class="tall"><video controls playsinline preload="none" poster="img/pakket/20-1.jpg" src="video/20.mp4"></video></figure></div></div>
+          <div class="pk-text"><p class="pk-num">20</p><p class="mono">za 12 dec · Reel · 20 s</p><h3>Drie deuren, drie kits: achter elke deur een ZO-kit</h3><p class="pk-note">Wacht op jullie akkoord: de kitprijzen en welke doos bij welke kit hoort.</p></div>
+        </article>
+        <article class="pk" id="pk-21" data-title="Poll: wat heeft jouw huid nodig?">
+          <div class="pk-media"><figure class="tall"><img src="img/pakket/21-1.jpg" alt="Poll: wat heeft jouw huid nodig?" loading="lazy"></figure></div>
+          <div class="pk-text"><p class="pk-num">21</p><p class="mono">ma 14 dec · Story</p><h3>Poll: wat heeft jouw huid nodig?</h3></div>
+        </article>
+        <article class="pk" id="pk-22" data-title="Welke kerstkit past bij jou? (5 slides)">
+          <div class="pk-media"><div class="pk-track" tabindex="0" aria-label="5 slides"><figure><img src="img/pakket/22-1.jpg" alt="Welke kerstkit past bij jou? (5 slides), 1 van 5" loading="lazy"></figure><figure><img src="img/pakket/22-2.jpg" alt="Welke kerstkit past bij jou? (5 slides), 2 van 5" loading="lazy"></figure><figure><img src="img/pakket/22-3.jpg" alt="Welke kerstkit past bij jou? (5 slides), 3 van 5" loading="lazy"></figure><figure><img src="img/pakket/22-4.jpg" alt="Welke kerstkit past bij jou? (5 slides), 4 van 5" loading="lazy"></figure><figure><img src="img/pakket/22-5.jpg" alt="Welke kerstkit past bij jou? (5 slides), 5 van 5" loading="lazy"></figure></div><p class="pk-count">5 slides · veeg →</p></div>
+          <div class="pk-text"><p class="pk-num">22</p><p class="mono">ma 14 dec · Carrousel</p><h3>Welke kerstkit past bij jou? (5 slides)</h3></div>
+        </article>
+        <article class="pk" id="pk-23" data-title="Cadeaubon">
+          <div class="pk-media"><figure><img src="img/pakket/23-1.jpg" alt="Cadeaubon" loading="lazy"></figure></div>
+          <div class="pk-text"><p class="pk-num">23</p><p class="mono">wo 16 dec · Post</p><h3>Cadeaubon</h3></div>
+        </article>
+        <article class="pk" id="pk-24" data-title="Mini-bos: van kerstboom naar cadeaukaart (voorstel: in plaats van 23)">
+          <div class="pk-media"><div class="pk-track"><figure class="tall"><video controls playsinline preload="none" poster="img/pakket/24-1.jpg" src="video/24.mp4"></video></figure></div></div>
+          <div class="pk-text"><p class="pk-num">24</p><p class="mono">wo 16 dec · Reel · 12 s</p><h3>Mini-bos: van kerstboom naar cadeaukaart (voorstel: in plaats van 23)</h3></div>
+        </article>
+        <article class="pk" id="pk-25" data-title="Cadeaukaart, in het concept van jullie voorbeeld">
+          <div class="pk-media"><div class="pk-track two"><figure class="tall"><video controls playsinline preload="none" poster="img/pakket/25-1.jpg" src="video/25.mp4"></video></figure><figure><img src="img/pakket/25-2.jpg" alt="Cadeaukaart, in het concept van jullie voorbeeld, post" loading="lazy"></figure></div></div>
+          <div class="pk-text"><p class="pk-num">25</p><p class="mono">december · Story-loop · 10 s + post</p><h3>Cadeaukaart, in het concept van jullie voorbeeld</h3></div>
+        </article>
+        <article class="pk" id="pk-26" data-title="Achter de schermen: tatoeage verwijderen">
+          <div class="pk-media"><div class="pk-track"><figure class="tall"><video controls playsinline preload="none" poster="img/pakket/26-1.jpg" src="video/26.mp4"></video></figure></div></div>
+          <div class="pk-text"><p class="pk-num">26</p><p class="mono">vr 18 dec · Reel · 20 s</p><h3>Achter de schermen: tatoeage verwijderen</h3><p class="pk-note">Wacht op jullie akkoord: toestemming van de cliënt.</p></div>
+        </article>
+        <article class="pk" id="pk-27" data-title="Last-minute cadeau">
+          <div class="pk-media"><figure><img src="img/pakket/27-1.jpg" alt="Last-minute cadeau" loading="lazy"></figure></div>
+          <div class="pk-text"><p class="pk-num">27</p><p class="mono">ma 21 dec · Post</p><h3>Last-minute cadeau</h3></div>
+        </article>
+        <article class="pk" id="pk-28" data-title="Kerstgroet">
+          <div class="pk-media"><figure><img src="img/pakket/28-1.jpg" alt="Kerstgroet" loading="lazy"></figure></div>
+          <div class="pk-text"><p class="pk-num">28</p><p class="mono">wo 23 dec · Post</p><h3>Kerstgroet</h3><p class="pk-note">Wacht op jullie akkoord: de openingstijden rond de feestdagen.</p></div>
+        </article>
+        <article class="pk" id="pk-29" data-title="Boom van licht: gouden stofjes vormen de kerstboom en daarna het Pure-logo">
+          <div class="pk-media"><div class="pk-track"><figure class="tall"><video controls playsinline preload="none" poster="img/pakket/29-1.jpg" src="video/29.mp4"></video></figure></div></div>
+          <div class="pk-text"><p class="pk-num">29</p><p class="mono">wo 23 dec · Reel · 15 s</p><h3>Boom van licht: gouden stofjes vormen de kerstboom en daarna het Pure-logo</h3></div>
+        </article>
+        <article class="pk" id="pk-30" data-title="Fijne kerstdagen">
+          <div class="pk-media"><figure class="tall"><img src="img/pakket/30-1.jpg" alt="Fijne kerstdagen" loading="lazy"></figure></div>
+          <div class="pk-text"><p class="pk-num">30</p><p class="mono">do 24 dec · Story</p><h3>Fijne kerstdagen</h3></div>
+        </article>
+        <article class="pk" id="pk-31" data-title="Nieuw jaar, nieuwe huid">
+          <div class="pk-media"><figure><img src="img/pakket/31-1.jpg" alt="Nieuw jaar, nieuwe huid" loading="lazy"></figure></div>
+          <div class="pk-text"><p class="pk-num">31</p><p class="mono">di 29 dec · Post</p><h3>Nieuw jaar, nieuwe huid</h3></div>
+        </article>
+        <article class="pk" id="pk-32" data-title="Een stralend 2027">
+          <div class="pk-media"><figure class="tall"><img src="img/pakket/32-1.jpg" alt="Een stralend 2027" loading="lazy"></figure></div>
+          <div class="pk-text"><p class="pk-num">32</p><p class="mono">do 31 dec · Story</p><h3>Een stralend 2027</h3></div>
+        </article>
+      </section>
+      <!-- pakket:end -->
       <section class="wrap intro round-head" id="eerste-ronde">
         <div>
           <p class="mono">Eerste ronde · november</p>
@@ -459,6 +621,11 @@
         const name = row.querySelector('h2').textContent.trim();
         addVote(row, row.id, 'rij ' + name);
         items[items.length - 1].label = 'Rij ' + name;
+      }
+      for (const card of document.querySelectorAll('article.pk')) {
+        const n = card.id.slice(-2);
+        addVote(card.querySelector('.pk-text'), card.id, 'nummer ' + n);
+        items[items.length - 1].label = 'Nr. ' + n + ' (' + card.dataset.title + ')';
       }
       for (const post of document.querySelectorAll('article.post')) {
         const n = post.id.slice(-2);

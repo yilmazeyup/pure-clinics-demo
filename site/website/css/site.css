@@ -1,22 +1,22 @@
-/* Pure Clinics website, second round: three design studies in pastel brown and bordeaux (Pure's choice, 2026-11-23), calm motion as on MVR. */
+/* Pure Clinics website, second round: three palettes in light brown and bordeaux, never powder pink (Pure's choice, 2026-11-23), calm motion as on MVR. */
 
 /* ---------- Studies ---------- */
 
 :root,
-:root[data-study='poeder'] {
-  --bg: #f6efea;
-  --surface: #fcf8f5;
-  --band: #ecdcd6;
-  --band-ink: #3f2a26;
-  --ink: #3a2623;
-  --body: #604a45;
-  --muted: #92776f;
-  --accent: #9b5d66;
-  --line: #e8d8d1;
-  --deep: #6b4248;
-  --on-deep: #f8eeea;
-  --on-deep-muted: #dcc0bb;
-  --footer: #3f2a2b;
+:root[data-study='creme'] {
+  --bg: #f7f3ec;
+  --surface: #fdfbf7;
+  --band: #efe7dc;
+  --band-ink: #3f3128;
+  --ink: #3f3128;
+  --body: #67564a;
+  --muted: #948372;
+  --accent: #7e3440;
+  --line: #e6dccf;
+  --deep: #8c6e58;
+  --on-deep: #fbf7f1;
+  --on-deep-muted: #eadfcf;
+  --footer: #8c6e58;
   --serif: 'Lexend', ui-sans-serif, system-ui, sans-serif;
   --wide: 'Lexend Peta', 'Lexend', ui-sans-serif, system-ui, sans-serif;
   --sans: 'Lexend', ui-sans-serif, system-ui, sans-serif;
@@ -24,26 +24,26 @@
   --serif-weight: 200;
   --serif-track: 0.01em;
   --eyebrow-track: 0.18em;
-  --photo: sepia(0.1) saturate(0.86) contrast(1.02) brightness(1.03);
-  --photo-hover: sepia(0.03) saturate(0.96);
+  --photo: sepia(0.06) saturate(0.92) contrast(1.02) brightness(1.03);
+  --photo-hover: sepia(0.02) saturate(0.98);
   --radius: 0px;
-  --hero-shade: linear-gradient(180deg, rgb(58 30 32 / 0.04) 30%, rgb(58 30 32 / 0.58));
+  --hero-shade: linear-gradient(180deg, rgb(63 49 40 / 0.04) 30%, rgb(63 49 40 / 0.55));
 }
 
-:root[data-study='rozenhout'] {
-  --bg: #efe0db;
-  --surface: #f8efeb;
-  --band: #b98c8f;
-  --band-ink: #fbf2ef;
-  --ink: #3a2324;
-  --body: #5d4140;
-  --muted: #8a6b69;
-  --accent: #8a4b55;
-  --line: #dfc8c1;
-  --deep: #7a4c53;
-  --on-deep: #fbf0ec;
-  --on-deep-muted: #e6cbc6;
-  --footer: #4a2c30;
+:root[data-study='karamel'] {
+  --bg: #f3ece2;
+  --surface: #fbf7f1;
+  --band: #c9ae8f;
+  --band-ink: #3f3128;
+  --ink: #3f3128;
+  --body: #645346;
+  --muted: #8f7b69;
+  --accent: #7e3440;
+  --line: #e2d5c4;
+  --deep: #9c7b63;
+  --on-deep: #fbf7f1;
+  --on-deep-muted: #efe2d0;
+  --footer: #9c7b63;
   --serif: 'Lexend', ui-sans-serif, system-ui, sans-serif;
   --wide: 'Lexend Peta', 'Lexend', ui-sans-serif, system-ui, sans-serif;
   --sans: 'Lexend', ui-sans-serif, system-ui, sans-serif;
@@ -51,26 +51,26 @@
   --serif-weight: 200;
   --serif-track: 0.01em;
   --eyebrow-track: 0.22em;
-  --photo: sepia(0.16) saturate(0.84) contrast(1.03);
+  --photo: sepia(0.12) saturate(0.88) contrast(1.03);
   --photo-hover: sepia(0.04) saturate(0.96);
   --radius: 2px;
-  --hero-shade: linear-gradient(180deg, transparent 50%, rgb(74 44 48 / 0.32));
+  --hero-shade: linear-gradient(180deg, transparent 50%, rgb(70 52 40 / 0.3));
 }
 
-:root[data-study='cacao'] {
-  --bg: #e9ddd3;
-  --surface: #f4ebe4;
-  --band: #a2826f;
-  --band-ink: #fbf3ed;
-  --ink: #3a2a24;
-  --body: #5b463c;
-  --muted: #8b7466;
-  --accent: #8e4f57;
-  --line: #dacabe;
-  --deep: #5a3d3a;
-  --on-deep: #f7ede7;
-  --on-deep-muted: #d8c2b8;
-  --footer: #33231f;
+:root[data-study='bordeaux'] {
+  --bg: #f6f1ea;
+  --surface: #fdfaf6;
+  --band: #7e3440;
+  --band-ink: #fbf5ef;
+  --ink: #3f3128;
+  --body: #67564a;
+  --muted: #948372;
+  --accent: #7e3440;
+  --line: #e6dccf;
+  --deep: #7e3440;
+  --on-deep: #fbf5ef;
+  --on-deep-muted: #eadbc8;
+  --footer: #7e3440;
   --serif: 'Lexend', ui-sans-serif, system-ui, sans-serif;
   --wide: 'Lexend Peta', 'Lexend', ui-sans-serif, system-ui, sans-serif;
   --sans: 'Lexend', ui-sans-serif, system-ui, sans-serif;
@@ -78,10 +78,10 @@
   --serif-weight: 200;
   --serif-track: 0.01em;
   --eyebrow-track: 0.26em;
-  --photo: sepia(0.18) saturate(0.8) contrast(1.04) brightness(0.98);
-  --photo-hover: sepia(0.06) saturate(0.94);
+  --photo: sepia(0.1) saturate(0.9) contrast(1.03);
+  --photo-hover: sepia(0.03) saturate(0.97);
   --radius: 0px;
-  --hero-shade: radial-gradient(ellipse at 50% 55%, rgb(52 30 28 / 0.3), rgb(52 30 28 / 0.72));
+  --hero-shade: radial-gradient(ellipse at 50% 55%, rgb(60 40 32 / 0.28), rgb(60 40 32 / 0.66));
 }
 
 :root[lang='ar'] {
@@ -296,11 +296,11 @@ section {
 }
 
 .btn-solid {
-  background: var(--ink);
-  color: var(--bg);
+  background: var(--accent);
+  color: #fff;
 }
 .btn-solid:hover {
-  background: var(--accent);
+  background: var(--ink);
   color: #fff;
 }
 
@@ -341,7 +341,7 @@ section {
 }
 
 .site-header.over-photo {
-  --header-ink: #f8efeb;
+  --header-ink: #fbf7f1;
 }
 
 .site-header.solid {
@@ -420,7 +420,7 @@ section {
   background-repeat: no-repeat;
 }
 .lang select option {
-  color: #3f2a26;
+  color: #3f3128;
 }
 
 .site-header .btn-solid {
@@ -430,8 +430,8 @@ section {
 }
 
 .site-header.over-photo .btn-solid {
-  background: #f8efeb;
-  color: #3f2a26;
+  background: #fbf7f1;
+  color: #3f3128;
 }
 
 .menu-button {
@@ -595,52 +595,52 @@ section {
   display: none;
 }
 
-/* Poeder: one full-bleed close-up in soft warm colour, the copy at the bottom (MVR). */
-[data-study='poeder'] .hero {
+/* Crème: one full-bleed close-up in soft warm colour, the copy at the bottom (MVR). */
+[data-study='creme'] .hero {
   grid-template: 1fr / 1fr;
-  color: #f8efeb;
+  color: #fbf7f1;
 }
-[data-study='poeder'] .hero > * {
+[data-study='creme'] .hero > * {
   grid-area: 1 / 1;
 }
-[data-study='poeder'] .hero-media::after {
+[data-study='creme'] .hero-media::after {
   content: '';
   position: absolute;
   inset: 0;
   background: var(--hero-shade);
 }
-[data-study='poeder'] .hero-copy {
+[data-study='creme'] .hero-copy {
   align-self: end;
   padding: 0 var(--gut) clamp(48px, 9vh, 110px);
   max-width: 980px;
 }
-[data-study='poeder'] .hero .eyebrow {
+[data-study='creme'] .hero .eyebrow {
   color: rgb(246 239 230 / 0.8);
 }
-[data-study='poeder'] .hero .display em {
-  color: #f0d0ca;
+[data-study='creme'] .hero .display em {
+  color: #e9d6b8;
 }
-[data-study='poeder'] .hero .btn-solid {
-  background: #f8efeb;
-  color: #3f2a26;
+[data-study='creme'] .hero .btn-solid {
+  background: #fbf7f1;
+  color: #3f3128;
 }
 
-/* Rozenhout: a split page: the words on dusty rose, the portrait beside them, two close-ups in between. */
-[data-study='rozenhout'] .hero {
+/* Karamel: a split page: the words on caramel cream, the portrait beside them, two close-ups in between. */
+[data-study='karamel'] .hero {
   grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
   min-height: max(100svh, 720px);
 }
-[data-study='rozenhout'] .hero-copy {
+[data-study='karamel'] .hero-copy {
   grid-column: 1;
   grid-row: 1;
   align-self: center;
   padding: calc(var(--header-h) + 40px) var(--gut) 80px;
 }
-[data-study='rozenhout'] .hero-media {
+[data-study='karamel'] .hero-media {
   grid-column: 2;
   grid-row: 1;
 }
-[data-study='rozenhout'] .hero-side {
+[data-study='karamel'] .hero-side {
   display: grid;
   grid-column: 1 / 3;
   grid-row: 1;
@@ -652,61 +652,61 @@ section {
   margin-bottom: 26px;
   transform: translateX(6%);
 }
-[dir='rtl'][data-study='rozenhout'] .hero-side {
+[dir='rtl'][data-study='karamel'] .hero-side {
   transform: translateX(-6%);
 }
-[data-study='rozenhout'] .hero-side img {
+[data-study='karamel'] .hero-side img {
   width: 100%;
   aspect-ratio: 4 / 5;
   object-fit: cover;
   filter: var(--photo);
   box-shadow: 0 18px 40px rgb(46 35 28 / 0.22);
 }
-[data-study='rozenhout'] .hero-side img:last-child {
+[data-study='karamel'] .hero-side img:last-child {
   margin-top: 40px;
 }
-[data-study='rozenhout'] .hero-scroll {
-  color: #f8ece8;
+[data-study='karamel'] .hero-scroll {
+  color: #f8f1e7;
 }
 
-/* Cacao: a centred title over a softly darkened close-up, cocoa and bordeaux. */
-[data-study='cacao'] .hero {
+/* Bordeaux: a centred title over a softly darkened close-up, bordeaux bands. */
+[data-study='bordeaux'] .hero {
   grid-template: 1fr / 1fr;
-  color: #f8eeea;
+  color: #fbf6ef;
   text-align: center;
 }
-[data-study='cacao'] .hero > * {
+[data-study='bordeaux'] .hero > * {
   grid-area: 1 / 1;
 }
-[data-study='cacao'] .hero-media::after {
+[data-study='bordeaux'] .hero-media::after {
   content: '';
   position: absolute;
   inset: 0;
   background: var(--hero-shade);
 }
-[data-study='cacao'] .hero-copy {
+[data-study='bordeaux'] .hero-copy {
   align-self: center;
   justify-self: center;
   padding: calc(var(--header-h) + 20px) var(--gut) 60px;
   max-width: 1100px;
 }
-[data-study='cacao'] .hero .eyebrow {
-  color: #efcfc8;
+[data-study='bordeaux'] .hero .eyebrow {
+  color: #e6cfa8;
 }
-[data-study='cacao'] .hero .display em {
-  color: #f0d0ca;
+[data-study='bordeaux'] .hero .display em {
+  color: #e9d6b8;
 }
-[data-study='cacao'] .hero .btn-solid {
-  background: #f8efeb;
-  color: #3f2a26;
+[data-study='bordeaux'] .hero .btn-solid {
+  background: #fbf7f1;
+  color: #3f3128;
 }
-[data-study='cacao'] .hero .lede {
+[data-study='bordeaux'] .hero .lede {
   margin-inline: auto;
 }
-[data-study='cacao'] .hero-actions {
+[data-study='bordeaux'] .hero-actions {
   justify-content: center;
 }
-[data-study='cacao'] .hero .display {
+[data-study='bordeaux'] .hero .display {
   font-size: calc(clamp(42px, 7.2vw, 124px) * var(--serif-size));
 }
 
@@ -1117,7 +1117,7 @@ section {
   display: grid;
   place-items: center;
   background: #fff;
-  color: #3f2a26;
+  color: #3f3128;
   font-size: 15px;
   letter-spacing: 2px;
 }
@@ -1189,8 +1189,8 @@ section {
   transform: scale(1.06);
 }
 
-[data-study='poeder'] .strip img,
-[data-study='cacao'] .strip img {
+[data-study='creme'] .strip img,
+[data-study='bordeaux'] .strip img {
   filter: saturate(0.75);
 }
 
@@ -1725,7 +1725,7 @@ section {
 
 .footer {
   background: var(--footer);
-  color: #f0e2dd;
+  color: #efe5d8;
   padding: clamp(60px, 7vw, 100px) var(--gut) 40px;
 }
 
@@ -2021,15 +2021,15 @@ section {
   border: 1px solid rgb(0 0 0 / 0.1);
 }
 
-[data-study='poeder'] i,
-.studies-buttons [data-study='poeder'] i {
-  background: linear-gradient(90deg, #f6efea 0 34%, #ecdcd6 34% 67%, #9b5d66 67%);
+[data-study='creme'] i,
+.studies-buttons [data-study='creme'] i {
+  background: linear-gradient(90deg, #f7f3ec 0 34%, #efe7dc 34% 67%, #7e3440 67%);
 }
-.studies-buttons [data-study='rozenhout'] i {
-  background: linear-gradient(90deg, #efe0db 0 34%, #b98c8f 34% 67%, #8a4b55 67%);
+.studies-buttons [data-study='karamel'] i {
+  background: linear-gradient(90deg, #f3ece2 0 34%, #c9ae8f 34% 67%, #7e3440 67%);
 }
-.studies-buttons [data-study='cacao'] i {
-  background: linear-gradient(90deg, #e9ddd3 0 34%, #a2826f 34% 67%, #5a3d3a 67%);
+.studies-buttons [data-study='bordeaux'] i {
+  background: linear-gradient(90deg, #f6f1ea 0 34%, #7e3440 34% 67%, #3f3128 67%);
 }
 
 .studies-note {
@@ -2168,19 +2168,19 @@ section {
   .site-header .btn-solid {
     display: none;
   }
-  [data-study='rozenhout'] .hero {
+  [data-study='karamel'] .hero {
     grid-template-columns: 1fr;
     grid-template-rows: auto 62svh;
   }
-  [data-study='rozenhout'] .hero-copy {
+  [data-study='karamel'] .hero-copy {
     grid-row: 1;
     padding-bottom: 40px;
   }
-  [data-study='rozenhout'] .hero-media {
+  [data-study='karamel'] .hero-media {
     grid-column: 1;
     grid-row: 2;
   }
-  [data-study='rozenhout'] .hero-side {
+  [data-study='karamel'] .hero-side {
     display: none;
   }
   .philosophy {

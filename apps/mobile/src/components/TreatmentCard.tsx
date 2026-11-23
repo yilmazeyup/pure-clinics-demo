@@ -35,8 +35,8 @@ export function TreatmentCard({ treatment, height, location, compact }: { treatm
         <Svg style={StyleSheet.absoluteFill} width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none" pointerEvents="none">
           <Defs>
             <LinearGradient id="cardShade" x1="0" y1="0" x2="0" y2="1">
-              <Stop offset="0.4" stopColor="#2B1B19" stopOpacity={0} />
-              <Stop offset="1" stopColor="#2B1B19" stopOpacity={0.72} />
+              <Stop offset="0.4" stopColor="#3A2D25" stopOpacity={0} />
+              <Stop offset="1" stopColor="#3A2D25" stopOpacity={0.72} />
             </LinearGradient>
           </Defs>
           <Rect x={0} y={0} width={100} height={100} fill="url(#cardShade)" />

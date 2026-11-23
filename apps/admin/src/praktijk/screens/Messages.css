@@ -36,7 +36,7 @@
   margin-top: 12px;
   padding: 10px 12px;
   border-radius: 8px;
-  background: #fbf6f3;
+  background: #fcf9f4;
   color: var(--muted);
   font-size: 12.5px;
 }
@@ -128,7 +128,7 @@
   padding: 10px 12px;
   border: 1px solid var(--line);
   border-radius: 10px;
-  background: #fbf6f3;
+  background: #fcf9f4;
 }
 
 .pk-me-appt span {
@@ -151,7 +151,7 @@
 }
 
 .pk-me-ai.is-writing {
-  background: linear-gradient(180deg, #ffffff, #fbf6f3);
+  background: linear-gradient(180deg, #ffffff, #fcf9f4);
   caret-color: transparent;
 }
 
@@ -264,7 +264,7 @@
   padding: 14px 16px;
   border: 1px solid var(--line);
   border-radius: 10px;
-  background: #fbf6f3;
+  background: #fcf9f4;
 }
 
 .pk-me-total > div {
@@ -399,8 +399,8 @@
   border-radius: 8px;
   background:
     radial-gradient(circle at 78% 30%, rgba(255, 255, 255, 0.55) 0 12%, transparent 13%),
-    radial-gradient(ellipse at 20% 110%, #b48f8e 0 38%, transparent 39%),
-    linear-gradient(150deg, #efe1db, #d9bcb4);
+    radial-gradient(ellipse at 20% 110%, #b8977a 0 38%, transparent 39%),
+    linear-gradient(150deg, #eee5d9, #d6be9e);
 }
 
 .pk-me-mail-body > div {
@@ -442,7 +442,7 @@
 .pk-me-mail-foot {
   padding: 12px 14px;
   border-top: 1px solid var(--line);
-  background: #fbf6f3;
+  background: #fcf9f4;
   color: var(--muted);
   font-size: 11px;
   line-height: 1.6;
@@ -542,7 +542,7 @@
   margin-inline: -10px;
   padding-inline: 10px;
   border-radius: 10px;
-  background: #fbf6f3;
+  background: #fcf9f4;
 }
 
 .pk-me-note-body {

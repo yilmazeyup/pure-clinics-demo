@@ -13,7 +13,7 @@ body,
 }
 
 body {
-  background: #f6efea;
+  background: #f7f3ec;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -46,23 +46,23 @@ li {
 }
 
 .app {
-  --bg: #f6efea;
+  --bg: #f7f3ec;
   --surface: #ffffff;
-  --ink: #3a2623;
-  --muted: #87706a;
-  --line: #e8d8d2;
-  --line-strong: #dcc6bf;
-  --soft: #f0e4df;
+  --ink: #3f3128;
+  --muted: #908070;
+  --line: #e6dccf;
+  --line-strong: #d8c9b5;
+  --soft: #efe7dc;
   /* Black for actions, warm taupe for the brand, green only for what is happening right now. */
-  --accent: #3a2623;
+  --accent: #7e3440;
   --accent-ink: #ffffff;
-  --brand: #8a4b55;
+  --brand: #7e3440;
   --now: #2f4a3c;
   --sage: #e1e9e3;
-  --blush: #f1e1dd;
-  --sand-soft: #eee0da;
-  --scene-top: #efe1db;
-  --scene-bottom: #fbf6f3;
+  --blush: #f0e8dd;
+  --sand-soft: #ece3d6;
+  --scene-top: #eee5d9;
+  --scene-bottom: #fcf9f4;
   --good: #23704a;
   --good-bg: #e7f3ea;
   --bad: #9b3b2d;
@@ -472,7 +472,7 @@ li {
 }
 
 .kpi:hover {
-  box-shadow: 0 22px 44px -24px rgba(58, 38, 35, 0.35);
+  box-shadow: 0 22px 44px -24px rgba(63, 49, 40, 0.35);
 }
 
 .kpi-top,
@@ -690,7 +690,7 @@ li {
   width: 11px;
   height: 11px;
   border-radius: 3px;
-  border: 1px solid rgba(58, 38, 35, 0.18);
+  border: 1px solid rgba(63, 49, 40, 0.18);
 }
 
 .scene-hint {
@@ -709,7 +709,7 @@ li {
   border-radius: 10px;
   background: var(--surface);
   border: 1px solid var(--line);
-  box-shadow: 0 14px 34px rgba(58, 38, 35, 0.16);
+  box-shadow: 0 14px 34px rgba(63, 49, 40, 0.16);
   font: 400 12px/1.4 var(--body);
   color: var(--muted);
   white-space: nowrap;
@@ -750,7 +750,7 @@ li {
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.95);
   border: 1px solid var(--line-strong);
-  box-shadow: 0 3px 10px rgba(58, 38, 35, 0.08);
+  box-shadow: 0 3px 10px rgba(63, 49, 40, 0.08);
   font: 400 calc(10.5px * var(--s)) / 1.2 var(--body);
   color: var(--muted);
   text-align: center;
@@ -813,7 +813,7 @@ li {
 }
 
 .scene-room--client:hover {
-  box-shadow: 0 8px 18px rgba(58, 38, 35, 0.2);
+  box-shadow: 0 8px 18px rgba(63, 49, 40, 0.2);
 }
 
 .scene-room--client:focus-visible {
@@ -873,7 +873,7 @@ li {
   border-radius: 14px;
   background: var(--surface);
   border: 1px solid var(--line);
-  box-shadow: 0 26px 50px -22px rgba(58, 38, 35, 0.42), 0 4px 14px rgba(58, 38, 35, 0.08);
+  box-shadow: 0 26px 50px -22px rgba(63, 49, 40, 0.42), 0 4px 14px rgba(63, 49, 40, 0.08);
   font: 400 12.5px/1.45 var(--body);
   color: var(--ink);
   text-align: start;
@@ -1089,7 +1089,7 @@ li {
 
 .scene-room--done,
 .scene-room--off {
-  background: rgba(241, 232, 228, 0.94);
+  background: rgba(241, 235, 226, 0.94);
 }
 
 .scene-clinic {
@@ -1484,13 +1484,13 @@ li {
   background: var(--surface);
   color: var(--ink);
   border: 1px solid var(--line-strong);
-  box-shadow: 0 8px 18px rgba(58, 38, 35, 0.14);
+  box-shadow: 0 8px 18px rgba(63, 49, 40, 0.14);
 }
 
 .scene-flash {
   background: var(--ink);
   color: #ffffff;
-  box-shadow: 0 8px 18px rgba(58, 38, 35, 0.22);
+  box-shadow: 0 8px 18px rgba(63, 49, 40, 0.22);
 }
 
 @keyframes float-up {
@@ -1628,7 +1628,7 @@ li {
   bottom: 3px;
   min-width: 6px;
   border-radius: 5px;
-  border: 1px solid rgba(58, 38, 35, 0.14);
+  border: 1px solid rgba(63, 49, 40, 0.14);
   font-size: 11.5px;
   line-height: 24px;
   color: var(--ink);
@@ -1880,7 +1880,7 @@ li {
 
 .btn-primary:hover {
   transform: translateY(-1px);
-  background: #3e2c29;
+  background: #46372d;
 }
 
 .btn:disabled {
@@ -1919,7 +1919,7 @@ li {
   background: var(--ink);
   color: #ffffff;
   font-size: 13.5px;
-  box-shadow: 0 16px 40px rgba(58, 38, 35, 0.25);
+  box-shadow: 0 16px 40px rgba(63, 49, 40, 0.25);
   opacity: 0;
   transform: translate(-50%, 14px);
   pointer-events: none;
@@ -1943,7 +1943,7 @@ li {
 .tour-spot {
   position: fixed;
   border-radius: calc(var(--radius-card) + 8px);
-  box-shadow: 0 0 0 2px #ffffff, 0 0 0 200vmax rgba(58, 38, 35, 0.58);
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 200vmax rgba(63, 49, 40, 0.58);
   pointer-events: none;
   transition: top 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), left 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), width 0.35s, height 0.35s;
 }
@@ -1996,7 +1996,7 @@ li {
   inset-inline-end: 24px;
   bottom: calc(24px + env(safe-area-inset-bottom, 0px));
   width: min(340px, calc(100vw - 32px));
-  box-shadow: 0 26px 60px -18px rgba(58, 38, 35, 0.4);
+  box-shadow: 0 26px 60px -18px rgba(63, 49, 40, 0.4);
   animation: rise 0.7s 1.4s cubic-bezier(0.2, 0.75, 0.2, 1) backwards;
 }
 

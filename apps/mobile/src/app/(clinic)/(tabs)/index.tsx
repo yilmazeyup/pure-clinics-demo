@@ -480,7 +480,7 @@ function Deals() {
       style={{ width: wide ? undefined : 250, height: 196, borderRadius: theme.r.card, overflow: 'hidden', boxShadow: theme.shadow.card }}
     >
       <Photo photo={deal.group === 'men' ? 'pc-laser' : deal.group === 'students' ? 'pc-epilation' : 'pc-smooth'} style={StyleSheet.absoluteFill} />
-      <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(44, 26, 24, 0.5)' }]} />
+      <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(54, 42, 34, 0.5)' }]} />
       <View style={{ flex: 1, padding: 16, justifyContent: 'space-between' }}>
         <Glass tone="dark" style={{ alignSelf: 'flex-start', borderRadius: 10, paddingHorizontal: 10, paddingVertical: 5 }}>
           <Txt variant="caption" color="#FFFFFF" style={{ fontFamily: theme.f.medium }}>

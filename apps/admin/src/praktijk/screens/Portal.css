@@ -58,11 +58,11 @@
   width: 320px;
   max-width: 100%;
   height: 640px;
-  border: 9px solid #3a2623;
+  border: 9px solid #3f3128;
   border-radius: 36px;
   background: #ffffff;
   overflow: hidden;
-  box-shadow: 0 24px 60px rgba(58, 38, 35, 0.18);
+  box-shadow: 0 24px 60px rgba(63, 49, 40, 0.18);
   font-size: 13px;
 }
 
@@ -363,7 +363,7 @@
   padding: 12px;
   border: 1px solid var(--line);
   border-radius: 10px;
-  background: #fbf6f3;
+  background: #fcf9f4;
 }
 
 .pk-po-pv-summary b {
@@ -504,7 +504,7 @@
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  text-shadow: 0 1px 2px rgba(58, 38, 35, 0.35);
+  text-shadow: 0 1px 2px rgba(63, 49, 40, 0.35);
 }
 
 .pk-po-ba-tile--before {
@@ -557,7 +557,7 @@
   padding: 12px;
   border: 1px solid var(--line);
   border-radius: 10px;
-  background: #fbf6f3;
+  background: #fcf9f4;
 }
 
 .pk-po-flow b {
@@ -604,7 +604,7 @@
   white-space: nowrap;
   padding: 4px 8px;
   border-radius: 6px;
-  background: #fbf6f3;
+  background: #fcf9f4;
   color: var(--muted);
   text-align: left;
 }
@@ -623,7 +623,7 @@
   margin-top: 12px;
   padding: 10px 12px;
   border-radius: 8px;
-  background: #fbf6f3;
+  background: #fcf9f4;
   color: var(--muted);
   font-size: 12.5px;
 }
@@ -833,8 +833,8 @@
   margin: 0;
   padding: 14px;
   border-radius: 10px;
-  background: #3a2623;
-  color: #f0e4df;
+  background: #3f3128;
+  color: #efe7dc;
   font: 12px/1.6 ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   text-align: left;
   white-space: pre-wrap;

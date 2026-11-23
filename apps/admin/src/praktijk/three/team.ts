@@ -36,7 +36,7 @@ type Figure = {
   label: CSS2DObject;
 };
 
-const RING_IDLE = new THREE.Color('#E6D2CC');
+const RING_IDLE = new THREE.Color('#E3D7C6');
 const RING_ON = new THREE.Color(CLINIC_COLORS.taupeDark);
 
 export class TeamScene {
@@ -61,7 +61,7 @@ export class TeamScene {
     const half = ((n - 1) / 2) * layout.spacing;
 
     // A shallow rectangular plinth on a slightly larger white base, like the clinic tiles on the overview (no round shapes).
-    const white = new THREE.MeshStandardMaterial({ color: '#FBF6F3', roughness: 0.9 });
+    const white = new THREE.MeshStandardMaterial({ color: '#FCF9F4', roughness: 0.9 });
     const sand = new THREE.MeshStandardMaterial({ color: CLINIC_COLORS.sand, roughness: 0.94 });
     const depth = layout === COMPACT ? 1.25 : 1.55;
     const base = new THREE.Mesh(new RoundedBoxGeometry(2 * (half + 1.35), 0.12, 2 * (depth + 0.35), 2, 0.05), white);

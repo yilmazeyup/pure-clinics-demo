@@ -1,20 +1,20 @@
-/** The clinic palette: ivory and sand, warm taupe text, black for actions; green marks what is happening now. */
+/** The clinic palette: ivory, cream and caramel, soft cocoa text, bordeaux for actions; green marks what is happening now. */
 export const CLINIC_COLORS = {
-  bg: '#F6EFEA',
+  bg: '#F7F3EC',
   surface: '#FFFFFF',
-  ink: '#3A2623',
-  muted: '#87706A',
-  body: '#5E4743',
-  line: '#E8D8D2',
-  lineStrong: '#DCC6BF',
-  sand: '#ECDCD6',
-  blush: '#EAD5D1',
+  ink: '#3F3128',
+  muted: '#908070',
+  body: '#67564A',
+  line: '#E6DCCF',
+  lineStrong: '#D8C9B5',
+  sand: '#EAE0D3',
+  blush: '#E9DFD1',
   now: '#2F4A3C',
-  /** Pure's pastel dusty-rose accent, and the soft bordeaux that carries white text (pastel brown and bordeaux, chosen 2026-11-23). */
-  taupe: '#CFB2AC',
-  taupeDark: '#8A4B55',
-  onPhoto: '#F6ECE8',
-  dashed: '#CDB3AC',
+  /** Pure's soft sand-caramel accent, and the bordeaux that carries white text (brown and bordeaux, never powder pink; 2026-11-23). */
+  taupe: '#D6C2A8',
+  taupeDark: '#7E3440',
+  onPhoto: '#F6EFE6',
+  dashed: '#CDBBA4',
 } as const;
 
 export const PHOTO_KEYS = [

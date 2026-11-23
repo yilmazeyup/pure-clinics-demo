@@ -11,16 +11,16 @@ type Kind = 'pump' | 'tube' | 'jar' | 'bottle' | 'can' | 'box';
 type Look = { kind: Kind; body: string; cap: string; ink: string; height: number };
 
 const LOOKS: Record<ProductId, Look> = {
-  'zo-cleanser': { kind: 'pump', body: '#F8F3F0', cap: '#3A2724', ink: '#3A2623', height: 0.6 },
-  'zo-defense': { kind: 'pump', body: '#45302D', cap: '#CFB2AC', ink: '#F6ECE8', height: 0.48 },
-  'zo-spf': { kind: 'tube', body: '#F0E4DF', cap: '#3A2724', ink: '#3A2623', height: 0.56 },
-  'lycogel-camouflage': { kind: 'tube', body: '#EAD5D1', cap: '#B48F8E', ink: '#5E4743', height: 0.46 },
-  'wiqo-cream': { kind: 'jar', body: '#F5EDE9', cap: '#B48F8E', ink: '#5E4743', height: 0.24 },
-  'xlhair-revitalix': { kind: 'bottle', body: '#CFB2AC', cap: '#5E4743', ink: '#3A2623', height: 0.66 },
-  'xlhair-scalpfit': { kind: 'bottle', body: '#957370', cap: '#ECDCD6', ink: '#F8F3F0', height: 0.66 },
-  'xlhair-spray': { kind: 'can', body: '#E6D3CC', cap: '#5E4743', ink: '#3A2623', height: 0.62 },
-  'camouflage-set': { kind: 'box', body: '#ECDCD6', cap: '#8A4B55', ink: '#3A2623', height: 0.4 },
-  'laser-aftercare-set': { kind: 'box', body: '#F5EDE9', cap: '#B48F8E', ink: '#3A2623', height: 0.4 },
+  'zo-cleanser': { kind: 'pump', body: '#F9F5EF', cap: '#433429', ink: '#3F3128', height: 0.6 },
+  'zo-defense': { kind: 'pump', body: '#4E3D32', cap: '#D6C2A8', ink: '#F6EFE6', height: 0.48 },
+  'zo-spf': { kind: 'tube', body: '#EFE7DC', cap: '#433429', ink: '#3F3128', height: 0.56 },
+  'lycogel-camouflage': { kind: 'tube', body: '#E9DFD1', cap: '#B8977A', ink: '#67564A', height: 0.46 },
+  'wiqo-cream': { kind: 'jar', body: '#F5EFE7', cap: '#B8977A', ink: '#67564A', height: 0.24 },
+  'xlhair-revitalix': { kind: 'bottle', body: '#D6C2A8', cap: '#67564A', ink: '#3F3128', height: 0.66 },
+  'xlhair-scalpfit': { kind: 'bottle', body: '#9A7B62', cap: '#EAE0D3', ink: '#F9F5EF', height: 0.66 },
+  'xlhair-spray': { kind: 'can', body: '#E4D8C8', cap: '#67564A', ink: '#3F3128', height: 0.62 },
+  'camouflage-set': { kind: 'box', body: '#EAE0D3', cap: '#7E3440', ink: '#3F3128', height: 0.4 },
+  'laser-aftercare-set': { kind: 'box', body: '#F5EFE7', cap: '#B8977A', ink: '#3F3128', height: 0.4 },
 };
 
 /** Two shelves: face and aftercare above, hair and the sets below. */
@@ -211,7 +211,7 @@ export class ShopScene {
   ) {
     stage.scene.add(this.root);
     const white = mat('#FFFFFF', 0.9);
-    const ivory = mat('#F4EBE7', 0.95);
+    const ivory = mat('#F3EDE4', 0.95);
     const oak = mat('#D7BF9B', 0.7);
     const kraft = mat('#D9BE98', 0.85);
 

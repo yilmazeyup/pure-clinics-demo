@@ -31,7 +31,7 @@
 
 .pk-head {
   padding: 24px 26px 18px;
-  background: linear-gradient(135deg, #fbf6f3 0%, var(--surface) 55%, var(--blush) 140%);
+  background: linear-gradient(135deg, #fcf9f4 0%, var(--surface) 55%, var(--blush) 140%);
 }
 
 .pk-head-top {
@@ -466,7 +466,7 @@ select.pk-input {
 .pk-input:focus {
   outline: none;
   border-color: var(--ink);
-  box-shadow: 0 0 0 3px rgba(58, 38, 35, 0.08);
+  box-shadow: 0 0 0 3px rgba(63, 49, 40, 0.08);
 }
 
 .pk-input[aria-invalid='true'] {
@@ -533,7 +533,7 @@ select.pk-input {
   height: 16px;
   border-radius: 50%;
   background: #ffffff;
-  box-shadow: 0 1px 3px rgba(58, 38, 35, 0.25);
+  box-shadow: 0 1px 3px rgba(63, 49, 40, 0.25);
   transition: inset-inline-start 0.2s;
 }
 
@@ -586,7 +586,7 @@ select.pk-input {
   position: sticky;
   top: 0;
   padding: 10px 12px;
-  background: #fbf6f3;
+  background: #fcf9f4;
   border-bottom: 1px solid var(--line);
   color: var(--muted);
   font-size: 11px;
@@ -835,7 +835,7 @@ select.pk-input {
   display: grid;
   place-items: center;
   padding: 18px;
-  background: rgba(58, 38, 35, 0.32);
+  background: rgba(63, 49, 40, 0.32);
   backdrop-filter: blur(3px);
   animation: fade-in 0.2s;
 }
@@ -849,7 +849,7 @@ select.pk-input {
   border-radius: var(--radius-card);
   border: 1px solid var(--line);
   background: var(--surface);
-  box-shadow: 0 30px 80px rgba(58, 38, 35, 0.28);
+  box-shadow: 0 30px 80px rgba(63, 49, 40, 0.28);
   outline: none;
   animation: rise 0.35s cubic-bezier(0.2, 0.75, 0.2, 1);
 }

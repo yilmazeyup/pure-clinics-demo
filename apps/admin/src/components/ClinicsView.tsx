@@ -15,10 +15,10 @@ import { CardHead } from './ui';
 /** One colour per kind of treatment, in the clinic's own warm range; Blanche Beauty Studio is the blush one. */
 export const CATEGORY_COLOR: Record<TreatmentCategory, string> = {
   consult: '#FFFFFF',
-  removal: '#D9BCB4',
+  removal: '#D6BE9E',
   conditions: CLINIC_COLORS.taupeDark,
-  skin: '#B48F8E',
-  hair: '#5E4743',
+  skin: '#B8977A',
+  hair: '#67564A',
   beauty: '#EBD9CF',
 };
 
@@ -250,7 +250,7 @@ export function ClinicsView({ appts, day, now, focus, onFocus, events, fast }: P
             <i style={{ background: '#FFFFFF' }} /> {t('clinics.legendFree')}
           </span>
           <span>
-            <i style={{ background: '#DBCDC8' }} /> {t('clinics.legendOff')}
+            <i style={{ background: '#DAD0C3' }} /> {t('clinics.legendOff')}
           </span>
         </div>
         <span className="scene-hint">{t('clinics.hint')}</span>

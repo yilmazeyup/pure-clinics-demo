@@ -18,12 +18,12 @@ const RAISED = 8;
 const FLAT = 2.5;
 
 const COLOR = {
-  done: '#8A4B55',
-  rest: '#E8D8D2',
-  planned: '#3A2623',
-  due: '#B48F8E',
+  done: '#7E3440',
+  rest: '#E6DCCF',
+  planned: '#3F3128',
+  due: '#B8977A',
   late: '#9B3B2D',
-  onTrack: '#DCC6BF',
+  onTrack: '#D8C9B5',
 };
 
 type Tile = { mesh: THREE.Mesh; material: THREE.MeshStandardMaterial; height: number; color: THREE.Color; delay: number };
@@ -61,7 +61,7 @@ export class CourseTiles {
     // Light from the front and above, so the tiles keep their palette colours rather than going dark.
     const key = new THREE.DirectionalLight('#FFF6EC', 1.9);
     key.position.set(-0.35, 0.8, 1.2);
-    this.scene.add(key, new THREE.HemisphereLight('#FFFFFF', '#ECDCD6', 1.9));
+    this.scene.add(key, new THREE.HemisphereLight('#FFFFFF', '#EAE0D3', 1.9));
 
     this.resizeObserver = new ResizeObserver(() => this.resize());
     this.resizeObserver.observe(host);

@@ -130,7 +130,7 @@
   margin-bottom: 14px;
   padding: 12px 14px;
   border-radius: var(--radius-control);
-  background: #fbf6f3;
+  background: #fcf9f4;
   border: 1px solid var(--line);
 }
 
@@ -173,7 +173,7 @@
   width: 11px;
   height: 11px;
   border-radius: 3px;
-  border: 1px solid rgba(58, 38, 35, 0.18);
+  border: 1px solid rgba(63, 49, 40, 0.18);
 }
 
 .pk-se-abbr {
@@ -287,7 +287,7 @@
   padding: 4px 4px 4px 12px;
   border: 1px solid var(--line);
   border-radius: var(--radius-control);
-  background: #fbf6f3;
+  background: #fcf9f4;
   min-width: 0;
 }
 
@@ -318,7 +318,7 @@
   padding: 16px;
   border: 1px solid var(--line);
   border-radius: calc(var(--radius-card) - 4px);
-  background: linear-gradient(160deg, #fbf6f3, var(--surface));
+  background: linear-gradient(160deg, #fcf9f4, var(--surface));
 }
 
 .pk-se-cert svg {
@@ -440,7 +440,7 @@
   padding: 26px 16px;
   border: 1.5px dashed var(--line-strong);
   border-radius: calc(var(--radius-card) - 4px);
-  background: #fbf6f3;
+  background: #fcf9f4;
   text-align: center;
   cursor: pointer;
 }

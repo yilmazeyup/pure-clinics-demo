@@ -164,7 +164,7 @@ export function Footer({ children }: PropsWithChildren) {
   const insets = useSafeAreaInsets();
   const { wide, gutter } = useLayout();
   return (
-    <Glass style={{ borderWidth: 0, borderTopWidth: 1, borderTopColor: 'rgba(58, 38, 35, 0.06)', boxShadow: '0px -10px 30px rgba(58, 36, 34, 0.06)' }}>
+    <Glass style={{ borderWidth: 0, borderTopWidth: 1, borderTopColor: 'rgba(63, 49, 40, 0.06)', boxShadow: '0px -10px 30px rgba(63, 49, 40, 0.06)' }}>
       <View
         style={{
           paddingHorizontal: wide ? gutter : 20,

@@ -113,7 +113,7 @@ export function Deck({ photos, width, ratio = 800 / 434, label, nextLabel }: Pro
                       paddingHorizontal: 10,
                       paddingVertical: 5,
                       borderRadius: 8,
-                      backgroundColor: 'rgba(58, 38, 35, 0.72)',
+                      backgroundColor: 'rgba(63, 49, 40, 0.72)',
                     }}
                   >
                     <Txt variant="caption" color="#FFFFFF" style={{ fontFamily: theme.f.medium }}>

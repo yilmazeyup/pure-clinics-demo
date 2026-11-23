@@ -55,7 +55,7 @@
 
 .pk-rp-key-booked,
 .pk-rp-booked {
-  background: repeating-linear-gradient(135deg, #b8a991 0 2px, #eee0da 2px 5px);
+  background: repeating-linear-gradient(135deg, #b8a991 0 2px, #ece3d6 2px 5px);
 }
 
 .pk-rp-key-expected {
@@ -182,7 +182,7 @@
 
 .pk-rp-path {
   fill: none;
-  stroke: #8a4b55;
+  stroke: #7e3440;
   stroke-width: 2.2;
   stroke-linejoin: round;
   stroke-linecap: round;
@@ -205,9 +205,9 @@
   margin-inline-start: -4.5px;
   margin-bottom: -4.5px;
   border-radius: 50%;
-  background: #8a4b55;
+  background: #7e3440;
   border: 2px solid var(--surface);
-  box-shadow: 0 0 0 1px #8a4b55;
+  box-shadow: 0 0 0 1px #7e3440;
 }
 
 .pk-rp-dot.is-forecast {
@@ -246,7 +246,7 @@
   width: 9px;
   height: 9px;
   border-radius: 2px;
-  border: 1px solid rgba(58, 38, 35, 0.15);
+  border: 1px solid rgba(63, 49, 40, 0.15);
 }
 
 .pk-rp-bars-track {
@@ -402,7 +402,7 @@
   border-radius: 6px;
   text-align: center;
   font-variant-numeric: tabular-nums;
-  background: color-mix(in srgb, #8a4b55 calc(var(--v) * 70%), #f6efea);
+  background: color-mix(in srgb, #7e3440 calc(var(--v) * 70%), #f7f3ec);
   color: var(--ink);
 }
 

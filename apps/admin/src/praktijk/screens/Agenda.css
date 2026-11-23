@@ -144,7 +144,7 @@
   position: sticky;
   top: 0;
   z-index: 3;
-  background: #fbf6f3;
+  background: #fcf9f4;
   border-bottom: 1px solid var(--line);
 }
 
@@ -198,7 +198,7 @@
   position: sticky;
   inset-inline-start: 0;
   z-index: 4;
-  background: #fbf6f3;
+  background: #fcf9f4;
   border-inline-end: 1px solid var(--line);
 }
 
@@ -314,11 +314,11 @@
 }
 
 .pk-ag-appt {
-  --c-ink: color-mix(in srgb, var(--c) 62%, #3a2623);
+  --c-ink: color-mix(in srgb, var(--c) 62%, #3f3128);
   background: color-mix(in srgb, var(--c) 30%, #ffffff);
   border: 1px solid color-mix(in srgb, var(--c) 45%, var(--line));
   border-inline-start: 3px solid var(--c-ink);
-  box-shadow: 0 1px 2px rgba(58, 38, 35, 0.06);
+  box-shadow: 0 1px 2px rgba(63, 49, 40, 0.06);
   cursor: grab;
   user-select: none;
   transition: box-shadow 0.15s, transform 0.15s;
@@ -326,7 +326,7 @@
 
 .pk-ag-appt:hover {
   z-index: 2;
-  box-shadow: 0 6px 16px rgba(58, 38, 35, 0.12);
+  box-shadow: 0 6px 16px rgba(63, 49, 40, 0.12);
 }
 
 .pk-ag-appt:focus-visible {
@@ -341,7 +341,7 @@
 .pk-ag-appt.is-dragging {
   z-index: 6;
   cursor: grabbing;
-  box-shadow: 0 14px 30px rgba(58, 38, 35, 0.22);
+  box-shadow: 0 14px 30px rgba(63, 49, 40, 0.22);
 }
 
 .pk-ag-appt.is-ghost {
@@ -417,7 +417,7 @@
 }
 
 .pk-ag-treat {
-  color: var(--body, #5e4743);
+  color: var(--body, #67564a);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -440,7 +440,7 @@
 }
 
 .pk-ag-block {
-  background: repeating-linear-gradient(135deg, var(--sand-soft) 0 6px, #fbf6f3 6px 12px);
+  background: repeating-linear-gradient(135deg, var(--sand-soft) 0 6px, #fcf9f4 6px 12px);
   border: 1px dashed var(--line-strong);
   color: var(--ink);
 }
@@ -495,12 +495,12 @@
   width: 10px;
   height: 10px;
   border-radius: 2px;
-  border: 1.6px solid color-mix(in srgb, var(--c) 65%, #3a2623);
+  border: 1.6px solid color-mix(in srgb, var(--c) 65%, #3f3128);
   background: transparent;
 }
 
 .pk-ag-square.is-filled {
-  background: color-mix(in srgb, var(--c) 65%, #3a2623);
+  background: color-mix(in srgb, var(--c) 65%, #3f3128);
 }
 
 .pk-ag-status-line {
@@ -619,7 +619,7 @@
 }
 
 .pk-ag-legend .pk-ag-square {
-  --c: #d9bcb4;
+  --c: #d6be9e;
   margin: 3px 2px 0;
 }
 
@@ -644,7 +644,7 @@
 
 .pk-ag-legend-swatch.is-block {
   border-style: dashed;
-  background: repeating-linear-gradient(135deg, var(--sand-soft) 0 4px, #fbf6f3 4px 8px);
+  background: repeating-linear-gradient(135deg, var(--sand-soft) 0 4px, #fcf9f4 4px 8px);
 }
 
 .pk-ag-wait li {

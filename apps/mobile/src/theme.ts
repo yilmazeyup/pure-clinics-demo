@@ -58,7 +58,8 @@ const PALETTE: Palette = {
   muted: CLINIC_COLORS.muted,
   line: CLINIC_COLORS.line,
   lineStrong: CLINIC_COLORS.lineStrong,
-  primary: CLINIC_COLORS.ink,
+  // Pure's bordeaux carries the main call to action (brown and bordeaux, never powder pink).
+  primary: CLINIC_COLORS.taupeDark,
   onPrimary: '#FFFFFF',
   accent: CLINIC_COLORS.ink,
   onAccent: '#FFFFFF',
@@ -67,7 +68,7 @@ const PALETTE: Palette = {
   onPhotoMuted: CLINIC_COLORS.onPhoto,
   highlight: CLINIC_COLORS.taupeDark,
   onHighlight: '#FFFFFF',
-  gold: '#C8AD8A',
+  gold: '#C6A979',
 };
 
 // Latin and Arabic need different families; the names match the keys loaded in the root layout.
@@ -97,9 +98,9 @@ const FONTS: { latin: Fonts; arabic: Fonts } = {
 };
 
 const SHADOW = {
-  card: '0px 1px 2px rgba(58, 36, 34, 0.05), 0px 8px 24px rgba(58, 36, 34, 0.07)',
-  float: '0px 2px 6px rgba(40, 22, 20, 0.10), 0px 18px 40px rgba(40, 22, 20, 0.22)',
-  lift: '0px 4px 10px rgba(58, 36, 34, 0.08), 0px 24px 48px rgba(58, 36, 34, 0.16)',
+  card: '0px 1px 2px rgba(63, 49, 40, 0.05), 0px 8px 24px rgba(63, 49, 40, 0.07)',
+  float: '0px 2px 6px rgba(50, 38, 30, 0.10), 0px 18px 40px rgba(50, 38, 30, 0.22)',
+  lift: '0px 4px 10px rgba(63, 49, 40, 0.08), 0px 24px 48px rgba(63, 49, 40, 0.16)',
 };
 
 export function makeTheme(locale: Locale): Theme {

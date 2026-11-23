@@ -127,7 +127,7 @@ export function SkinScan({ width, height, preview, onDone }: Props) {
   return (
     <View style={{ width, height, borderRadius: theme.r.photo, overflow: 'hidden', backgroundColor: theme.c.sand }}>
       <Image source={PHOTOS['pc-eyes']} style={StyleSheet.absoluteFill} contentFit="cover" />
-      <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(40, 22, 20, 0.12)' }]} />
+      <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(50, 38, 30, 0.12)' }]} />
 
       {/* The mesh is drawn in as the light passes over it. */}
       <Animated.View style={{ position: 'absolute', top: 0, left: 0, right: 0, height: revealed, overflow: 'hidden' }}>

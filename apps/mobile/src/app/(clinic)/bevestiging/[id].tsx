@@ -163,7 +163,7 @@ function Pass({ appointment }: { appointment: AppointmentView }) {
     >
       <View style={{ borderRadius: 28, backgroundColor: theme.c.surface, overflow: 'hidden', boxShadow: theme.shadow.lift }}>
         <Photo photo={treatment.photo} style={{ height: 190 }}>
-          <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(40, 22, 20, 0.18)' }]} />
+          <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(50, 38, 30, 0.18)' }]} />
           <View style={{ position: 'absolute', top: 14, start: 14, end: 14, flexDirection: 'row', justifyContent: 'space-between' }}>
             <Glass style={{ borderRadius: 14, paddingHorizontal: 12, paddingVertical: 8 }}>
               <Txt variant="eyebrow" style={{ fontSize: 10 }}>

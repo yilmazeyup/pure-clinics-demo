@@ -1,6 +1,17 @@
 // Pure Clinics website, second round: three palettes in light brown and bordeaux, seven languages, every section the meeting of November 2026 asked for.
 import { logoSvg } from './logo.js';
 import { LANGS, LANG_NAMES, STRINGS } from './i18n.js';
+// The first site's parts (October 2026), each after a site that won in 2026.
+import { onFrame, scroll, pointer, FINE, lerp, smoothstep, transition } from './fx/core.js';
+import { startHeroGL } from './fx/gl.js';
+import { buildLogoFromSquares } from './fx/loader.js';
+import { startToc } from './fx/toc.js';
+import { startParticles } from './fx/particles.js';
+import { startLoupe } from './fx/loupe.js';
+import { startDrop } from './fx/drop.js';
+import { startLayers } from './fx/layers.js';
+import { startFilm } from './fx/film.js';
+import { startMirror } from './fx/mirror.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -168,6 +179,7 @@ function applyTexts() {
     if (el.hasAttribute('data-html')) el.innerHTML = v;
     else el.textContent = v;
   });
+  $$('[data-t-label]').forEach((el) => el.setAttribute('aria-label', S(el.dataset.tLabel)));
   $$('.lines').forEach((el) => {
     splitWords(el, 'wd');
     if (revealed.has(el.id)) el.classList.add('in');
@@ -237,7 +249,7 @@ function filterCards(animate = true) {
   $$('#filters button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.cat === category)));
 }
 
-$('#filters').addEventListener('click', (e) => {
+$('#filters')?.addEventListener('click', (e) => {
   const b = e.target.closest('[data-cat]');
   if (!b) return;
   category = b.dataset.cat;
@@ -559,11 +571,244 @@ function renderPlaces() {
     .join('');
 }
 
+
+/* ---------- The first site's parts, back in this one ---------- */
+
+const CONCERN_IDS = data.concerns.map((c) => c.id);
+const concernName = (id) => S(`concern_${id}`);
+const nameOf = (id) => (byId[id] ? L(byId[id].name) : id);
+
+// Huidscan: tap what you recognise; the route lists the treatments named for most of your choices first.
+const concernList = $('#concerns');
+const picked = new Set();
+function renderScan() {
+  concernList.innerHTML = data.concerns
+    .map(
+      (c, i) => `<li class="concern">
+        <button type="button" aria-pressed="${picked.has(c.id)}" data-id="${c.id}" data-photo="${c.photo}">
+          <span class="idx">${String(i + 1).padStart(2, '0')}</span>
+          <span class="name">${esc(concernName(c.id))}</span>
+          <span class="tick" aria-hidden="true"></span>
+        </button>
+        <div class="concern-text"><p>${esc(L(c.text))}</p></div>
+      </li>`,
+    )
+    .join('');
+  renderRoute();
+}
+function renderRoute() {
+  const score = new Map();
+  for (const c of data.concerns) {
+    if (!picked.has(c.id)) continue;
+    c.treatments.forEach((id, rank) => byId[id] && score.set(id, (score.get(id) ?? 0) + 10 - rank));
+  }
+  const list = [...score.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5).map(([id]) => byId[id]);
+  $('#route-empty').hidden = list.length > 0;
+  $('#route-full').hidden = list.length === 0;
+  $('#route-count').textContent = S(picked.size === 1 ? 'routeOne' : 'routeMany', { n: picked.size });
+  $('#route-list').innerHTML = list
+    .map(
+      (t, i) => `<li class="route-item" style="--i:${i}">
+        <button type="button" data-open="${t.id}" aria-label="${esc(L(t.name))}">
+          <img src="${photo(t.photo)}" alt="" loading="lazy" />
+          <span><strong>${esc(L(t.name))}</strong><small>${S('minutes', { m: t.minutes })}</small><span class="price">${priceLine(t)}</span></span>
+        </button>
+      </li>`,
+    )
+    .join('');
+}
+concernList.addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-id]');
+  if (!b) return;
+  const on = b.getAttribute('aria-pressed') !== 'true';
+  b.setAttribute('aria-pressed', String(on));
+  on ? picked.add(b.dataset.id) : picked.delete(b.dataset.id);
+  renderRoute();
+});
+// The concern's photo follows the pointer and leans into the direction it moves.
+const float = $('#scan-float');
+const fp = { x: 0, y: 0, vx: 0 };
+if (FINE) {
+  concernList.addEventListener('pointerover', (e) => {
+    const b = e.target.closest('button[data-photo]');
+    if (!b) return;
+    float.firstElementChild.src = photo(b.dataset.photo);
+    float.classList.add('on');
+  });
+  concernList.addEventListener('pointerleave', () => float.classList.remove('on'));
+  onFrame(() => {
+    if (!float.classList.contains('on')) {
+      fp.x = pointer.x;
+      fp.y = pointer.y;
+      return;
+    }
+    const nx = lerp(fp.x, pointer.x + 150, 0.12);
+    fp.vx = lerp(fp.vx, nx - fp.x, 0.2);
+    fp.x = nx;
+    fp.y = lerp(fp.y, pointer.y, 0.12);
+    float.style.transform = `translate3d(${fp.x}px, ${fp.y}px, 0) translate(-50%, -50%) rotate(${clamp(fp.vx * 0.6, -12, 12)}deg)`;
+  });
+}
+
+// Behandelkamers: a row that moves sideways while the page scrolls, and leans with the scroll speed.
+const roomsSection = $('#behandelingen');
+const roomsTrack = $('#rooms-track');
+const ROOM_CATS = ['all', 'removal', 'conditions', 'skin', 'hair'];
+let roomCat = 'all';
+function renderRooms() {
+  roomsTrack.innerHTML = treatments
+    .filter((t) => t.id !== 'consult')
+    .map(
+      (t) => `<button type="button" class="room" data-open="${t.id}" data-cat="${t.category}"${roomCat !== 'all' && t.category !== roomCat ? ' hidden' : ''}>
+        <div class="room-photo"><img src="${photo(t.photo)}" alt="" loading="lazy" /><span class="room-tag">${t.insurable ? S('insurable') : S('cat_' + t.category)}</span></div>
+        <div class="room-meta"><span class="room-name">${esc(L(t.name))}</span><span class="room-price">${priceLine(t)}</span></div>
+        <p class="room-desc">${esc(L(t.description))}</p>
+      </button>`,
+    )
+    .join('');
+  $('#rooms-filter').setAttribute('aria-label', S('roomsFilter'));
+  $('#rooms-filter').innerHTML = ROOM_CATS.map(
+    (c) => `<button type="button" class="chip" role="tab" aria-selected="${c === roomCat}" data-f="${c}">${S(c === 'all' ? 'catAll' : 'cat_' + c)}</button>`,
+  ).join('');
+  sizeRooms();
+}
+$('#rooms-filter').addEventListener('click', (e) => {
+  const chip = e.target.closest('.chip');
+  if (!chip) return;
+  roomCat = chip.dataset.f;
+  $$('#rooms-filter .chip').forEach((c) => c.setAttribute('aria-selected', String(c === chip)));
+  transition(() => {
+    $$('.room', roomsTrack).forEach((r) => (r.hidden = roomCat !== 'all' && r.dataset.cat !== roomCat));
+    sizeRooms();
+  });
+  scroll.to(roomsSection.offsetTop, true);
+});
+let roomsTravel = 0;
+function sizeRooms() {
+  roomsTravel = Math.max(0, roomsTrack.scrollWidth - innerWidth);
+  roomsSection.style.setProperty('--rooms-h', `${innerHeight + roomsTravel}px`);
+}
+const roomsTitle = $('#rooms-title');
+let lean = 0;
+let leanV = 0;
+onFrame((_, y) => {
+  const top = roomsSection.offsetTop;
+  const p = roomsTravel ? clamp((y - top) / roomsTravel, 0, 1) : 0;
+  const inside = y > top - innerHeight && y < top + roomsSection.offsetHeight;
+  const target = inside && !REDUCED ? clamp(-scroll.velocity * 0.35, -6, 6) : 0;
+  leanV += (target - lean) * 0.09;
+  leanV *= 0.78;
+  lean += leanV;
+  roomsTrack.style.transform = `translate3d(${-p * roomsTravel * (root.dir === 'rtl' ? -1 : 1)}px, 0, 0) skewX(${lean.toFixed(2)}deg)`;
+  roomsTitle.style.transform = `skewX(${(lean * 0.6).toFixed(2)}deg)`;
+  $('#rooms-bar').parentElement.style.setProperty('--p', p.toFixed(4));
+  if (inside) {
+    for (const img of roomsTrack.querySelectorAll('.room:not([hidden]) img')) {
+      const r = img.parentElement.getBoundingClientRect();
+      img.style.setProperty('--px', `${((-(r.left + r.width / 2 - innerWidth / 2) / innerWidth) * 30).toFixed(1)}px`);
+    }
+  }
+});
+addEventListener('resize', () => sizeRooms());
+
+// Prijskaart: every price on one card; a photo peeks out at the pointer.
+function renderMenu() {
+  $('#menu-card').innerHTML = ['consult', 'removal', 'conditions', 'skin', 'hair']
+    .map(
+      (cat) => `<div class="menu-group"><h3>${S('cat_' + cat)}</h3>${treatments
+        .filter((t) => t.category === cat)
+        .map(
+          (t) => `<button type="button" class="menu-row" data-open="${t.id}" data-photo="${t.photo}">
+            <span class="n">${esc(L(t.name))}</span>${t.insurable ? `<span class="v">${S('insurable')}</span>` : ''}<span class="dots"></span><span class="p">${priceLine(t)}</span>
+          </button>`,
+        )
+        .join('')}</div>`,
+    )
+    .join('');
+}
+const peek = $('#price-peek');
+const pk = { x: 0, y: 0 };
+if (FINE) {
+  $('#menu-card').addEventListener('pointerover', (e) => {
+    const row = e.target.closest('.menu-row');
+    if (!row) return;
+    peek.firstElementChild.src = photo(row.dataset.photo);
+    peek.classList.add('on');
+  });
+  $('#menu-card').addEventListener('pointerleave', () => peek.classList.remove('on'));
+  onFrame(() => {
+    pk.x = lerp(pk.x, pointer.x + 140, 0.14);
+    pk.y = lerp(pk.y, pointer.y - 40, 0.14);
+    peek.style.transform = `translate3d(${pk.x}px, ${pk.y}px, 0) translate(-50%, -50%) scale(${peek.classList.contains('on') ? 1 : 0.4})`;
+  });
+}
+
+// The words in the sentence are the switch: "voor" shows the photo before, "na" the one after.
+let glideAnim = 0;
+$('#era-switch').addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-side]');
+  if (!b) return;
+  $$('#era-switch button').forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+  const from = split;
+  const to = b.dataset.side === 'voor' ? 0.98 : 0.02;
+  const start = performance.now();
+  cancelAnimationFrame(glideAnim);
+  const step = (now) => {
+    const t = Math.min((now - start) / (REDUCED ? 1 : 900), 1);
+    setSplit(from + (to - from) * (1 - Math.pow(1 - t, 3)));
+    if (t < 1) glideAnim = requestAnimationFrame(step);
+  };
+  glideAnim = requestAnimationFrame(step);
+});
+
+// Ticker: drifts on its own, speeds up and leans with the scroll.
+const ticker = $('#ticker');
+ticker.innerHTML += ticker.innerHTML.replaceAll('<span', '<span aria-hidden="true"');
+let tickerX = 0;
+let tickerDir = -1;
+onFrame(() => {
+  const v = scroll.velocity;
+  if (Math.abs(v) > 0.4) tickerDir = v > 0 ? -1 : 1;
+  tickerX += tickerDir * (0.55 + Math.min(Math.abs(v) * 0.35, 14));
+  const half = ticker.scrollWidth / 2;
+  if (tickerX <= -half) tickerX += half;
+  if (tickerX > 0) tickerX -= half;
+  ticker.style.transform = `translate3d(${tickerX}px,0,0) skewX(${clamp(-v * 0.25, -8, 8)}deg)`;
+});
+
+// The booking button rises out of its rings as the last section comes in.
+const ringCta = $('#ring-cta');
+onFrame(() => {
+  const r = ringCta.getBoundingClientRect();
+  if (r.top > innerHeight || r.bottom < 0) return;
+  const p = smoothstep(innerHeight, innerHeight * 0.55, r.top);
+  ringCta.style.transform = `translate3d(0, ${((1 - p) * 60).toFixed(1)}px, 0) scale(${(0.9 + p * 0.1).toFixed(3)})`;
+});
+
+// Framed index, particles, loupe, serum drop, skin layers, film and mirror.
+const namesNow = new Proxy({}, { get: (_, id) => concernName(id) });
+startToc();
+startParticles(concernList, namesNow);
+const relabelLoupe = startLoupe(S, nameOf);
+startDrop();
+const relabelLayers = startLayers(byId, S, nameOf);
+const relabelFilm = startFilm(S);
+startMirror();
+function relabelFx() {
+  relabelLoupe?.();
+  relabelLayers?.();
+  relabelFilm?.();
+}
+let heroGL = null;
+
 /* ---------- Everything that follows the language ---------- */
 
 function renderAll() {
   applyTexts();
-  renderTreatments();
+  renderScan();
+  renderRooms();
+  renderMenu();
+  relabelFx();
   renderResults();
   renderProducts();
   renderReviews();
@@ -598,7 +843,10 @@ function setStudy(next, first = false) {
     heroImg.style.opacity = '0';
     setTimeout(() => {
       heroImg.src = src;
-      heroImg.onload = () => (heroImg.style.opacity = '1');
+      heroImg.onload = () => {
+        heroImg.style.opacity = '1';
+        heroGL?.setImage(heroImg);
+      };
     }, 300);
   }
   syncUrl();
@@ -702,5 +950,31 @@ setStudy(study, true);
 renderAll();
 onScroll();
 const ready = () => requestAnimationFrame(() => document.body.classList.add('loaded'));
-if (heroImg.complete) ready();
-else heroImg.addEventListener('load', ready, { once: true });
+
+// The loader counts while the fonts and the first photo arrive; the wordmark builds itself out of squares, then the
+// photo appears as dots that sharpen (after Lama Lama) and takes the light of the hour in Nijmegen (after Bruno Simon).
+const loader = $('#loader');
+const loaderCount = $('#loader-count');
+const arrived = Promise.all([document.fonts.ready, heroImg.decode().catch(() => {})]);
+let loadedAll = false;
+arrived.then(() => (loadedAll = true));
+const squares = REDUCED ? Promise.resolve() : buildLogoFromSquares($('.loader-logo')).catch(() => $('.loader-logo').classList.add('crisp'));
+if (REDUCED) $('.loader-logo').classList.add('crisp');
+const t0 = performance.now();
+await new Promise((resolve) => {
+  const step = (now) => {
+    const t = Math.min((now - t0) / (REDUCED ? 200 : 1500), 1);
+    const n = Math.round((loadedAll ? t : Math.min(t, 0.86)) * 100);
+    loaderCount.textContent = String(n);
+    if (n >= 100) resolve();
+    else requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+});
+await squares;
+heroGL = await startHeroGL($('#hero-gl'), heroImg, pointer, onFrame).catch(() => null);
+loader.classList.add('done');
+heroGL?.reveal();
+ready();
+setTimeout(() => loader.remove(), 1400);
+sizeRooms();

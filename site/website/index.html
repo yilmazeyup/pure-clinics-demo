@@ -16,9 +16,16 @@
       href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..600&family=Lexend+Peta:wght@100..400&family=Noto+Naskh+Arabic:wght@400;500&display=swap"
     />
     <link rel="stylesheet" href="css/site.css" />
+    <link rel="stylesheet" href="css/fx.css" />
     <script type="module" src="js/main.js"></script>
   </head>
   <body>
+    <!-- Loader: the wordmark builds itself out of small squares while the first photo arrives (after Lama Lama) -->
+    <div class="loader" id="loader" aria-hidden="true">
+      <div class="loader-logo" data-logo></div>
+      <div class="loader-count"><span id="loader-count">0</span><small>%</small></div>
+      <p class="loader-line" data-t="loaderLine">Even je huid laten rusten…</p>
+    </div>
     <a class="skip" href="#main" data-t="skip">Naar de inhoud</a>
 
     <header class="site-header" id="header">
@@ -60,6 +67,7 @@
       <section class="hero" id="top" aria-labelledby="hero-title">
         <div class="hero-media">
           <img class="hero-img" id="hero-img" src="img/close/c-web81-hero.webp" alt="" />
+          <canvas class="hero-gl" id="hero-gl" aria-hidden="true"></canvas>
         </div>
         <div class="hero-side" aria-hidden="true">
           <img src="img/close/c-eyes-s.webp" alt="" />
@@ -79,6 +87,18 @@
         </div>
         <p class="hero-scroll" aria-hidden="true"><span data-t="scroll">Scroll</span><i></i></p>
       </section>
+
+      <!-- Ticker: the clinic in short, drifting and speeding up with the scroll -->
+      <div class="ticker" data-t-label="tickerLabel" aria-label="Pure Clinics in het kort">
+        <div class="ticker-track" id="ticker">
+          <span data-t="tick1">Gratis intake van 30 minuten</span><b>✦</b>
+          <span data-t="tick2">Hbo-opgeleide huidtherapeuten</span><b>✦</b>
+          <span data-t="tick3">Soms vergoed door je zorgverzekeraar</span><b>✦</b>
+          <span data-t="tick4" data-html><em>6811</em> cliënten gingen je voor</span><b>✦</b>
+          <span data-t="tick5" data-html><em>10</em> jaar Pure Clinics</span><b>✦</b>
+          <span>Nijmegen · Uden</span><b>✦</b>
+        </div>
+      </div>
 
       <!-- Welkom: the clinic's own words, in a card on a photo, as on MVR -->
       <section class="welcome" aria-labelledby="welcome-title">
@@ -102,6 +122,50 @@
         </div>
       </section>
 
+      <!-- Inhoud: a framed index that docks to the side as you read on (after Shopify Editions) -->
+      <section class="toc" id="inhoud" aria-label="Inhoud">
+        <nav class="toc-frame" id="toc" aria-label="Inhoud van deze pagina">
+          <p class="toc-title" data-t="tocTitle">Inhoud</p>
+          <ol>
+            <li><a href="#huidscan"><i>I</i><span data-t="tocScan">Huidscan</span></a></li>
+            <li><a href="#loep"><i>II</i><span data-t="tocLoupe">De loep</span></a></li>
+            <li><a href="#behandelingen"><i>III</i><span data-t="tocTreat">Behandelingen</span></a></li>
+            <li><a href="#prijzen"><i>IV</i><span data-t="tocPrices">Prijskaart</span></a></li>
+            <li><a href="#resultaten"><i>V</i><span data-t="tocResults">Resultaten</span></a></li>
+            <li><a href="#huidlagen"><i>VI</i><span data-t="tocLayers">Onder de huid</span></a></li>
+            <li><a href="#traject"><i>VII</i><span data-t="tocFilm">Jouw traject</span></a></li>
+            <li><a href="#producten"><i>VIII</i><span data-t="tocProducts">Producten</span></a></li>
+            <li><a href="#team"><i>IX</i><span data-t="tocTeam">Team</span></a></li>
+            <li><a href="#intake"><i>X</i><span data-t="tocIntake">Intake</span></a></li>
+          </ol>
+        </nav>
+      </section>
+
+      <!-- Huidscan: pick what you recognise and get a route; particles form the concern's name (after Igloo Inc) -->
+      <section class="scan" id="huidscan" aria-labelledby="scan-title">
+        <div class="section-head">
+          <p class="eyebrow rise"><span class="num">I</span> <span data-t="tocScan">Huidscan</span></p>
+          <h2 id="scan-title" class="title lines" data-t="scanTitle" data-html>Waar wil je <em>aan werken?</em></h2>
+          <p class="note rise" data-t="scanNote">Tik aan wat je herkent. Je krijgt meteen een route die bij jou past.</p>
+        </div>
+        <div class="scan-grid">
+          <ul class="concerns" id="concerns" role="list"></ul>
+          <aside class="route" id="route" aria-live="polite">
+            <div class="route-empty" id="route-empty">
+              <canvas class="route-particles" id="route-particles" aria-hidden="true"></canvas>
+              <p class="route-kicker" data-t="routeKicker">Jouw route</p>
+              <p class="route-hint" data-t="routeHint">Kies één of meer onderwerpen, dan stellen we je route samen.</p>
+            </div>
+            <div class="route-full" id="route-full" hidden>
+              <p class="route-kicker"><span data-t="routeKicker">Jouw route</span> · <span id="route-count"></span></p>
+              <ol class="route-list" id="route-list"></ol>
+              <a class="pill pill-ink route-cta" id="route-cta" href="../app/afspraak/consult" data-book><span data-t="routeCta">Bespreek dit in je gratis intake</span></a>
+            </div>
+          </aside>
+        </div>
+        <div class="scan-float" id="scan-float" aria-hidden="true"><img alt="" /></div>
+      </section>
+
       <!-- Van dichtbij: close-ups drift by -->
       <section class="closeups" aria-labelledby="close-title">
         <div class="closeups-head">
@@ -121,24 +185,60 @@
         </div>
       </section>
 
-      <!-- Behandelingen: a few highlights, then every treatment with its own explanation -->
-      <section class="treatments" id="behandelingen" aria-labelledby="treat-title">
+      <!-- De loep: pick up the loupe and find what a skin therapist looks at (after metic.) -->
+      <section class="loupe-sec" id="loep" aria-labelledby="loupe-title">
         <div class="section-head">
-          <p class="eyebrow rise" data-t="treatEyebrow">Behandelingen</p>
-          <h2 id="treat-title" class="title lines" data-t="treatTitle" data-html>Een greep uit <em>onze behandelingen</em></h2>
+          <p class="eyebrow rise"><span class="num">II</span> <span data-t="tocLoupe">De loep</span></p>
+          <h2 id="loupe-title" class="title lines" data-t="loupeTitle" data-html>Kijk zoals <em>een huidtherapeut.</em></h2>
+          <p class="note rise" data-t="loupeNote">Pak de loep en zoek wat een huidtherapeut in je intake bekijkt.</p>
+          <p class="loupe-meta rise"><span class="found" id="loupe-count" aria-live="polite"></span><button type="button" class="link-arrow" id="loupe-all" data-t="loupeShowAll">Laat alles zien</button></p>
         </div>
-        <div class="highlights" id="highlights"></div>
-        <div class="filters rise" id="filters" role="tablist" aria-label="Soort behandeling"></div>
-        <ul class="cards" id="cards" role="list"></ul>
+        <div class="loupe-stage" id="loupe-stage">
+          <img class="loupe-photo" id="loupe-photo" src="img/pc-eyes.webp" alt="" loading="lazy" />
+          <div class="loupe-spots" id="loupe-spots"></div>
+          <button class="loupe" id="loupe" type="button" data-t-label="loupeLabel" aria-label="Loep">
+            <span class="loupe-lens" id="loupe-lens"></span><span class="loupe-handle" aria-hidden="true"></span><span class="loupe-tag" aria-hidden="true" data-t="loupeTag">Pak me op</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Behandelingen: every treatment its own room; the reel slides sideways and leans with the scroll (after AUGE) -->
+      <section class="rooms" id="behandelingen" aria-labelledby="rooms-title">
+        <div class="rooms-pin">
+          <div class="rooms-head">
+            <p class="eyebrow"><span class="num">III</span> <span data-t="treatEyebrow">Behandelingen</span></p>
+            <h2 id="rooms-title" class="title" data-t="roomsTitle" data-html>Elke behandeling <em>een eigen kamer.</em></h2>
+            <div class="rooms-filter" role="tablist" id="rooms-filter"></div>
+          </div>
+          <div class="rooms-track" id="rooms-track"></div>
+          <div class="rooms-progress" aria-hidden="true"><i id="rooms-bar"></i></div>
+        </div>
+      </section>
+
+      <!-- Prijskaart: every price on one card; a photo peeks out at the pointer -->
+      <section class="prices" id="prijzen" aria-labelledby="prices-title">
+        <div class="section-head">
+          <p class="eyebrow rise"><span class="num">IV</span> <span data-t="tocPrices">Prijskaart</span></p>
+          <h2 id="prices-title" class="title lines" data-t="pricesTitle" data-html>Alles op <em>één kaart.</em></h2>
+          <p class="note rise" data-t="pricesNote">Vanafprijzen per behandeling. In je intake krijg je een prijs op maat, per behandeling of per pakket.</p>
+        </div>
+        <div class="menu-card" id="menu-card"></div>
+        <div class="price-peek" id="price-peek" aria-hidden="true"><img alt="" /></div>
       </section>
 
       <!-- Resultaten -->
       <section class="results" id="resultaten" aria-labelledby="results-title">
-        <div class="section-head">
-          <p class="eyebrow rise" data-t="resultsEyebrow">Resultaten</p>
-          <h2 id="results-title" class="title lines" data-t="resultsTitle" data-html>Echte huid, <em>echte cliënten.</em></h2>
-          <p class="note rise" data-t="resultsNote">Foto's van cliënten van Pure Clinics, voor en na. Sleep de lijn.</p>
+        <!-- One drop of serum stays while the room turns to mocha and the headline slides in (after Oryzo AI) -->
+        <div class="drop-stage" id="drop-stage">
+          <div class="drop-pin">
+            <canvas class="drop-gl" id="drop-gl" aria-hidden="true"></canvas>
+            <p class="eyebrow drop-eyebrow"><span class="num">V</span> <span data-t="resultsEyebrow">Resultaten</span></p>
+            <h2 id="results-title" class="drop-title"><span class="drop-left" data-t="dropLeft">Echte huid,</span> <span class="drop-right" data-t="dropRight" data-html><em>echte cliënten.</em></span></h2>
+            <p class="drop-note" data-t="resultsNote">Foto's van cliënten van Pure Clinics, voor en na. Sleep de lijn.</p>
+          </div>
         </div>
+        <!-- The words are the switch: "voor" shows the photo before, "na" the one after (after ERA Residence) -->
+        <p class="era-switch rise" id="era-switch" data-t="eraSwitch" data-html>Zo was het <button type="button" data-side="voor">voor</button>, en zo <button type="button" data-side="na">na</button>.</p>
         <div class="compare-wrap">
           <figure class="compare" id="compare">
             <img class="compare-na" id="compare-na" alt="" />
@@ -151,6 +251,49 @@
             <p class="compare-caption" id="compare-caption"></p>
             <div class="compare-pick" id="compare-pick" role="listbox"></div>
             <p class="fine" data-t="resultsFine">Resultaten verschillen per persoon. Je huidtherapeut bespreekt in de intake wat je mag verwachten.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Onder de huid: three layers come apart into a labelled flat-lay (after Body Layout) -->
+      <section class="layers-sec" id="huidlagen" aria-labelledby="layers-title">
+        <div class="section-head">
+          <p class="eyebrow rise"><span class="num">VI</span> <span data-t="tocLayers">Onder de huid</span></p>
+          <h2 id="layers-title" class="title lines" data-t="layersTitle" data-html>Elke laag <em>een eigen aanpak.</em></h2>
+          <p class="note rise" data-t="layersNote">Je huid bestaat uit lagen. Haal ze uit elkaar en zie waar welke behandeling werkt.</p>
+        </div>
+        <div class="layers" id="layers" data-state="stack">
+          <div class="layers-scene" id="layers-scene"></div>
+          <button class="pill pill-ink layers-toggle" id="layers-toggle" type="button" aria-pressed="false"><span>Haal de lagen uit elkaar</span></button>
+        </div>
+      </section>
+
+      <!-- Jouw traject: one film that the scroll, or a drag on the timeline, plays forwards and back (after GQ & AP) -->
+      <section class="film" id="traject" aria-labelledby="film-title">
+        <div class="film-pin">
+          <div class="film-frames" id="film-frames">
+            <img src="img/pc-consult.webp" alt="" loading="lazy" />
+            <img src="img/pc-room.webp" alt="" loading="lazy" />
+            <img src="img/pc-tixel.webp" alt="" loading="lazy" />
+            <img src="img/stock-serum.webp" alt="" loading="lazy" />
+          </div>
+          <div class="film-shade" aria-hidden="true"></div>
+          <div class="film-copy">
+            <p class="eyebrow"><span class="num">VII</span> <span data-t="tocFilm">Jouw traject</span></p>
+            <h2 id="film-title" class="title" data-t="filmTitle" data-html>Van eerste vraag <em>tot nazorg.</em></h2>
+          </div>
+          <ol class="film-captions" id="film-captions">
+            <li><span class="num">I</span><h3 data-t="film1Title">Gratis intake</h3><p data-t="film1Text">Dertig minuten met een hbo-opgeleide huidtherapeut. Ze bekijkt je huid en vraagt naar je achtergrond en verzorging.</p></li>
+            <li><span class="num">II</span><h3 data-t="film2Title">Een plan op maat</h3><p data-t="film2Text">Je gaat naar huis met een behandelplan en een duidelijke prijs, per behandeling of per pakket.</p></li>
+            <li><span class="num">III</span><h3 data-t="film3Title">De behandeling</h3><p data-t="film3Text">In Nijmegen of Uden, met de apparatuur die bij jouw huid past.</p></li>
+            <li><span class="num">IV</span><h3 data-t="film4Title">Nazorg</h3><p data-t="film4Text">Je krijgt nazorgadvies mee voor thuis, en met foto's volgen jullie samen je voortgang.</p></li>
+          </ol>
+          <div class="film-bar">
+            <span class="film-chapter" id="film-chapter"></span>
+            <div class="film-track" id="film-track" role="slider" tabindex="0" data-t-label="filmLabel" aria-label="Spoel door je traject" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <i class="film-fill" id="film-fill"></i><i class="film-tick" style="--at: 25%"></i><i class="film-tick" style="--at: 50%"></i><i class="film-tick" style="--at: 75%"></i><b class="film-head" id="film-head"></b>
+            </div>
+            <span class="film-time" id="film-time">0%</span>
           </div>
         </div>
       </section>
@@ -244,13 +387,23 @@
       </section>
 
       <!-- Afspraak -->
-      <section class="book" aria-labelledby="book-title">
-        <figure class="book-photo" aria-hidden="true"><img src="img/close/c-mature-hero.webp" alt="" loading="lazy" /></figure>
+      <section class="book" id="intake" aria-labelledby="book-title">
+        <!-- Wipe the steamed-up mirror; draw a circle and it clears (after Why Zero) -->
+        <div class="mirror book-photo" id="mirror">
+          <img class="mirror-photo" src="img/close/c-mature-hero.webp" alt="" loading="lazy" />
+          <canvas class="mirror-fog" id="mirror-fog" aria-hidden="true"></canvas>
+          <p class="mirror-hint" id="mirror-hint" data-t="mirrorHint">Teken een cirkel op de beslagen spiegel</p>
+          <button class="mirror-skip" id="mirror-skip" type="button" data-t="mirrorSkip">Sla over</button>
+        </div>
         <div class="book-copy">
           <h2 id="book-title" class="title lines" data-t="bookTitle" data-html>Plan <em>nu</em> je afspraak</h2>
           <p class="rise" data-t="bookBody">Of je nu last hebt van een huidprobleem of je huid gewoon wilt verbeteren: we kijken eerst naar het totaalplaatje, en maken dan een plan dat bij jou past.</p>
           <div class="hero-actions rise">
-            <a class="btn btn-solid" href="../app/afspraak/consult" data-book data-t="ctaIntakePlan">Plan je gratis intake</a>
+            <!-- The booking button rises out of its rings (after Aether 1) -->
+            <div class="ring-cta" id="ring-cta">
+              <i aria-hidden="true"></i><i aria-hidden="true"></i><i aria-hidden="true"></i>
+              <a class="btn btn-solid" href="../app/afspraak/consult" data-book data-t="ctaIntakePlan">Plan je gratis intake</a>
+            </div>
             <a class="btn btn-line" href="../app/boeken" data-app data-t="ctaFollowUp">Vervolgafspraak</a>
           </div>
           <p class="book-alt rise"><span data-t="orCall">Of bel</span> <a href="tel:+31246792236">024 679 22 36</a> · <a href="mailto:info@pureclinics.nl">info@pureclinics.nl</a></p>

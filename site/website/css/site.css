@@ -2021,7 +2021,6 @@ section {
   border: 1px solid rgb(0 0 0 / 0.1);
 }
 
-[data-study='creme'] i,
 .studies-buttons [data-study='creme'] i {
   background: linear-gradient(90deg, #f7f3ec 0 34%, #efe7dc 34% 67%, #7e3440 67%);
 }

@@ -113,6 +113,20 @@
       .row .note { margin: 18px 0 0; color: var(--muted); font-size: 14px; }
       .round-head { padding-top: 24px; border-top: 1px solid var(--ink); }
       .round-head .looks { margin-top: 18px; }
+      /* Mooi / liever niet per row and per post; the choices go to WhatsApp from the bar at the bottom (23 Nov). */
+      .vote { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 0; }
+      .vote button { appearance: none; display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); background: var(--ivory); color: var(--ink); font: 400 15px/1 var(--sans); padding: 12px 18px; border-radius: 999px; cursor: pointer; transition: background .25s, color .25s, border-color .25s; }
+      .vote button svg { width: 16px; height: 16px; flex: none; }
+      .vote button:hover { border-color: var(--ink); }
+      .vote button[data-v='mooi'][aria-pressed='true'] { background: var(--taupe); border-color: var(--taupe); color: var(--ivory); }
+      .vote button[data-v='niet'][aria-pressed='true'] { background: var(--ink); border-color: var(--ink); color: var(--ivory); }
+      .vote button:focus-visible, .sendbar a:focus-visible { outline: 2px solid var(--taupe); outline-offset: 2px; }
+      .sendbar { position: fixed; left: 50%; bottom: 18px; z-index: 20; display: flex; align-items: center; gap: 18px; padding: 8px 8px 8px 22px; border-radius: 999px; background: var(--ink); color: var(--ivory); box-shadow: 0 24px 50px -24px rgba(63, 49, 40, .7); transform: translate(-50%, 140%); transition: transform .5s cubic-bezier(.2,.7,.2,1); max-width: calc(100% - 24px); }
+      .sendbar.on { transform: translate(-50%, 0); }
+      .sendbar span { font-size: 15px; white-space: nowrap; }
+      .sendbar a { flex: none; display: inline-flex; align-items: center; gap: 8px; padding: 12px 18px; border-radius: 999px; background: var(--taupe); color: var(--ivory); text-decoration: none; font: 500 15px/1 var(--sans); white-space: nowrap; }
+      .sendbar a svg { width: 18px; height: 18px; }
+      body { padding-bottom: 96px; }
       @media (max-width: 760px) {
         .rows-head { grid-template-columns: 1fr; padding: 44px 0 28px; }
         .trio { margin: 0 -16px; }
@@ -152,6 +166,7 @@
           <h1>drie posts, <em>één beeld</em></h1>
           <p class="lead">Elke rij op het profiel is één beeld: een product, een campagne en echt werk van Pure Clinics. Los bekeken is elke post een complete foto.</p>
           <p class="hint">In licht bruin en bordeaux, met weinig tekst op het beeld. Kies Profiel om de rij te zien zoals op Instagram, of Los om de posts één voor één te bekijken. Posts van 1080 × 1440 (3:4), het formaat van het Instagram-raster.</p>
+          <p class="hint">Onder elke rij en elke post kies je <b>Mooi</b> of <b>Liever niet</b>. Met de knop onderaan stuur je je keuzes via WhatsApp naar ons.</p>
         </div>
         <div class="view" role="group" aria-label="Bekijk de rijen">
           <button type="button" data-v="profiel" aria-pressed="true">Profiel</button>
@@ -410,6 +425,65 @@
         track.addEventListener('scroll', update, { passive: true });
         update();
       }
+
+      // Mooi / liever niet under every row and every post. The choices stay in this browser and go out as one
+      // WhatsApp message (wa.me without a number, so the sender picks the chat).
+      const KEY = 'pure-ig-votes';
+      let votes = {};
+      try { votes = JSON.parse(localStorage.getItem(KEY)) || {}; } catch { votes = {}; }
+      const save = () => { try { localStorage.setItem(KEY, JSON.stringify(votes)); } catch { /* private mode */ } };
+      const HEART = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+      const CROSS = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
+      const items = [];
+      function addVote(host, key, label) {
+        const box = document.createElement('div');
+        box.className = 'vote';
+        box.setAttribute('role', 'group');
+        box.setAttribute('aria-label', 'Jouw keuze voor ' + label);
+        box.innerHTML = `<button type="button" data-v="mooi">${HEART}Mooi</button><button type="button" data-v="niet">${CROSS}Liever niet</button>`;
+        const paint = () => { for (const b of box.children) b.setAttribute('aria-pressed', String(votes[key] === b.dataset.v)); };
+        box.addEventListener('click', (e) => {
+          const b = e.target.closest('button');
+          if (!b) return;
+          if (votes[key] === b.dataset.v) delete votes[key];
+          else votes[key] = b.dataset.v;
+          save();
+          paint();
+          renderBar();
+        });
+        host.append(box);
+        items.push({ key, label });
+        paint();
+      }
+      for (const row of document.querySelectorAll('section.row[id^="rij-"]')) {
+        const name = row.querySelector('h2').textContent.trim();
+        addVote(row, row.id, 'rij ' + name);
+        items[items.length - 1].label = 'Rij ' + name;
+      }
+      for (const post of document.querySelectorAll('article.post')) {
+        const n = post.id.slice(-2);
+        const title = post.querySelector('h2').textContent.trim();
+        addVote(post.querySelector('.caption'), post.id, 'post ' + n);
+        items[items.length - 1].label = 'Post ' + n + ' (' + title + ')';
+      }
+      const bar = document.createElement('div');
+      bar.className = 'sendbar';
+      bar.setAttribute('aria-live', 'polite');
+      bar.innerHTML = '<span></span><a target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 18.8z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>Stuur via WhatsApp</a>';
+      document.body.append(bar);
+      function renderBar() {
+        const pick = (v) => items.filter((it) => votes[it.key] === v).map((it) => it.label);
+        const yes = pick('mooi');
+        const no = pick('niet');
+        const n = yes.length + no.length;
+        bar.classList.toggle('on', n > 0);
+        bar.querySelector('span').textContent = n === 1 ? '1 keuze' : n + ' keuzes';
+        const text = ['Pure Clinics · Instagram', yes.length ? 'Mooi: ' + yes.join(', ') : '', no.length ? 'Liever niet: ' + no.join(', ') : '']
+          .filter(Boolean)
+          .join('\n');
+        bar.querySelector('a').href = 'https://wa.me/?text=' + encodeURIComponent(text);
+      }
+      renderBar();
     </script>
   </body>
 </html>

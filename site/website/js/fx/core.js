@@ -18,7 +18,9 @@ export const scroll = {
   y: scrollY,
   target: scrollY,
   velocity: 0,
-  smooth: FINE && !REDUCED,
+  // Native scrolling: this site already scrolls smoothly (scroll-behavior), and taking over the wheel on top of it
+  // made the page heavy to scroll (23 Nov 2026). The velocity below still drives the leaning reel and the ticker.
+  smooth: false,
   animating: false,
   max: () => document.documentElement.scrollHeight - innerHeight,
   to(y, instant = false) {

@@ -1593,12 +1593,48 @@
   }
 }
 
+/* Phones: the framed index and the concern list were wider than the screen (the index's 3em side columns and
+   40px padding, the 34px concern names), which pushed the whole page sideways and cut off the header (23 Nov). */
+@media (max-width: 640px) {
+  .toc-frame {
+    padding: 24px 14px 26px;
+  }
+  .toc-frame a {
+    grid-template-columns: 2.4em minmax(0, 1fr) 2.4em;
+    font-size: 22px;
+  }
+  .concern button {
+    grid-template-columns: 2.2em minmax(0, 1fr) auto;
+    gap: 10px;
+  }
+  .concern .name {
+    font-size: clamp(26px, 7.6vw, 34px);
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+  .concern .tick {
+    width: 30px;
+    height: 30px;
+  }
+  .concern .tick::after {
+    left: 9px;
+    top: 7px;
+  }
+  .concern-text > p {
+    padding-left: calc(2.2em + 10px);
+  }
+}
+
 /* ---------- In this site: the mirror sits in the light booking section, the rings in bordeaux ---------- */
 .book .mirror {
   width: 100%;
   max-width: 520px;
   justify-self: center;
   box-shadow: 0 0 0 10px color-mix(in srgb, var(--surface) 70%, transparent), 0 30px 70px -30px rgb(63 49 40 / 0.45);
+}
+.book {
+  /* The rings grow past the screen edge on phones; keep them inside the section so the page never scrolls sideways. */
+  overflow-x: clip;
 }
 .book .ring-cta {
   display: inline-grid;
@@ -1638,4 +1674,27 @@
   .menu-row .p {
     font-size: 11px;
   }
+}
+
+/* Team cards open each member's own page; a walk-in film plays over the portrait on hover. */
+.person a {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+}
+.person figure {
+  position: relative;
+}
+.person video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 20%;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.person figure.playing video {
+  opacity: 1;
 }

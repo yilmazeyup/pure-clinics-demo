@@ -1,22 +1,22 @@
-/* Pure Clinics website, second round: three design studies in UMA's coffee range, calm motion as on MVR. */
+/* Pure Clinics website, second round: three design studies in pastel brown and bordeaux (Pure's choice, 2026-11-23), calm motion as on MVR. */
 
 /* ---------- Studies ---------- */
 
 :root,
-:root[data-study='latte'] {
-  --bg: #f4ede4;
-  --surface: #fbf8f3;
-  --band: #e6d9c8;
-  --band-ink: #2a211b;
-  --ink: #2a211b;
-  --body: #564a40;
-  --muted: #84756a;
-  --accent: #a5835f;
-  --line: #e1d4c4;
-  --deep: #3a2f27;
-  --on-deep: #f3ebe1;
-  --on-deep-muted: #c9baa9;
-  --footer: #2a211b;
+:root[data-study='poeder'] {
+  --bg: #f6efea;
+  --surface: #fcf8f5;
+  --band: #ecdcd6;
+  --band-ink: #3f2a26;
+  --ink: #3a2623;
+  --body: #604a45;
+  --muted: #92776f;
+  --accent: #9b5d66;
+  --line: #e8d8d1;
+  --deep: #6b4248;
+  --on-deep: #f8eeea;
+  --on-deep-muted: #dcc0bb;
+  --footer: #3f2a2b;
   --serif: 'Lexend', ui-sans-serif, system-ui, sans-serif;
   --wide: 'Lexend Peta', 'Lexend', ui-sans-serif, system-ui, sans-serif;
   --sans: 'Lexend', ui-sans-serif, system-ui, sans-serif;
@@ -24,26 +24,26 @@
   --serif-weight: 200;
   --serif-track: 0.01em;
   --eyebrow-track: 0.18em;
-  --photo: grayscale(1) contrast(1.06) brightness(1.03);
-  --photo-hover: grayscale(0.1) contrast(1.02);
+  --photo: sepia(0.1) saturate(0.86) contrast(1.02) brightness(1.03);
+  --photo-hover: sepia(0.03) saturate(0.96);
   --radius: 0px;
-  --hero-shade: linear-gradient(180deg, rgb(20 15 11 / 0.05) 30%, rgb(20 15 11 / 0.62));
+  --hero-shade: linear-gradient(180deg, rgb(58 30 32 / 0.04) 30%, rgb(58 30 32 / 0.58));
 }
 
-:root[data-study='mokka'] {
-  --bg: #ebe0d3;
-  --surface: #f5eee5;
-  --band: #8a6f5a;
-  --band-ink: #f6ede2;
-  --ink: #2e231c;
-  --body: #514236;
-  --muted: #7d6959;
-  --accent: #8b6a4f;
-  --line: #d8c6b3;
-  --deep: #5a4536;
-  --on-deep: #f4e9dc;
-  --on-deep-muted: #d6c3ae;
-  --footer: #3b2d23;
+:root[data-study='rozenhout'] {
+  --bg: #efe0db;
+  --surface: #f8efeb;
+  --band: #b98c8f;
+  --band-ink: #fbf2ef;
+  --ink: #3a2324;
+  --body: #5d4140;
+  --muted: #8a6b69;
+  --accent: #8a4b55;
+  --line: #dfc8c1;
+  --deep: #7a4c53;
+  --on-deep: #fbf0ec;
+  --on-deep-muted: #e6cbc6;
+  --footer: #4a2c30;
   --serif: 'Lexend', ui-sans-serif, system-ui, sans-serif;
   --wide: 'Lexend Peta', 'Lexend', ui-sans-serif, system-ui, sans-serif;
   --sans: 'Lexend', ui-sans-serif, system-ui, sans-serif;
@@ -51,26 +51,26 @@
   --serif-weight: 200;
   --serif-track: 0.01em;
   --eyebrow-track: 0.22em;
-  --photo: sepia(0.22) saturate(0.82) contrast(1.04);
-  --photo-hover: sepia(0.05) saturate(0.95);
+  --photo: sepia(0.16) saturate(0.84) contrast(1.03);
+  --photo-hover: sepia(0.04) saturate(0.96);
   --radius: 2px;
-  --hero-shade: linear-gradient(180deg, transparent 50%, rgb(46 35 28 / 0.35));
+  --hero-shade: linear-gradient(180deg, transparent 50%, rgb(74 44 48 / 0.32));
 }
 
-:root[data-study='espresso'] {
-  --bg: #1c1612;
-  --surface: #251d18;
-  --band: #2f251e;
-  --band-ink: #efe5d8;
-  --ink: #f1e8dc;
-  --body: #cdbfae;
-  --muted: #9b8a78;
-  --accent: #c9a27c;
-  --line: #3a2f27;
-  --deep: #120e0b;
-  --on-deep: #f1e8dc;
-  --on-deep-muted: #b3a291;
-  --footer: #0e0b09;
+:root[data-study='cacao'] {
+  --bg: #e9ddd3;
+  --surface: #f4ebe4;
+  --band: #a2826f;
+  --band-ink: #fbf3ed;
+  --ink: #3a2a24;
+  --body: #5b463c;
+  --muted: #8b7466;
+  --accent: #8e4f57;
+  --line: #dacabe;
+  --deep: #5a3d3a;
+  --on-deep: #f7ede7;
+  --on-deep-muted: #d8c2b8;
+  --footer: #33231f;
   --serif: 'Lexend', ui-sans-serif, system-ui, sans-serif;
   --wide: 'Lexend Peta', 'Lexend', ui-sans-serif, system-ui, sans-serif;
   --sans: 'Lexend', ui-sans-serif, system-ui, sans-serif;
@@ -78,10 +78,10 @@
   --serif-weight: 200;
   --serif-track: 0.01em;
   --eyebrow-track: 0.26em;
-  --photo: grayscale(1) contrast(1.16) brightness(0.9);
-  --photo-hover: grayscale(0.2) contrast(1.06) brightness(0.95);
+  --photo: sepia(0.18) saturate(0.8) contrast(1.04) brightness(0.98);
+  --photo-hover: sepia(0.06) saturate(0.94);
   --radius: 0px;
-  --hero-shade: radial-gradient(ellipse at 50% 55%, rgb(12 9 7 / 0.35), rgb(12 9 7 / 0.82));
+  --hero-shade: radial-gradient(ellipse at 50% 55%, rgb(52 30 28 / 0.3), rgb(52 30 28 / 0.72));
 }
 
 :root[lang='ar'] {
@@ -341,7 +341,7 @@ section {
 }
 
 .site-header.over-photo {
-  --header-ink: #f6efe6;
+  --header-ink: #f8efeb;
 }
 
 .site-header.solid {
@@ -420,7 +420,7 @@ section {
   background-repeat: no-repeat;
 }
 .lang select option {
-  color: #2a211b;
+  color: #3f2a26;
 }
 
 .site-header .btn-solid {
@@ -430,8 +430,8 @@ section {
 }
 
 .site-header.over-photo .btn-solid {
-  background: #f6efe6;
-  color: #2a211b;
+  background: #f8efeb;
+  color: #3f2a26;
 }
 
 .menu-button {
@@ -538,7 +538,7 @@ section {
 }
 
 .stars {
-  color: #e9b44c;
+  color: #c9a46e;
   letter-spacing: 1px;
 }
 
@@ -595,52 +595,52 @@ section {
   display: none;
 }
 
-/* Latte: one full-bleed close-up in black and white, the copy at the bottom (MVR). */
-[data-study='latte'] .hero {
+/* Poeder: one full-bleed close-up in soft warm colour, the copy at the bottom (MVR). */
+[data-study='poeder'] .hero {
   grid-template: 1fr / 1fr;
-  color: #f6efe6;
+  color: #f8efeb;
 }
-[data-study='latte'] .hero > * {
+[data-study='poeder'] .hero > * {
   grid-area: 1 / 1;
 }
-[data-study='latte'] .hero-media::after {
+[data-study='poeder'] .hero-media::after {
   content: '';
   position: absolute;
   inset: 0;
   background: var(--hero-shade);
 }
-[data-study='latte'] .hero-copy {
+[data-study='poeder'] .hero-copy {
   align-self: end;
   padding: 0 var(--gut) clamp(48px, 9vh, 110px);
   max-width: 980px;
 }
-[data-study='latte'] .hero .eyebrow {
+[data-study='poeder'] .hero .eyebrow {
   color: rgb(246 239 230 / 0.8);
 }
-[data-study='latte'] .hero .display em {
-  color: #e6d2b9;
+[data-study='poeder'] .hero .display em {
+  color: #f0d0ca;
 }
-[data-study='latte'] .hero .btn-solid {
-  background: #f6efe6;
-  color: #2a211b;
+[data-study='poeder'] .hero .btn-solid {
+  background: #f8efeb;
+  color: #3f2a26;
 }
 
-/* Mokka: a split page: the words on sand, the portrait beside them, two close-ups in between. */
-[data-study='mokka'] .hero {
+/* Rozenhout: a split page: the words on dusty rose, the portrait beside them, two close-ups in between. */
+[data-study='rozenhout'] .hero {
   grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
   min-height: max(100svh, 720px);
 }
-[data-study='mokka'] .hero-copy {
+[data-study='rozenhout'] .hero-copy {
   grid-column: 1;
   grid-row: 1;
   align-self: center;
   padding: calc(var(--header-h) + 40px) var(--gut) 80px;
 }
-[data-study='mokka'] .hero-media {
+[data-study='rozenhout'] .hero-media {
   grid-column: 2;
   grid-row: 1;
 }
-[data-study='mokka'] .hero-side {
+[data-study='rozenhout'] .hero-side {
   display: grid;
   grid-column: 1 / 3;
   grid-row: 1;
@@ -652,54 +652,61 @@ section {
   margin-bottom: 26px;
   transform: translateX(6%);
 }
-[dir='rtl'][data-study='mokka'] .hero-side {
+[dir='rtl'][data-study='rozenhout'] .hero-side {
   transform: translateX(-6%);
 }
-[data-study='mokka'] .hero-side img {
+[data-study='rozenhout'] .hero-side img {
   width: 100%;
   aspect-ratio: 4 / 5;
   object-fit: cover;
   filter: var(--photo);
   box-shadow: 0 18px 40px rgb(46 35 28 / 0.22);
 }
-[data-study='mokka'] .hero-side img:last-child {
+[data-study='rozenhout'] .hero-side img:last-child {
   margin-top: 40px;
 }
-[data-study='mokka'] .hero-scroll {
-  color: #f4e9dc;
+[data-study='rozenhout'] .hero-scroll {
+  color: #f8ece8;
 }
 
-/* Espresso: dark, a centred title over a darkened close-up. */
-[data-study='espresso'] .hero {
+/* Cacao: a centred title over a softly darkened close-up, cocoa and bordeaux. */
+[data-study='cacao'] .hero {
   grid-template: 1fr / 1fr;
-  color: var(--ink);
+  color: #f8eeea;
   text-align: center;
 }
-[data-study='espresso'] .hero > * {
+[data-study='cacao'] .hero > * {
   grid-area: 1 / 1;
 }
-[data-study='espresso'] .hero-media::after {
+[data-study='cacao'] .hero-media::after {
   content: '';
   position: absolute;
   inset: 0;
   background: var(--hero-shade);
 }
-[data-study='espresso'] .hero-copy {
+[data-study='cacao'] .hero-copy {
   align-self: center;
   justify-self: center;
   padding: calc(var(--header-h) + 20px) var(--gut) 60px;
   max-width: 1100px;
 }
-[data-study='espresso'] .hero .eyebrow {
-  color: var(--accent);
+[data-study='cacao'] .hero .eyebrow {
+  color: #efcfc8;
 }
-[data-study='espresso'] .hero .lede {
+[data-study='cacao'] .hero .display em {
+  color: #f0d0ca;
+}
+[data-study='cacao'] .hero .btn-solid {
+  background: #f8efeb;
+  color: #3f2a26;
+}
+[data-study='cacao'] .hero .lede {
   margin-inline: auto;
 }
-[data-study='espresso'] .hero-actions {
+[data-study='cacao'] .hero-actions {
   justify-content: center;
 }
-[data-study='espresso'] .hero .display {
+[data-study='cacao'] .hero .display {
   font-size: calc(clamp(42px, 7.2vw, 124px) * var(--serif-size));
 }
 
@@ -1110,7 +1117,7 @@ section {
   display: grid;
   place-items: center;
   background: #fff;
-  color: #2a211b;
+  color: #3f2a26;
   font-size: 15px;
   letter-spacing: 2px;
 }
@@ -1182,8 +1189,8 @@ section {
   transform: scale(1.06);
 }
 
-[data-study='latte'] .strip img,
-[data-study='espresso'] .strip img {
+[data-study='poeder'] .strip img,
+[data-study='cacao'] .strip img {
   filter: saturate(0.75);
 }
 
@@ -1718,7 +1725,7 @@ section {
 
 .footer {
   background: var(--footer);
-  color: #e9dfd2;
+  color: #f0e2dd;
   padding: clamp(60px, 7vw, 100px) var(--gut) 40px;
 }
 
@@ -2014,15 +2021,15 @@ section {
   border: 1px solid rgb(0 0 0 / 0.1);
 }
 
-[data-study='latte'] i,
-.studies-buttons [data-study='latte'] i {
-  background: linear-gradient(90deg, #f4ede4 0 34%, #e6d9c8 34% 67%, #3a2f27 67%);
+[data-study='poeder'] i,
+.studies-buttons [data-study='poeder'] i {
+  background: linear-gradient(90deg, #f6efea 0 34%, #ecdcd6 34% 67%, #9b5d66 67%);
 }
-.studies-buttons [data-study='mokka'] i {
-  background: linear-gradient(90deg, #ebe0d3 0 34%, #8a6f5a 34% 67%, #3b2d23 67%);
+.studies-buttons [data-study='rozenhout'] i {
+  background: linear-gradient(90deg, #efe0db 0 34%, #b98c8f 34% 67%, #8a4b55 67%);
 }
-.studies-buttons [data-study='espresso'] i {
-  background: linear-gradient(90deg, #1c1612 0 34%, #2f251e 34% 67%, #c9a27c 67%);
+.studies-buttons [data-study='cacao'] i {
+  background: linear-gradient(90deg, #e9ddd3 0 34%, #a2826f 34% 67%, #5a3d3a 67%);
 }
 
 .studies-note {
@@ -2161,19 +2168,19 @@ section {
   .site-header .btn-solid {
     display: none;
   }
-  [data-study='mokka'] .hero {
+  [data-study='rozenhout'] .hero {
     grid-template-columns: 1fr;
     grid-template-rows: auto 62svh;
   }
-  [data-study='mokka'] .hero-copy {
+  [data-study='rozenhout'] .hero-copy {
     grid-row: 1;
     padding-bottom: 40px;
   }
-  [data-study='mokka'] .hero-media {
+  [data-study='rozenhout'] .hero-media {
     grid-column: 1;
     grid-row: 2;
   }
-  [data-study='mokka'] .hero-side {
+  [data-study='rozenhout'] .hero-side {
     display: none;
   }
   .philosophy {

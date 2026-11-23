@@ -1,4 +1,4 @@
-// Pure Clinics website, second round: three design studies, seven languages, every section the meeting of November 2026 asked for.
+// Pure Clinics website, second round: three design studies in pastel brown and bordeaux, seven languages, every section the meeting of November 2026 asked for.
 import { logoSvg } from './logo.js';
 import { LANGS, LANG_NAMES, STRINGS } from './i18n.js';
 
@@ -27,9 +27,9 @@ const store = {
 
 /* ---------- Study and language ---------- */
 
-const STUDIES = ['latte', 'mokka', 'espresso'];
-const HERO = { latte: 'c-web81-hero', mokka: 'c-mature-hero', espresso: 'c-up-hero' };
-const THEME = { latte: '#f4ede4', mokka: '#ebe0d3', espresso: '#1c1612' };
+const STUDIES = ['poeder', 'rozenhout', 'cacao'];
+const HERO = { poeder: 'c-web81-hero', rozenhout: 'c-mature-hero', cacao: 'c-up-hero' };
+const THEME = { poeder: '#f6efea', rozenhout: '#efe0db', cacao: '#e9ddd3' };
 const pickFrom = (list, ...values) => values.find((v) => list.includes(v)) ?? list[0];
 
 let study = pickFrom(STUDIES, params.get('studie'), store.get('pure-web-study'));
@@ -667,7 +667,7 @@ function onScroll() {
   const y = scrollY;
   const vh = innerHeight;
   const heroH = hero.offsetHeight;
-  const photoBehind = study !== 'mokka' && y < heroH - 80;
+  const photoBehind = study !== 'rozenhout' && y < heroH - 80;
   header.classList.toggle('over-photo', photoBehind && menu.hidden);
   header.classList.toggle('solid', !photoBehind || !menu.hidden);
   header.classList.toggle('hide', y > lastY && y > vh && menu.hidden);

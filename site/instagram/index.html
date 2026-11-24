@@ -149,6 +149,15 @@
       .pk-text .mono { margin: 10px 0 0; color: var(--muted); font-size: 11px; }
       .pk-text h3 { margin: 8px 0 0; font: 400 19px/1.3 var(--sans); }
       .pk-note { margin: 10px 0 0; padding: 8px 12px; border-left: 2px solid var(--taupe); background: var(--paper); font-size: 14px; }
+      /* What changed since the pdf, per post: removed (struck, muted) and new (with a walnut mark). */
+      .pk-changes { margin: 12px 0 0; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); }
+      .pk-changes-head { margin: 0 0 8px; font: 500 10.5px/1.2 var(--mono, var(--sans)); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+      .pk-changes ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+      .pk-changes li { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 8px; font-size: 13.5px; line-height: 1.4; overflow-wrap: anywhere; }
+      .pk-changes li b { font-weight: 500; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; padding-top: 2px; }
+      .pk-changes li.weg { color: var(--muted); }
+      .pk-changes li.weg b { color: var(--muted); }
+      .pk-changes li.nieuw b { color: #6f3a22; }
       @media (max-width: 960px) { .pk-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
       @media (max-width: 600px) { .pk-head { padding: 44px 0 20px; } .pk-grid { grid-template-columns: 1fr; gap: 48px; } .pk-media .tall { max-width: 260px; } }
       @media (max-width: 760px) {
@@ -237,7 +246,7 @@
         <p class="mono">November – december · 32 posts · 11 video's</p>
         <h1>de planning, <em>post voor post</em></h1>
         <p class="lead">Alle posts van 22 november tot en met 31 december, op datum en met hetzelfde nummer als in de pdf.</p>
-        <p class="hint">Kies bij elke post <b>Mooi</b> of <b>Liever niet</b>. Je keuzes komen vanzelf bij ons binnen.</p>
+        <p class="hint">Kies bij elke post <b>Mooi</b> of <b>Liever niet</b>. Je keuzes komen vanzelf bij ons binnen. Onder elke post staat wat er sinds de pdf is aangepast: wat <b>weg</b> is en wat <b>nieuw</b> is. Alle teksten zijn in het Nederlands.</p>
       </section>
       <section class="wrap pk-grid" aria-label="De posts van november en december">
         <article class="pk" id="pk-01" data-title="Laserontharen (4 slides)">
@@ -246,7 +255,7 @@
         </article>
         <article class="pk" id="pk-02" data-title="Black Friday: de vier deals (5 slides)">
           <div class="pk-media"><div class="pk-track" tabindex="0" aria-label="5 slides"><figure><img src="img/pakket/02-1.jpg" alt="Black Friday: de vier deals (5 slides), 1 van 5" loading="lazy"></figure><figure><img src="img/pakket/02-2.jpg" alt="Black Friday: de vier deals (5 slides), 2 van 5" loading="lazy"></figure><figure><img src="img/pakket/02-3.jpg" alt="Black Friday: de vier deals (5 slides), 3 van 5" loading="lazy"></figure><figure><img src="img/pakket/02-4.jpg" alt="Black Friday: de vier deals (5 slides), 4 van 5" loading="lazy"></figure><figure><img src="img/pakket/02-5.jpg" alt="Black Friday: de vier deals (5 slides), 5 van 5" loading="lazy"></figure></div><p class="pk-count">5 slides · veeg →</p></div>
-          <div class="pk-text"><p class="pk-num">02</p><p class="mono">wo 25 nov · Carrousel</p><h3>Black Friday: de vier deals (5 slides)</h3></div>
+          <div class="pk-text"><p class="pk-num">02</p><p class="mono">wo 25 nov · Carrousel</p><h3>Black Friday: de vier deals (5 slides)</h3><div class="pk-changes"><p class="pk-changes-head">Aangepast · 24 november</p><ul><li class="weg"><b>Weg</b> &quot;Give your skin a little extra love. Vier deals, t/m 1 december.&quot; op de cover</li><li class="weg"><b>Weg</b> &quot;skinbooster&quot; en &quot;Naaldvrij&quot; op de PRX-slide</li><li class="weg"><b>Weg</b> &quot;bij je SylfirmX&quot; op de SylfirmX-slide</li><li class="weg"><b>Weg</b> de zwarte achtergrond</li><li class="nieuw"><b>Nieuw</b> volgorde PRX, SkinPen, SylfirmX, laser</li><li class="nieuw"><b>Nieuw</b> SkinPen 3 behandelingen €495 (was €499)</li><li class="nieuw"><b>Nieuw</b> &quot;Je huid wordt direct voller en stralender.&quot; op de PRX-slide</li><li class="nieuw"><b>Nieuw</b> lichte achtergrond in Pure's bruin, met een zacht verloop</li><li class="nieuw"><b>Nieuw</b> datum: woensdag 25 november</li></ul></div></div>
         </article>
         <article class="pk" id="pk-03" data-title="IPL: licht op roodheid (3 slides)">
           <div class="pk-media"><div class="pk-track" tabindex="0" aria-label="3 slides"><figure><img src="img/pakket/03-1.jpg" alt="IPL: licht op roodheid (3 slides), 1 van 3" loading="lazy"></figure><figure><img src="img/pakket/03-2.jpg" alt="IPL: licht op roodheid (3 slides), 2 van 3" loading="lazy"></figure><figure><img src="img/pakket/03-3.jpg" alt="IPL: licht op roodheid (3 slides), 3 van 3" loading="lazy"></figure></div><p class="pk-count">3 slides · veeg →</p></div>
@@ -258,19 +267,19 @@
         </article>
         <article class="pk" id="pk-05" data-title="Black Friday reel">
           <div class="pk-media"><div class="pk-track"><figure class="tall"><video controls playsinline preload="none" poster="img/pakket/05-1.jpg" src="video/05.mp4"></video></figure></div></div>
-          <div class="pk-text"><p class="pk-num">05</p><p class="mono">do 26 nov · Reel · 15 s</p><h3>Black Friday reel</h3></div>
+          <div class="pk-text"><p class="pk-num">05</p><p class="mono">do 26 nov · Reel · 15 s</p><h3>Black Friday reel</h3><div class="pk-changes"><p class="pk-changes-head">Aangepast · 24 november</p><ul><li class="weg"><b>Weg</b> &quot;Give your skin a little extra love.&quot; op de eerste kaart</li><li class="weg"><b>Weg</b> &quot;skinbooster&quot; op de PRX-kaart</li><li class="weg"><b>Weg</b> &quot;bij je SylfirmX&quot; op de SylfirmX-kaart</li><li class="weg"><b>Weg</b> de zwarte achtergrond</li><li class="nieuw"><b>Nieuw</b> volgorde PRX, SkinPen, SylfirmX, laser</li><li class="nieuw"><b>Nieuw</b> SkinPen 3 behandelingen €495</li><li class="nieuw"><b>Nieuw</b> lichte achtergrond in Pure's bruin</li></ul></div></div>
         </article>
         <article class="pk" id="pk-06" data-title="Black Friday is begonnen · de deals op een rij">
           <div class="pk-media"><div class="pk-track two" tabindex="0" aria-label="2 slides"><figure class="tall"><img src="img/pakket/06-1.jpg" alt="Black Friday is begonnen · de deals op een rij, 1 van 2" loading="lazy"></figure><figure class="tall"><img src="img/pakket/06-2.jpg" alt="Black Friday is begonnen · de deals op een rij, 2 van 2" loading="lazy"></figure></div><p class="pk-count">2 slides · veeg →</p></div>
-          <div class="pk-text"><p class="pk-num">06</p><p class="mono">vr 27 nov · Story (2)</p><h3>Black Friday is begonnen · de deals op een rij</h3></div>
+          <div class="pk-text"><p class="pk-num">06</p><p class="mono">vr 27 nov · Story (2)</p><h3>Black Friday is begonnen · de deals op een rij</h3><div class="pk-changes"><p class="pk-changes-head">Aangepast · 24 november</p><ul><li class="weg"><b>Weg</b> &quot;Give your skin a little extra love.&quot; in story 1</li><li class="weg"><b>Weg</b> de vakken voor stickers</li><li class="weg"><b>Weg</b> de zwarte achtergrond</li><li class="nieuw"><b>Nieuw</b> PRX bovenaan in &quot;de deals op een rij&quot;, SkinPen 3× €495</li><li class="nieuw"><b>Nieuw</b> een link &quot;Afspraak maken&quot; in story 2 (via Meta)</li><li class="nieuw"><b>Nieuw</b> lichte achtergrond in Pure's bruin</li><li class="nieuw"><b>Nieuw</b> gepland in Meta: vrijdag 27 november 08:00</li></ul></div></div>
         </article>
         <article class="pk" id="pk-07" data-title="Black Friday: laser gehele benen">
           <div class="pk-media"><figure><img src="img/pakket/07-1.jpg" alt="Black Friday: laser gehele benen" loading="lazy"></figure></div>
-          <div class="pk-text"><p class="pk-num">07</p><p class="mono">vr 27 nov · Post</p><h3>Black Friday: laser gehele benen</h3></div>
+          <div class="pk-text"><p class="pk-num">07</p><p class="mono">vr 27 nov · Post</p><h3>Black Friday: laser gehele benen</h3><div class="pk-changes"><p class="pk-changes-head">Aangepast · 24 november</p><ul><li class="weg"><b>Weg</b> de tekst naast €295</li><li class="nieuw"><b>Nieuw</b> gepland in Meta: vrijdag 27 november 20:00</li></ul></div></div>
         </article>
         <article class="pk" id="pk-08" data-title="Laatste kans: de jaloezieën van de kliniek draaien, elke draai een actie">
           <div class="pk-media"><div class="pk-track"><figure class="tall"><video controls playsinline preload="none" poster="img/pakket/08-1.jpg" src="video/08.mp4"></video></figure></div></div>
-          <div class="pk-text"><p class="pk-num">08</p><p class="mono">zo 29 nov · Reel · 20 s</p><h3>Laatste kans: de jaloezieën van de kliniek draaien, elke draai een actie</h3></div>
+          <div class="pk-text"><p class="pk-num">08</p><p class="mono">zo 29 nov · Reel · 20 s</p><h3>Laatste kans: de jaloezieën van de kliniek draaien, elke draai een actie</h3><div class="pk-changes"><p class="pk-changes-head">Aangepast · 24 november</p><ul><li class="weg"><b>Weg</b> &quot;krijg je erbij&quot; onder &quot;een prx-behandeling t.w.v. €125&quot;</li><li class="weg"><b>Weg</b> de zwarte achtergrond</li><li class="nieuw"><b>Nieuw</b> volgorde PRX, SkinPen, SylfirmX, laser</li><li class="nieuw"><b>Nieuw</b> SkinPen 3× €545 → €495</li><li class="nieuw"><b>Nieuw</b> lichte achtergrond in Pure's bruin met de schaduw van de jaloezieën</li></ul></div></div>
         </article>
         <article class="pk" id="pk-09" data-title="Cadeaukaart, Black Friday-versie">
           <div class="pk-media"><div class="pk-track two"><figure class="tall"><video controls playsinline preload="none" poster="img/pakket/09-1.jpg" src="video/09.mp4"></video></figure><figure><img src="img/pakket/09-2.jpg" alt="Cadeaukaart, Black Friday-versie, post" loading="lazy"></figure></div></div>
@@ -282,11 +291,11 @@
         </article>
         <article class="pk" id="pk-11" data-title="Black Friday: laatste dag">
           <div class="pk-media"><figure class="tall"><img src="img/pakket/11-1.jpg" alt="Black Friday: laatste dag" loading="lazy"></figure></div>
-          <div class="pk-text"><p class="pk-num">11</p><p class="mono">di 1 dec · Story</p><h3>Black Friday: laatste dag</h3></div>
+          <div class="pk-text"><p class="pk-num">11</p><p class="mono">di 1 dec · Story</p><h3>Black Friday: laatste dag</h3><div class="pk-changes"><p class="pk-changes-head">Aangepast · 24 november</p><ul><li class="weg"><b>Weg</b> het vak voor de afteller-sticker</li><li class="weg"><b>Weg</b> de zwarte achtergrond</li><li class="nieuw"><b>Nieuw</b> lichte achtergrond in Pure's bruin</li></ul></div></div>
         </article>
         <article class="pk" id="pk-12" data-title="Stralende kerst (5 slides)">
           <div class="pk-media"><div class="pk-track" tabindex="0" aria-label="5 slides"><figure><img src="img/pakket/12-1.jpg" alt="Stralende kerst (5 slides), 1 van 5" loading="lazy"></figure><figure><img src="img/pakket/12-2.jpg" alt="Stralende kerst (5 slides), 2 van 5" loading="lazy"></figure><figure><img src="img/pakket/12-3.jpg" alt="Stralende kerst (5 slides), 3 van 5" loading="lazy"></figure><figure><img src="img/pakket/12-4.jpg" alt="Stralende kerst (5 slides), 4 van 5" loading="lazy"></figure><figure><img src="img/pakket/12-5.jpg" alt="Stralende kerst (5 slides), 5 van 5" loading="lazy"></figure></div><p class="pk-count">5 slides · veeg →</p></div>
-          <div class="pk-text"><p class="pk-num">12</p><p class="mono">wo 2 dec · Carrousel</p><h3>Stralende kerst (5 slides)</h3><p class="pk-note">Wacht op jullie akkoord: de kitprijzen en welke doos bij welke kit hoort.</p></div>
+          <div class="pk-text"><p class="pk-num">12</p><p class="mono">wo 2 dec · Carrousel</p><h3>Stralende kerst (5 slides)</h3><p class="pk-note">Wacht op jullie akkoord: de kitprijzen en welke doos bij welke kit hoort.</p><div class="pk-changes"><p class="pk-changes-head">Aangepast · 24 november</p><ul><li class="weg"><b>Weg</b> &quot;Christmas Glow&quot;, &quot;skincarekit&quot;, &quot;Less pigment, more glow!&quot;</li><li class="nieuw"><b>Nieuw</b> &quot;Stralende kerst&quot;, &quot;huidverzorgingsset&quot;, &quot;Minder pigment, meer uitstraling!&quot;</li></ul></div></div>
         </article>
         <article class="pk" id="pk-13" data-title="Cadeaubon reel">
           <div class="pk-media"><div class="pk-track"><figure class="tall"><video controls playsinline preload="none" poster="img/pakket/13-1.jpg" src="video/13.mp4"></video></figure></div></div>
@@ -298,35 +307,35 @@
         </article>
         <article class="pk" id="pk-15" data-title="Pakjesavond (3 slides)">
           <div class="pk-media"><div class="pk-track" tabindex="0" aria-label="3 slides"><figure><img src="img/pakket/15-1.jpg" alt="Pakjesavond (3 slides), 1 van 3" loading="lazy"></figure><figure><img src="img/pakket/15-2.jpg" alt="Pakjesavond (3 slides), 2 van 3" loading="lazy"></figure><figure><img src="img/pakket/15-3.jpg" alt="Pakjesavond (3 slides), 3 van 3" loading="lazy"></figure></div><p class="pk-count">3 slides · veeg →</p></div>
-          <div class="pk-text"><p class="pk-num">15</p><p class="mono">vr 4 dec · Carrousel</p><h3>Pakjesavond (3 slides)</h3><p class="pk-note">Wacht op jullie akkoord: de openingstijden.</p></div>
+          <div class="pk-text"><p class="pk-num">15</p><p class="mono">vr 4 dec · Carrousel</p><h3>Pakjesavond (3 slides)</h3><p class="pk-note">Wacht op jullie akkoord: de openingstijden.</p><div class="pk-changes"><p class="pk-changes-head">Aangepast · 24 november</p><ul><li class="weg"><b>Weg</b> &quot;Swipe voor onze openingstijden&quot;</li><li class="nieuw"><b>Nieuw</b> &quot;Hierna: onze openingstijden&quot;</li></ul></div></div>
         </article>
         <article class="pk" id="pk-16" data-title="Fijne pakjesavond">
           <div class="pk-media"><figure class="tall"><img src="img/pakket/16-1.jpg" alt="Fijne pakjesavond" loading="lazy"></figure></div>
-          <div class="pk-text"><p class="pk-num">16</p><p class="mono">za 5 dec · Story</p><h3>Fijne pakjesavond</h3></div>
+          <div class="pk-text"><p class="pk-num">16</p><p class="mono">za 5 dec · Story</p><h3>Fijne pakjesavond</h3><div class="pk-changes"><p class="pk-changes-head">Aangepast · 24 november</p><ul><li class="weg"><b>Weg</b> het vak voor de link-sticker</li><li class="nieuw"><b>Nieuw</b> &quot;Cadeaubon en kerstkits · pureclinics.nl&quot;</li></ul></div></div>
         </article>
         <article class="pk" id="pk-17" data-title="De Clear Skin Kit">
           <div class="pk-media"><figure><img src="img/pakket/17-1.jpg" alt="De Clear Skin Kit" loading="lazy"></figure></div>
-          <div class="pk-text"><p class="pk-num">17</p><p class="mono">ma 7 dec · Post</p><h3>De Clear Skin Kit</h3><p class="pk-note">Wacht op jullie akkoord: de prijs (€125 of €99?).</p></div>
+          <div class="pk-text"><p class="pk-num">17</p><p class="mono">ma 7 dec · Post</p><h3>De Clear Skin Kit</h3><p class="pk-note">Wacht op jullie akkoord: de prijs (€125 of €99?).</p><div class="pk-changes"><p class="pk-changes-head">Aangepast · 24 november</p><ul><li class="weg"><b>Weg</b> &quot;Christmas Glow&quot;, &quot;The Clear Skin Kit&quot;</li><li class="nieuw"><b>Nieuw</b> &quot;Stralende kerst&quot;, &quot;de Clear Skin Kit&quot;</li></ul></div></div>
         </article>
         <article class="pk" id="pk-18" data-title="Stralende kerst, met jullie eigen kerstvideo">
           <div class="pk-media"><div class="pk-track"><figure class="tall"><video controls playsinline preload="none" poster="img/pakket/18-1.jpg" src="video/18.mp4"></video></figure></div></div>
-          <div class="pk-text"><p class="pk-num">18</p><p class="mono">wo 9 dec · Reel · 19 s</p><h3>Stralende kerst, met jullie eigen kerstvideo</h3><p class="pk-note">Wacht op jullie akkoord: de 10%-kaart in de video.</p></div>
+          <div class="pk-text"><p class="pk-num">18</p><p class="mono">wo 9 dec · Reel · 19 s</p><h3>Stralende kerst, met jullie eigen kerstvideo</h3><p class="pk-note">Wacht op jullie akkoord: de 10%-kaart in de video.</p><div class="pk-changes"><p class="pk-changes-head">Aangepast · 24 november</p><ul><li class="weg"><b>Weg</b> &quot;Christmas Glow&quot;, &quot;Make this Christmas glow!&quot;</li><li class="nieuw"><b>Nieuw</b> &quot;Stralende kerst&quot;, &quot;Maak er een stralende kerst van!&quot;</li></ul></div></div>
         </article>
         <article class="pk" id="pk-19" data-title="De Even Skin Kit">
           <div class="pk-media"><figure><img src="img/pakket/19-1.jpg" alt="De Even Skin Kit" loading="lazy"></figure></div>
-          <div class="pk-text"><p class="pk-num">19</p><p class="mono">vr 11 dec · Post</p><h3>De Even Skin Kit</h3></div>
+          <div class="pk-text"><p class="pk-num">19</p><p class="mono">vr 11 dec · Post</p><h3>De Even Skin Kit</h3><div class="pk-changes"><p class="pk-changes-head">Aangepast · 24 november</p><ul><li class="weg"><b>Weg</b> &quot;Christmas Glow&quot;, &quot;Less pigment, more glow!&quot;</li><li class="nieuw"><b>Nieuw</b> &quot;Stralende kerst&quot;, &quot;Minder pigment, meer uitstraling!&quot;</li></ul></div></div>
         </article>
         <article class="pk" id="pk-20" data-title="Drie deuren, drie kits: achter elke deur een ZO-kit">
           <div class="pk-media"><div class="pk-track"><figure class="tall"><video controls playsinline preload="none" poster="img/pakket/20-1.jpg" src="video/20.mp4"></video></figure></div></div>
-          <div class="pk-text"><p class="pk-num">20</p><p class="mono">za 12 dec · Reel · 20 s</p><h3>Drie deuren, drie kits: achter elke deur een ZO-kit</h3><p class="pk-note">Wacht op jullie akkoord: de kitprijzen en welke doos bij welke kit hoort.</p></div>
+          <div class="pk-text"><p class="pk-num">20</p><p class="mono">za 12 dec · Reel · 20 s</p><h3>Drie deuren, drie kits: achter elke deur een ZO-kit</h3><p class="pk-note">Wacht op jullie akkoord: de kitprijzen en welke doos bij welke kit hoort.</p><div class="pk-changes"><p class="pk-changes-head">Aangepast · 24 november</p><ul><li class="weg"><b>Weg</b> de Engelse teksten op de deuren en kaarten</li><li class="nieuw"><b>Nieuw</b> alles in het Nederlands: &quot;Stralende kerst&quot;, &quot;huidverzorgingsset&quot;, &quot;minder pigment, meer uitstraling&quot;</li></ul></div></div>
         </article>
         <article class="pk" id="pk-21" data-title="Wat heeft jouw huid deze winter nodig?">
           <div class="pk-media"><figure class="tall"><img src="img/pakket/21-1.jpg" alt="Wat heeft jouw huid deze winter nodig?" loading="lazy"></figure></div>
-          <div class="pk-text"><p class="pk-num">21</p><p class="mono">ma 14 dec · Story</p><h3>Wat heeft jouw huid deze winter nodig?</h3></div>
+          <div class="pk-text"><p class="pk-num">21</p><p class="mono">ma 14 dec · Story</p><h3>Wat heeft jouw huid deze winter nodig?</h3><div class="pk-changes"><p class="pk-changes-head">Aangepast · 24 november</p><ul><li class="weg"><b>Weg</b> het vak voor de poll-sticker</li><li class="nieuw"><b>Nieuw</b> &quot;Stuur ons een bericht: we helpen je graag de juiste kit te kiezen.&quot;</li></ul></div></div>
         </article>
         <article class="pk" id="pk-22" data-title="Welke kerstkit past bij jou? (5 slides)">
           <div class="pk-media"><div class="pk-track" tabindex="0" aria-label="5 slides"><figure><img src="img/pakket/22-1.jpg" alt="Welke kerstkit past bij jou? (5 slides), 1 van 5" loading="lazy"></figure><figure><img src="img/pakket/22-2.jpg" alt="Welke kerstkit past bij jou? (5 slides), 2 van 5" loading="lazy"></figure><figure><img src="img/pakket/22-3.jpg" alt="Welke kerstkit past bij jou? (5 slides), 3 van 5" loading="lazy"></figure><figure><img src="img/pakket/22-4.jpg" alt="Welke kerstkit past bij jou? (5 slides), 4 van 5" loading="lazy"></figure><figure><img src="img/pakket/22-5.jpg" alt="Welke kerstkit past bij jou? (5 slides), 5 van 5" loading="lazy"></figure></div><p class="pk-count">5 slides · veeg →</p></div>
-          <div class="pk-text"><p class="pk-num">22</p><p class="mono">ma 14 dec · Carrousel</p><h3>Welke kerstkit past bij jou? (5 slides)</h3></div>
+          <div class="pk-text"><p class="pk-num">22</p><p class="mono">ma 14 dec · Carrousel</p><h3>Welke kerstkit past bij jou? (5 slides)</h3><div class="pk-changes"><p class="pk-changes-head">Aangepast · 24 november</p><ul><li class="weg"><b>Weg</b> &quot;Swipe en ontdek…&quot;, &quot;The … Kit&quot;, &quot;meer glow?&quot;</li><li class="nieuw"><b>Nieuw</b> &quot;Ontdek…&quot;, &quot;de … Kit&quot;, &quot;een stralende huid?&quot;</li></ul></div></div>
         </article>
         <article class="pk" id="pk-23" data-title="Cadeaubon">
           <div class="pk-media"><figure><img src="img/pakket/23-1.jpg" alt="Cadeaubon" loading="lazy"></figure></div>
@@ -338,7 +347,7 @@
         </article>
         <article class="pk" id="pk-25" data-title="Cadeaukaart, in het concept van jullie voorbeeld">
           <div class="pk-media"><div class="pk-track two"><figure class="tall"><video controls playsinline preload="none" poster="img/pakket/25-1.jpg" src="video/25.mp4"></video></figure><figure><img src="img/pakket/25-2.jpg" alt="Cadeaukaart, in het concept van jullie voorbeeld, post" loading="lazy"></figure></div></div>
-          <div class="pk-text"><p class="pk-num">25</p><p class="mono">december · Story-loop · 10 s + post</p><h3>Cadeaukaart, in het concept van jullie voorbeeld</h3></div>
+          <div class="pk-text"><p class="pk-num">25</p><p class="mono">december · Story-loop · 10 s + post</p><h3>Cadeaukaart, in het concept van jullie voorbeeld</h3><div class="pk-changes"><p class="pk-changes-head">Aangepast · 24 november</p><ul><li class="weg"><b>Weg</b> het vak voor de link-sticker</li></ul></div></div>
         </article>
         <article class="pk" id="pk-26" data-title="Achter de schermen: tatoeage verwijderen">
           <div class="pk-media"><div class="pk-track"><figure class="tall"><video controls playsinline preload="none" poster="img/pakket/26-1.jpg" src="video/26.mp4"></video></figure></div></div>
@@ -346,7 +355,7 @@
         </article>
         <article class="pk" id="pk-27" data-title="Nog snel een cadeau">
           <div class="pk-media"><figure><img src="img/pakket/27-1.jpg" alt="Nog snel een cadeau" loading="lazy"></figure></div>
-          <div class="pk-text"><p class="pk-num">27</p><p class="mono">ma 21 dec · Post</p><h3>Nog snel een cadeau</h3></div>
+          <div class="pk-text"><p class="pk-num">27</p><p class="mono">ma 21 dec · Post</p><h3>Nog snel een cadeau</h3><div class="pk-changes"><p class="pk-changes-head">Aangepast · 24 november</p><ul><li class="weg"><b>Weg</b> &quot;Last-minute cadeau&quot;</li><li class="nieuw"><b>Nieuw</b> &quot;Nog snel een cadeau&quot;</li></ul></div></div>
         </article>
         <article class="pk" id="pk-28" data-title="Kerstgroet">
           <div class="pk-media"><figure><img src="img/pakket/28-1.jpg" alt="Kerstgroet" loading="lazy"></figure></div>
@@ -358,7 +367,7 @@
         </article>
         <article class="pk" id="pk-30" data-title="Fijne kerstdagen">
           <div class="pk-media"><figure class="tall"><img src="img/pakket/30-1.jpg" alt="Fijne kerstdagen" loading="lazy"></figure></div>
-          <div class="pk-text"><p class="pk-num">30</p><p class="mono">do 24 dec · Story</p><h3>Fijne kerstdagen</h3></div>
+          <div class="pk-text"><p class="pk-num">30</p><p class="mono">do 24 dec · Story</p><h3>Fijne kerstdagen</h3><div class="pk-changes"><p class="pk-changes-head">Aangepast · 24 november</p><ul><li class="weg"><b>Weg</b> het vak voor de openingstijden-sticker</li></ul></div></div>
         </article>
         <article class="pk" id="pk-31" data-title="Nieuw jaar, nieuwe huid">
           <div class="pk-media"><figure><img src="img/pakket/31-1.jpg" alt="Nieuw jaar, nieuwe huid" loading="lazy"></figure></div>

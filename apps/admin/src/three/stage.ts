@@ -26,6 +26,8 @@ export type StageOptions = {
   fitAspect?: number;
   /** How far the idle camera sways from side to side, in radians. */
   sway?: number;
+  /** Instead of swaying, the idle camera turns slowly all the way round, at this many radians a second. */
+  spin?: number;
 };
 
 export type Frame = (time: number, delta: number) => void;
@@ -65,7 +67,9 @@ export class Stage {
 
   // Camera choreography: a fly-in, then a gentle sway until someone grabs the view.
   private flight: { from: THREE.Vector3; to: THREE.Vector3; fromTarget: THREE.Vector3; toTarget: THREE.Vector3; start: number; duration: number } | null;
-  private readonly sway = { base: new THREE.Spherical(), since: 0, paused: true, resumeAt: 0, amount: 0.2 };
+  private readonly sway = { base: new THREE.Spherical(), since: 0, paused: true, resumeAt: 0, amount: 0.2, spin: 0 };
+  /** Where the camera settles after the fly-in, to come back to. */
+  private readonly start: { camera: Vec; target: Vec };
   /** While true the camera stays where it is, e.g. while a card in the scene is being read. */
   private still = false;
 
@@ -83,6 +87,8 @@ export class Stage {
   constructor(readonly host: HTMLElement, options: StageOptions) {
     this.fitAspect = options.fitAspect ?? 0;
     this.sway.amount = options.sway ?? 0.2;
+    this.sway.spin = options.spin ?? 0;
+    this.start = { camera: options.camera, target: options.target };
     this.camera = new THREE.PerspectiveCamera(options.fov ?? 30, 1, 0.1, 200);
     this.camera.position.set(...options.intro);
 
@@ -187,6 +193,11 @@ export class Stage {
       start: performance.now(),
       duration: this.reducedMotion ? 1 : duration,
     };
+  }
+
+  /** Flies back to where the camera started, e.g. after the scene was turned or zoomed. */
+  home(duration = 1100) {
+    this.flyTo(this.start.camera, this.start.target, duration);
   }
 
   /** Where the camera is going (or is, when it is not moving) and what it looks at. */
@@ -338,8 +349,13 @@ export class Stage {
       if (!this.sway.paused) {
         const s = (now - this.sway.since) / 1000;
         const spherical = this.sway.base.clone();
-        spherical.theta += Math.sin(s * 0.11) * this.sway.amount;
-        spherical.phi += Math.sin(s * 0.07) * 0.035;
+        if (this.sway.spin) {
+          // Ease into the turn, so picking up again after a drag does not jerk.
+          spherical.theta += this.sway.spin * (s - 1.2 * (1 - Math.exp(-s / 1.2)));
+        } else {
+          spherical.theta += Math.sin(s * 0.11) * this.sway.amount;
+          spherical.phi += Math.sin(s * 0.07) * 0.035;
+        }
         this.camera.position.setFromSpherical(spherical).add(this.controls.target);
       }
       this.controls.update();

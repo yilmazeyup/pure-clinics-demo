@@ -1,0 +1,591 @@
+/* The side panel: details of an appointment, a client or an invoice, sliding in from the inline end. Quiet on purpose:
+   one title, a few lines, lists you can tap, and the actions at the bottom. */
+
+.pk-dt-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+}
+
+.pk-dt-layer.is-open {
+  pointer-events: auto;
+}
+
+.pk-dt-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(63, 49, 40, 0.16);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.pk-dt-layer.is-open .pk-dt-backdrop {
+  opacity: 1;
+}
+
+.pk-dt {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  inset-inline-end: 0;
+  display: flex;
+  flex-direction: column;
+  width: min(440px, 100vw);
+  background: var(--surface);
+  border-inline-start: 1px solid var(--line);
+  box-shadow: -24px 0 60px rgba(63, 49, 40, 0.14);
+  outline: none;
+  transform: translateX(104%);
+  transition: transform 0.3s cubic-bezier(0.2, 0.75, 0.2, 1);
+}
+
+[dir='rtl'] .pk-dt {
+  box-shadow: 24px 0 60px rgba(63, 49, 40, 0.14);
+  transform: translateX(-104%);
+}
+
+.pk-dt-layer.is-open .pk-dt {
+  transform: none;
+}
+
+.pk-dt-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px 0;
+}
+
+.pk-dt-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  color: var(--ink);
+  transition: background 0.2s;
+}
+
+.pk-dt-icon:hover {
+  background: var(--soft);
+}
+
+.pk-dt-body {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 6px 28px 28px;
+  animation: pk-dt-in 0.28s ease both;
+}
+
+@keyframes pk-dt-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/* ---------- Head ---------- */
+
+.pk-dt-head h2 {
+  margin: 8px 0 0;
+  font-family: var(--display);
+  font-size: 34px;
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  font-variant-numeric: lining-nums;
+  color: var(--ink);
+}
+
+.pk-dt-sub {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin: 8px 0 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.pk-dt-sub strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.pk-dt-amount {
+  font-family: var(--display);
+  font-size: 26px;
+  font-variant-numeric: lining-nums;
+}
+
+.pk-dt-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.pk-dt-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 7px;
+  background: var(--soft);
+  color: var(--ink);
+  font-size: 12.5px;
+}
+
+.pk-dt-chip--unconfirmed,
+.pk-dt-chip--inv-open {
+  background: #f4e9d6;
+  color: #7a4e17;
+}
+
+.pk-dt-chip--client,
+.pk-dt-chip--insurer,
+.pk-dt-chip--inv-paid,
+.pk-dt-chip--inv-creditDone {
+  background: var(--good-bg);
+  color: var(--good);
+}
+
+.pk-dt-chip--invoiced,
+.pk-dt-chip--future,
+.pk-dt-chip--inv-concept,
+.pk-dt-chip--inv-credited,
+.pk-dt-chip--inv-writtenOff {
+  color: var(--muted);
+}
+
+.pk-dt-chip--inv-insurer {
+  background: var(--sage);
+  color: var(--now);
+}
+
+.pk-dt-head--person {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.pk-dt-head--person h2 {
+  margin-top: 4px;
+}
+
+.pk-dt-head--person .pk-dt-sub {
+  margin-top: 4px;
+}
+
+/* ---------- The person in an appointment or an invoice ---------- */
+
+.pk-dt-initials {
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--sand-soft);
+  color: var(--accent);
+  font-family: var(--display);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.pk-dt-person {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  margin: 24px 0 8px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fbf8f3;
+  text-align: start;
+  color: var(--ink);
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.pk-dt-person:hover {
+  border-color: var(--line-strong);
+  transform: translateY(-1px);
+}
+
+.pk-dt-person > svg {
+  flex: none;
+  color: var(--muted);
+}
+
+[dir='rtl'] .pk-dt-person > svg,
+[dir='rtl'] .pk-dt-row > svg {
+  transform: scaleX(-1);
+}
+
+.pk-dt-person-text {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.pk-dt-person-text strong {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.pk-dt-person-text small {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.pk-dt-warn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 4px;
+  font-size: 12.5px;
+  font-style: normal;
+  color: var(--bad);
+}
+
+.pk-dt-alert {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 20px 0 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--bad-bg);
+  color: var(--bad);
+  font-size: 13.5px;
+}
+
+/* ---------- Lines ---------- */
+
+.pk-dt-lines {
+  margin: 18px 0 0;
+}
+
+.pk-dt-lines > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 48px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.pk-dt-lines dt {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
+.pk-dt-lines dd {
+  min-width: 0;
+  margin: 0;
+  font-size: 14.5px;
+  text-align: end;
+  overflow-wrap: anywhere;
+  color: var(--ink);
+}
+
+.pk-dt-lines a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.pk-dt-staff {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ---------- Sections and lists ---------- */
+
+.pk-dt-section {
+  margin-top: 28px;
+}
+
+.pk-dt-section h3 {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+[dir='rtl'] .pk-dt-section h3 {
+  letter-spacing: 0;
+  font-size: 13px;
+}
+
+.pk-dt-section h3 small {
+  font-size: 11px;
+  letter-spacing: 0;
+  color: var(--line-strong);
+}
+
+.pk-dt-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pk-dt-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 8px;
+  margin: 0 -8px;
+  width: calc(100% + 16px);
+  border-radius: 10px;
+  text-align: start;
+  color: var(--ink);
+  transition: background 0.2s;
+}
+
+.pk-dt-row:hover {
+  background: var(--soft);
+}
+
+.pk-dt-row > svg {
+  flex: none;
+  color: var(--line-strong);
+}
+
+.pk-dt-row-lead {
+  flex: none;
+  width: 64px;
+  display: grid;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+[dir='rtl'] .pk-dt-row-lead {
+  width: 104px;
+}
+
+.pk-dt-row-lead b {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.pk-dt-row-text {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 1px;
+}
+
+.pk-dt-row-text strong {
+  overflow: hidden;
+  font-size: 14.5px;
+  font-weight: 400;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.pk-dt-row-text small {
+  overflow: hidden;
+  font-size: 12.5px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--muted);
+}
+
+.pk-dt-row-end {
+  flex: none;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.pk-dt-row.is-dim .pk-dt-row-text strong {
+  color: var(--muted);
+}
+
+.pk-dt-empty {
+  margin: 0;
+  padding: 10px 0;
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
+.pk-dt-balance {
+  margin: 0 0 6px;
+  font-size: 13.5px;
+  color: #7a4e17;
+}
+
+.pk-dt-episode {
+  display: grid;
+  gap: 8px;
+  padding: 10px 0;
+}
+
+.pk-dt-episode > span:first-child {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.pk-dt-episode strong {
+  font-size: 14.5px;
+  font-weight: 400;
+}
+
+.pk-dt-episode small {
+  flex: none;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.pk-dt-progress {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--soft);
+  overflow: hidden;
+}
+
+.pk-dt-progress i {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: #b08a66;
+}
+
+/* ---------- Note ---------- */
+
+.pk-dt-note {
+  display: grid;
+  gap: 8px;
+  justify-items: end;
+}
+
+.pk-dt-note textarea {
+  width: 100%;
+  min-height: 84px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fbf8f3;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink);
+  resize: vertical;
+}
+
+.pk-dt-note textarea:focus {
+  outline: none;
+  border-color: var(--line-strong);
+  background: var(--surface);
+}
+
+/* ---------- Invoice lines ---------- */
+
+.pk-dt-bill {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pk-dt-bill li {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 14.5px;
+}
+
+.pk-dt-bill strong {
+  flex: none;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+
+.pk-dt-bill .is-minor {
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
+.pk-dt-bill .is-total {
+  border-bottom-color: var(--line-strong);
+  font-weight: 500;
+}
+
+.pk-dt-bill .is-total strong {
+  font-weight: 500;
+}
+
+.pk-dt-bill .is-open {
+  border-bottom: 0;
+  color: #7a4e17;
+}
+
+/* ---------- Actions ---------- */
+
+.pk-dt-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 14px 28px;
+  padding-bottom: calc(14px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.pk-dt-foot .btn {
+  flex: 1 1 auto;
+  justify-content: center;
+  height: 40px;
+}
+
+.pk-dt-foot .btn-primary {
+  flex-basis: 100%;
+}
+
+.pk-dt-danger {
+  color: var(--bad);
+}
+
+/* ---------- Phone ---------- */
+
+@media (max-width: 600px) {
+  .pk-dt {
+    width: 100vw;
+    border-inline-start: 0;
+  }
+
+  .pk-dt-body {
+    padding: 4px 18px 24px;
+  }
+
+  .pk-dt-head h2 {
+    font-size: 30px;
+  }
+
+  .pk-dt-foot {
+    padding-inline: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pk-dt,
+  .pk-dt-backdrop,
+  .pk-dt-body {
+    transition: none;
+    animation: none;
+  }
+}

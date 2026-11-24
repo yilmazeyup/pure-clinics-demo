@@ -19,7 +19,6 @@ import {
   blocksOn,
   columnFree,
   columnsFor,
-  confirmable,
   dayAppts,
   minutesOf,
   moveAppt,
@@ -43,7 +42,7 @@ import { cityOf, clientFor, roleKey, STAFF, staffById, type StaffId } from '../d
 import { seedAgendaAccess, type AgendaAccess } from '../data/shared';
 import { PkIcon } from '../icons';
 import { Avatar, Card, Chip, Seg } from '../kit';
-import { BlockInfoModal, BlockModal, BookModal, ConfirmModal, DetailModal, OnlineModal, type BlockDraft, type BookDraft } from './agenda/dialogs';
+import { BlockInfoModal, BlockModal, BookModal, ConfirmModal, OnlineModal, type BlockDraft, type BookDraft } from './agenda/dialogs';
 import { Grid, type ApptInfo, type GridCol } from './agenda/Grid';
 import { CalendarCross, ReportMark, StatusMark } from './agenda/marks';
 import './Agenda.css';
@@ -66,7 +65,9 @@ const addMonths = (date: Date, n: number) => new Date(date.getFullYear(), date.g
 export function AgendaScreen() {
   const i18n = useI18n();
   const { t, dayLong, dayMonth, monthYear, weekdayShort } = i18n;
-  const { now, today, go, demo } = usePraktijk();
+  const { now, today, go, demo, openDetail } = usePraktijk();
+  // An appointment opens in the side panel, with her client one tap further.
+  const setDetail = (a: AgAppt) => openDetail({ kind: 'appt', id: a.id, day: startOfDay(a.start) });
   const [state, setState] = useShared<AgendaState>('agenda', () => seedAgenda(today));
   const [access] = useShared<AgendaAccess>('agendaAccess', seedAgendaAccess);
 
@@ -79,7 +80,6 @@ export function AgendaScreen() {
   const [selecting, setSelecting] = useState(false);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [book, setBook] = useState<BookDraft | null>(null);
-  const [detail, setDetail] = useState<AgAppt | null>(null);
   const [confirm, setConfirm] = useState<AgAppt | null>(null);
   const [block, setBlock] = useState<BlockDraft | null>(null);
   const [blockInfo, setBlockInfo] = useState<BlockItem | null>(null);
@@ -186,7 +186,6 @@ export function AgendaScreen() {
   const doConfirm = (a: AgAppt) => {
     setState((s) => ({ ...s, confirmed: [...s.confirmed, a.id] }));
     setConfirm(null);
-    setDetail(null);
     demo(t('pk.agenda.confirmed', { client: a.client, time: a.start }));
   };
 
@@ -562,36 +561,6 @@ export function AgendaScreen() {
                 : t('pk.agenda.book.saved', { client: appt.client, day: { date: appt.start }, time: appt.start }),
             );
           }}
-        />
-      ) : null}
-
-      {detail ? (
-        <DetailModal
-          key={detail.id}
-          appt={detail}
-          status={statusOf(detail, now, state, today)}
-          note={info(detail).note ?? ''}
-          confirmable={confirmable(detail, now)}
-          onClose={() => setDetail(null)}
-          onNote={(note) => {
-            setState((s) => ({ ...s, notes: { ...s.notes, [detail.id]: note } }));
-            demo(t('pk.agenda.detail.noteSaved'));
-          }}
-          onConfirm={() => doConfirm(detail)}
-          onInvoice={() => {
-            setDetail(null);
-            go('facturen', { appt: refOf(detail), feature: 'i.agenda' });
-          }}
-          onFile={() => {
-            setDetail(null);
-            onFile(detail);
-          }}
-          onDelete={() => {
-            remove([detail.id]);
-            setDetail(null);
-            demo(t('pk.agenda.detail.deleted', { client: detail.client }));
-          }}
-          onMail={() => demo(t('pk.agenda.detail.mailed', { email: clientFor(detail.client, detail.clinic, today).email }))}
         />
       ) : null}
 

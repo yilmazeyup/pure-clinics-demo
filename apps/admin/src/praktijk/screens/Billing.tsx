@@ -63,6 +63,9 @@ export function BillingScreen() {
     if (target.appt) {
       setTab('invoices');
       setSelected(billing.invoiceAppt(target.appt));
+    } else if (target.invoiceId) {
+      setTab('invoices');
+      setSelected(target.invoiceId);
     } else if (target.feature && FEATURE_TAB[target.feature]) setTab(FEATURE_TAB[target.feature]);
   }, [target?.at]);
 

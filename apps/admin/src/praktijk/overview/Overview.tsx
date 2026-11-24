@@ -18,7 +18,7 @@ import { useBilling } from '../screens/billing/state';
 import { BarList, ColumnChart, LOCATION_COLOR, useChartFormat } from '../screens/reports/charts';
 import { HEAT_COMPACT, HEAT_WIDE, HeatScene } from '../three/heat';
 import { Donut, Sparkline, TrendChart, type Share } from './charts';
-import { busyMap, change, dailyTreatments, HEAT_DAYS, HEAT_FROM, HEAT_TO, newClients, occupancyTrend, weeklyRevenue, weekOccupancy, type HeatCell } from './data';
+import { BLOCK_HOURS, BLOCKS, busyBlocks, change, dailyTreatments, HEAT_DAYS, newClients, occupancyTrend, weeklyRevenue, weekOccupancy, type BusyBlock } from './data';
 import './overview.css';
 
 // Overzicht: the practice at a glance. Everything comes from the module's own seeded test world (data/*.ts and the
@@ -41,7 +41,7 @@ function useCompact(): boolean {
 export function OverviewScreen() {
   const i18n = useI18n();
   const { t, eur, num, pct, text, clock, weekdayShort, monthYear } = i18n;
-  const { today, now, go } = usePraktijk();
+  const { today, now, go, openDetail } = usePraktijk();
   const fmt = useChartFormat();
   const billing = useBilling();
   const [agenda] = useShared<AgendaState>('agenda', () => seedAgenda(today));
@@ -319,7 +319,19 @@ export function OverviewScreen() {
             const member = staffById(a.specialist.id);
             const state = a.end <= now ? 'done' : a.start <= now ? 'now' : 'later';
             return (
-              <li key={a.id} className={`is-${state}`}>
+              <li
+                key={a.id}
+                className={`is-${state}`}
+                role="button"
+                tabIndex={0}
+                onClick={() => openDetail({ kind: 'appt', id: a.id, day: today })}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openDetail({ kind: 'appt', id: a.id, day: today });
+                  }
+                }}
+              >
                 <time>
                   {clock(a.start)}
                   <small>{clock(a.end)}</small>
@@ -406,66 +418,67 @@ function BusyCard() {
   const decimal = useDecimal();
   const { today } = usePraktijk();
   const compact = useCompact();
-  const [where, setWhere] = useState<Where>('all');
+  // One clinic at a time reads best; both together is the third choice.
+  const [where, setWhere] = useState<Where>('nijmegen');
   const [hover, setHover] = useState<number | null>(null);
   const host = useRef<HTMLDivElement>(null);
   const scene = useRef<HeatScene | null>(null);
-  const cells = useMemo(() => busyMap(today, where), [today, where]);
-  const cols = HEAT_TO - HEAT_FROM;
+  const stage = useRef<Stage | null>(null);
+  const cells = useMemo(() => busyBlocks(today, where), [today, where]);
   const weekStart = weekStartOf(today);
   const dayOf = (weekday: number) => addDays(weekStart, weekday - 1);
-  const hourLabel = (h: number) => `${String(h).padStart(2, '0')}:00`;
+  const cap = (s: string) => s.charAt(0).toLocaleUpperCase(i18n.locale) + s.slice(1);
+  const range = (c: BusyBlock) => `${c.from}:00–${c.to}:00`;
+  const describe = (c: BusyBlock) => `${cap(weekdayLong(dayOf(c.weekday)))} ${range(c)}`;
+  const short = (c: BusyBlock) => `${cap(weekdayShort(dayOf(c.weekday)))} ${c.from}–${c.to}`;
+
+  const open = cells.filter((c) => c.open);
+  const busiest = open.reduce<BusyBlock | null>((best, c) => (!best || c.value > best.value ? c : best), null);
+  const quietest = open.reduce<BusyBlock | null>((best, c) => (!best || c.value < best.value ? c : best), null);
 
   useEffect(() => {
     const layout = compact ? HEAT_COMPACT : HEAT_WIDE;
-    const stage = new Stage(host.current!, {
+    const view = new Stage(host.current!, {
       camera: layout.camera,
       target: layout.target,
       intro: layout.intro,
       fov: 30,
-      minDistance: 6,
-      maxDistance: 20,
-      minPolarAngle: 0.35,
-      maxPolarAngle: 1.3,
-      minAzimuthAngle: -0.9,
-      maxAzimuthAngle: 0.9,
+      minDistance: 8,
+      maxDistance: 24,
+      // All the way round, but never below the plinth or straight down from above.
+      minPolarAngle: 0.25,
+      maxPolarAngle: 1.2,
       fitAspect: layout.fitAspect,
-      sway: 0.05,
+      spin: 0.07,
     });
     const heat = new HeatScene(
-      stage,
-      cols,
+      view,
+      BLOCKS.length,
       HEAT_DAYS.length,
-      HEAT_DAYS.map((d) => {
-        const name = weekdayShort(dayOf(d));
-        return name.charAt(0).toLocaleUpperCase(i18n.locale) + name.slice(1);
-      }),
-      Array.from({ length: cols }, (_, c) => ((HEAT_FROM + c) % (compact ? 3 : 2) === 0 ? String(HEAT_FROM + c) : '')),
-      busyMap(today, where),
+      HEAT_DAYS.map((d) => cap(weekdayShort(dayOf(d)))),
+      BLOCKS.map((h) => `${h}–${h + BLOCK_HOURS}`),
+      cells,
       setHover,
+      // A narrower scene (a tablet) draws the model smaller, so the words on the plinth get a little larger.
+      compact ? layout.print : host.current!.clientWidth < 820 ? 1.25 : layout.print,
     );
     scene.current = heat;
+    stage.current = view;
     return () => {
       heat.dispose();
-      stage.dispose();
+      view.dispose();
       scene.current = null;
+      stage.current = null;
     };
     // Rebuilt for a new layout or language; a new location only moves the columns (next effect).
   }, [compact, i18n.locale]);
 
   useEffect(() => {
-    scene.current?.update(cells);
-  }, [cells]);
+    scene.current?.update(cells, busiest ? `${t('pk.ov.busy.top')} · ${short(busiest)}` : '');
+  }, [cells, i18n.locale, compact]);
 
-  const open = cells.map((c, i) => ({ c, i })).filter(({ c }) => c.open);
-  const busiest = [...open].sort((a, b) => b.c.value - a.c.value).slice(0, 3);
-  const quietest = [...open].filter(({ c }) => c.hour < HEAT_TO - 1).sort((a, b) => a.c.value - b.c.value).slice(0, 3);
-  const shown: HeatCell | null = hover !== null ? cells[hover] : busiest[0]?.c ?? null;
-  const describe = (c: HeatCell) => `${weekdayLong(dayOf(c.weekday))} ${hourLabel(c.hour)}–${hourLabel(c.hour + 1)}`;
-  const pick = (i: number) => {
-    setHover(i);
-    scene.current?.point(i);
-  };
+  const pointed = hover !== null && cells[hover]?.open ? cells[hover] : null;
+  const shown = pointed ?? busiest;
 
   return (
     <Card
@@ -477,53 +490,46 @@ function BusyCard() {
         <Seg<Where>
           label={t('pk.ov.busy.where')}
           value={where}
-          onChange={setWhere}
-          options={[{ value: 'all', label: t('pk.ov.busy.all') }, ...LOCATIONS.map((l) => ({ value: l.id, label: l.city }))]}
+          onChange={(w) => {
+            setHover(null);
+            scene.current?.point(null);
+            setWhere(w);
+          }}
+          options={[...LOCATIONS.map((l) => ({ value: l.id as Where, label: l.city })), { value: 'all', label: t('pk.ov.busy.all') }]}
         />
       }
     >
       <div className="pk-ov-busy-body">
         <div className="scene-host pk-ov-heat" ref={host} role="img" aria-label={t('pk.ov.busy.help')}>
           <span className="scene-hint">{t('pk.ov.busy.hint')}</span>
+          <button type="button" className="pk-ov-heat-reset" onClick={() => stage.current?.home()}>
+            <PkIcon name="refresh" size={15} />
+            {t('pk.ov.busy.reset')}
+          </button>
         </div>
         <aside className="pk-ov-busy-side">
           {shown ? (
-            <div className="pk-ov-busy-now" aria-live="polite">
-              <span className="eyebrow">{hover !== null ? t('pk.ov.busy.pointed') : t('pk.ov.busy.peak')}</span>
+            <div className={`pk-ov-busy-now ${pointed ? 'is-pointed' : ''}`} aria-live="polite">
+              <span className="eyebrow">{pointed ? t('pk.ov.busy.pointed') : t('pk.ov.busy.peak')}</span>
               <strong>{describe(shown)}</strong>
-              <p>
-                {shown.open
-                  ? t('pk.ov.busy.value', { n: decimal(shown.value) })
-                  : t('pk.ov.busy.closed')}
-              </p>
+              <p>{t('pk.ov.busy.value', { n: decimal(shown.value) })}</p>
             </div>
           ) : null}
-          <div className="pk-ov-busy-list">
-            <span className="eyebrow">{t('pk.ov.busy.busiest')}</span>
-            <ul>
-              {busiest.map(({ c, i }) => (
-                <li key={i}>
-                  <button type="button" onClick={() => pick(i)} onPointerEnter={() => pick(i)}>
-                    <span>{describe(c)}</span>
-                    <strong>{decimal(c.value)}</strong>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="pk-ov-busy-list">
-            <span className="eyebrow">{t('pk.ov.busy.quietest')}</span>
-            <ul>
-              {quietest.map(({ c, i }) => (
-                <li key={i}>
-                  <button type="button" onClick={() => pick(i)} onPointerEnter={() => pick(i)}>
-                    <span>{describe(c)}</span>
-                    <strong>{decimal(c.value)}</strong>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {quietest ? (
+            <button
+              type="button"
+              className="pk-ov-busy-quiet"
+              onClick={() => {
+                const i = cells.indexOf(quietest);
+                setHover(i);
+                scene.current?.point(i);
+              }}
+            >
+              <span className="eyebrow">{t('pk.ov.busy.quietest')}</span>
+              <strong>{describe(quietest)}</strong>
+              <small>{t('pk.ov.busy.quietSub', { n: decimal(quietest.value) })}</small>
+            </button>
+          ) : null}
           <div className="pk-ov-scale" aria-hidden="true">
             <span>{t('pk.ov.busy.calm')}</span>
             <i />

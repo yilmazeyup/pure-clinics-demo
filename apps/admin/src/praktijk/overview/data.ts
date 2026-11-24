@@ -71,6 +71,34 @@ export function busyMap(today: Date, location: LocationId | 'all'): HeatCell[] {
   return out;
 }
 
+/** The busy map in two-hour blocks, from the earliest opening (9:00) to the latest close (21:00). */
+export const BLOCKS = [9, 11, 13, 15, 17, 19] as const;
+export const BLOCK_HOURS = 2;
+
+export type BusyBlock = {
+  weekday: number;
+  /** First hour of the block. */
+  from: number;
+  to: number;
+  /** Treatments in progress at the same time, on average over the hours the clinic is open in this block. */
+  value: number;
+  open: boolean;
+};
+
+/** `busyMap` gathered into two-hour blocks: 36 columns instead of 78, easier to read at a glance. */
+export function busyBlocks(today: Date, location: LocationId | 'all'): BusyBlock[] {
+  const hours = busyMap(today, location);
+  const out: BusyBlock[] = [];
+  for (const weekday of HEAT_DAYS) {
+    for (const from of BLOCKS) {
+      const open = hours.filter((c) => c.weekday === weekday && c.open && c.hour >= from && c.hour < from + BLOCK_HOURS);
+      const value = open.length ? open.reduce((s, c) => s + c.value, 0) / open.length : 0;
+      out.push({ weekday, from, to: from + BLOCK_HOURS, value, open: open.length > 0 });
+    }
+  }
+  return out;
+}
+
 /** Revenue per day for the last `days` days, both locations together (for sparklines). */
 export function dailyRevenue(today: Date, days: number): number[] {
   return Array.from({ length: days }, (_, i) => {

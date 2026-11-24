@@ -2,6 +2,7 @@ import type { nl } from '../nl';
 import { agenda } from './agenda';
 import { berichten } from './berichten';
 import { overzicht } from './overzicht';
+import { details } from './details';
 import { clienten } from './clienten';
 import { declaraties } from './declaraties';
 import { dossier } from './dossier';
@@ -19,6 +20,7 @@ import { voorraad } from './voorraad';
 export const ar: Record<keyof typeof nl, string> = {
   ...shell,
   ...overzicht,
+  ...details,
   ...features,
   ...agenda,
   ...planner,

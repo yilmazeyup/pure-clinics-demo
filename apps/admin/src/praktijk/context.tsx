@@ -19,8 +19,15 @@ export type ApptRef = {
   price: number;
 };
 
+/** What the side panel shows: an appointment (by id, on its day), a client or an invoice. */
+export type Detail =
+  | { kind: 'appt'; id: string; day: Date }
+  /** A client by id; `short` and `clinic` find one met in the diary who is not in the client list yet. */
+  | { kind: 'client'; id: string; short?: string; clinic?: LocationId }
+  | { kind: 'invoice'; id: string };
+
 /** Where a jump should land: a feature to highlight, a client's file, or an appointment to invoice. */
-export type Target = { feature?: string; clientId?: string; appt?: ApptRef; at: number };
+export type Target = { feature?: string; clientId?: string; appt?: ApptRef; invoiceId?: string; at: number };
 
 type Ctx = {
   now: Date;
@@ -38,6 +45,12 @@ type Ctx = {
   store: Record<string, unknown>;
   setStore: (update: (store: Record<string, unknown>) => Record<string, unknown>) => void;
   seed: <T>(key: string, init: () => T) => T;
+  /** The side panel's trail: the last one is shown, the ones before it are where the back arrow leads. */
+  details: Detail[];
+  /** Opens the side panel on this; from inside the panel (`push`) it adds a step, so back returns to where it was. */
+  openDetail: (detail: Detail, push?: boolean) => void;
+  backDetail: () => void;
+  closeDetail: () => void;
 };
 
 const PraktijkContext = createContext<Ctx | null>(null);
@@ -78,6 +91,7 @@ export function PraktijkProvider({ now, screen, initialFeature, onScreen, childr
   const toast = useToast();
   const [target, setTarget] = useState<Target | null>(() => (initialFeature ? { feature: initialFeature, at: Date.now() } : null));
   const [clientId, setClientId] = useState<string | null>(null);
+  const [details, setDetails] = useState<Detail[]>([]);
   const [store, setStoreState] = useState<Record<string, unknown>>({});
   const seeds = useRef(new Map<string, unknown>());
   const dayKey = dateKey(now);
@@ -88,8 +102,14 @@ export function PraktijkProvider({ now, screen, initialFeature, onScreen, childr
     return seeds.current.get(key) as T;
   }, []);
 
+  const openDetail = useCallback((detail: Detail, push = false) => setDetails((list) => (push ? [...list, detail] : [detail])), []);
+  const backDetail = useCallback(() => setDetails((list) => list.slice(0, -1)), []);
+  const closeDetail = useCallback(() => setDetails([]), []);
+
   const go = useCallback(
     (next: ScreenId, to?: Omit<Target, 'at'>) => {
+      // Going to another screen closes the side panel.
+      setDetails([]);
       if (to?.clientId) setClientId(to.clientId);
       setTarget(to ? { ...to, at: Date.now() } : null);
       onScreen(next);
@@ -110,8 +130,12 @@ export function PraktijkProvider({ now, screen, initialFeature, onScreen, childr
       store,
       setStore: setStoreState,
       seed,
+      details,
+      openDetail,
+      backDetail,
+      closeDetail,
     }),
-    [now, today, screen, go, target, clientId, store, seed, t, toast],
+    [now, today, screen, go, target, clientId, store, seed, t, toast, details, openDetail, backDetail, closeDetail],
   );
   return <PraktijkContext.Provider value={value}>{children}</PraktijkContext.Provider>;
 }

@@ -36,7 +36,7 @@ const CHANNEL_ICON: Record<Channel, PkIconName> = { email: 'mail', sms: 'sms', w
 export function ClientsScreen() {
   const i18n = useI18n();
   const { t, num, pct } = i18n;
-  const { today, go, target } = usePraktijk();
+  const { today, go, target, openDetail } = usePraktijk();
   const { list, pairs, addedIds, add, update, remove, merge, byId, foreign, setForeign } = useClients();
   const [query, setQuery] = useState('');
   const [limit, setLimit] = useState(25);
@@ -61,6 +61,11 @@ export function ClientsScreen() {
   }, [list, query]);
 
   const selected = byId(selectedId) ?? null;
+  // A client opens in the side panel; her card below follows, for editing.
+  const look = (id: string) => {
+    setSelectedId(id);
+    openDetail({ kind: 'client', id });
+  };
   const members = list.filter((c) => c.member).length;
   const insured = list.filter((c) => c.episodes.some((e) => e.billing === 'insurer')).length;
 
@@ -125,9 +130,9 @@ export function ClientsScreen() {
               </thead>
               <tbody>
                 {results.slice(0, limit).map(({ c, on }) => (
-                  <tr key={c.id} aria-selected={c.id === selectedId} onClick={() => setSelectedId(c.id)}>
+                  <tr key={c.id} aria-selected={c.id === selectedId} onClick={() => look(c.id)}>
                     <td>
-                      <button className="pk-cl-name" onClick={() => setSelectedId(c.id)}>
+                      <button className="pk-cl-name" onClick={(e) => { e.stopPropagation(); look(c.id); }}>
                         <strong>
                           {c.first} {c.last}
                         </strong>

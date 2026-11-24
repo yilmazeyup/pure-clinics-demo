@@ -4,6 +4,7 @@ import { useI18n } from '../i18n';
 // The module's base styles load before every screen's own, so a screen can refine a kit class.
 import './praktijk.css';
 import { PraktijkProvider, usePraktijk } from './context';
+import { DetailPanel } from './details/Details';
 import { PkIcon } from './icons';
 import { SCREENS, type ScreenId } from './nav';
 import { OverviewScreen } from './overview/Overview';
@@ -121,6 +122,7 @@ function Module() {
           );
         })}
       </div>
+      <DetailPanel />
     </div>
   );
 }

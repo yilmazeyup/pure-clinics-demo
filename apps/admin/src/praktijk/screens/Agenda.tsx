@@ -45,6 +45,7 @@ import { Avatar, Card, Chip, Seg } from '../kit';
 import { BlockInfoModal, BlockModal, BookModal, ConfirmModal, OnlineModal, type BlockDraft, type BookDraft } from './agenda/dialogs';
 import { Grid, type ApptInfo, type GridCol } from './agenda/Grid';
 import { CalendarCross, ReportMark, StatusMark } from './agenda/marks';
+import './responsive.css';
 import './Agenda.css';
 
 type View = 'day' | 'workweek' | 'week' | 'month';

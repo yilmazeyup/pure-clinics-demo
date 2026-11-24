@@ -216,7 +216,7 @@ function Treatments() {
         </button>
       </div>
       <TableWrap label={t('pk.instellingen.treat.title')}>
-        <table className="pk-table pk-se-treat">
+        <table className="pk-table pk-se-treat pk-sticky-start">
           <thead>
             <tr>
               <th>{t('pk.instellingen.treat.col.name')}</th>
@@ -287,7 +287,7 @@ function Conditions() {
   return (
     <Card feature="u.conditions" eyebrow={t('pk.instellingen.cond.eyebrow')} title={t('pk.instellingen.cond.title')} help={t('pk.instellingen.cond.help')}>
       <TableWrap label={t('pk.instellingen.cond.title')}>
-        <table className="pk-table">
+        <table className="pk-table pk-cards">
           <thead>
             <tr>
               <th>{t('pk.common.condition')}</th>
@@ -300,17 +300,21 @@ function Conditions() {
           <tbody>
             {rows.map((r) => (
               <tr key={r.id} className={r.active ? '' : 'pk-se-off'}>
-                <td>
+                <td className="pk-cell-main">
                   <strong>{r.key ? t(r.key) : r.label}</strong>
                 </td>
-                <td className="pk-mono">{r.diagnosis || '–'}</td>
-                <td>{r.insured ? <Chip tone="good">{t('pk.instellingen.cond.insuredYes')}</Chip> : <Chip tone="outline">{t('pk.instellingen.cond.insuredNo')}</Chip>}</td>
-                <td className="pk-small pk-muted">
+                <td data-label={t('pk.instellingen.cond.diagnosis')}>
+                  <span className="pk-mono">{r.diagnosis || '–'}</span>
+                </td>
+                <td data-label={t('pk.instellingen.cond.insured')}>
+                  {r.insured ? <Chip tone="good">{t('pk.instellingen.cond.insuredYes')}</Chip> : <Chip tone="outline">{t('pk.instellingen.cond.insuredNo')}</Chip>}
+                </td>
+                <td className="pk-small pk-muted pk-cell-full">
                   {treatmentsOf(r.id)
                     .map((id) => text(TREATMENTS.find((x) => x.id === id)!.name))
                     .join(', ') || '–'}
                 </td>
-                <td>
+                <td className="pk-cell-side">
                   <button
                     type="button"
                     role="switch"

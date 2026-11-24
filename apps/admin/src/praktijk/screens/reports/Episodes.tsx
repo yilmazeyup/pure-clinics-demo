@@ -82,7 +82,7 @@ export function Episodes({ period }: { period: Period }) {
           <Stat label={t('pk.rapportages.files.closed')} value={episodes - open} />
         </div>
         <TableWrap label={t('pk.rapportages.files.title')}>
-          <table className="pk-table">
+          <table className="pk-table pk-sticky-start">
             <thead>
               <tr>
                 <th>{t('pk.common.condition')}</th>
@@ -124,7 +124,7 @@ export function Episodes({ period }: { period: Period }) {
         }
       >
         <TableWrap label={t('pk.rapportages.complications.title')}>
-          <table className="pk-table">
+          <table className="pk-table pk-sticky-start">
             <thead>
               <tr>
                 <th>{t('pk.rapportages.complications.type')}</th>
@@ -200,7 +200,7 @@ export function Episodes({ period }: { period: Period }) {
           <Seg label={t('pk.common.location')} value={where} onChange={setWhere} options={LOCATIONS.map((l) => ({ value: l.id, label: l.city }))} />
         </div>
         <TableWrap label={t('pk.rapportages.occupancy.title')}>
-          <table className="pk-table pk-rp-heat">
+          <table className="pk-table pk-rp-heat pk-sticky-start">
             <thead>
               <tr>
                 <th>{t('pk.rapportages.occupancy.agenda')}</th>

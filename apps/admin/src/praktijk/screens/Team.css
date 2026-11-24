@@ -465,3 +465,10 @@
 .pk-table.pk-tm-access .pk-tm-agenda-head {
   font-size: 11.5px;
 }
+
+@media (max-width: 900px), (pointer: coarse) {
+  /* Schedule slots are buttons: tall enough for a finger. */
+  .pk-tm-slot {
+    height: 40px;
+  }
+}

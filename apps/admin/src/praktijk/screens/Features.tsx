@@ -6,6 +6,7 @@ import { EXTRAS, FEATURE_GROUPS, FEATURES, type Feature } from '../features';
 import { PkIcon } from '../icons';
 import { Card, Chip } from '../kit';
 import { SCREENS, type ScreenId } from '../nav';
+import './responsive.css';
 import './Features.css';
 
 /** Lower case without accents, so "clienten" finds "Cliënten". */

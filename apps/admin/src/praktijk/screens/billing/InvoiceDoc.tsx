@@ -94,7 +94,7 @@ export function InvoiceDoc({ invoice, layout, claim }: { invoice: Invoice; layou
         </dl>
       </div>
 
-      <div className="pk-bi-doc-lines-wrap">
+      <div className="pk-bi-doc-lines-wrap pk-scroll-x">
         <table className="pk-bi-doc-lines">
           <thead>
             <tr>

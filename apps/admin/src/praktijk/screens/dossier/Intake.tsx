@@ -59,7 +59,7 @@ function IntakeCard({ client, state, update }: Props) {
           />
         </Field>
       </div>
-      <ul className="pk-list">
+      <ul className="pk-list pk-ds-intake-list">
         {state.episodes.map((e) => (
           <li key={e.id}>
             <PkIcon name="clipboard" size={17} />
@@ -330,7 +330,7 @@ function IcfCard({ state, update }: { state: DossierState; update: Update }) {
       }
     >
       <TableWrap label={t('pk.dossier.icf.title')}>
-        <table className="pk-table">
+        <table className="pk-table pk-cards">
           <thead>
             <tr>
               <th>{t('pk.dossier.icf.code')}</th>
@@ -342,9 +342,9 @@ function IcfCard({ state, update }: { state: DossierState; update: Update }) {
           <tbody>
             {state.icf.map((row) => (
               <tr key={row.code}>
-                <td className="pk-mono">{row.code}</td>
-                <td>{t(`pk.dossier.icf.${row.code}`)}</td>
-                <td>
+                <td className="pk-mono pk-cell-check">{row.code}</td>
+                <td className="pk-cell-main">{t(`pk.dossier.icf.${row.code}`)}</td>
+                <td data-label={t('pk.dossier.icf.qualifier')}>
                   <select
                     className="pk-input pk-ds-q-select"
                     value={row.qualifier}
@@ -358,7 +358,7 @@ function IcfCard({ state, update }: { state: DossierState; update: Update }) {
                     ))}
                   </select>
                 </td>
-                <td className="end">
+                <td className="end pk-cell-side">
                   <button className="icon-button small" aria-label={t('pk.common.delete')} onClick={() => set(state.icf.filter((x) => x.code !== row.code))}>
                     <PkIcon name="trash" size={15} />
                   </button>

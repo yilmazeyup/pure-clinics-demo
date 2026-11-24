@@ -184,7 +184,7 @@ function ChangeLog() {
   return (
     <Card feature="x.log" eyebrow={t('pk.instellingen.avg.logEyebrow')} title={t('pk.instellingen.avg.logTitle')} help={t('pk.instellingen.avg.logHelp')}>
       <TableWrap label={t('pk.instellingen.avg.logTitle')}>
-        <table className="pk-table">
+        <table className="pk-table pk-cards">
           <thead>
             <tr>
               <th>{t('pk.common.time')}</th>
@@ -196,14 +196,14 @@ function ChangeLog() {
           <tbody>
             {AUDIT.map((a) => (
               <tr key={a.id}>
-                <td className="nowrap pk-num">
+                <td className="nowrap pk-num pk-cell-main">
                   {i18n.clock(at(a.minutesAgo))} <small className="pk-muted">· {i18n.ago(at(a.minutesAgo), now)}</small>
                 </td>
-                <td className="nowrap">
+                <td className="nowrap pk-cell-inline">
                   {staffById(a.who).name} <span className="pk-tm-code">{staffById(a.who).code}</span>
                 </td>
-                <td>{t(a.key, a.args)}</td>
-                <td>
+                <td className="pk-cell-full">{t(a.key, a.args)}</td>
+                <td className="pk-cell-side">
                   <Chip tone="outline">{t(`pk.instellingen.avg.obj.${a.object}`)}</Chip>
                 </td>
               </tr>

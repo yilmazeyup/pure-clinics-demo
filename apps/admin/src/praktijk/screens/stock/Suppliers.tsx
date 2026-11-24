@@ -44,7 +44,7 @@ export function Suppliers() {
                 ]}
               />
               <TableWrap label={s.name}>
-                <table className="pk-table pk-st-supplier-table">
+                <table className="pk-table pk-st-supplier-table pk-cards">
                   <thead>
                     <tr>
                       <th>{t('pk.voorraad.levels.product')}</th>
@@ -63,11 +63,11 @@ export function Suppliers() {
                       const net = d.price / (1 + d.vat / 100);
                       return (
                         <tr key={p.id}>
-                          <td>
+                          <td className="pk-cell-main">
                             {name(p.id)}
                             <small className="pk-muted pk-st-block">{money(d.price)}</small>
                           </td>
-                          <td className="end">
+                          <td className="end" data-label={t('pk.voorraad.levels.purchase')}>
                             <input
                               type="number"
                               step="0.01"
@@ -79,7 +79,7 @@ export function Suppliers() {
                             />
                           </td>
                           {LOCATIONS.map((l) => (
-                            <td key={l.id} className="end">
+                            <td key={l.id} className="end" data-label={t('pk.voorraad.suppliers.minCity', { city: l.city })}>
                               <input
                                 type="number"
                                 min={0}
@@ -90,7 +90,9 @@ export function Suppliers() {
                               />
                             </td>
                           ))}
-                          <td className="end pk-num">{net > 0 ? pct((net - d.purchase) / net) : '–'}</td>
+                          <td className="end pk-num" data-label={t('pk.voorraad.suppliers.margin')}>
+                            {net > 0 ? pct((net - d.purchase) / net) : '–'}
+                          </td>
                         </tr>
                       );
                     })}

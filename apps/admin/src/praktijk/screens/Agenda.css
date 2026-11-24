@@ -818,3 +818,31 @@
     max-width: 180px;
   }
 }
+
+/* The time grid scrolls sideways inside its own box; where the browser supports scroll timelines its far edge fades
+   while more rooms or days are hidden (see responsive.css). The time column stays sharp. */
+@supports (animation-timeline: scroll()) {
+  .pk-ag-scroll {
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - var(--pk-fade-end)), rgba(0, 0, 0, 0.08) 100%);
+    mask-image: linear-gradient(to right, #000 calc(100% - var(--pk-fade-end)), rgba(0, 0, 0, 0.08) 100%);
+    animation: pk-edge-fade linear both;
+    animation-timeline: scroll(self inline);
+  }
+
+  [dir='rtl'] .pk-ag-scroll {
+    -webkit-mask-image: linear-gradient(to left, #000 calc(100% - var(--pk-fade-end)), rgba(0, 0, 0, 0.08) 100%);
+    mask-image: linear-gradient(to left, #000 calc(100% - var(--pk-fade-end)), rgba(0, 0, 0, 0.08) 100%);
+  }
+}
+
+@media (max-width: 640px) {
+  /* "View as" and the week's agenda get the full width of the toolbar, so their names are not cut short. */
+  .pk-ag-pick {
+    flex: 1 1 100%;
+  }
+
+  .pk-ag-pick .pk-input {
+    flex: 1 1 auto;
+    max-width: none;
+  }
+}

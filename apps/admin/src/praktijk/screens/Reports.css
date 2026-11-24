@@ -567,3 +567,27 @@
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
 }
+
+@media (max-width: 640px) {
+  /* The staff table keeps its first column fixed while the figures scroll; on a phone that column is just the face
+     and the name. */
+  .pk-sticky-start .pk-rp-person small {
+    display: none;
+  }
+
+  .pk-sticky-start .pk-rp-person {
+    gap: 8px;
+  }
+
+  /* The top ten as cards: rank, name and revenue on top. */
+  .pk-rp-top.pk-cards .pk-rp-rank {
+    width: 22px;
+    font-size: 17px;
+    line-height: 1;
+  }
+
+  .pk-rp-top.pk-cards .pk-rp-link {
+    white-space: normal;
+    text-align: start;
+  }
+}

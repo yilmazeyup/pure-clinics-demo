@@ -307,7 +307,7 @@ function HistoryCard({ episode }: { episode: DsEpisode }) {
   return (
     <Card className="span-7" eyebrow={t('pk.dossier.ep.history')} title={t('pk.dossier.ep.history')} feature="e.history">
       <TableWrap label={t('pk.dossier.ep.history')}>
-        <table className="pk-table">
+        <table className="pk-table pk-cards">
           <thead>
             <tr>
               <th>{t('pk.common.date')}</th>
@@ -319,14 +319,14 @@ function HistoryCard({ episode }: { episode: DsEpisode }) {
           <tbody>
             {[...episode.history].reverse().map((s, i) => (
               <tr key={i}>
-                <td className="nowrap pk-num">{i18n.dayMonth(s.date, today)}</td>
-                <td>
+                <td className="nowrap pk-num pk-cell-inline">{i18n.dayMonth(s.date, today)}</td>
+                <td className="pk-cell-main">
                   <span className="pk-ds-cell">
                     {i18n.text(treatmentById(s.treatment).name)}
                     {s.note ? <small className="pk-muted">{t(s.note)}</small> : null}
                   </span>
                 </td>
-                <td className="nowrap">
+                <td className="nowrap pk-cell-inline">
                   {specialistById(s.specialist).name}
                   {s.agenda ? (
                     <>
@@ -335,7 +335,7 @@ function HistoryCard({ episode }: { episode: DsEpisode }) {
                     </>
                   ) : null}
                 </td>
-                <td className="end nowrap">{s.price ? money(s.price) : t('pk.dossier.ep.free')}</td>
+                <td className="end nowrap pk-cell-side">{s.price ? money(s.price) : t('pk.dossier.ep.free')}</td>
               </tr>
             ))}
           </tbody>

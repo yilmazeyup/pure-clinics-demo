@@ -192,7 +192,7 @@ function History({ checks }: { checks: CashCheck[] }) {
     <>
       <h3 className="pk-subtitle pk-bi-gap">{t('pk.facturen.cash.history')}</h3>
       <TableWrap label={t('pk.facturen.cash.history')}>
-        <table className="pk-table">
+        <table className="pk-table pk-cards">
           <thead>
             <tr>
               <th>{t('pk.facturen.cash.period')}</th>
@@ -204,12 +204,16 @@ function History({ checks }: { checks: CashCheck[] }) {
           <tbody>
             {checks.map((c) => (
               <tr key={c.id}>
-                <td className="nowrap">
+                <td className="nowrap pk-cell-main">
                   {dmy(c.start)} – {c.finalisedAt ? dmy(c.finalisedAt) : ''}
                 </td>
-                <td className="end">{money(c.startBalance)}</td>
-                <td className="end">{c.recount === null ? '—' : money(c.recount)}</td>
-                <td>
+                <td className="end" data-label={t('pk.facturen.cash.startBalance')}>
+                  {money(c.startBalance)}
+                </td>
+                <td className="end" data-label={t('pk.facturen.cash.recount')}>
+                  {c.recount === null ? '—' : money(c.recount)}
+                </td>
+                <td className="pk-cell-side">
                   {c.difference ? <Chip tone="warn">{t('pk.facturen.cash.diff', { amount: money(c.difference) })}</Chip> : <Chip tone="good">{t('pk.facturen.cash.match')}</Chip>}
                 </td>
               </tr>

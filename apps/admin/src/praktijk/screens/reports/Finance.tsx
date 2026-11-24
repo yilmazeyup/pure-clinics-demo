@@ -237,7 +237,7 @@ export function Finance({ period }: { period: Period }) {
         }
       >
         <TableWrap label={t('pk.rapportages.staff.title')}>
-          <table className="pk-table">
+          <table className="pk-table pk-sticky-start">
             <thead>
               <tr>
                 <th>{t('pk.common.employee')}</th>
@@ -308,7 +308,7 @@ export function Finance({ period }: { period: Period }) {
           <Stat label={t('pk.rapportages.gift.open')} value={money(open)} />
         </div>
         <TableWrap label={t('pk.rapportages.gift.title')}>
-          <table className="pk-table">
+          <table className="pk-table pk-cards">
             <thead>
               <tr>
                 <th>{t('pk.rapportages.gift.code')}</th>
@@ -324,12 +324,16 @@ export function Finance({ period }: { period: Period }) {
                 const status = giftStatus(c);
                 return (
                   <tr key={c.code}>
-                    <td className="pk-mono">{c.code.replace(/(\d{4})(\d{4})/, '$1 $2')}</td>
-                    <td className="nowrap">{dayMonth(c.issued, now)}</td>
-                    <td>{LOCATIONS.find((l) => l.id === c.locationId)?.city}</td>
-                    <td className="end nowrap">{money(c.amount)}</td>
-                    <td className="end nowrap">{money(c.balance)}</td>
-                    <td>
+                    <td className="pk-mono pk-cell-main">{c.code.replace(/(\d{4})(\d{4})/, '$1 $2')}</td>
+                    <td className="nowrap pk-cell-inline">{dayMonth(c.issued, now)}</td>
+                    <td className="pk-cell-inline">{LOCATIONS.find((l) => l.id === c.locationId)?.city}</td>
+                    <td className="end nowrap pk-cell-half" data-label={t('pk.rapportages.gift.value')}>
+                      {money(c.amount)}
+                    </td>
+                    <td className="end nowrap pk-cell-half" data-label={t('pk.rapportages.gift.balance')}>
+                      {money(c.balance)}
+                    </td>
+                    <td className="pk-cell-side">
                       <Chip tone={status === 'active' ? 'good' : status === 'partly' ? 'brand' : status === 'draft' ? 'warn' : 'outline'}>
                         {t(`pk.rapportages.gift.status.${status}`)}
                       </Chip>
@@ -379,7 +383,7 @@ export function Finance({ period }: { period: Period }) {
           </label>
         </div>
         <TableWrap label={t('pk.rapportages.share.title')}>
-          <table className="pk-table">
+          <table className="pk-table pk-sticky-start">
             <thead>
               <tr>
                 <th>{t('pk.rapportages.share.month')}</th>

@@ -924,3 +924,120 @@
     width: auto;
   }
 }
+
+@media (max-width: 640px) {
+  /* An invoice as a card: client and total on top, number with date and the status under it, how it was paid last. */
+  .pk-bi-table.pk-cards > tbody > tr::before,
+  .pk-bi-table.pk-cards > tbody > tr::after {
+    content: none;
+  }
+
+  .pk-bi-table.pk-cards > tbody > tr > td {
+    margin-block: 0;
+  }
+
+  .pk-bi-table.pk-cards > tbody > tr {
+    display: grid;
+    padding: 12px 14px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'client total'
+      'num status'
+      'method status';
+    gap: 4px 12px;
+    align-items: center;
+  }
+
+  .pk-bi-table.pk-cards td {
+    white-space: normal;
+  }
+
+  .pk-bi-table.pk-cards .pk-bi-c-client {
+    grid-area: client;
+    font-weight: 500;
+  }
+
+  .pk-bi-table.pk-cards .pk-bi-c-client .pk-bi-mixed,
+  .pk-bi-table.pk-cards .pk-bi-c-num .pk-bi-mixed {
+    font-weight: 400;
+  }
+
+  .pk-bi-table.pk-cards .pk-bi-c-total {
+    grid-area: total;
+    font-weight: 500;
+    text-align: end;
+  }
+
+  .pk-bi-table.pk-cards .pk-bi-c-num {
+    grid-area: num;
+  }
+
+  .pk-bi-table.pk-cards .pk-bi-c-num .pk-bi-mixed {
+    display: inline;
+    margin-inline-start: 8px;
+  }
+
+  .pk-bi-table.pk-cards .pk-bi-c-method {
+    grid-area: method;
+    font-size: 12px;
+  }
+
+  .pk-bi-table.pk-cards .pk-bi-c-status {
+    grid-area: status;
+    justify-self: end;
+  }
+
+  /* The invoice itself, on a phone or in a dialog: tighter columns so the amount column stays in view. */
+  .pk-bi-doc {
+    padding: 18px 14px;
+  }
+
+  .pk-bi-doc-lines th {
+    padding: 8px 4px;
+    font-size: 9.5px;
+    letter-spacing: 0.05em;
+  }
+
+  .pk-bi-doc-lines td {
+    padding: 8px 4px;
+    font-size: 12.5px;
+  }
+
+  /* Rest amounts: client and amount on one line, the two buttons on the next. */
+  .pk-bi-rest > .pk-row {
+    flex: 1 1 100%;
+  }
+
+  .pk-bi-rest > .pk-row .btn {
+    flex: 1 1 0;
+    justify-content: center;
+  }
+
+  /* Open invoices: the reminder and pay buttons share the card's last line. */
+  .pk-bi-open.pk-cards .pk-bi-rowactions {
+    justify-content: flex-start;
+  }
+
+  .pk-bi-open.pk-cards .pk-bi-rowactions .btn {
+    flex: 1 1 0;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 900px), (pointer: coarse) {
+  /* Payment methods and gift card amounts are buttons: tall enough for a finger. */
+  .pk-bi-methods button,
+  .pk-bi-amount {
+    min-height: 40px;
+  }
+
+  .pk-bi-swatch {
+    position: relative;
+  }
+
+  .pk-bi-swatch::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+  }
+}

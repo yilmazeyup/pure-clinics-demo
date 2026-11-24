@@ -558,7 +558,7 @@ export function Newsletter({ jump }: { jump: { feature: string; at: number } | n
       <div className="pk-grid">
         <Card feature="q.newsSend" className="span-8" eyebrow={t('pk.berichten.news.step3')} title={t('pk.berichten.news.overview')}>
           <TableWrap label={t('pk.berichten.news.overview')}>
-            <table className="pk-table">
+            <table className="pk-table pk-cards">
               <thead>
                 <tr>
                   <th>{t('pk.common.date')}</th>
@@ -571,10 +571,12 @@ export function Newsletter({ jump }: { jump: { feature: string; at: number } | n
               <tbody>
                 {log.map((n) => (
                   <tr key={n.id}>
-                    <td className="nowrap">{dayMonth(n.at, today)}</td>
-                    <td>{n.subject ?? (n.subjectKey ? t(n.subjectKey) : '')}</td>
-                    <td className="end">{num(n.recipients)}</td>
-                    <td>
+                    <td className="nowrap pk-cell-inline">{dayMonth(n.at, today)}</td>
+                    <td className="pk-cell-main">{n.subject ?? (n.subjectKey ? t(n.subjectKey) : '')}</td>
+                    <td className="end pk-cell-half" data-label={t('pk.berichten.news.colRecipients')}>
+                      {num(n.recipients)}
+                    </td>
+                    <td className="pk-cell-half" data-label={t('pk.berichten.news.colOpened')}>
                       {n.opened !== null ? (
                         <span className="pk-me-open">
                           <Bar value={n.opened} tone="good" />
@@ -584,7 +586,7 @@ export function Newsletter({ jump }: { jump: { feature: string; at: number } | n
                         <span className="pk-muted">—</span>
                       )}
                     </td>
-                    <td>{n.draft ? <Chip tone="outline">{t('pk.berichten.news.draft')}</Chip> : <Chip tone="good">{t('pk.berichten.news.sentStatus')}</Chip>}</td>
+                    <td className="pk-cell-side">{n.draft ? <Chip tone="outline">{t('pk.berichten.news.draft')}</Chip> : <Chip tone="good">{t('pk.berichten.news.sentStatus')}</Chip>}</td>
                   </tr>
                 ))}
               </tbody>
@@ -611,7 +613,7 @@ export function Newsletter({ jump }: { jump: { feature: string; at: number } | n
       <Modal open={showRecipients} title={t('pk.berichten.news.recipientsTitle')} onClose={() => setShowRecipients(false)} wide>
         <p className="pk-muted pk-small">{t('pk.berichten.news.consent')}</p>
         <TableWrap label={t('pk.berichten.news.recipientsTitle')}>
-          <table className="pk-table">
+          <table className="pk-table pk-cards">
             <thead>
               <tr>
                 <th>{t('pk.common.client')}</th>
@@ -622,11 +624,11 @@ export function Newsletter({ jump }: { jump: { feature: string; at: number } | n
             <tbody>
               {recipients.slice(0, 250).map((c) => (
                 <tr key={c.id}>
-                  <td>
+                  <td className="pk-cell-main">
                     {c.first} {c.last}
                   </td>
-                  <td className="pk-mono">{c.email}</td>
-                  <td>{c.city}</td>
+                  <td className="pk-mono pk-cell-full">{c.email}</td>
+                  <td className="pk-cell-side pk-muted">{c.city}</td>
                 </tr>
               ))}
             </tbody>

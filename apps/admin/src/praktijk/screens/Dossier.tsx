@@ -12,7 +12,9 @@ import { LogTab } from './dossier/Log';
 import { MediaTab } from './dossier/Media';
 import { ReportsTab } from './dossier/Reports';
 import { useDossier } from './dossier/useDossier';
+import './responsive.css';
 import './Dossier.css';
+import { useTabInView } from './useTabInView';
 
 type Tab = 'episodes' | 'intake' | 'reports' | 'media' | 'log';
 const TABS: Tab[] = ['episodes', 'intake', 'reports', 'media', 'log'];
@@ -75,6 +77,7 @@ export function DossierScreen() {
   const fallback = useMemo(() => defaultClient(list), [list]);
   const client = byId(clientId) ?? fallback;
   const [tab, setTab] = useState<Tab>('episodes');
+  useTabInView(tab);
 
   useEffect(() => {
     const tabFor = target?.feature ? FEATURE_TAB[target.feature] : undefined;

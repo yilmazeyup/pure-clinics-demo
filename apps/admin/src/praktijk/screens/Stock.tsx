@@ -10,7 +10,9 @@ import { Levels } from './stock/Levels';
 import { Orders } from './stock/Orders';
 import { Products } from './stock/Products';
 import { Suppliers } from './stock/Suppliers';
+import './responsive.css';
 import './Stock.css';
+import { useTabInView } from './useTabInView';
 
 type Tab = 'stock' | 'order' | 'suppliers' | 'products';
 
@@ -30,6 +32,7 @@ export function StockScreen() {
   const money = useMoney();
   const { stock, info, orders, booked, products } = useStock();
   const [tab, setTab] = useState<Tab>('stock');
+  useTabInView(tab);
 
   useEffect(() => {
     const next = target?.feature ? TAB_OF[target.feature] : undefined;

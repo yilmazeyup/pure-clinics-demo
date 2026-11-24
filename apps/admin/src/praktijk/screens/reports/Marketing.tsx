@@ -142,7 +142,7 @@ export function Marketing({ period }: { period: Period }) {
         }
       >
         <TableWrap label={t('pk.rapportages.top.title')}>
-          <table className="pk-table">
+          <table className="pk-table pk-cards pk-rp-top">
             <thead>
               <tr>
                 <th>#</th>
@@ -156,16 +156,20 @@ export function Marketing({ period }: { period: Period }) {
             <tbody>
               {top.map((r, i) => (
                 <tr key={r.client}>
-                  <td className="pk-rp-rank">{i + 1}</td>
-                  <td>
+                  <td className="pk-rp-rank pk-cell-check">{i + 1}</td>
+                  <td className="pk-cell-main">
                     <button className="pk-rp-link" onClick={() => go('dossier', { clientId: clientFor(r.client, r.clinic, today).id })}>
                       {isolate(r.client)}
                     </button>
                   </td>
-                  <td>{city(r.clinic)}</td>
-                  <td className="end">{r.visits}</td>
-                  <td className="nowrap">{dayMonth(r.last, now)}</td>
-                  <td className="end nowrap">
+                  <td className="pk-cell-inline">{city(r.clinic)}</td>
+                  <td className="end pk-cell-half" data-label={t('pk.rapportages.top.visits')}>
+                    {r.visits}
+                  </td>
+                  <td className="nowrap pk-cell-half" data-label={t('pk.rapportages.top.last')}>
+                    {dayMonth(r.last, now)}
+                  </td>
+                  <td className="end nowrap pk-cell-side">
                     <b>{eur(r.revenue)}</b>
                   </td>
                 </tr>
@@ -271,7 +275,7 @@ export function Marketing({ period }: { period: Period }) {
         </div>
         {matches.length && columns.length ? (
           <TableWrap label={t('pk.rapportages.builder.title')}>
-            <table className="pk-table">
+            <table className="pk-table pk-sticky-start">
               <thead>
                 <tr>
                   {columns.map((col) => (

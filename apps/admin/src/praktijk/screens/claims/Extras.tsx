@@ -104,7 +104,7 @@ export function PortalTab() {
       }
     >
       <TableWrap label={t('pk.declaraties.portal.title')}>
-        <table className="pk-table">
+        <table className="pk-table pk-cards">
           <thead>
             <tr>
               <th>{t('pk.declaraties.col.prestatie')}</th>
@@ -119,13 +119,13 @@ export function PortalTab() {
           <tbody>
             {PORTAL_TREATMENTS.map((tr) => (
               <tr key={tr.id}>
-                <td className="pk-mono">{codesOf(tr).prestatie}</td>
-                <td className="nowrap">{text(tr.name)}</td>
+                <td className="pk-mono pk-cell-side">{codesOf(tr).prestatie}</td>
+                <td className="nowrap pk-cell-main">{text(tr.name)}</td>
                 {contracted.map((i) => {
                   const now = priceFor(i.id, tr.id, Number(year));
                   const before = priceFor(i.id, tr.id, 2026);
                   return (
-                    <td key={i.id} className="end nowrap">
+                    <td key={i.id} className="end nowrap pk-cell-half" data-label={i.name}>
                       {money(now)}
                       {year === '2027' ? <small className="pk-dc-up">+{money(round2(now - before))}</small> : null}
                     </td>

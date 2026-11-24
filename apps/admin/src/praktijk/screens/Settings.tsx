@@ -8,7 +8,9 @@ import { IntegrationsTab } from './settings/Integrations';
 import { LocationsTab } from './settings/Locations';
 import { MasterTab } from './settings/Master';
 import { SupportTab } from './settings/Support';
+import './responsive.css';
 import './Settings.css';
+import { useTabInView } from './useTabInView';
 
 type Tab = 'locations' | 'master' | 'integrations' | 'avg' | 'support';
 
@@ -42,6 +44,7 @@ export function SettingsScreen() {
   const { t } = useI18n();
   const { target } = usePraktijk();
   const [tab, setTab] = useState<Tab>('locations');
+  useTabInView(tab);
 
   useEffect(() => {
     const feature = target?.feature;

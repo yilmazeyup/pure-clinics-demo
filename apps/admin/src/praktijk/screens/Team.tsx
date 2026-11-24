@@ -9,7 +9,9 @@ import { SchedulesTab } from './team/Schedules';
 import { SecurityTab } from './team/Security';
 import { useChosen, useMembers, useNarrow } from './team/shared';
 import { StaffTab } from './team/Staff';
+import './responsive.css';
 import './Team.css';
+import { useTabInView } from './useTabInView';
 
 type Tab = 'staff' | 'rights' | 'security' | 'schedules';
 
@@ -30,6 +32,7 @@ export function TeamScreen() {
   const { t, locale } = useI18n();
   const { target } = usePraktijk();
   const [tab, setTab] = useState<Tab>('staff');
+  useTabInView(tab);
   const [members] = useMembers();
   const [chosen, setChosen] = useChosen();
   const narrow = useNarrow();

@@ -11,8 +11,10 @@ import { ClaimStatusChip } from './billing/format';
 import { useBilling } from './billing/state';
 import { Coding } from './claims/Coding';
 import { AnbosTab, GdsTab, GphTab, PortalTab } from './claims/Extras';
+import './responsive.css';
 import './Billing.css';
 import './Claims.css';
+import { useTabInView } from './useTabInView';
 
 type Tab = 'vecozo' | 'gds' | 'portal' | 'anbos' | 'gph';
 
@@ -42,6 +44,7 @@ export function ClaimsScreen() {
   const { target } = usePraktijk();
   const billing = useBilling();
   const [tab, setTab] = useState<Tab>('vecozo');
+  useTabInView(tab);
   const [side, setSide] = useState<'debit' | 'credit'>('debit');
 
   useEffect(() => {
@@ -219,7 +222,7 @@ function VecozoTab({ billing, side, onSide }: { billing: ReturnType<typeof useBi
                       </button>
                     </header>
                     <TableWrap label={insurer.name}>
-                      <table className="pk-table pk-dc-table">
+                      <table className="pk-table pk-dc-table pk-dc-claims pk-cards">
                         <thead>
                           <tr>
                             <th />
@@ -457,7 +460,7 @@ function CreditSide({ billing, credit, readyCredit, onSend, sending, onSelect }:
 
       {credit.length ? (
         <TableWrap label={t('pk.declaraties.vecozo.credit', { n: credit.length })}>
-          <table className="pk-table pk-dc-table">
+          <table className="pk-table pk-dc-table pk-cards">
             <thead>
               <tr>
                 <th>{t('pk.common.client')}</th>
@@ -471,12 +474,12 @@ function CreditSide({ billing, credit, readyCredit, onSend, sending, onSelect }:
             <tbody>
               {credit.map((c) => (
                 <tr key={c.id} className="pk-bi-row" onClick={() => onSelect(c.creditOf ?? c.id)}>
-                  <td className="nowrap">{c.client}</td>
-                  <td className="nowrap">{insurerById(c.insurer).name}</td>
-                  <td className="nowrap">{dmy(c.date)}</td>
-                  <td className="nowrap pk-muted">{c.invoiceNumber ?? '—'}</td>
-                  <td className="end nowrap pk-bi-neg">{money(round2(c.amount))}</td>
-                  <td>
+                  <td className="nowrap pk-cell-main">{c.client}</td>
+                  <td className="nowrap pk-cell-inline">{insurerById(c.insurer).name}</td>
+                  <td className="nowrap pk-cell-inline">{dmy(c.date)}</td>
+                  <td className="nowrap pk-muted pk-cell-inline">{c.invoiceNumber ?? '—'}</td>
+                  <td className="end nowrap pk-bi-neg pk-cell-side">{money(round2(c.amount))}</td>
+                  <td className="pk-cell-inline">
                     <ClaimStatusChip status={c.status} side="credit" />
                   </td>
                 </tr>

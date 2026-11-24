@@ -15,7 +15,9 @@ import { InvoiceDoc } from './billing/InvoiceDoc';
 import { KassaTab } from './billing/Kassa';
 import { LayoutTab } from './billing/Layout';
 import { daysBetween, useBilling } from './billing/state';
+import './responsive.css';
 import './Billing.css';
+import { useTabInView } from './useTabInView';
 
 type Tab = 'invoices' | 'kassa' | 'gift' | 'cash' | 'layout';
 type Filter = 'all' | 'concept' | 'open' | 'paid' | 'insurer' | 'credit';
@@ -53,6 +55,7 @@ export function BillingScreen() {
   const { target } = usePraktijk();
   const billing = useBilling();
   const [tab, setTab] = useState<Tab>('invoices');
+  useTabInView(tab);
   const [selected, setSelected] = useState<string | null>(() => billing.invoices.find((i) => i.status === 'concept')?.id ?? null);
   const [preview, setPreview] = useState<Invoice | null>(null);
   const [crediting, setCrediting] = useState<Invoice | null>(null);
@@ -251,7 +254,7 @@ function InvoicesTab({ billing, selected, onSelect, onPreview, onCredit }: TabPr
             />
           </div>
           <TableWrap label={t('pk.facturen.list.title')}>
-            <table className="pk-table pk-bi-table">
+            <table className="pk-table pk-bi-table pk-cards">
               <thead>
                 <tr>
                   <th>{t('pk.facturen.doc.number')}</th>
@@ -267,18 +270,18 @@ function InvoicesTab({ billing, selected, onSelect, onPreview, onCredit }: TabPr
                   const mixed = inv.lines.some((l) => l.ref.type === 'product' || l.ref.type === 'package') && inv.lines.some((l) => l.ref.type === 'treatment');
                   return (
                     <tr key={inv.id} aria-selected={inv.id === selected} onClick={() => select(inv.id)} className="pk-bi-row">
-                      <td className="nowrap">
+                      <td className="nowrap pk-bi-c-num">
                         <span className="pk-mono">{inv.number ?? '—'}</span>
                         <small className="pk-bi-mixed">{dmy(inv.date)}</small>
                       </td>
-                      <td className="nowrap">
+                      <td className="nowrap pk-bi-c-client">
                         {inv.client}
                         <small className="pk-bi-mixed">
                           {t(KIND_KEY[inv.kind])}
                           {mixed ? ` · ${t('pk.facturen.list.mixed')}` : ''}
                         </small>
                       </td>
-                      <td className="nowrap pk-muted">
+                      <td className="nowrap pk-muted pk-bi-c-method">
                         {inv.payer === 'insurer'
                           ? insurerById(clientFor(inv.short, inv.locationId, today).insurer).name
                           : inv.payments.length
@@ -287,8 +290,8 @@ function InvoicesTab({ billing, selected, onSelect, onPreview, onCredit }: TabPr
                               ? t(METHOD_KEY.account)
                               : '—'}
                       </td>
-                      <td className="end nowrap">{money(sums.total)}</td>
-                      <td>
+                      <td className="end nowrap pk-bi-c-total">{money(sums.total)}</td>
+                      <td className="pk-bi-c-status">
                         <InvoiceStatus invoice={inv} />
                       </td>
                     </tr>
@@ -309,7 +312,7 @@ function InvoicesTab({ billing, selected, onSelect, onPreview, onCredit }: TabPr
         <Card eyebrow={t('pk.facturen.open.eyebrow')} title={t('pk.facturen.open.title')} help={t('pk.facturen.open.help', { term: layout.term })} feature="i.open">
           {open.length ? (
             <TableWrap label={t('pk.facturen.open.title')}>
-              <table className="pk-table pk-bi-open">
+              <table className="pk-table pk-bi-open pk-cards">
                 <thead>
                   <tr>
                     <th>{t('pk.common.client')}</th>
@@ -323,11 +326,11 @@ function InvoicesTab({ billing, selected, onSelect, onPreview, onCredit }: TabPr
                     const days = daysBetween(inv.date, now);
                     return (
                       <tr key={inv.id}>
-                        <td className="nowrap">
+                        <td className="nowrap pk-cell-main">
                           {inv.client}
                           <small className="pk-bi-mixed pk-mono">{inv.number}</small>
                         </td>
-                        <td className="nowrap">
+                        <td className="nowrap pk-cell-inline">
                           {days > layout.term ? (
                             <Chip tone="bad">{t('pk.facturen.open.overdue', { n: days })}</Chip>
                           ) : (
@@ -335,8 +338,8 @@ function InvoicesTab({ billing, selected, onSelect, onPreview, onCredit }: TabPr
                           )}
                           {inv.reminded ? <small className="pk-bi-reminded">{t('pk.facturen.open.reminded', { date: dmy(inv.reminded) })}</small> : null}
                         </td>
-                        <td className="end nowrap">{money(totals(inv).open)}</td>
-                        <td className="end nowrap">
+                        <td className="end nowrap pk-cell-side">{money(totals(inv).open)}</td>
+                        <td className="end nowrap pk-cell-full">
                           <span className="pk-row pk-bi-rowactions">
                             <button
                               type="button"

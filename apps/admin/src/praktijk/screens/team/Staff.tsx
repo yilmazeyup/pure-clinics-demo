@@ -49,7 +49,7 @@ function Employees() {
       }
     >
       <TableWrap label={t('pk.team.staffEyebrow')}>
-        <table className="pk-table">
+        <table className="pk-table pk-cards pk-tm-staff">
           <thead>
             <tr>
               <th>{t('pk.team.col.code')}</th>
@@ -66,20 +66,24 @@ function Employees() {
           <tbody>
             {members.map((m) => (
               <tr key={m.id} aria-selected={chosen === m.id} className={m.active ? '' : 'pk-tm-off'} onClick={() => setChosen(m.id)}>
-                <td>
+                <td className="pk-cell-check">
                   <span className="pk-tm-code">{m.code}</span>
                 </td>
-                <td>
+                <td className="pk-cell-main">
                   <span className="pk-tm-who">
                     <MemberPhoto member={m} size={30} />
                     <strong>{m.name}</strong>
                   </span>
                 </td>
-                <td className="nowrap">{t(roleKey(m.role))}</td>
-                <td className="nowrap">{m.role === 'beauty' ? 'Blanche Beauty Studio' : cityOf(m.locationId)}</td>
-                <td className="pk-mono nowrap">{m.agb || '–'}</td>
-                <td className="pk-mono">{m.email}</td>
-                <td onClick={(e) => e.stopPropagation()}>
+                <td className="nowrap pk-cell-inline">{t(roleKey(m.role))}</td>
+                <td className="nowrap pk-cell-inline">{m.role === 'beauty' ? 'Blanche Beauty Studio' : cityOf(m.locationId)}</td>
+                <td className="nowrap pk-cell-half" data-label={t('pk.team.col.agb')}>
+                  <span className="pk-mono">{m.agb || '–'}</span>
+                </td>
+                <td data-label={t('pk.team.col.email')}>
+                  <span className="pk-mono">{m.email}</span>
+                </td>
+                <td data-label={t('pk.team.col.profile')} onClick={(e) => e.stopPropagation()}>
                   <select
                     className="pk-input pk-tm-select"
                     value={m.profile}
@@ -93,8 +97,10 @@ function Employees() {
                     ))}
                   </select>
                 </td>
-                <td>{m.twofa ? <Chip tone="good" icon="shieldCheck">{t('pk.common.on')}</Chip> : <Chip tone="outline">{t('pk.common.off')}</Chip>}</td>
-                <td onClick={(e) => e.stopPropagation()}>
+                <td className="pk-cell-half" data-label={t('pk.team.col.twofa')}>
+                  {m.twofa ? <Chip tone="good" icon="shieldCheck">{t('pk.common.on')}</Chip> : <Chip tone="outline">{t('pk.common.off')}</Chip>}
+                </td>
+                <td className="pk-cell-side" onClick={(e) => e.stopPropagation()}>
                   <button
                     type="button"
                     role="switch"

@@ -230,7 +230,7 @@ function ChecklistCard({ state, update }: { state: DossierState; update: Update 
       </Field>
       <h3 className="pk-ds-h">{t('pk.dossier.chk.table')}</h3>
       <TableWrap label={t('pk.dossier.chk.table')}>
-        <table className="pk-table pk-ds-settings">
+        <table className="pk-table pk-ds-settings pk-cards">
           <thead>
             <tr>
               <th>{t('pk.dossier.chk.zone')}</th>
@@ -242,7 +242,7 @@ function ChecklistCard({ state, update }: { state: DossierState; update: Update 
           <tbody>
             {state.settings.map((row) => (
               <tr key={row.id}>
-                <td>
+                <td className="pk-cell-full">
                   <select className="pk-input" value={row.zone} onChange={(e) => setRow(row.id, { zone: e.target.value })}>
                     {LASER_ZONES.map((z) => (
                       <option key={z.id} value={z.id}>
@@ -252,7 +252,7 @@ function ChecklistCard({ state, update }: { state: DossierState; update: Update 
                   </select>
                 </td>
                 {(['energy', 'pulse', 'spot'] as const).map((f) => (
-                  <td key={f}>
+                  <td key={f} data-label={t(`pk.dossier.chk.${f}`)}>
                     <input className="pk-input pk-num pk-ds-narrow" inputMode="decimal" value={row[f]} onChange={(e) => setRow(row.id, { [f]: e.target.value })} />
                   </td>
                 ))}
@@ -282,7 +282,7 @@ function CosmeticReport({ state, update }: { state: DossierState; update: Update
       <div data-feature="g.lots">
         <h3 className="pk-ds-h">{t('pk.dossier.lot.title')}</h3>
         <TableWrap label={t('pk.dossier.lot.title')}>
-          <table className="pk-table">
+          <table className="pk-table pk-cards">
             <thead>
               <tr>
                 <th>{t('pk.dossier.lot.product')}</th>
@@ -296,7 +296,7 @@ function CosmeticReport({ state, update }: { state: DossierState; update: Update
                 const expired = lot.expiry.getTime() < today.getTime();
                 return (
                   <tr key={lot.id}>
-                    <td>
+                    <td className="pk-cell-main">
                       <select
                         className="pk-input"
                         value={lot.product}
@@ -309,14 +309,14 @@ function CosmeticReport({ state, update }: { state: DossierState; update: Update
                         ))}
                       </select>
                     </td>
-                    <td>
+                    <td data-label={t('pk.dossier.lot.number')}>
                       <CommitInput
                         className="pk-input pk-mono pk-ds-lot"
                         value={lot.number}
                         onCommit={(number) => update((s) => ({ ...s, lots: s.lots.map((l) => (l.id === lot.id ? { ...l, number } : l)) }))}
                       />
                     </td>
-                    <td>
+                    <td data-label={t('pk.dossier.lot.expiry')}>
                       <input
                         className="pk-input"
                         type="date"
@@ -328,7 +328,7 @@ function CosmeticReport({ state, update }: { state: DossierState; update: Update
                         }}
                       />
                     </td>
-                    <td>
+                    <td className="pk-cell-side">
                       <Chip tone={expired ? 'bad' : 'good'}>{expired ? t('pk.dossier.lot.expired') : t('pk.dossier.lot.valid')}</Chip>
                     </td>
                   </tr>
@@ -356,7 +356,7 @@ function CosmeticReport({ state, update }: { state: DossierState; update: Update
       <div data-feature="g.injectables">
         <h3 className="pk-ds-h">{t('pk.dossier.inj.title')}</h3>
         <TableWrap label={t('pk.dossier.inj.title')}>
-          <table className="pk-table">
+          <table className="pk-table pk-cards">
             <thead>
               <tr>
                 <th>{t('pk.dossier.lot.product')}</th>
@@ -370,14 +370,14 @@ function CosmeticReport({ state, update }: { state: DossierState; update: Update
                 const set = (patch: Partial<typeof row>) => update((s) => ({ ...s, injectables: s.injectables.map((x) => (x.id === row.id ? { ...x, ...patch } : x)) }));
                 return (
                   <tr key={row.id}>
-                    <td className="nowrap">{name(row.product)}</td>
-                    <td>
+                    <td className="nowrap pk-cell-full">{name(row.product)}</td>
+                    <td data-label={t('pk.dossier.inj.batch')}>
                       <CommitInput className="pk-input pk-mono pk-ds-lot" value={row.batch} onCommit={(batch) => set({ batch })} />
                     </td>
-                    <td>
+                    <td data-label={t('pk.dossier.inj.dose')}>
                       <CommitInput className="pk-input pk-num pk-ds-narrow" value={row.dose} onCommit={(dose) => set({ dose })} />
                     </td>
-                    <td>
+                    <td data-label={t('pk.dossier.inj.needle')}>
                       <CommitInput className="pk-input pk-ds-needle" value={row.needle} onCommit={(needle) => set({ needle })} />
                     </td>
                   </tr>

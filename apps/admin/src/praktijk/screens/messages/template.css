@@ -119,3 +119,10 @@
   font-size: 11.5px;
   font-weight: 500;
 }
+
+@media (max-width: 900px), (pointer: coarse) {
+  /* Insertable tokens are buttons: tall enough for a finger. */
+  .pk-me-token {
+    height: 40px;
+  }
+}

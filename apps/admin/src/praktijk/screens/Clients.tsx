@@ -10,6 +10,7 @@ import { MergeDialog } from './clients/Merge';
 import { NewClientDialog } from './clients/NewClient';
 import { TransferDialog } from './clients/Transfer';
 import { useClients } from './clients/useClients';
+import './responsive.css';
 import './Clients.css';
 
 type MatchField = 'name' | 'birth' | 'email' | 'phone' | 'policy' | 'bsn';
@@ -116,7 +117,7 @@ export function ClientsScreen() {
 
         {results.length ? (
           <TableWrap label={t('pk.clienten.search.title')}>
-            <table className="pk-table pk-cl-table">
+            <table className="pk-table pk-cl-table pk-cards">
               <thead>
                 <tr>
                   <th>{t('pk.clienten.col.name')}</th>
@@ -131,7 +132,7 @@ export function ClientsScreen() {
               <tbody>
                 {results.slice(0, limit).map(({ c, on }) => (
                   <tr key={c.id} aria-selected={c.id === selectedId} onClick={() => look(c.id)}>
-                    <td>
+                    <td className="pk-cell-main">
                       <button className="pk-cl-name" onClick={(e) => { e.stopPropagation(); look(c.id); }}>
                         <strong>
                           {c.first} {c.last}
@@ -142,11 +143,11 @@ export function ClientsScreen() {
                       <small className="pk-cl-city">{c.city}</small>
                       {query.trim() && on !== 'name' ? <small className="pk-cl-on">{t('pk.clienten.search.on', { field: t(`pk.clienten.field.${on}`) })}</small> : null}
                     </td>
-                    <td className="nowrap pk-num">{dmy(c.birth)}</td>
-                    <td className="nowrap">{insurerById(c.insurer).name}</td>
-                    <td className="pk-mono">{c.policy || '—'}</td>
-                    <td>{cityOf(c.locationId)}</td>
-                    <td>
+                    <td className="nowrap pk-num pk-cell-inline">{dmy(c.birth)}</td>
+                    <td className="nowrap pk-cell-inline">{insurerById(c.insurer).name}</td>
+                    <td className="pk-mono pk-cell-inline">{c.policy || '—'}</td>
+                    <td className="pk-cell-inline">{cityOf(c.locationId)}</td>
+                    <td className="pk-cl-flagcell">
                       <span className="pk-cl-flags">
                         {(Object.keys(c.flags) as (keyof PracticeClient['flags'])[]).map((f) => (
                           <i key={f} className={c.flags[f] ? 'on' : ''} title={t(`pk.clienten.flag.${f}`)}>
@@ -155,7 +156,7 @@ export function ClientsScreen() {
                         ))}
                       </span>
                     </td>
-                    <td className="end">
+                    <td className="end pk-cell-side">
                       <button
                         className="icon-button small pk-cl-open"
                         title={t('pk.clienten.openFile')}
@@ -450,7 +451,7 @@ function MessageLog({ client, today }: { client: PracticeClient; today: Date }) 
   return (
     <Card className="span-6" eyebrow={t('pk.clienten.log.eyebrow')} title={t('pk.clienten.log.title')} feature="d.log" help={`${client.first} ${client.last} · ${client.email}`}>
       <TableWrap label={t('pk.clienten.log.title')}>
-        <table className="pk-table">
+        <table className="pk-table pk-cards">
           <thead>
             <tr>
               <th>{t('pk.common.date')}</th>
@@ -462,17 +463,17 @@ function MessageLog({ client, today }: { client: PracticeClient; today: Date }) 
           <tbody>
             {log.map((m) => (
               <tr key={m.id}>
-                <td className="nowrap pk-num">
+                <td className="nowrap pk-num pk-cell-main">
                   {i18n.dayMonth(m.at, today)} · {clock(m.at)}
                 </td>
-                <td>
+                <td className="pk-cell-inline">
                   <span className="pk-cl-channel">
                     <PkIcon name={CHANNEL_ICON[m.channel]} size={15} />
                     {t(`pk.clienten.log.channel.${m.channel}`)}
                   </span>
                 </td>
-                <td>{t(`pk.clienten.log.subject.${m.subject}`)}</td>
-                <td>
+                <td className="pk-cell-inline">{t(`pk.clienten.log.subject.${m.subject}`)}</td>
+                <td className="pk-cell-side">
                   <Chip tone={m.status === 'failed' ? 'bad' : m.status === 'opened' ? 'good' : 'neutral'}>{t(`pk.clienten.log.status.${m.status}`)}</Chip>
                 </td>
               </tr>

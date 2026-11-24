@@ -273,3 +273,37 @@
     max-width: none;
   }
 }
+
+@media (max-width: 640px) {
+  /* Stock rows as cards (see responsive.css): the minimum sits next to the level, the order contents stay a list. */
+  .pk-table.pk-cards .pk-st-min {
+    display: inline;
+  }
+
+  .pk-table.pk-cards td.pk-st-contents {
+    display: grid;
+    min-width: 0;
+  }
+
+  .pk-table.pk-cards .pk-st-product {
+    min-width: 0;
+  }
+
+  .pk-table.pk-cards .pk-st-actions .btn,
+  .pk-table.pk-cards .pk-st-delete {
+    flex: 1 1 0;
+  }
+
+  .pk-table.pk-cards .pk-st-actions {
+    display: flex;
+    width: 100%;
+  }
+
+  .pk-table.pk-cards .pk-st-actions .btn {
+    justify-content: center;
+  }
+
+  .pk-table.pk-cards .pk-st-delete {
+    justify-items: start;
+  }
+}

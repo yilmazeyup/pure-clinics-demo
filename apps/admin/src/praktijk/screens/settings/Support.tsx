@@ -103,7 +103,7 @@ function Import() {
         <div className="pk-stack">
           <p className="pk-small pk-muted">{t('pk.instellingen.imp.mapHelp', { file: file ?? '' })}</p>
           <TableWrap label={steps[2]}>
-            <table className="pk-table">
+            <table className="pk-table pk-cards">
               <thead>
                 <tr>
                   <th>{t('pk.instellingen.imp.column')}</th>
@@ -114,11 +114,11 @@ function Import() {
               <tbody>
                 {IMPORT_COLUMNS.map((c) => (
                   <tr key={c.column}>
-                    <td>
+                    <td className="pk-cell-main">
                       <strong>{c.column}</strong>
                     </td>
-                    <td className="pk-mono pk-muted">{c.sample}</td>
-                    <td>
+                    <td className="pk-mono pk-muted pk-cell-side">{c.sample}</td>
+                    <td className="pk-cell-full">
                       <select
                         className="pk-input pk-tm-select"
                         value={mapping[c.column]}

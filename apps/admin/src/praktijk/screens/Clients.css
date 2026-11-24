@@ -150,6 +150,7 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
+  white-space: nowrap;
 }
 
 .pk-cl-dup {
@@ -276,4 +277,17 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  /* A client as a card: name and the dossier button on top, birth date, insurer, policy and location under it, the
+     ticks at the end of that line. */
+  .pk-cl-table.pk-cards .pk-cl-flagcell {
+    flex: none;
+    margin-inline-start: auto;
+  }
+
+  .pk-cl-table.pk-cards .pk-cl-name strong {
+    white-space: normal;
+  }
 }

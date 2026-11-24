@@ -30,7 +30,7 @@ export function SchedulesTab() {
     <div className="pk-grid">
       <Card className="span-8" feature="s.schedules" eyebrow={t('pk.team.schEyebrow')} title={t('pk.team.schTitle')} help={t('pk.team.schHelp')}>
         <TableWrap label={t('pk.team.schEyebrow')}>
-          <table className="pk-table pk-tm-week">
+          <table className="pk-table pk-tm-week pk-sticky-start">
             <thead>
               <tr>
                 <th>{t('pk.team.col.name')}</th>

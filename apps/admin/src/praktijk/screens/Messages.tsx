@@ -11,7 +11,9 @@ import { PkIcon, type PkIconName } from '../icons';
 import { Avatar, Card, Chip, Empty, Field, Seg, Stat, TableWrap, Toggle } from '../kit';
 import { Newsletter } from './messages/Newsletter';
 import { TemplateEditor, TOKEN_ARGS, type Channel, type Token } from './messages/template';
+import './responsive.css';
 import './Messages.css';
+import { useTabInView } from './useTabInView';
 
 type Tab = 'reminders' | 'templates' | 'ai' | 'news' | 'notepad' | 'settings';
 
@@ -37,6 +39,7 @@ export function MessagesScreen() {
   const { t } = useI18n();
   const { target } = usePraktijk();
   const [tab, setTab] = useState<Tab>('reminders');
+  useTabInView(tab);
   const [jump, setJump] = useState<{ feature: string; at: number } | null>(null);
 
   useEffect(() => {
@@ -202,7 +205,7 @@ function Reminders() {
           {queue.length ? (
             <>
               <TableWrap label={t('pk.berichten.rem.queueTitle')}>
-                <table className="pk-table">
+                <table className="pk-table pk-cards">
                   <thead>
                     <tr>
                       <th>{t('pk.common.time')}</th>
@@ -218,11 +221,11 @@ function Reminders() {
                       const channels = channelsFor(a);
                       return (
                         <tr key={a.id}>
-                          <td className="pk-num">{clock(a.start)}</td>
-                          <td className="nowrap">{a.client}</td>
-                          <td>{text(a.treatment.name)}</td>
-                          <td>{cityOfAppt(a)}</td>
-                          <td>
+                          <td className="pk-num pk-cell-inline">{clock(a.start)}</td>
+                          <td className="nowrap pk-cell-main">{a.client}</td>
+                          <td className="pk-cell-inline">{text(a.treatment.name)}</td>
+                          <td className="pk-cell-inline">{cityOfAppt(a)}</td>
+                          <td className="pk-cell-side">
                             <span className="pk-me-channels">
                               {channels.length ? (
                                 channels.map((ch) => (
@@ -235,7 +238,7 @@ function Reminders() {
                               )}
                             </span>
                           </td>
-                          <td className="nowrap pk-muted">{channels.length ? t('pk.berichten.rem.queued', { time: settings.time }) : '—'}</td>
+                          <td className="nowrap pk-muted pk-cell-hide">{channels.length ? t('pk.berichten.rem.queued', { time: settings.time }) : '—'}</td>
                         </tr>
                       );
                     })}
@@ -258,7 +261,7 @@ function Reminders() {
         {log.length ? (
           <>
             <TableWrap label={t('pk.berichten.rem.logTitle')}>
-              <table className="pk-table">
+              <table className="pk-table pk-cards">
                 <thead>
                   <tr>
                     <th>{t('pk.common.sent')}</th>
@@ -273,13 +276,13 @@ function Reminders() {
                     const channels = channelsFor(a);
                     return (
                       <tr key={a.id}>
-                        <td className="pk-num pk-muted">{`02:0${Math.min(9, Math.floor(i / 6))}`}</td>
-                        <td className="nowrap">{a.client}</td>
-                        <td>{text(a.treatment.name)}</td>
-                        <td className="pk-num">
+                        <td className="pk-num pk-muted pk-cell-inline">{`02:0${Math.min(9, Math.floor(i / 6))}`}</td>
+                        <td className="nowrap pk-cell-main">{a.client}</td>
+                        <td className="pk-cell-inline">{text(a.treatment.name)}</td>
+                        <td className="pk-num pk-cell-inline">
                           {clock(a.start)} · {cityOfAppt(a)}
                         </td>
-                        <td>
+                        <td className="pk-cell-full">
                           <span className="pk-me-channels">{channels.length ? channels.map((ch) => status(a, ch)) : <Chip tone="outline">{t('pk.berichten.rem.noChannel')}</Chip>}</span>
                         </td>
                       </tr>

@@ -679,3 +679,21 @@
 [dir='rtl'] .pk-me-pointer .btn svg {
   transform: scaleX(-1);
 }
+
+@media (max-width: 640px) {
+  /* Reminder rows as cards (see responsive.css): one chip per channel, wrapping when a client has several. */
+  .pk-table.pk-cards .pk-me-channels {
+    flex-wrap: wrap;
+  }
+
+  /* The open rate fits next to its label in half a card line. */
+  .pk-table.pk-cards .pk-me-open {
+    min-width: 0;
+    gap: 6px;
+  }
+
+  .pk-table.pk-cards .pk-me-open .pk-bar {
+    width: 36px;
+    min-width: 0;
+  }
+}

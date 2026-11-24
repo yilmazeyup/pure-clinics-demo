@@ -76,7 +76,7 @@ export function Products() {
       </div>
 
       <TableWrap label={t('pk.voorraad.products.title')}>
-        <table className="pk-table">
+        <table className="pk-table pk-cards">
           <thead>
             <tr>
               <th>
@@ -103,16 +103,20 @@ export function Products() {
               const left = total(p.id);
               return (
                 <tr key={p.id} aria-selected={picked.includes(p.id)}>
-                  <td>
+                  <td className="pk-cell-check">
                     <input type="checkbox" className="pk-st-box" aria-label={name(p.id)} checked={picked.includes(p.id)} onChange={() => toggle(p.id)} />
                   </td>
-                  <td>{name(p.id)}</td>
-                  <td className="nowrap">{t(`pk.voorraad.cat.${p.category}`)}</td>
-                  <td className="pk-mono">{d.barcode}</td>
-                  <td className="end nowrap">{money(d.price)}</td>
-                  <td className="end pk-num">{d.vat}%</td>
-                  <td className="end pk-num">{left}</td>
-                  <td className="end">
+                  <td className="pk-cell-main">{name(p.id)}</td>
+                  <td className="nowrap pk-cell-inline">{t(`pk.voorraad.cat.${p.category}`)}</td>
+                  <td className="pk-mono pk-cell-inline">{d.barcode}</td>
+                  <td className="end nowrap pk-cell-side">{money(d.price)}</td>
+                  <td className="end pk-num pk-cell-half" data-label={t('pk.common.vat')}>
+                    {d.vat}%
+                  </td>
+                  <td className="end pk-num pk-cell-half" data-label={t('pk.voorraad.products.stock')}>
+                    {left}
+                  </td>
+                  <td className="end pk-cell-full">
                     <span className="pk-st-delete" title={left ? t('pk.voorraad.products.cantDelete', { n: left }) : undefined}>
                       <button
                         className="btn btn-ghost btn-small"

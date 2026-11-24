@@ -282,7 +282,7 @@ function DocsCard({ state, update }: { state: DossierState; update: Update }) {
       }
     >
       <TableWrap label={t('pk.dossier.doc.title')}>
-        <table className="pk-table">
+        <table className="pk-table pk-cards">
           <thead>
             <tr>
               <th>{t('pk.dossier.doc.type')}</th>
@@ -295,16 +295,16 @@ function DocsCard({ state, update }: { state: DossierState; update: Update }) {
           <tbody>
             {state.docs.map((d) => (
               <tr key={d.id}>
-                <td className="nowrap">
+                <td className="nowrap pk-cell-main">
                   <span className="pk-ds-doc">
                     <PkIcon name="file" size={15} />
                     {t(`pk.dossier.doc.${d.type}`)}
                   </span>
                 </td>
-                <td className="pk-mono">{d.name}</td>
-                <td className="nowrap">{i18n.dayMonth(d.date, today)}</td>
-                <td className="end nowrap">{t('pk.dossier.doc.kb', { n: num(d.kb) })}</td>
-                <td className="end">
+                <td className="pk-mono pk-cell-inline">{d.name}</td>
+                <td className="nowrap pk-cell-inline">{i18n.dayMonth(d.date, today)}</td>
+                <td className="end nowrap pk-cell-inline">{t('pk.dossier.doc.kb', { n: num(d.kb) })}</td>
+                <td className="end pk-cell-side">
                   <button className="btn btn-ghost btn-small" onClick={() => setViewing(d)}>
                     <PkIcon name="eye" size={14} />
                     {t('pk.common.view')}

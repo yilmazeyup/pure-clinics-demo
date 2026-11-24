@@ -83,7 +83,7 @@ export function Levels() {
         </div>
 
         <TableWrap label={t('pk.voorraad.levels.title')}>
-          <table className="pk-table">
+          <table className="pk-table pk-cards">
             <thead>
               <tr>
                 <th>{t('pk.voorraad.levels.product')}</th>
@@ -108,7 +108,7 @@ export function Levels() {
                 const diff = locations.reduce((s, l) => s + stock[l.id][p.id] - shown[l.id][p.id], 0);
                 return (
                   <tr key={p.id}>
-                    <td>
+                    <td className="pk-cell-main">
                       <span className="pk-st-product">
                         <strong>{name(p.id)}</strong>
                         <small className="pk-muted">{t(`pk.voorraad.cat.${p.category}`)}</small>
@@ -118,26 +118,30 @@ export function Levels() {
                       const level = shown[l.id][p.id];
                       const state = levelOf(level, d.min[l.id], p.soldOut);
                       return (
-                        <td key={l.id} className="end nowrap">
+                        <td key={l.id} className="end nowrap pk-cell-half" data-label={l.city}>
                           <span className={`pk-st-level pk-st-level--${state}`}>{level}</span>
                           <small className="pk-muted pk-st-min">{t('pk.voorraad.levels.min', { n: d.min[l.id] })}</small>
                         </td>
                       );
                     })}
                     {past ? (
-                      <td className="end pk-num">
+                      <td className="end pk-num pk-cell-half" data-label={t('pk.voorraad.past.diff')}>
                         <span dir="ltr" className={diff > 0 ? 'pk-st-plus' : diff < 0 ? 'pk-st-minus' : 'pk-muted'}>
                           {diff > 0 ? `+${diff}` : diff}
                         </span>
                       </td>
                     ) : null}
-                    <td>
+                    <td className="pk-cell-side">
                       <LevelChip level={worst} />
                     </td>
-                    <td className="end nowrap">{money(d.purchase)}</td>
-                    <td className="end nowrap">{money(d.price)}</td>
+                    <td className="end nowrap pk-cell-half" data-label={t('pk.voorraad.levels.purchase')}>
+                      {money(d.purchase)}
+                    </td>
+                    <td className="end nowrap pk-cell-half" data-label={t('pk.voorraad.levels.sale')}>
+                      {money(d.price)}
+                    </td>
                     {past ? null : (
-                      <td className="end">
+                      <td className="end pk-cell-full">
                         <span className="pk-st-actions">
                           <button
                             className="btn btn-ghost btn-small"
@@ -173,7 +177,7 @@ export function Levels() {
 
       <Card eyebrow={t('pk.voorraad.moves.eyebrow')} title={t('pk.voorraad.moves.title')} help={t('pk.voorraad.moves.help')}>
         <TableWrap label={t('pk.voorraad.moves.title')}>
-          <table className="pk-table">
+          <table className="pk-table pk-cards">
             <thead>
               <tr>
                 <th>{t('pk.voorraad.moves.when')}</th>
@@ -187,20 +191,20 @@ export function Levels() {
             <tbody>
               {moves.map((m: Move) => (
                 <tr key={m.id} className={m.id.startsWith('d-') ? 'pk-st-fresh' : ''}>
-                  <td className="nowrap">
+                  <td className="nowrap pk-cell-inline">
                     {dayMonth(m.at, now)} · {clock(m.at)}
                   </td>
-                  <td className="pk-st-wide">{name(m.product)}</td>
-                  <td>{cityOf(m.locationId)}</td>
-                  <td className="end pk-num">
+                  <td className="pk-st-wide pk-cell-main">{name(m.product)}</td>
+                  <td className="pk-cell-inline">{cityOf(m.locationId)}</td>
+                  <td className="end pk-num pk-cell-side">
                     <span dir="ltr" className={m.qty > 0 ? 'pk-st-plus' : 'pk-st-minus'}>
                       {m.qty > 0 ? `+${m.qty}` : m.qty}
                     </span>
                   </td>
-                  <td>
+                  <td className="pk-cell-inline">
                     <Chip tone={m.qty > 0 ? 'good' : 'neutral'}>{t(`pk.voorraad.reason.${m.reason}`)}</Chip>
                   </td>
-                  <td className="pk-mono">{staffById(m.by).code}</td>
+                  <td className="pk-mono pk-cell-inline">{staffById(m.by).code}</td>
                 </tr>
               ))}
             </tbody>

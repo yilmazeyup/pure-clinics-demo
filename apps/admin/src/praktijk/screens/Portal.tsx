@@ -35,7 +35,9 @@ import { PkIcon } from '../icons';
 import { Avatar, Bar, Card, Check, Chip, copyText, Field, Modal, Seg, Stat, TableWrap, Toggle, useDecimal } from '../kit';
 import { TemplateEditor, TOKEN_ARGS, type Token } from './messages/template';
 import { optionPrice, optionTitle, PortalPreview, type PortalConfig } from './portal/Preview';
+import './responsive.css';
 import './Portal.css';
+import { useTabInView } from './useTabInView';
 
 type Tab = 'intake' | 'rules' | 'look' | 'reach';
 
@@ -66,6 +68,7 @@ export function PortalScreen() {
   const { t, num } = i18n;
   const { now, today, target } = usePraktijk();
   const [tab, setTab] = useState<Tab>('intake');
+  useTabInView(tab);
 
   const [live, setLive] = useState(true);
   const [options, setOptions] = useState<IntakeOption[]>(SEED_OPTIONS);
@@ -220,7 +223,7 @@ function IntakeCard({ options, onOptions }: { options: IntakeOption[]; onOptions
       }
     >
       <TableWrap label={t('pk.portaal.intake.eyebrow')}>
-        <table className="pk-table">
+        <table className="pk-table pk-cards">
           <thead>
             <tr>
               <th>{t('pk.portaal.intake.visible')}</th>
@@ -234,7 +237,7 @@ function IntakeCard({ options, onOptions }: { options: IntakeOption[]; onOptions
           <tbody>
             {options.map((o) => (
               <tr key={o.id}>
-                <td>
+                <td className="pk-cell-check">
                   <button
                     type="button"
                     role="switch"
@@ -246,17 +249,19 @@ function IntakeCard({ options, onOptions }: { options: IntakeOption[]; onOptions
                     <i />
                   </button>
                 </td>
-                <td>
+                <td className="pk-cell-main">
                   <div className="pk-po-opt">
                     <b>{optionTitle(o, i18n)}</b>
                     {o.title ? <span className="pk-muted pk-small">{text(treatmentById(o.treatment).name)}</span> : null}
                   </div>
                   {o.featured ? <Chip tone="brand" icon="star">{t('pk.portaal.intake.featured')}</Chip> : null}
                 </td>
-                <td>{t(conditionById(o.condition).label)}</td>
-                <td>{o.practitioner === 'any' ? <span className="pk-muted">{t('pk.portaal.intake.anyone')}</span> : staffById(o.practitioner).name}</td>
-                <td className="nowrap">{optionPrice(o, i18n)}</td>
-                <td className="end">
+                <td className="pk-cell-inline">{t(conditionById(o.condition).label)}</td>
+                <td className="pk-cell-inline">
+                  {o.practitioner === 'any' ? <span className="pk-muted">{t('pk.portaal.intake.anyone')}</span> : staffById(o.practitioner).name}
+                </td>
+                <td className="nowrap pk-cell-inline">{optionPrice(o, i18n)}</td>
+                <td className="end pk-cell-side">
                   <button className="btn btn-ghost btn-small" onClick={() => setEditing({ option: o, isNew: false })}>
                     <PkIcon name="edit" size={14} />
                     {t('pk.common.edit')}

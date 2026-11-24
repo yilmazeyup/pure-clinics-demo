@@ -219,7 +219,7 @@ function Lockout() {
 
       <h3 className="pk-subtitle pk-tm-gap">{t('pk.team.attempts')}</h3>
       <TableWrap label={t('pk.team.attempts')}>
-        <table className="pk-table">
+        <table className="pk-table pk-cards">
           <thead>
             <tr>
               <th>{t('pk.team.col.when')}</th>
@@ -232,15 +232,15 @@ function Lockout() {
           <tbody>
             {attempts.map((a) => (
               <tr key={a.id}>
-                <td className="nowrap">
+                <td className="nowrap pk-cell-main">
                   {i18n.clock(at(a.minutesAgo))} <small className="pk-muted">· {ago(at(a.minutesAgo), now)}</small>
                 </td>
-                <td className="pk-mono">{a.email}</td>
-                <td>
+                <td className="pk-mono pk-cell-full">{a.email}</td>
+                <td className="pk-cell-side">
                   <Chip tone={tone[a.result]}>{t(`pk.team.result.${a.result}`)}</Chip>
                 </td>
-                <td className="nowrap">{t(`pk.team.device.${a.device}`)}</td>
-                <td className="pk-mono">{a.ip}</td>
+                <td className="nowrap pk-cell-inline">{t(`pk.team.device.${a.device}`)}</td>
+                <td className="pk-mono pk-cell-inline">{a.ip}</td>
               </tr>
             ))}
           </tbody>

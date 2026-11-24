@@ -33,7 +33,9 @@ import { AGENDAS, cityOf, clientById, conditionById, EQUIPMENT, practiceClients,
 import { findAppt, machineAppointments, planOptions, type PlanItem, type PlanOption, type Pos } from '../data/planner';
 import { PkIcon, type PkIconName } from '../icons';
 import { Avatar, Bar, Card, Check, Chip, Field, Modal, Seg, TableWrap, Toggle, useDecimal } from '../kit';
+import './responsive.css';
 import './Planner.css';
+import { useTabInView } from './useTabInView';
 
 type Tab = 'plan' | 'equipment' | 'availability' | 'occupancy';
 
@@ -61,6 +63,7 @@ export function PlannerScreen() {
   const { t } = useI18n();
   const { target } = usePraktijk();
   const [tab, setTab] = useState<Tab>('plan');
+  useTabInView(tab);
 
   useEffect(() => {
     const next = target?.feature ? FEATURE_TAB[target.feature] : undefined;
@@ -411,7 +414,7 @@ function PlanTab() {
           {sorted.length ? (
             <>
               <TableWrap label={t('pk.planner.results', { n: sorted.length })}>
-                <table className="pk-table pk-pl-table">
+                <table className="pk-table pk-pl-table pk-cards">
                   <thead>
                     <tr>
                       <th aria-label={t('pk.common.add')} />
@@ -586,23 +589,23 @@ function OptionRow({ option, equipment, checked, onCheck }: { option: PlanOption
   const machines = option.machines.map((m) => machineName(m, equipment)).filter(Boolean) as string[];
   return (
     <tr aria-selected={checked} onClick={() => onCheck(!checked)} className="pk-pl-row">
-      <td onClick={(e) => e.stopPropagation()}>
+      <td className="pk-pl-c-check" onClick={(e) => e.stopPropagation()}>
         <Check checked={checked} onChange={onCheck} label={<span className="pk-pl-sr">{t('pk.common.add')}</span>} />
       </td>
-      <td className="nowrap">
+      <td className="nowrap pk-pl-c-day">
         <span className="pk-pl-wd">{weekdayShort(option.start)}</span> {dayMonth(option.start, today)}
       </td>
-      <td className="nowrap pk-num">
+      <td className="nowrap pk-num pk-pl-c-time">
         {clock(option.start)}–{clock(option.end)}
       </td>
-      <td>
+      <td className="pk-pl-c-who">
         <span className="pk-pl-who">
           <Avatar staff={staff} size={22} />
           {staff.name}
         </span>
       </td>
-      <td className="nowrap">{t('pk.agenda.room', { n: option.room })}</td>
-      <td>
+      <td className="nowrap pk-pl-c-room">{t('pk.agenda.room', { n: option.room })}</td>
+      <td className="pk-pl-c-machine">
         {machines.length ? (
           <span className="pk-row">
             {machines.join(' + ')}
@@ -616,7 +619,7 @@ function OptionRow({ option, equipment, checked, onCheck }: { option: PlanOption
           <span className="pk-muted">—</span>
         )}
       </td>
-      <td>
+      <td className="pk-pl-c-pos">
         <PosMark pos={option.pos} />
       </td>
     </tr>
@@ -711,7 +714,7 @@ function EquipmentTab() {
       }
     >
       <TableWrap label={t('pk.planner.eq.title')}>
-        <table className="pk-table">
+        <table className="pk-table pk-cards">
           <thead>
             <tr>
               <th>{t('pk.planner.eq.name')}</th>
@@ -726,7 +729,7 @@ function EquipmentTab() {
           <tbody>
             {equipment.map((m) => (
               <tr key={m.id}>
-                <td className="nowrap">
+                <td className="nowrap pk-cell-main">
                   <span className="pk-pl-who">
                     <span className="pk-pl-dev">
                       <PkIcon name="device" size={15} />
@@ -734,16 +737,20 @@ function EquipmentTab() {
                     <strong>{m.name}</strong>
                   </span>
                 </td>
-                <td>{cityOf(m.locationId)}</td>
-                <td className="pk-pl-for">{m.treatments.map((id) => text(treatmentById(id).name)).join(', ')}</td>
-                <td>
+                <td data-label={t('pk.common.location')}>{cityOf(m.locationId)}</td>
+                <td className="pk-pl-for" data-label={t('pk.planner.eq.treatments')}>
+                  {m.treatments.map((id) => text(treatmentById(id).name)).join(', ')}
+                </td>
+                <td data-label={t('pk.planner.eq.serial')}>
                   <span className="pk-mono">{m.serial}</span>
                 </td>
-                <td className="nowrap">{dateShort(new Date(`${m.service}T00:00`))}</td>
-                <td>
+                <td className="nowrap" data-label={t('pk.planner.eq.service')}>
+                  {dateShort(new Date(`${m.service}T00:00`))}
+                </td>
+                <td className="pk-cell-side">
                   <Chip tone={m.maintenance ? 'warn' : 'good'}>{m.maintenance ? t('pk.planner.eq.maintenance') : t('pk.planner.eq.inUse')}</Chip>
                 </td>
-                <td className="end">
+                <td className="end pk-cell-full">
                   <button
                     className="btn btn-small btn-ghost"
                     onClick={() => {
@@ -898,7 +905,7 @@ function AvailabilityTab() {
           </button>
         </div>
         <TableWrap label={t('pk.planner.av.title')}>
-          <table className="pk-table pk-pl-av">
+          <table className="pk-table pk-pl-av pk-sticky-start">
             <thead>
               <tr>
                 <th>{show === 'staff' ? t('pk.planner.av.staff') : t('pk.planner.av.machines')}</th>

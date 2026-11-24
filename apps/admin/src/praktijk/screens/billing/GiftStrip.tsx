@@ -174,7 +174,7 @@ function GiftCards({ billing }: { billing: Billing }) {
       </div>
 
       <TableWrap label={t('pk.facturen.gift.title')}>
-        <table className="pk-table">
+        <table className="pk-table pk-cards">
           <thead>
             <tr>
               <th>{t('pk.facturen.gift.codeCol')}</th>
@@ -186,12 +186,12 @@ function GiftCards({ billing }: { billing: Billing }) {
           <tbody>
             {giftcards.map((c) => (
               <tr key={c.code} className="pk-bi-row" aria-selected={c.code === found} onClick={() => (setFound(c.code), setLookup(groupCode(c.code)))}>
-                <td className="pk-mono nowrap">{groupCode(c.code)}</td>
-                <td className="nowrap">
+                <td className="pk-mono nowrap pk-cell-main">{groupCode(c.code)}</td>
+                <td className="nowrap pk-cell-inline">
                   {c.buyer}
                   <small className="pk-bi-mixed">{t('pk.facturen.gift.issuedOn', { date: dmy(c.issued) })}</small>
                 </td>
-                <td>
+                <td className="pk-cell-full">
                   <span className="pk-bi-balance">
                     <Bar value={c.balance} max={c.amount} tone="brand" />
                     <span className="pk-num nowrap">
@@ -199,7 +199,7 @@ function GiftCards({ billing }: { billing: Billing }) {
                     </span>
                   </span>
                 </td>
-                <td>
+                <td className="pk-cell-side">
                   <GiftState card={c} />
                 </td>
               </tr>

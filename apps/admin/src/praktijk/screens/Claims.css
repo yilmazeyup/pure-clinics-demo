@@ -295,3 +295,105 @@
     margin-inline-start: 0;
   }
 }
+
+@media (max-width: 640px) {
+  /* A claim as a card: the tick, client and amount on top, date with the service code and the status under it, the
+     actions on a line of their own. */
+  .pk-dc-claims.pk-cards > tbody > tr::before,
+  .pk-dc-claims.pk-cards > tbody > tr::after {
+    content: none;
+  }
+
+  .pk-dc-claims.pk-cards > tbody > tr > td {
+    margin-block: 0;
+  }
+
+  .pk-dc-claims.pk-cards > tbody > tr {
+    display: grid;
+    padding: 12px 14px;
+    grid-template-columns: 16px minmax(0, 1fr) auto;
+    gap: 4px 10px;
+    align-items: center;
+  }
+
+  .pk-dc-claims.pk-cards td {
+    white-space: normal;
+  }
+
+  .pk-dc-claims.pk-cards > tbody > tr > td:nth-child(1) {
+    display: block;
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    align-self: start;
+    padding-top: 2px;
+  }
+
+  .pk-dc-claims.pk-cards > tbody > tr > td:nth-child(2) {
+    grid-column: 2;
+    grid-row: 1;
+    font-weight: 500;
+  }
+
+  .pk-dc-claims.pk-cards > tbody > tr > td:nth-child(3) {
+    grid-column: 2;
+    grid-row: 2;
+    white-space: nowrap;
+  }
+
+  .pk-dc-claims.pk-cards > tbody > tr > td:nth-child(3) .pk-bi-mixed {
+    display: inline;
+    margin-inline-start: 8px;
+  }
+
+  .pk-dc-claims.pk-cards > tbody > tr > td:nth-child(4) {
+    grid-column: 3;
+    grid-row: 1;
+    font-weight: 500;
+    text-align: end;
+  }
+
+  .pk-dc-claims.pk-cards > tbody > tr > td:nth-child(5) {
+    grid-column: 3;
+    grid-row: 2;
+    min-width: 0;
+    justify-self: end;
+    text-align: end;
+  }
+
+  /* A return code with its explanation gets the card's full width on a line of its own. */
+  .pk-dc-claims.pk-cards > tbody > tr > td:nth-child(5):has(.pk-dc-reasonline) {
+    grid-column: 2 / 4;
+    grid-row: 3;
+    justify-self: stretch;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 8px;
+    text-align: start;
+  }
+
+  .pk-dc-claims.pk-cards .pk-dc-reasonline {
+    flex: 1 1 160px;
+    margin-top: 0;
+  }
+
+  .pk-dc-claims.pk-cards > tbody > tr > td:nth-child(6) {
+    grid-column: 2 / 4;
+    grid-row: 4;
+  }
+
+  .pk-dc-claims.pk-cards > tbody > tr > td:nth-child(6) .pk-row {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 8px;
+  }
+
+  .pk-dc-claims.pk-cards > tbody > tr > td:nth-child(6) .pk-dc-actions .btn {
+    flex: 1 1 0;
+    justify-content: center;
+  }
+
+  .pk-dc-claims.pk-cards .pk-bi-mixed {
+    font-weight: 400;
+  }
+}

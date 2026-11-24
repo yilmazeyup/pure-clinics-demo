@@ -81,7 +81,7 @@ export function Orders() {
                   </button>
                 </div>
                 <TableWrap label={supplier.name}>
-                  <table className="pk-table">
+                  <table className="pk-table pk-cards">
                     <thead>
                       <tr>
                         <th>{t('pk.voorraad.levels.product')}</th>
@@ -94,14 +94,16 @@ export function Orders() {
                     <tbody>
                       {list.map((l) => (
                         <tr key={lineKey(l)}>
-                          <td>{name(l.product)}</td>
-                          <td>{cityOf(l.locationId)}</td>
-                          <td className="end nowrap">
+                          <td className="pk-cell-main">{name(l.product)}</td>
+                          <td className="pk-cell-inline">{cityOf(l.locationId)}</td>
+                          <td className="end nowrap pk-cell-half" data-label={t('pk.voorraad.order.level')}>
                             <span className={l.level ? 'pk-st-level pk-st-level--low' : 'pk-st-level pk-st-level--out'}>{l.level}</span>
                             <small className="pk-muted pk-st-min">{t('pk.voorraad.levels.min', { n: l.min })}</small>
                           </td>
-                          <td className="end pk-num">{l.onWay || '–'}</td>
-                          <td className="end">
+                          <td className="end pk-num pk-cell-half" data-label={t('pk.voorraad.order.onWay')}>
+                            {l.onWay || '–'}
+                          </td>
+                          <td className="end" data-label={t('pk.voorraad.order.suggested')}>
                             <input
                               type="number"
                               min={0}
@@ -132,7 +134,7 @@ export function Orders() {
       <Card eyebrow={t('pk.voorraad.onway.eyebrow')} title={t('pk.voorraad.onway.title')}>
         {open.length ? (
           <TableWrap label={t('pk.voorraad.onway.title')}>
-            <table className="pk-table">
+            <table className="pk-table pk-cards">
               <thead>
                 <tr>
                   <th>{t('pk.voorraad.onway.number')}</th>
@@ -148,20 +150,22 @@ export function Orders() {
                   const late = startOfDay(o.expected).getTime() < startOfDay(today).getTime();
                   return (
                     <tr key={o.id}>
-                      <td className="pk-mono">{o.number}</td>
-                      <td>{supplierName(o.supplier)}</td>
-                      <td className="nowrap">{dayMonth(o.placed, now)}</td>
-                      <td className="nowrap">
+                      <td className="pk-mono pk-cell-main">{o.number}</td>
+                      <td className="pk-cell-inline">{supplierName(o.supplier)}</td>
+                      <td className="nowrap pk-cell-half" data-label={t('pk.voorraad.onway.placed')}>
+                        {dayMonth(o.placed, now)}
+                      </td>
+                      <td className="nowrap pk-cell-half" data-label={t('pk.voorraad.onway.expected')}>
                         {dayMonth(o.expected, now)} {late ? <Chip tone="warn">{t('pk.voorraad.onway.late')}</Chip> : null}
                       </td>
-                      <td className="pk-st-contents">
+                      <td className="pk-st-contents pk-cell-full">
                         {o.lines.map((l) => (
                           <span key={lineKey(l)}>
                             {l.qty}× {name(l.product)} · {cityOf(l.locationId)}
                           </span>
                         ))}
                       </td>
-                      <td className="end">
+                      <td className="end pk-cell-full">
                         <button className="btn btn-ghost btn-small" onClick={() => setReceiving(o)}>
                           <PkIcon name="inbox" size={14} />
                           {t('pk.voorraad.onway.receive')}
@@ -250,7 +254,7 @@ function Receive({ order, onClose, onConfirm }: { order: StockOrder; onClose: ()
     >
       <p className="help">{t('pk.voorraad.receive.help')}</p>
       <TableWrap>
-        <table className="pk-table">
+        <table className="pk-table pk-cards">
           <thead>
             <tr>
               <th>{t('pk.voorraad.levels.product')}</th>
@@ -262,10 +266,12 @@ function Receive({ order, onClose, onConfirm }: { order: StockOrder; onClose: ()
           <tbody>
             {order.lines.map((l) => (
               <tr key={lineKey(l)}>
-                <td>{name(l.product)}</td>
-                <td>{cityOf(l.locationId)}</td>
-                <td className="end pk-num">{l.qty}</td>
-                <td className="end">
+                <td className="pk-cell-main">{name(l.product)}</td>
+                <td className="pk-cell-inline">{cityOf(l.locationId)}</td>
+                <td className="end pk-num pk-cell-half" data-label={t('pk.voorraad.receive.ordered')}>
+                  {l.qty}
+                </td>
+                <td className="end pk-cell-half" data-label={t('pk.voorraad.receive.counted')}>
                   <input
                     type="number"
                     min={0}

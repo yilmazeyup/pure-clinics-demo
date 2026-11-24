@@ -131,7 +131,7 @@ function Profiles() {
             </p>
           ) : null}
           <TableWrap label={t('pk.team.profEyebrow')}>
-            <table className="pk-table pk-tm-matrix">
+            <table className="pk-table pk-tm-matrix pk-sticky-start">
               <thead>
                 <tr>
                   <th>{t('pk.team.module')}</th>
@@ -187,7 +187,7 @@ function AgendaAccess() {
   return (
     <Card className="span-5" feature="s.agendaAccess" eyebrow={t('pk.team.accEyebrow')} title={t('pk.team.accTitle')} help={t('pk.team.accHelp')}>
       <TableWrap label={t('pk.team.accEyebrow')}>
-        <table className="pk-table pk-tm-matrix pk-tm-access">
+        <table className="pk-table pk-tm-matrix pk-tm-access pk-sticky-start">
           <thead>
             <tr>
               <th>{t('pk.team.col.name')}</th>

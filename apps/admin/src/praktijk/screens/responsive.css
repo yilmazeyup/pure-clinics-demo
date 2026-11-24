@@ -1,0 +1,393 @@
+/* Pure Praktijk on a phone and a tablet: refinements of the kit classes (praktijk.css) that every screen shares.
+   Each screen imports this file just before its own styles, so it comes after the kit and a screen can still refine it.
+   Desktop stays as it is: every rule sits behind a width or pointer query, or only shows when something actually
+   scrolls. Directions are logical, so Arabic mirrors without extra rules. */
+
+/* ---------- Sideways scrolling: a soft edge where more is hidden ---------- */
+
+/* Where the browser can tie an animation to a scroll position, a scrolling table or tab row fades out at the side
+   that still has more to show: at the end before scrolling, at both sides halfway, at the start once at the end.
+   A row that fits shows no fade at all. Browsers without scroll timelines simply scroll, without the fade. */
+@property --pk-fade-start {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --pk-fade-end {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@keyframes pk-edge-fade {
+  0% {
+    --pk-fade-start: 0px;
+    --pk-fade-end: 40px;
+  }
+  8%,
+  92% {
+    --pk-fade-start: 40px;
+    --pk-fade-end: 40px;
+  }
+  100% {
+    --pk-fade-start: 40px;
+    --pk-fade-end: 0px;
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  .pk-screen .pk-table-wrap,
+  .pk-screen .pk-tabs,
+  .pk-modal .pk-table-wrap,
+  .pk-screen .pk-scroll-x,
+  .pk-modal .pk-scroll-x {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.08) 0,
+      #000 var(--pk-fade-start),
+      #000 calc(100% - var(--pk-fade-end)),
+      rgba(0, 0, 0, 0.08) 100%
+    );
+    mask-image: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.08) 0,
+      #000 var(--pk-fade-start),
+      #000 calc(100% - var(--pk-fade-end)),
+      rgba(0, 0, 0, 0.08) 100%
+    );
+    animation: pk-edge-fade linear both;
+    animation-timeline: scroll(self inline);
+  }
+
+  [dir='rtl'] .pk-screen .pk-table-wrap,
+  [dir='rtl'] .pk-screen .pk-tabs,
+  [dir='rtl'] .pk-modal .pk-table-wrap,
+  [dir='rtl'] .pk-screen .pk-scroll-x,
+  [dir='rtl'] .pk-modal .pk-scroll-x {
+    -webkit-mask-image: linear-gradient(
+      to left,
+      rgba(0, 0, 0, 0.08) 0,
+      #000 var(--pk-fade-start),
+      #000 calc(100% - var(--pk-fade-end)),
+      rgba(0, 0, 0, 0.08) 100%
+    );
+    mask-image: linear-gradient(
+      to left,
+      rgba(0, 0, 0, 0.08) 0,
+      #000 var(--pk-fade-start),
+      #000 calc(100% - var(--pk-fade-end)),
+      rgba(0, 0, 0, 0.08) 100%
+    );
+  }
+
+  /* A table with a fixed first column only fades at the end; the start is the column itself. */
+  .pk-screen .pk-table-wrap:has(> .pk-sticky-start),
+  .pk-screen .pk-scroll-x:has(> .pk-sticky-start) {
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - var(--pk-fade-end)), rgba(0, 0, 0, 0.08) 100%);
+    mask-image: linear-gradient(to right, #000 calc(100% - var(--pk-fade-end)), rgba(0, 0, 0, 0.08) 100%);
+  }
+
+  [dir='rtl'] .pk-screen .pk-table-wrap:has(> .pk-sticky-start),
+  [dir='rtl'] .pk-screen .pk-scroll-x:has(> .pk-sticky-start) {
+    -webkit-mask-image: linear-gradient(to left, #000 calc(100% - var(--pk-fade-end)), rgba(0, 0, 0, 0.08) 100%);
+    mask-image: linear-gradient(to left, #000 calc(100% - var(--pk-fade-end)), rgba(0, 0, 0, 0.08) 100%);
+  }
+}
+
+/* A box of its own that scrolls sideways, for wide grids that are not a kit table. */
+.pk-scroll-x {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+
+.pk-screen .pk-table-wrap,
+.pk-modal .pk-table-wrap,
+.pk-screen .pk-tabs {
+  overscroll-behavior-x: contain;
+}
+
+@media (max-width: 900px) {
+  /* Matrices keep their first column (who, what) in view while the days or rights scroll past. */
+  .pk-table.pk-sticky-start th:first-child,
+  .pk-table.pk-sticky-start td:first-child {
+    position: sticky;
+    inset-inline-start: 0;
+    z-index: 1;
+    background: var(--surface);
+    box-shadow: inset -1px 0 0 var(--line);
+  }
+
+  [dir='rtl'] .pk-table.pk-sticky-start th:first-child,
+  [dir='rtl'] .pk-table.pk-sticky-start td:first-child {
+    box-shadow: inset 1px 0 0 var(--line);
+  }
+
+  .pk-table.pk-sticky-start th:first-child {
+    z-index: 2;
+    background: #fcf9f4;
+  }
+
+  .pk-table.pk-sticky-start tbody tr[aria-selected='true'] td:first-child {
+    background: var(--sand-soft);
+  }
+}
+
+/* ---------- Tables as cards on a phone ---------- */
+
+/* A table with .pk-cards turns every row into a small card below 640px: the cell marked .pk-cell-main is its title,
+   .pk-cell-side sits top right (an amount, a status), .pk-cell-check top left, and every cell with a data-label
+   becomes a "label · value" line (.pk-cell-half: two to a line). .pk-cell-inline flows on the lines under the title
+   without a label, .pk-cell-full takes a line of its own without a label, and .pk-cell-hide is left out on a phone. Tablet and desktop keep the table. */
+@media (max-width: 640px) {
+  .pk-table.pk-cards,
+  .pk-table.pk-cards > tbody,
+  .pk-table.pk-cards > tfoot {
+    display: block;
+    width: 100%;
+  }
+
+  .pk-table.pk-cards > thead {
+    display: none;
+  }
+
+  /* Lines sit 6px apart through the cells' own margins, so the empty line breaks below add no space. */
+  .pk-table.pk-cards > tbody > tr,
+  .pk-table.pk-cards > tfoot > tr {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 12px;
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .pk-table.pk-cards > tbody > tr:last-child {
+    border-bottom: 0;
+  }
+
+  .pk-table.pk-cards > tfoot > tr {
+    border-top: 1px solid var(--line-strong);
+    border-bottom: 0;
+  }
+
+  .pk-table.pk-cards > tbody > tr > td,
+  .pk-table.pk-cards > tfoot > tr > td {
+    display: block;
+    min-width: 0;
+    margin-block: 3px;
+    padding: 0;
+    border: 0;
+    text-align: start;
+    overflow-wrap: anywhere;
+  }
+
+  .pk-table.pk-cards td.pk-cell-check {
+    order: -3;
+    flex: none;
+  }
+
+  .pk-table.pk-cards td.pk-cell-main {
+    order: -2;
+    flex: 1 1 0;
+    font-weight: 500;
+  }
+
+  .pk-table.pk-cards td.pk-cell-side {
+    order: -1;
+    flex: none;
+    max-width: 55%;
+    margin-inline-start: auto;
+    text-align: end;
+  }
+
+  .pk-table.pk-cards td.pk-cell-inline {
+    flex: none;
+    color: var(--muted);
+    font-size: 12.5px;
+  }
+
+  /* Everything after the title line starts on a line of its own, never squeezing the title. (Tables that lay their
+     cards out as a grid switch this off.) */
+  .pk-table.pk-cards > tbody > tr::after {
+    content: '';
+    order: -1;
+    flex-basis: 100%;
+  }
+
+  /* Label · value lines and full-width cells come after the short inline cells, from a fresh line. */
+  .pk-table.pk-cards > tbody > tr::before {
+    content: '';
+    order: 1;
+    flex-basis: 100%;
+  }
+
+  .pk-table.pk-cards td[data-label],
+  .pk-table.pk-cards td.pk-cell-full {
+    order: 1;
+  }
+
+  .pk-table.pk-cards td.pk-cell-full {
+    flex: 1 1 100%;
+  }
+
+  .pk-table.pk-cards td[data-label] {
+    flex: 1 1 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px 8px;
+    text-align: end;
+  }
+
+  /* Two short label · value pairs share a line. */
+  .pk-table.pk-cards td[data-label].pk-cell-half {
+    flex: 1 1 calc(50% - 12px);
+  }
+
+  .pk-table.pk-cards td[data-label]::before {
+    content: attr(data-label);
+    flex: none;
+    max-width: 48%;
+    color: var(--muted);
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: start;
+    overflow-wrap: normal;
+    font-family: var(--body);
+    margin-inline-end: auto;
+  }
+
+  .pk-table.pk-cards td[data-label] > * {
+    min-width: 0;
+  }
+
+  /* A field in a label · value line stays next to its label; selects and dates take their natural width. */
+  .pk-table.pk-cards td[data-label] > .pk-input {
+    max-width: 62%;
+  }
+
+  .pk-table.pk-cards td[data-label] > select.pk-input,
+  .pk-table.pk-cards td[data-label] > input[type='date'].pk-input {
+    width: auto;
+  }
+
+  .pk-table.pk-cards td.pk-cell-hide,
+  .pk-table.pk-cards td:empty {
+    display: none;
+  }
+
+  .pk-table.pk-cards td.nowrap {
+    white-space: normal;
+  }
+}
+
+/* ---------- Touch: controls at least 40px tall ---------- */
+
+@media (max-width: 900px), (pointer: coarse) {
+  .pk-screen .btn,
+  .pk-modal .btn {
+    min-height: 40px;
+  }
+
+  .pk-screen .pk-input,
+  .pk-modal .pk-input {
+    min-height: 40px;
+  }
+
+  .pk-screen .pk-seg button,
+  .pk-modal .pk-seg button {
+    min-height: 40px;
+  }
+
+  .pk-screen .pk-tabs button {
+    height: 44px;
+  }
+
+  .pk-screen .icon-button.small,
+  .pk-modal .icon-button.small {
+    width: 40px;
+    height: 40px;
+  }
+
+  .pk-screen .pk-steps button,
+  .pk-modal .pk-steps button {
+    height: 40px;
+  }
+
+  .pk-screen .pk-check,
+  .pk-modal .pk-check {
+    min-height: 32px;
+  }
+
+  /* A switch keeps its look; an invisible margin around it makes the hit area 40px tall. */
+  .pk-screen .pk-switch::after,
+  .pk-modal .pk-switch::after {
+    content: '';
+    position: absolute;
+    inset: -9px -4px;
+  }
+}
+
+/* ---------- Phones ---------- */
+
+@media (max-width: 640px) {
+  /* A search field in a card's head gets the full width under the title instead of a sliver beside it. */
+  .pk-screen .card-head > .head-actions:has(.pk-search, input.pk-input) {
+    flex: 1 1 100%;
+    justify-content: stretch;
+  }
+
+  .pk-screen .card-head > .head-actions:has(.pk-search, input.pk-input) > * {
+    flex: 1 1 auto;
+  }
+
+  /* Dialogs: full width with 16px around, their own scroll, buttons that are easy to hit. */
+  .pk-modal-backdrop {
+    padding: 16px;
+  }
+
+  .pk-modal,
+  .pk-modal--wide {
+    width: 100%;
+    max-height: calc(100vh - 32px);
+    max-height: calc(100dvh - 32px);
+  }
+
+  .pk-modal-head {
+    padding: 16px 16px 4px;
+  }
+
+  .pk-modal-head .card-title {
+    font-size: 23px;
+  }
+
+  .pk-modal-body {
+    padding: 10px 16px 16px;
+    overscroll-behavior: contain;
+  }
+
+  .pk-modal-foot {
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .pk-modal-foot .btn {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  /* Key-value lines: a narrower label column, so values keep room to breathe. */
+  .pk-screen .pk-kv > div,
+  .pk-modal .pk-kv > div {
+    grid-template-columns: minmax(92px, 36%) minmax(0, 1fr);
+  }
+
+  .pk-screen .pk-stat strong {
+    font-size: 25px;
+    overflow-wrap: anywhere;
+  }
+}

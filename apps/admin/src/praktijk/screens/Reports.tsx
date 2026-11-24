@@ -8,7 +8,9 @@ import { Episodes } from './reports/Episodes';
 import { Finance } from './reports/Finance';
 import { Marketing } from './reports/Marketing';
 import { Quality } from './reports/Quality';
+import './responsive.css';
 import './Reports.css';
+import { useTabInView } from './useTabInView';
 
 type Group = 'finance' | 'episodes' | 'marketing' | 'quality';
 
@@ -34,6 +36,7 @@ export function ReportsScreen() {
   const { t } = useI18n();
   const { target } = usePraktijk();
   const [group, setGroup] = useState<Group>('finance');
+  useTabInView(group);
   const [period, setPeriod] = useState<Period>('month');
 
   useEffect(() => {

@@ -1377,3 +1377,71 @@ img.pk-ds-compare-img {
 .pk-ds-modal .pk-field > .pk-seg {
   justify-self: start;
 }
+
+@media (max-width: 640px) {
+  /* Dossier tables as cards (see responsive.css): selects take the card's width, notes keep their normal weight. */
+  .pk-ds .pk-table.pk-cards td.pk-cell-full > select.pk-input,
+  .pk-ds .pk-table.pk-cards td.pk-cell-main > select.pk-input {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .pk-table.pk-cards .pk-ds-cell small {
+    font-weight: 400;
+  }
+
+  .pk-table.pk-cards .pk-ds-lot,
+  .pk-table.pk-cards .pk-ds-needle {
+    width: 150px;
+  }
+
+  /* The intake form per episode: name and status on one line, the send button under the name. */
+  .pk-ds-intake-list > li {
+    flex-wrap: wrap;
+    row-gap: 0;
+  }
+
+  .pk-ds-intake-list > li > * {
+    margin-block: 3px;
+  }
+
+  .pk-ds-intake-list > li > .pk-ds-grow {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .pk-ds-intake-list > li::before {
+    content: '';
+    order: 1;
+    flex-basis: 100%;
+  }
+
+  .pk-ds-intake-list > li > .btn {
+    order: 2;
+    margin-inline-start: 29px;
+  }
+}
+
+@media (max-width: 900px), (pointer: coarse) {
+  /* The method steps are buttons: a taller hit area on touch, the bar and label stay as they are. */
+  .pk-ds-hmh button {
+    min-height: 40px;
+    align-content: center;
+  }
+
+  /* Face canvas: zone chips and the per-zone lines are 40px tall; colour dots keep their size with a 40px hit area. */
+  .pk-ds-zones button,
+  .pk-ds-totals li > button {
+    min-height: 40px;
+  }
+
+  .pk-ds-swatches button {
+    position: relative;
+  }
+
+  .pk-ds-swatches button::after {
+    content: '';
+    position: absolute;
+    inset: -9px -3px;
+  }
+}

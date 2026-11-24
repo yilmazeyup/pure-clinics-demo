@@ -34,7 +34,7 @@ export function LogTab({ state }: { state: DossierState }) {
         <input className="pk-input" type="search" value={query} aria-label={t('pk.dossier.log.search')} placeholder={t('pk.dossier.log.search')} onChange={(e) => setQuery(e.target.value)} />
       </label>
       <TableWrap label={t('pk.dossier.log.title')}>
-        <table className="pk-table">
+        <table className="pk-table pk-cards">
           <thead>
             <tr>
               <th>{t('pk.dossier.log.when')}</th>
@@ -45,11 +45,11 @@ export function LogTab({ state }: { state: DossierState }) {
           <tbody>
             {rows.map((l) => (
               <tr key={l.id} className={l.who === 'you' ? 'pk-ds-log-new' : ''}>
-                <td className="nowrap pk-num">
+                <td className="nowrap pk-num pk-cell-main">
                   {i18n.dayMonth(l.at, today)} · {clock(l.at)}
                 </td>
-                <td className="nowrap">{who(l.who)}</td>
-                <td>{txt(l.line)}</td>
+                <td className="nowrap pk-cell-side pk-muted">{who(l.who)}</td>
+                <td className="pk-cell-full">{txt(l.line)}</td>
               </tr>
             ))}
           </tbody>

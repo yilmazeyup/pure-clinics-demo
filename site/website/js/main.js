@@ -1,6 +1,7 @@
 // Pure Clinics website, second round: three palettes in cream and walnut brown, seven languages, every section the meeting of November 2026 asked for.
 import { logoSvg } from './logo.js';
 import { LANGS, LANG_NAMES, STRINGS } from './i18n.js';
+import { TEAM } from './team-data.js';
 // The first site's parts (October 2026), each after a site that won in 2026.
 import { onFrame, scroll, pointer, FINE, lerp, smoothstep, transition } from './fx/core.js';
 import { startHeroGL } from './fx/gl.js';
@@ -497,20 +498,30 @@ const reviewCarousel = carousel({
 /* ---------- Team ---------- */
 
 // The team as pureclinics.nl shows it, with the clinic's own portraits.
-const TEAM = [
-  { id: 'maud', name: 'Maud', role: 'roleTherapist' },
-  { id: 'margot', name: 'Margot', role: 'roleTherapist' },
-  { id: 'nadila', name: 'Nadila', role: 'roleTherapist' },
-  { id: 'sam', name: 'Sam', role: 'roleTherapist' },
-  { id: 'husna', name: 'Husna', role: 'roleReception' },
-  { id: 'hawin', name: 'Hawin', role: 'roleBeauty' },
-];
+// Every member has their own page (team/<id>/); a walk-in film plays on hover where one exists.
 function renderTeam() {
   $('#people').innerHTML = TEAM.map(
-    (p, i) => `<li class="person rise" style="--d:${(i % 3) * 110}ms"><figure><img src="img/team/${p.id}.webp" alt="${p.name}" loading="lazy" /></figure><h3>${p.name}</h3><p>${S(p.role)}</p></li>`,
+    (p, i) => `<li class="person rise" style="--d:${(i % 3) * 110}ms"><a href="team/${p.id}/?lang=${lang}" aria-label="${esc(S('teamSee', { name: p.name }))}"><figure><img src="img/team/${p.id}.webp" alt="${p.name}" loading="lazy" />${p.video ? `<video src="video/team/${p.id}.mp4" muted playsinline preload="none" aria-hidden="true"></video>` : ''}</figure><h3>${p.name}</h3><p>${S(p.role)}</p></a></li>`,
   ).join('');
   watch($('#team'));
 }
+$('#people').addEventListener('pointerover', (e) => {
+  const v = e.target.closest('.person')?.querySelector('video');
+  if (v && v.paused) {
+    v.currentTime = 0;
+    v.play().catch(() => {});
+    v.closest('figure').classList.add('playing');
+  }
+});
+$('#people').addEventListener('pointerout', (e) => {
+  const li = e.target.closest('.person');
+  if (!li || li.contains(e.relatedTarget)) return;
+  const v = li.querySelector('video');
+  if (v) {
+    v.pause();
+    v.closest('figure').classList.remove('playing');
+  }
+});
 
 /* ---------- FAQ: the clinic's own questions per treatment, grouped ---------- */
 

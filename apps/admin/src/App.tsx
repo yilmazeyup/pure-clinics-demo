@@ -111,6 +111,8 @@ function Panel() {
           onView={(view) =>
             view === 'campagnes' ? openCampagnes({ tab: campagnes?.tab ?? lastTab }) : open(view === 'praktijk' ? (praktijk?.screen ?? 'overzicht') : null)
           }
+          screen={praktijk?.screen ?? null}
+          onScreen={open}
         />
         <main className="main">
           <Topbar

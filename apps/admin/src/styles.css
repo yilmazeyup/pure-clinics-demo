@@ -96,6 +96,32 @@ li {
   flex-direction: column;
   gap: 26px;
   border-right: 1px solid var(--line);
+  /* With Praktijk open the menu can be taller than the window: then the menu scrolls, not the page. */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+
+.sidebar-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* The Menu button, its close button and the dimmed page behind are for phones and tablets only. */
+.menu-button,
+.side-backdrop,
+.side-menu-head {
+  display: none;
+}
+
+.side-menu {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
 }
 
 .logo {
@@ -143,6 +169,73 @@ li {
 .nav button[aria-current='page'] {
   background: var(--accent);
   color: var(--accent-ink);
+}
+
+/* Praktijk is a monthly subscription next to the panel: a small chip says so. */
+.nav button .pk-nav-chip {
+  margin-inline-start: auto;
+  padding: 2px 7px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* An open group: Praktijk itself in ink, the screen under it carries the brown. */
+.nav button.is-open {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* Praktijk's screens under Praktijk: a thin line from its icon, the names lined up with the words above. */
+.nav-sub {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.32s cubic-bezier(0.2, 0.75, 0.2, 1);
+}
+
+.nav-sub.is-open {
+  grid-template-rows: 1fr;
+}
+
+.nav-sub-list {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  display: grid;
+  gap: 1px;
+  padding-inline-start: 30px;
+}
+
+.nav-sub-list::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  bottom: 10px;
+  inset-inline-start: 21px;
+  width: 1px;
+  background: var(--line-strong);
+}
+
+/* Room above and below the list, as content, so the folded list is truly zero high. */
+.nav-sub-list::after {
+  content: '';
+  height: 8px;
+}
+
+.nav .nav-sub-list button {
+  height: auto;
+  min-height: 32px;
+  padding-block: 6px;
+  padding-inline: 14px 10px;
+  font-size: 13.5px;
+  line-height: 1.25;
+}
+
+.nav .nav-sub-list button:first-child {
+  margin-top: 3px;
 }
 
 .test-box {
@@ -2161,24 +2254,98 @@ li {
     grid-template-columns: minmax(0, 1fr);
   }
 
+  /* On a phone and a tablet the menu is one button at the top; the same menu slides in from the side. */
   .sidebar {
     position: static;
     height: auto;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 14px;
-    padding-block: 16px;
+    display: block;
+    overflow: visible;
+    padding-block: 12px;
     padding-left: max(16px, env(safe-area-inset-left, 0px));
     padding-right: max(16px, env(safe-area-inset-right, 0px));
     border-right: 0;
     border-bottom: 1px solid var(--line);
   }
 
-  .nav {
-    grid-auto-flow: column;
-    overflow-x: auto;
-    width: 100%;
+  .menu-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 40px;
+    padding: 0 14px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-control);
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 14px;
+  }
+
+  .side-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 59;
+    background: rgba(63, 49, 40, 0.16);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+
+  .sidebar.is-open .side-backdrop {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .side-menu {
+    position: fixed;
+    z-index: 60;
+    top: 0;
+    bottom: 0;
+    inset-inline-start: 0;
+    width: min(320px, 86vw);
+    gap: 18px;
+    padding-block: max(12px, env(safe-area-inset-top, 0px)) calc(24px + env(safe-area-inset-bottom, 0px));
+    padding-inline: 14px;
+    background: var(--bg);
+    border-inline-end: 1px solid var(--line);
+    box-shadow: 24px 0 60px rgba(63, 49, 40, 0.14);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    transform: translateX(-104%);
+    visibility: hidden;
+    transition:
+      transform 0.3s cubic-bezier(0.2, 0.75, 0.2, 1),
+      visibility 0s linear 0.3s;
+  }
+
+  [dir='rtl'] .side-menu {
+    box-shadow: -24px 0 60px rgba(63, 49, 40, 0.14);
+    transform: translateX(104%);
+  }
+
+  .sidebar.is-open .side-menu {
+    transform: none;
+    visibility: visible;
+    transition: transform 0.3s cubic-bezier(0.2, 0.75, 0.2, 1);
+  }
+
+  .side-menu-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .menu-close {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    color: var(--ink);
+  }
+
+  .menu-close:hover {
+    background: var(--soft);
   }
 
   .test-box,

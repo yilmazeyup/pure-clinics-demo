@@ -13,6 +13,8 @@ export const es: Messages = {
   'nav.settings': 'Ajustes',
   'nav.help': 'Ayuda y vídeo',
   'nav.soon': '{label} llega en el siguiente paso de la demo.',
+  'nav.menu': 'Menú',
+  'nav.menuClose': 'Cerrar menú',
   'test.title': 'Entorno de prueba',
   'test.body': 'Todos los nombres, citas, pedidos y pagos son datos de prueba. Mollie está en modo de prueba.',
 

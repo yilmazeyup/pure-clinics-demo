@@ -1,12 +1,11 @@
-import { useEffect, useRef, useState, type ComponentType, type CSSProperties } from 'react';
+import { useEffect, useRef, useState, type ComponentType } from 'react';
 
 import { useI18n } from '../i18n';
 // The module's base styles load before every screen's own, so a screen can refine a kit class.
 import './praktijk.css';
 import { PraktijkProvider, usePraktijk } from './context';
 import { DetailPanel } from './details/Details';
-import { PkIcon } from './icons';
-import { SCREENS, type ScreenId } from './nav';
+import { type ScreenId } from './nav';
 import { OverviewScreen } from './overview/Overview';
 import { AgendaScreen } from './screens/Agenda';
 import { ClientsScreen } from './screens/Clients';
@@ -52,22 +51,14 @@ export function Praktijk({ now, screen, feature, onScreen }: Props) {
 
 function Module() {
   const { t } = useI18n();
-  const { screen, go, target } = usePraktijk();
+  const { screen, target } = usePraktijk();
   // A screen stays mounted once it has been opened, so its state survives a visit elsewhere.
   const [opened, setOpened] = useState<ScreenId[]>([screen]);
   const body = useRef<HTMLDivElement>(null);
-  const nav = useRef<HTMLElement>(null);
 
+  // The screens are chosen in the menu, under Praktijk (components/Shell.tsx); the module has no row of tabs of its own.
   useEffect(() => {
     setOpened((list) => (list.includes(screen) ? list : [...list, screen]));
-    // Keep the chosen tab in view in the scrolling sub-navigation on a phone, without scrolling the page itself.
-    const bar = nav.current;
-    const tab = bar?.querySelector<HTMLElement>('[aria-current="page"]');
-    if (bar && tab && bar.scrollWidth > bar.clientWidth) {
-      const b = bar.getBoundingClientRect();
-      const r = tab.getBoundingClientRect();
-      bar.scrollBy({ left: r.left - b.left - (b.width - r.width) / 2 });
-    }
   }, [screen]);
 
   // A jump to a feature: wait for its element on the screen, bring it into view and let it glow for a moment.
@@ -96,15 +87,6 @@ function Module() {
 
   return (
     <div className="pk">
-      <nav ref={nav} className="pk-subnav rise" aria-label={t('pk.subnav.label')} style={{ '--d': '60ms' } as CSSProperties}>
-        {SCREENS.map((s) => (
-          <button key={s.id} aria-current={s.id === screen ? 'page' : undefined} onClick={() => go(s.id)}>
-            <PkIcon name={s.icon} size={16} />
-            {t(`pk.screen.${s.id}`)}
-          </button>
-        ))}
-      </nav>
-
       <div ref={body} className="pk-body">
         {opened.map((id) => {
           const View = VIEWS[id];

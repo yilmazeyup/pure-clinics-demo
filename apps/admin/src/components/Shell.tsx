@@ -1,6 +1,8 @@
 import { LOCALE_NAMES, LOCALES, type Locale } from '@pure-clinics/shared';
+import { Fragment, useEffect, useRef, useState } from 'react';
 
 import { Accent, useI18n, useSetLocale, type MessageKey } from '../i18n';
+import { SCREENS, type ScreenId } from '../praktijk/nav';
 import { Icon, type IconName } from './Icon';
 import { useToast } from './ui';
 
@@ -25,10 +27,70 @@ const NAV: { icon: IconName; label: MessageKey; section?: string; help?: boolean
 
 type View = 'overview' | 'praktijk' | 'campagnes';
 
-export function Sidebar({ view, onView }: { view: View; onView: (view: View) => void }) {
+type SidebarProps = {
+  view: View;
+  onView: (view: View) => void;
+  /** The Praktijk screen that is open (null outside Praktijk); its screens sit under Praktijk in the menu. */
+  screen: ScreenId | null;
+  onScreen: (screen: ScreenId) => void;
+};
+
+/**
+ * The menu. On a wide screen it stands on the left (on the right in Arabic) and Praktijk's screens fold open under
+ * Praktijk while it is open. On a phone and a tablet it is one Menu button that slides the same menu in from the side.
+ */
+export function Sidebar({ view, onView, screen, onScreen }: SidebarProps) {
   const { t, locale } = useI18n();
   const toast = useToast();
+  const [open, setOpen] = useState(false);
+  const aside = useRef<HTMLElement>(null);
+  const sub = useRef<HTMLDivElement>(null);
+  const menuButton = useRef<HTMLButtonElement>(null);
+  const closeButton = useRef<HTMLButtonElement>(null);
+
+  // The sliding menu on a phone: the page underneath stays put, Escape closes it, and the focus goes in and comes back.
+  useEffect(() => {
+    if (!open) return;
+    const root = document.documentElement;
+    const overflow = root.style.overflow;
+    root.style.overflow = 'hidden';
+    closeButton.current?.focus();
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false);
+    };
+    const wide = window.matchMedia('(min-width: 901px)');
+    const onWide = () => wide.matches && setOpen(false);
+    window.addEventListener('keydown', onKey);
+    wide.addEventListener('change', onWide);
+    return () => {
+      root.style.overflow = overflow;
+      window.removeEventListener('keydown', onKey);
+      wide.removeEventListener('change', onWide);
+      menuButton.current?.focus({ preventScroll: true });
+    };
+  }, [open]);
+
+  // Keep the chosen Praktijk screen in sight when the menu is taller than the window, without moving the page.
+  // It measures once the list has finished folding open.
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      const box = aside.current;
+      const item = sub.current?.querySelector<HTMLElement>('[aria-current="page"]');
+      if (!box || !item || box.scrollHeight <= box.clientHeight) return;
+      const b = box.getBoundingClientRect();
+      const r = item.getBoundingClientRect();
+      if (r.top < b.top + 12) box.scrollTop -= b.top + 12 - r.top;
+      else if (r.bottom > b.bottom - 12) box.scrollTop += r.bottom - (b.bottom - 12);
+    }, 360);
+    return () => window.clearTimeout(timer);
+  }, [screen]);
+
+  const pick = (next: ScreenId) => {
+    setOpen(false);
+    onScreen(next);
+  };
   const go = (index: number) => {
+    setOpen(false);
     const item = NAV[index];
     if (item.praktijk) onView('praktijk');
     else if (item.campagnes) onView('campagnes');
@@ -44,29 +106,68 @@ export function Sidebar({ view, onView }: { view: View; onView: (view: View) => 
       }
     } else toast(t('nav.soon', { label: t(item.label) }));
   };
-  const current = (index: number) =>
-    view === 'praktijk' ? Boolean(NAV[index].praktijk) : view === 'campagnes' ? Boolean(NAV[index].campagnes) : index === 0;
+  // Inside Praktijk the screen under it is the current page; Praktijk itself is then the open group above it.
+  const inPraktijk = view === 'praktijk';
+  const current = (index: number) => (view === 'campagnes' ? Boolean(NAV[index].campagnes) : view === 'overview' && index === 0);
+  const wordmark = (
+    <div className="logo" role="img" aria-label="Pure Clinics">
+      <span className="wordmark" aria-hidden="true">
+        <b>PURE</b>CLINICS
+      </span>
+    </div>
+  );
   return (
-    <aside className="sidebar">
-      <div className="logo" role="img" aria-label="Pure Clinics">
-        <span className="wordmark" aria-hidden="true">
-          <b>PURE</b>CLINICS
-        </span>
+    <aside ref={aside} className={`sidebar ${open ? 'is-open' : ''}`}>
+      <div className="sidebar-top">
+        {wordmark}
+        <button ref={menuButton} className="menu-button" aria-expanded={open} aria-controls="side-menu" onClick={() => setOpen(true)}>
+          <Icon name="menu" size={19} />
+          {t('nav.menu')}
+        </button>
       </div>
 
-      <nav className="nav" aria-label={t('nav.label')}>
-        {NAV.map((item, index) => (
-          <button key={item.label} aria-current={current(index) ? 'page' : undefined} onClick={() => go(index)}>
-            <Icon name={item.icon} />
-            {t(item.label)}
-            {item.praktijk ? <span className="pk-nav-chip">{t('pk.nav.chip')}</span> : null}
-          </button>
-        ))}
-      </nav>
+      <div className="side-backdrop" aria-hidden="true" onClick={() => setOpen(false)} />
 
-      <div className="test-box">
-        <strong>{t('test.title')}</strong>
-        {t('test.body')}
+      <div id="side-menu" className="side-menu">
+        <div className="side-menu-head">
+          {wordmark}
+          <button ref={closeButton} className="menu-close" aria-label={t('nav.menuClose')} onClick={() => setOpen(false)}>
+            <Icon name="close" size={19} />
+          </button>
+        </div>
+
+        <nav className="nav" aria-label={t('nav.label')}>
+          {NAV.map((item, index) => (
+            <Fragment key={item.label}>
+              <button
+                className={item.praktijk && inPraktijk ? 'is-open' : undefined}
+                aria-current={current(index) ? 'page' : undefined}
+                aria-expanded={item.praktijk ? inPraktijk : undefined}
+                onClick={() => go(index)}
+              >
+                <Icon name={item.icon} />
+                {t(item.label)}
+                {item.praktijk ? <span className="pk-nav-chip">{t('pk.nav.chip')}</span> : null}
+              </button>
+              {item.praktijk ? (
+                <div className={`nav-sub ${inPraktijk ? 'is-open' : ''}`} inert={!inPraktijk}>
+                  <div ref={sub} className="nav-sub-list" role="group" aria-label={t('pk.subnav.label')}>
+                    {SCREENS.map((s) => (
+                      <button key={s.id} aria-current={inPraktijk && s.id === screen ? 'page' : undefined} onClick={() => pick(s.id)}>
+                        {t(`pk.screen.${s.id}`)}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+            </Fragment>
+          ))}
+        </nav>
+
+        <div className="test-box">
+          <strong>{t('test.title')}</strong>
+          {t('test.body')}
+        </div>
       </div>
     </aside>
   );

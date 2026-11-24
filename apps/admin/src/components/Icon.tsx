@@ -20,6 +20,7 @@ const PATHS = {
   down: 'M12 6v12M7 13l5 5 5-5',
   plus: 'M12 5v14M5 12h14',
   close: 'M6 6l12 12M18 6 6 18',
+  menu: 'M4 7h16M4 12h16M4 17h16',
   bag: 'M5 8h14l-1 12H6zM9 8V6.5a3 3 0 0 1 6 0V8',
   undo: 'M9 6.5 4.5 11 9 15.5M5 11h10a4.5 4.5 0 0 1 0 9h-3',
   queue: 'M4 6h12M4 12h12M4 18h7M17 15v6M14 18h6',

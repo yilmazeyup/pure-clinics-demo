@@ -109,7 +109,7 @@ function Panel() {
         <Sidebar
           view={praktijk ? 'praktijk' : campagnes ? 'campagnes' : 'overview'}
           onView={(view) =>
-            view === 'campagnes' ? openCampagnes({ tab: campagnes?.tab ?? lastTab }) : open(view === 'praktijk' ? (praktijk?.screen ?? 'agenda') : null)
+            view === 'campagnes' ? openCampagnes({ tab: campagnes?.tab ?? lastTab }) : open(view === 'praktijk' ? (praktijk?.screen ?? 'overzicht') : null)
           }
         />
         <main className="main">
@@ -120,6 +120,7 @@ function Panel() {
             onPlay={clock.play}
             onStop={clock.stop}
             onTour={tour}
+            compact={!!praktijk}
           />
           {praktijk ? (
             <Praktijk now={clock.now} screen={praktijk.screen} feature={praktijk.feature} onScreen={open} />

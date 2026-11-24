@@ -79,15 +79,17 @@ type TopbarProps = {
   onPlay: () => void;
   onStop: () => void;
   onTour: () => void;
+  /** Inside a module (Pure Praktijk): a smaller greeting and fewer buttons on a phone, so the module's own content starts high. */
+  compact?: boolean;
 };
 
-export function Topbar({ now, playing, progress, onPlay, onStop, onTour }: TopbarProps) {
+export function Topbar({ now, playing, progress, onPlay, onStop, onTour, compact = false }: TopbarProps) {
   const i18n = useI18n();
   const { t, clock, locale } = i18n;
   const setLocale = useSetLocale();
   const toast = useToast();
   return (
-    <header className="topbar rise">
+    <header className={`topbar rise ${compact ? 'topbar--compact' : ''}`}>
       <div>
         <h1 className="greeting">
           <Accent text={i18n.greeting(now)} />

@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState, type ComponentType, type CSSProperties } from 'react';
 
-import { Accent, useI18n } from '../i18n';
+import { useI18n } from '../i18n';
 // The module's base styles load before every screen's own, so a screen can refine a kit class.
 import './praktijk.css';
 import { PraktijkProvider, usePraktijk } from './context';
-import { EXTRAS, FEATURES } from './features';
 import { PkIcon } from './icons';
 import { SCREENS, type ScreenId } from './nav';
+import { OverviewScreen } from './overview/Overview';
 import { AgendaScreen } from './screens/Agenda';
 import { ClientsScreen } from './screens/Clients';
 import { ClaimsScreen } from './screens/Claims';
@@ -22,6 +22,7 @@ import { StockScreen } from './screens/Stock';
 import { TeamScreen } from './screens/Team';
 
 const VIEWS: Record<ScreenId, ComponentType> = {
+  overzicht: OverviewScreen,
   agenda: AgendaScreen,
   planner: PlannerScreen,
   portaal: PortalScreen,
@@ -92,38 +93,8 @@ function Module() {
     return () => window.clearTimeout(timer);
   }, [target?.at]);
 
-  const total = FEATURES.length + EXTRAS.length;
   return (
     <div className="pk">
-      <section className="card pk-head rise">
-        <div className="pk-head-top">
-          <div className="pk-head-text">
-            <span className="eyebrow">{t('pk.head.eyebrow')}</span>
-            <h1 className="pk-title">
-              <Accent text={t('pk.head.title')} />
-            </h1>
-            <p className="help">{t('pk.head.help')}</p>
-          </div>
-          <div className="pk-head-side">
-            <span className="pk-chip pk-chip--good">
-              <i className="live-dot" />
-              {t('pk.head.active')}
-            </span>
-            <button className="pk-head-link" onClick={() => go('functies')}>
-              <strong>{t('pk.head.features', { n: total, screens: SCREENS.length })}</strong>
-              <span>
-                {t('pk.head.all')}
-                <PkIcon name="arrow" size={14} />
-              </span>
-            </button>
-          </div>
-        </div>
-        <p className="pk-demo-line">
-          <PkIcon name="info" size={15} />
-          {t('pk.head.demo')}
-        </p>
-      </section>
-
       <nav ref={nav} className="pk-subnav rise" aria-label={t('pk.subnav.label')} style={{ '--d': '60ms' } as CSSProperties}>
         {SCREENS.map((s) => (
           <button key={s.id} aria-current={s.id === screen ? 'page' : undefined} onClick={() => go(s.id)}>
@@ -138,10 +109,13 @@ function Module() {
           const View = VIEWS[id];
           return (
             <div key={id} data-screen={id} className="pk-screen" hidden={id !== screen}>
-              <header className="pk-screen-head">
-                <h2 className="pk-screen-title">{t(`pk.screen.${id}`)}</h2>
-                <p className="help">{t(`pk.help.${id}`)}</p>
-              </header>
+              {/* The overview carries its own title in its hero. */}
+              {id === 'overzicht' ? null : (
+                <header className="pk-screen-head">
+                  <h2 className="pk-screen-title">{t(`pk.screen.${id}`)}</h2>
+                  <p className="help">{t(`pk.help.${id}`)}</p>
+                </header>
+              )}
               <View />
             </div>
           );

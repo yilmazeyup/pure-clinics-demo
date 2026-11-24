@@ -14,6 +14,7 @@ export const shell: Record<keyof typeof source, string> = {
   'pk.head.all': 'اعرض قائمة الوظائف',
   'pk.subnav.label': 'أقسام Pure Praktijk',
 
+  'pk.screen.overzicht': 'نظرة عامة',
   'pk.screen.agenda': 'المواعيد',
   'pk.screen.planner': 'المخطِّط والموارد',
   'pk.screen.portaal': 'الحجز عبر الإنترنت',
@@ -28,6 +29,7 @@ export const shell: Record<keyof typeof source, string> = {
   'pk.screen.instellingen': 'الإعدادات والتكاملات',
   'pk.screen.functies': 'قائمة الوظائف',
 
+  'pk.help.overzicht': 'العيادة في لمحة: الإيرادات، أوقات الذروة ثلاثية الأبعاد، المهام واليوم.',
   'pk.help.agenda':
     'يوم أو أسبوع عمل أو أسبوع أو شهر، لكل غرفة أو لكل موظف. اسحب موعدًا لنقله؛ وتُظهر الأيقونات إن كان مؤكدًا وصدرت فاتورته ووُثّق.',
   'pk.help.planner': 'الأجهزة والتوفّر، ومخطِّط يجد بنفسه الأوقات المناسبة حين يكون الموظف والجهاز كلاهما متاحين.',

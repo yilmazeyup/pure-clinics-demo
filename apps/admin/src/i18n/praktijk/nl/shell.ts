@@ -15,6 +15,7 @@ export const shell = {
   'pk.head.all': 'Bekijk het functieoverzicht',
   'pk.subnav.label': 'Onderdelen van Pure Praktijk',
 
+  'pk.screen.overzicht': 'Overzicht',
   'pk.screen.agenda': 'Agenda',
   'pk.screen.planner': 'Planner & middelen',
   'pk.screen.portaal': 'Online boeken',
@@ -29,6 +30,7 @@ export const shell = {
   'pk.screen.instellingen': 'Instellingen & koppelingen',
   'pk.screen.functies': 'Functieoverzicht',
 
+  'pk.help.overzicht': 'De praktijk in één oogopslag: omzet, drukte in 3D, actiepunten en vandaag.',
   'pk.help.agenda':
     'Dag, werkweek, week of maand, per kamer of per medewerker. Sleep een afspraak om hem te verplaatsen; de icoontjes laten zien of hij bevestigd, gefactureerd en verslagen is.',
   'pk.help.planner': 'Apparatuur, beschikbaarheid en een planner die zelf de passende momenten zoekt, met de medewerker én het apparaat vrij.',

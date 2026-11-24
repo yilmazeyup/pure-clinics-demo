@@ -2,6 +2,7 @@ import type { PkIconName } from './icons';
 
 /** The screens of Pure Praktijk, in the order of the sub-navigation; the id is also the link: #praktijk/<id>. */
 export const SCREENS = [
+  { id: 'overzicht', icon: 'grid' },
   { id: 'agenda', icon: 'calendar' },
   { id: 'planner', icon: 'device' },
   { id: 'portaal', icon: 'globe' },
@@ -25,6 +26,6 @@ export const isScreen = (value: string): value is ScreenId => SCREENS.some((s) =
 export function screenFromHash(hash: string): { screen: ScreenId; feature?: string } | null {
   const match = /^#praktijk(?:\/([a-z]+))?(?:\/([\w.]+))?$/.exec(hash);
   if (!match) return null;
-  const screen = match[1] && isScreen(match[1]) ? match[1] : 'agenda';
+  const screen = match[1] && isScreen(match[1]) ? match[1] : 'overzicht';
   return { screen, feature: match[2] };
 }

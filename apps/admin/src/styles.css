@@ -2243,3 +2243,51 @@ li {
 .pk-loading {
   min-height: 70vh;
 }
+
+/* ---------- Top bar inside a module (Pure Praktijk) ---------- */
+
+.topbar--compact {
+  align-items: center;
+}
+
+.topbar--compact .greeting {
+  font-size: 30px;
+}
+
+.topbar--compact .subline {
+  margin-top: 4px;
+  font-size: 13px;
+}
+
+@media (max-width: 900px) {
+  .topbar--compact {
+    gap: 10px;
+  }
+
+  .topbar--compact .greeting {
+    font-size: 25px;
+  }
+
+  .topbar--compact .subline,
+  .topbar--compact .demo-chip,
+  .topbar--compact .tour-button,
+  .topbar--compact .live-chip {
+    display: none;
+  }
+
+  /* One row of buttons that scrolls sideways if it must, instead of three rows. */
+  .topbar--compact .top-actions {
+    width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .topbar--compact .top-actions::-webkit-scrollbar {
+    display: none;
+  }
+
+  .topbar--compact .top-actions > * {
+    flex: none;
+  }
+}

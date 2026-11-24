@@ -14,6 +14,7 @@ export const shell: Record<keyof typeof source, string> = {
   'pk.head.all': 'Zur Funktionsübersicht',
   'pk.subnav.label': 'Bereiche von Pure Praktijk',
 
+  'pk.screen.overzicht': 'Übersicht',
   'pk.screen.agenda': 'Kalender',
   'pk.screen.planner': 'Planer & Ressourcen',
   'pk.screen.portaal': 'Online buchen',
@@ -28,6 +29,7 @@ export const shell: Record<keyof typeof source, string> = {
   'pk.screen.instellingen': 'Einstellungen & Schnittstellen',
   'pk.screen.functies': 'Funktionsübersicht',
 
+  'pk.help.overzicht': 'Die Praxis auf einen Blick: Umsatz, Stoßzeiten in 3D, Aufgaben und der heutige Tag.',
   'pk.help.agenda':
     'Tag, Arbeitswoche, Woche oder Monat, pro Raum oder pro Mitarbeiter:in. Zieh einen Termin, um ihn zu verschieben; die Symbole zeigen, ob er bestätigt, abgerechnet und dokumentiert ist.',
   'pk.help.planner': 'Geräte, Verfügbarkeit und ein Planer, der selbst passende Zeiten sucht, an denen Mitarbeiter:in und Gerät frei sind.',

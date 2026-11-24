@@ -1,6 +1,7 @@
 import type { nl } from '../nl';
 import { agenda } from './agenda';
 import { berichten } from './berichten';
+import { overzicht } from './overzicht';
 import { clienten } from './clienten';
 import { declaraties } from './declaraties';
 import { dossier } from './dossier';
@@ -17,6 +18,7 @@ import { voorraad } from './voorraad';
 /** Every text of Pure Praktijk in Spanish, the same keys as the Dutch source. */
 export const es: Record<keyof typeof nl, string> = {
   ...shell,
+  ...overzicht,
   ...features,
   ...agenda,
   ...planner,

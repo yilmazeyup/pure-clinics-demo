@@ -1,5 +1,6 @@
 import { agenda } from './agenda';
 import { berichten } from './berichten';
+import { overzicht } from './overzicht';
 import { clienten } from './clienten';
 import { declaraties } from './declaraties';
 import { dossier } from './dossier';
@@ -16,6 +17,7 @@ import { voorraad } from './voorraad';
 /** Every text of Pure Praktijk in Dutch, the source language; one file per screen. */
 export const nl = {
   ...shell,
+  ...overzicht,
   ...features,
   ...agenda,
   ...planner,

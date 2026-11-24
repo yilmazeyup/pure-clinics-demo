@@ -14,6 +14,7 @@ export const shell: Record<keyof typeof source, string> = {
   'pk.head.all': 'Vedi la panoramica delle funzioni',
   'pk.subnav.label': 'Sezioni di Pure Praktijk',
 
+  'pk.screen.overzicht': 'Panoramica',
   'pk.screen.agenda': 'Agenda',
   'pk.screen.planner': 'Planner e risorse',
   'pk.screen.portaal': 'Prenotazione online',
@@ -28,6 +29,7 @@ export const shell: Record<keyof typeof source, string> = {
   'pk.screen.instellingen': 'Impostazioni e integrazioni',
   'pk.screen.functies': 'Panoramica funzioni',
 
+  'pk.help.overzicht': 'Lo studio a colpo d’occhio: fatturato, ore di punta in 3D, cose da fare e oggi.',
   'pk.help.agenda':
     'Giorno, settimana lavorativa, settimana o mese, per sala o per operatore. Trascina un appuntamento per spostarlo; le icone mostrano se è confermato, fatturato e documentato.',
   'pk.help.planner': 'Apparecchiature, disponibilità e un planner che trova da solo i momenti adatti, con l’operatore e anche l’apparecchio liberi.',

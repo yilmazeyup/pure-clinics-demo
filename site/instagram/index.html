@@ -113,7 +113,7 @@
       .row .note { margin: 18px 0 0; color: var(--muted); font-size: 14px; }
       .round-head { padding-top: 24px; border-top: 1px solid var(--ink); }
       .round-head .looks { margin-top: 18px; }
-      /* Mooi / liever niet per row and per post; the choices go to WhatsApp from the bar at the bottom (23 Nov). */
+      /* Mooi / liever niet per row and per post; every change is e-mailed to us via FormSubmit (24 Nov), WhatsApp stays as a backup. */
       .vote { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 0; }
       .vote button { appearance: none; display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); background: var(--ivory); color: var(--ink); font: 400 15px/1 var(--sans); padding: 12px 18px; border-radius: 999px; cursor: pointer; transition: background .25s, color .25s, border-color .25s; }
       .vote button svg { width: 16px; height: 16px; flex: none; }
@@ -190,7 +190,7 @@
           <h1>drie posts, <em>één beeld</em></h1>
           <p class="lead">Elke rij op het profiel is één beeld: een product, een campagne en echt werk van Pure Clinics. Los bekeken is elke post een complete foto.</p>
           <p class="hint">In crème en walnootbruin, met weinig tekst op het beeld. Kies Profiel om de rij te zien zoals op Instagram, of Los om de posts één voor één te bekijken. Posts van 1080 × 1440 (3:4), het formaat van het Instagram-raster.</p>
-          <p class="hint">Onder elke rij en elke post kies je <b>Mooi</b> of <b>Liever niet</b>. Met de knop onderaan stuur je je keuzes via WhatsApp naar ons.</p>
+          <p class="hint">Onder elke rij en elke post kies je <b>Mooi</b> of <b>Liever niet</b>. Je keuzes komen vanzelf bij ons binnen; je hoeft niets te versturen.</p>
         </div>
         <div class="view" role="group" aria-label="Bekijk de rijen">
           <button type="button" data-v="profiel" aria-pressed="true">Profiel</button>
@@ -237,7 +237,7 @@
         <p class="mono">November – december · 32 posts · 11 video's</p>
         <h1>de planning, <em>post voor post</em></h1>
         <p class="lead">Alle posts van 22 november tot en met 31 december, op datum en met hetzelfde nummer als in de pdf.</p>
-        <p class="hint">Kies bij elke post <b>Mooi</b> of <b>Liever niet</b>. Met de knop onderaan stuur je al je keuzes in één WhatsApp-bericht.</p>
+        <p class="hint">Kies bij elke post <b>Mooi</b> of <b>Liever niet</b>. Je keuzes komen vanzelf bij ons binnen.</p>
       </section>
       <section class="wrap pk-grid" aria-label="De posts van november en december">
         <article class="pk" id="pk-01" data-title="Laserontharen (4 slides)">
@@ -588,9 +588,20 @@
         update();
       }
 
-      // Mooi / liever niet under every row and every post. The choices stay in this browser and go out as one
-      // WhatsApp message (wa.me without a number, so the sender picks the chat).
+      // Mooi / liever niet under every row and every post. The choices are kept in this browser and, a few seconds
+      // after the last click (or when the page is left), the whole current set is e-mailed to us through FormSubmit,
+      // so nobody has to press a send button. WhatsApp (wa.me without a number) stays as a backup in the bar.
       const KEY = 'pure-ig-votes';
+      // FormSubmit form, activated for this page on 24 Nov; the address is only encoded, not hidden.
+      const MAIL = 'https://formsubmit.co/ajax/' + atob('bWVAZXl1cHlpbG1hei5jb20=');
+      const SENT = 'pure-ig-votes-sent';
+      const DEVICE = (() => {
+        try {
+          let d = localStorage.getItem('pure-ig-device');
+          if (!d) { d = Math.random().toString(36).slice(2, 8); localStorage.setItem('pure-ig-device', d); }
+          return d;
+        } catch { return 'onbekend'; }
+      })();
       let votes = {};
       try { votes = JSON.parse(localStorage.getItem(KEY)) || {}; } catch { votes = {}; }
       const save = () => { try { localStorage.setItem(KEY, JSON.stringify(votes)); } catch { /* private mode */ } };
@@ -612,6 +623,7 @@
           save();
           paint();
           renderBar();
+          queueMail();
         });
         host.append(box);
         items.push({ key, label });
@@ -636,7 +648,7 @@
       const bar = document.createElement('div');
       bar.className = 'sendbar';
       bar.setAttribute('aria-live', 'polite');
-      bar.innerHTML = '<span></span><a target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 18.8z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>Stuur via WhatsApp</a>';
+      bar.innerHTML = '<span></span><a target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 18.8z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>Ook via WhatsApp</a>';
       document.body.append(bar);
       function renderBar() {
         const pick = (v) => items.filter((it) => votes[it.key] === v).map((it) => it.label);
@@ -644,12 +656,60 @@
         const no = pick('niet');
         const n = yes.length + no.length;
         bar.classList.toggle('on', n > 0);
-        bar.querySelector('span').textContent = n === 1 ? '1 keuze' : n + ' keuzes';
+        bar.querySelector('span').textContent = (n === 1 ? '1 keuze' : n + ' keuzes') + (status ? ' · ' + status : '');
         const text = ['Pure Clinics · Instagram', yes.length ? 'Mooi: ' + yes.join(', ') : '', no.length ? 'Liever niet: ' + no.join(', ') : '']
           .filter(Boolean)
           .join('\n');
         bar.querySelector('a').href = 'https://wa.me/?text=' + encodeURIComponent(text);
       }
+
+      // E-mail the current set: debounced, never twice the same set, flushed when the page is hidden or left.
+      let status = '';
+      let timer = 0;
+      const snapshot = () => {
+        const pick = (v) => items.filter((it) => votes[it.key] === v).map((it) => it.label);
+        return { yes: pick('mooi'), no: pick('niet') };
+      };
+      let lastSent = '';
+      try { lastSent = localStorage.getItem(SENT) || ''; } catch { /* private mode */ }
+      function sendMail() {
+        clearTimeout(timer);
+        timer = 0;
+        const s = snapshot();
+        const sig = JSON.stringify(s);
+        if (sig === lastSent) return;
+        const body = {
+          _subject: 'Pure Clinics · Instagram-stemmen (' + (s.yes.length + s.no.length) + ')',
+          _template: 'table',
+          _captcha: 'false',
+          Mooi: s.yes.join('\n') || '–',
+          'Liever niet': s.no.join('\n') || '–',
+          Tijd: new Date().toLocaleString('nl-NL', { timeZone: 'Europe/Amsterdam' }),
+          Apparaat: DEVICE,
+          Pagina: location.href,
+        };
+        status = 'wordt verstuurd…';
+        renderBar();
+        fetch(MAIL, { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(body) })
+          .then((r) => r.json())
+          .then((j) => {
+            if (String(j.success) !== 'true') throw new Error(j.message || 'niet verstuurd');
+            lastSent = sig;
+            try { localStorage.setItem(SENT, sig); } catch { /* private mode */ }
+            status = 'ontvangen ✓';
+            renderBar();
+          })
+          .catch(() => { status = 'niet verstuurd, stuur via WhatsApp'; renderBar(); });
+      }
+      function queueMail() {
+        status = '';
+        renderBar();
+        clearTimeout(timer);
+        timer = setTimeout(sendMail, 6000);
+      }
+      const flush = () => { if (timer) sendMail(); };
+      document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flush(); });
+      addEventListener('pagehide', flush);
       renderBar();
     </script>
   </body>

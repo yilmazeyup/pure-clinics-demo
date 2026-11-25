@@ -146,6 +146,11 @@ export const EXTRAS: Feature[] = [
   { id: 'more.calendar', screen: 'team' },
   { id: 'more.membership', screen: 'clienten' },
   { id: 'more.waitlist', screen: 'agenda' },
+  { id: 'more.shelf', screen: 'voorraad' },
+  { id: 'more.forecast', screen: 'voorraad' },
+  { id: 'more.sales', screen: 'voorraad' },
+  { id: 'more.request', screen: 'voorraad' },
+  { id: 'more.reviews', screen: 'voorraad' },
 ];
 
 /** The features that live on one screen, in inventory order. */

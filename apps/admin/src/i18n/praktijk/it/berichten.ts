@@ -234,7 +234,7 @@ export const berichten: Record<keyof typeof source, string> = {
   'pk.berichten.smtp.title': 'Invio dal *proprio indirizzo*',
   'pk.berichten.smtp.help': 'Con un server SMTP proprio ogni e-mail parte dal proprio dominio e compare anche nella propria posta inviata.',
   'pk.berichten.smtp.own': 'Usa un server SMTP proprio',
-  'pk.berichten.smtp.ownHint': 'Disattivo: le e-mail passano dal server di Pure Praktijk',
+  'pk.berichten.smtp.ownHint': 'Disattivo: le e-mail passano dal server di Pure Clinics',
   'pk.berichten.smtp.host': 'Server',
   'pk.berichten.smtp.port': 'Porta',
   'pk.berichten.smtp.user': 'Nome utente',

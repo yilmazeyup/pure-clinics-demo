@@ -24,7 +24,8 @@ import {
   type Payment,
   type StripCard,
 } from '../../data/billing';
-import { seedGiftCards, seedStock, type GiftCard, type StockLevels } from '../../data/shared';
+import { seedGiftCards, type GiftCard, type StockLevels } from '../../data/shared';
+import { stockAt } from '../../data/stock';
 
 /**
  * Everything at the desk, shared by Facturen & kassa and Declaraties: invoices, claims, gift and strip cards, stock and
@@ -39,7 +40,7 @@ export function useBilling() {
   const [claims, setClaims] = useShared<Claim[]>('claims', () => seed().claims);
   const [giftcards, setGiftcards] = useShared<GiftCard[]>('giftcards', () => seedGiftCards(today));
   const [giftUses, setGiftUses] = useShared<Record<string, GiftUse[]>>('giftUses', () => seed().giftUses);
-  const [stock, setStock] = useShared<StockLevels>('stock', seedStock);
+  const [stock, setStock] = useShared<StockLevels>('stock', () => stockAt(now));
   const [strips, setStrips] = useShared<StripCard[]>('strips', () => seed().strips);
   const [bookings, setBookings] = useShared<CashBooking[]>('cashBookings', () => seed().bookings);
   const [checks, setChecks] = useShared<CashCheck[]>('cashChecks', () => seed().checks);

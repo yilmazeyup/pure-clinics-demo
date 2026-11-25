@@ -172,18 +172,7 @@ li {
 }
 
 /* Praktijk is a monthly subscription next to the panel: a small chip says so. */
-.nav button .pk-nav-chip {
-  margin-inline-start: auto;
-  padding: 2px 7px;
-  border-radius: 999px;
-  border: 1px solid var(--line-strong);
-  font-size: 10.5px;
-  letter-spacing: 0.04em;
-  color: var(--muted);
-  white-space: nowrap;
-}
-
-/* An open group: Praktijk itself in ink, the screen under it carries the brown. */
+/* An open group: Kliniek itself in ink, the screen under it carries the brown. */
 .nav button.is-open {
   color: var(--ink);
   font-weight: 500;
@@ -2456,5 +2445,626 @@ li {
 
   .topbar--compact .top-actions > * {
     flex: none;
+  }
+}
+
+/* ---------- Treatment plans: the overview card opens the full page (…/#trajecten) ---------- */
+
+.courses-card.is-link {
+  cursor: pointer;
+  transition:
+    border-color 0.25s,
+    box-shadow 0.35s;
+}
+
+.courses-card.is-link:hover {
+  border-color: var(--line-strong);
+  box-shadow: 0 18px 40px -30px rgba(63, 49, 40, 0.35);
+}
+
+[dir='rtl'] .courses-open svg {
+  transform: scaleX(-1);
+}
+
+.courses-more {
+  font-size: 12.5px;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--line-strong);
+  text-underline-offset: 3px;
+}
+
+.courses-more:hover {
+  text-decoration-color: var(--ink);
+}
+
+.tp-page {
+  display: grid;
+  gap: var(--gap);
+}
+
+.tp-head {
+  display: grid;
+  justify-items: start;
+  gap: 6px;
+}
+
+.tp-head .help {
+  margin: 2px 0 0;
+}
+
+.tp-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  margin-inline-start: -8px;
+  margin-bottom: 4px;
+  padding-inline: 8px 10px;
+  border-radius: var(--radius-control);
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.tp-back:hover {
+  background: var(--soft);
+  color: var(--ink);
+}
+
+.tp-back svg {
+  transform: scaleX(-1);
+}
+
+[dir='rtl'] .tp-back svg {
+  transform: none;
+}
+
+.tp-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 44px;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+.tp-title em {
+  font-style: italic;
+}
+
+[dir='rtl'] .tp-title {
+  line-height: 1.35;
+}
+
+/* The tiles are the status filter: the pressed one is drawn with a dark edge. */
+.tp-tiles {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.tp-tile {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  padding: 16px 18px;
+  text-align: start;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    transform 0.2s;
+}
+
+.tp-tile:hover {
+  border-color: var(--line-strong);
+  transform: translateY(-1px);
+}
+
+.tp-tile[aria-pressed='true'] {
+  border-color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--ink);
+}
+
+.tp-tile-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+[dir='rtl'] .tp-tile-label,
+[dir='rtl'] .tp-select,
+[dir='rtl'] .tp-row--head {
+  font-size: 12px;
+  letter-spacing: 0;
+}
+
+.tp-tile-value {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 40px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.tp-tile--late .tp-tile-value {
+  color: var(--bad);
+}
+
+.tp-tile.is-zero .tp-tile-value {
+  color: var(--muted);
+}
+
+.tp-tile-sub {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+/* One small square per status, the same in the tiles, the list and the bars. */
+.tp-dot {
+  display: inline-block;
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+}
+
+.tp-dot--late,
+.tp-bar-part--late {
+  background: var(--bad);
+}
+
+.tp-dot--due,
+.tp-bar-part--due {
+  background: var(--ink);
+}
+
+.tp-dot--planned,
+.tp-bar-part--planned {
+  background: var(--good);
+}
+
+.tp-dot--onTrack,
+.tp-bar-part--onTrack {
+  background: var(--line-strong);
+}
+
+.tp-card {
+  display: grid;
+  gap: 14px;
+}
+
+.tp-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px;
+  scroll-margin-top: 20px;
+}
+
+.tp-search {
+  flex: 1 1 220px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  color: var(--muted);
+}
+
+.tp-search:focus-within {
+  border-color: var(--ink);
+}
+
+.tp-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font: inherit;
+  letter-spacing: inherit;
+  color: var(--ink);
+}
+
+.tp-select {
+  display: grid;
+  gap: 4px;
+  flex: 0 1 180px;
+  min-width: 130px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.tp-select select {
+  width: 100%;
+  min-width: 0;
+  height: 38px;
+  padding: 0 30px 0 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-control);
+  background: var(--surface)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23908070' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")
+    no-repeat right 10px center;
+  appearance: none;
+  font: inherit;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+[dir='rtl'] .tp-select select {
+  padding: 0 10px 0 30px;
+  background-position: left 10px center;
+}
+
+.tp-select select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.tp-reset {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 38px;
+  padding: 0 10px;
+  border-radius: var(--radius-control);
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.tp-reset:hover {
+  background: var(--soft);
+  color: var(--ink);
+}
+
+.tp-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+/* Name, specialist, progress, last and next session, status and the button on one line. */
+.tp-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.7fr) 150px minmax(0, 0.75fr) minmax(0, 0.9fr) minmax(0, 1fr) 96px;
+  align-items: center;
+  gap: 14px;
+  min-height: 56px;
+  padding-block: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.tp-row--head {
+  min-height: 0;
+  padding-block: 4px 8px;
+  border-top: 0;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.tp-who {
+  display: grid;
+  min-width: 0;
+}
+
+.tp-who strong {
+  font-weight: 500;
+}
+
+.tp-who > span {
+  overflow: hidden;
+  font-size: 12.5px;
+  color: var(--muted);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.tp-who-spec,
+.tp-cell-label {
+  display: none;
+}
+
+.tp-muted {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.tp-prog {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tp-prog .course-steps {
+  --tile: 9px;
+  --tile-gap: 3px;
+}
+
+.tp-prog small {
+  font-size: 12px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.tp-next {
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.tp-state {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.tp-row--due .tp-state {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.tp-row--late .tp-state {
+  color: var(--bad);
+  font-weight: 500;
+}
+
+.tp-row--planned .tp-state {
+  color: var(--good);
+}
+
+.tp-action {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.tp-empty {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 36px 0 22px;
+  color: var(--muted);
+}
+
+/* Per treatment: how many clients, and one bar split by status. A click filters the list on that treatment. */
+.tp-series .card-head {
+  align-items: flex-end;
+  margin-bottom: 14px;
+}
+
+.tp-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.tp-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tp-series-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.tp-serie {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  padding: 14px 16px;
+  text-align: start;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+}
+
+.tp-serie:hover {
+  background: #fcf9f4;
+  border-color: var(--line-strong);
+}
+
+.tp-serie[aria-pressed='true'] {
+  border-color: var(--ink);
+}
+
+.tp-serie-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.tp-serie-name {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.tp-serie-name strong {
+  font-weight: 500;
+}
+
+.tp-serie-name span {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.tp-serie-count {
+  font-family: var(--display);
+  font-size: 30px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.tp-serie-bar {
+  display: flex;
+  gap: 2px;
+  height: 8px;
+}
+
+.tp-bar-part {
+  flex: 1 1 0;
+  min-width: 6px;
+  border-radius: 2px;
+}
+
+.tp-serie-late {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.tp-serie-late.is-late {
+  color: var(--bad);
+  font-weight: 500;
+}
+
+@media (max-width: 1360px) {
+  .tp-series-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* A narrower main column: the specialist goes under the name and the last session drops out. */
+@media (max-width: 1200px) and (min-width: 901px) {
+  .tp-tiles {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .tp-tile--all {
+    grid-column: span 2;
+  }
+
+  .tp-row {
+    grid-template-columns: minmax(0, 1.6fr) 140px minmax(0, 0.9fr) minmax(0, 1fr) 96px;
+  }
+
+  .tp-col-spec,
+  .tp-col-last {
+    display: none;
+  }
+
+  .tp-who-spec {
+    display: inline;
+  }
+}
+
+/* A phone and a tablet: three short lines per client, with the button at the top. */
+@media (max-width: 900px) {
+  .tp-title {
+    font-size: 34px;
+  }
+
+  .tp-tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .tp-tile--all {
+    grid-column: 1 / -1;
+  }
+
+  .tp-tile {
+    padding: 14px 15px;
+  }
+
+  .tp-tile-value {
+    font-size: 34px;
+  }
+
+  .tp-select {
+    flex: 1 1 140px;
+    min-width: 0;
+  }
+
+  .tp-row--head,
+  .tp-col-spec {
+    display: none;
+  }
+
+  .tp-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'who action'
+      'prog state'
+      'last next';
+    gap: 8px 12px;
+    padding-block: 12px;
+  }
+
+  .tp-who {
+    grid-area: who;
+  }
+
+  .tp-who > span {
+    white-space: normal;
+  }
+
+  .tp-who-spec {
+    display: inline;
+  }
+
+  .tp-action {
+    grid-area: action;
+  }
+
+  .tp-prog {
+    grid-area: prog;
+  }
+
+  .tp-state {
+    grid-area: state;
+    justify-content: flex-end;
+    text-align: end;
+  }
+
+  .tp-col-last {
+    grid-area: last;
+  }
+
+  .tp-next {
+    grid-area: next;
+    text-align: end;
+  }
+
+  .tp-cell-label {
+    display: inline;
+    margin-inline-end: 5px;
+    color: var(--muted);
+  }
+
+  .tp-series-list {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

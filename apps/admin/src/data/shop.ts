@@ -1,6 +1,7 @@
-import { dateKey, PRODUCTS, SHIPPING_FEE, startOfDay, treatmentById, type LocationId, type Product, type ProductId } from '@pure-clinics/shared';
+import { dateKey, LOCATIONS, PRODUCTS, SHIPPING_FEE, startOfDay, treatmentById, type LocationId, type Product, type ProductId } from '@pure-clinics/shared';
 
 import { between, personName, pick, rng } from './random';
+import { seedStock } from './stockSeed';
 
 export type OrderLine = { product: Product; qty: number };
 
@@ -87,9 +88,18 @@ export const orderTotal = (orders: Order[]) => orders.reduce((sum, o) => sum + o
 
 export const shopRevenue = (day: Date) => orderTotal(shopDay(day));
 
-/** Units on the shelf at the start of the day: demo stock, with the sold-out product at zero. */
-export function stockOf(product: Product, day: Date): number {
+/**
+ * What is left of a product now, both clinics together: each order comes off the clinic nearest to the customer, and a
+ * clinic's shelf never goes below zero. The stock screen in Kliniek counts it the same way (data/stock.ts stockAt).
+ */
+export function leftNow(product: Product, orders: Order[]): number {
   if (product.soldOut) return 0;
-  if (product.id === 'camouflage-set') return 4;
-  return between(rng(`stock-${product.id}-${dateKey(day)}`), 7, 36);
+  const levels = seedStock();
+  for (const order of orders)
+    for (const line of order.lines)
+      if (line.product.id === product.id) {
+        const at = clinicOfOrder(order);
+        levels[at][product.id] = Math.max(0, levels[at][product.id] - line.qty);
+      }
+  return LOCATIONS.reduce((n, l) => n + levels[l.id][product.id], 0);
 }

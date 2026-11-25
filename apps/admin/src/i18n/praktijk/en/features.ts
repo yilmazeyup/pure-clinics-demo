@@ -251,4 +251,9 @@ export const features: Record<keyof typeof source, string> = {
   'pk.f.more.calendar': 'Link the diary to Google and Outlook',
   'pk.f.more.membership': 'Memberships',
   'pk.f.more.waitlist': 'Waiting list',
+  'pk.f.more.shelf': 'The stock as a 3D shelf, per clinic or together',
+  'pk.f.more.forecast': 'When a product runs out: next week, next month, and the last day to order',
+  'pk.f.more.sales': 'Sold per product, at the desk and via the webshop',
+  'pk.f.more.request': 'Request per product, with a request e-mail per supplier, automatic or with approval',
+  'pk.f.more.reviews': 'Reviews per product',
 };

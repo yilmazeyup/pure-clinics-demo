@@ -1,9 +1,14 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 
+import { ClientHome } from './account/ClientHome';
+import { AccountProvider, useAccount } from './account/context';
+import { SignIn } from './account/SignIn';
+import { StaffHome } from './account/StaffHome';
 import { useDemoClock } from './clock';
 import { Sidebar, Topbar } from './components/Shell';
 import { Tour } from './components/Tour';
 import { ToastProvider } from './components/ui';
+import { CoursesPage } from './dash/Courses';
 import { Overview } from './dash/Overview';
 import { campagnesFromHash, campagnesHash, type CpRoute } from './campagnes/nav';
 import { I18nProvider, loadCampagnes, loadPraktijk, useI18n } from './i18n';
@@ -50,15 +55,17 @@ function Campagnes(props: Parameters<typeof CampagnesModule>[0]) {
   );
 }
 
-type Route = { screen: ScreenId; feature?: string } | { campagnes: CpRoute } | null;
+type Route = { screen: ScreenId; feature?: string } | { campagnes: CpRoute } | { courses: true } | null;
 
 const routeOf = (hash: string): Route => {
+  if (hash === '#trajecten') return { courses: true };
   const campagnes = campagnesFromHash(hash);
   return campagnes ? { campagnes } : screenFromHash(hash);
 };
 
 /**
- * The overview, Pure Praktijk at one of its screens (…/#praktijk/agenda) or Campagnes at one of its tabs
+ * The overview, the full list of treatment plans (…/#trajecten), the Kliniek module at one of its screens
+ * (…/#praktijk/agenda; the Webshop entry opens its stock screen, …/#praktijk/voorraad) or Campagnes at one of its tabs
  * (…/#campagnes/kalender).
  */
 function useRoute() {
@@ -84,20 +91,30 @@ function useRoute() {
     go(campagnesHash(to), { campagnes: to });
     if (scroll) window.scrollTo({ top: 0 });
   };
-  return [route, open, openCampagnes] as const;
+  const openCourses = () => {
+    go('trajecten', { courses: true });
+    window.scrollTo({ top: 0 });
+  };
+  return [route, open, openCampagnes, openCourses] as const;
 }
 
 function Panel() {
+  const { account } = useAccount();
   const clock = useDemoClock();
   const [touring, setTouring] = useState(false);
-  const [route, open, openCampagnes] = useRoute();
+  const [route, open, openCampagnes, openCourses] = useRoute();
   // Back to the tab of Campagnes that was open last, like Praktijk keeps its screen.
   const [lastTab, setLastTab] = useState<CpRoute['tab']>('overzicht');
   useEffect(() => {
     if (route && 'campagnes' in route) setLastTab(route.campagnes.tab);
   }, [route]);
-  const praktijk = route && 'screen' in route ? route : null;
-  const campagnes = route && 'campagnes' in route ? route.campagnes : null;
+  // Only the admin opens the modules and the full pages; a team member or a client always lands on her own page.
+  const admin = account?.role === 'admin';
+  const praktijk = admin && route && 'screen' in route ? route : null;
+  const campagnes = admin && route && 'campagnes' in route ? route.campagnes : null;
+  const courses = Boolean(admin && route && 'courses' in route);
+  // The Webshop entry in the menu opens the module's stock screen; the menu shows it as its own entry.
+  const view = praktijk ? (praktijk.screen === 'voorraad' ? 'shop' : 'praktijk') : campagnes ? 'campagnes' : courses ? 'courses' : 'overview';
   // The tour walks through the overview, so it starts there.
   const tour = () => {
     open(null);
@@ -107,9 +124,15 @@ function Panel() {
     <div className="app">
       <ToastProvider>
         <Sidebar
-          view={praktijk ? 'praktijk' : campagnes ? 'campagnes' : 'overview'}
-          onView={(view) =>
-            view === 'campagnes' ? openCampagnes({ tab: campagnes?.tab ?? lastTab }) : open(view === 'praktijk' ? (praktijk?.screen ?? 'overzicht') : null)
+          view={view}
+          onView={(next) =>
+            next === 'campagnes'
+              ? openCampagnes({ tab: campagnes?.tab ?? lastTab })
+              : next === 'shop'
+                ? open('voorraad')
+                : next === 'praktijk'
+                  ? open(praktijk && praktijk.screen !== 'voorraad' ? praktijk.screen : 'overzicht')
+                  : open(null)
           }
           screen={praktijk?.screen ?? null}
           onScreen={open}
@@ -126,24 +149,38 @@ function Panel() {
             onTour={tour}
             compact={!!praktijk}
           />
-          {praktijk ? (
+          {account?.role === 'staff' ? (
+            <StaffHome now={clock.now} account={account} />
+          ) : account?.role === 'client' ? (
+            <ClientHome now={clock.now} account={account} />
+          ) : praktijk ? (
             <Praktijk now={clock.now} screen={praktijk.screen} feature={praktijk.feature} onScreen={open} />
           ) : campagnes ? (
             <Campagnes now={clock.now} route={campagnes} onRoute={openCampagnes} />
+          ) : courses ? (
+            <CoursesPage now={clock.now} onBack={() => open(null)} />
           ) : (
-            <Overview now={clock.now} playing={clock.playing} />
+            <Overview now={clock.now} playing={clock.playing} onCourses={openCourses} />
           )}
         </main>
-        <Tour open={touring} onOpen={tour} onClose={() => setTouring(false)} />
+        {admin ? <Tour open={touring} onOpen={tour} onClose={() => setTouring(false)} /> : null}
       </ToastProvider>
     </div>
   );
 }
 
+/** Nobody signed in: the sign-in page; otherwise the panel of that account. */
+function Gate() {
+  const { account } = useAccount();
+  return account ? <Panel key={account.id} /> : <SignIn />;
+}
+
 export function App() {
   return (
     <I18nProvider>
-      <Panel />
+      <AccountProvider>
+        <Gate />
+      </AccountProvider>
     </I18nProvider>
   );
 }

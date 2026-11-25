@@ -1,18 +1,13 @@
 import type { shell as source } from '../nl/shell';
 
 export const shell: Record<keyof typeof source, string> = {
-  'pk.nav.label': 'إدارة العيادة',
-  'pk.nav.chip': 'اشتراك',
+  'pk.nav.label': 'العيادة',
 
-  'pk.head.eyebrow': 'Pure Praktijk · اشتراك شهري',
-  'pk.head.title': 'العيادة كلها، *في لوحة واحدة*',
-  'pk.head.help':
-    'المواعيد والملفات والفواتير والمطالبات عبر Vecozo والمخزون والرسائل والتقارير لـ Nijmegen وUden وBlanche Beauty Studio. وحدة منفصلة تُضاف إلى اللوحة باشتراك شهري.',
-  'pk.head.active': 'الاشتراك مفعّل',
+  'pk.head.eyebrow': 'العيادة · Nijmegen وUden',
   'pk.head.demo': 'نسخة تجريبية · عملاء وهميون، ولا يُرسَل شيء ولا تُقدَّم أي مطالبة فعلًا',
   'pk.head.features': 'الوظائف: {n} · الشاشات: {screens}',
   'pk.head.all': 'اعرض قائمة الوظائف',
-  'pk.subnav.label': 'أقسام Pure Praktijk',
+  'pk.subnav.label': 'أقسام العيادة',
 
   'pk.screen.overzicht': 'نظرة عامة',
   'pk.screen.agenda': 'المواعيد',
@@ -22,7 +17,7 @@ export const shell: Record<keyof typeof source, string> = {
   'pk.screen.dossier': 'الملف',
   'pk.screen.facturen': 'الفواتير والصندوق',
   'pk.screen.declaraties': 'المطالبات',
-  'pk.screen.voorraad': 'المخزون',
+  'pk.screen.voorraad': 'المتجر والمخزون',
   'pk.screen.berichten': 'الرسائل',
   'pk.screen.rapportages': 'التقارير',
   'pk.screen.team': 'الفريق والصلاحيات',
@@ -40,12 +35,12 @@ export const shell: Record<keyof typeof source, string> = {
   'pk.help.facturen':
     'إصدار الفواتير من جدول المواعيد، وrestitutienota، والدفع على أقساط، وقسائم الهدايا وبطاقات الجلسات، ومراجعة الصندوق في نهاية اليوم.',
   'pk.help.declaraties': 'تقديم المطالبات لشركات التأمين الصحي عبر Vecozo: الإرسال لكل شركة تأمين، ومعالجة بيانات الرد، والإلغاء بإشعار دائن، وإعادة التقديم.',
-  'pk.help.voorraad': 'المخزون لكل فرع، والموردون، وقائمة طلب تملأ نفسها بنفسها، والمخزون في أي تاريخ.',
+  'pk.help.voorraad': 'المبيعات، والمخزون لكل فرع، وما سينفد قريبًا، والتقييمات، والموردون، والطلبات. المتجر الإلكتروني والمكتب معًا.',
   'pk.help.berichten': 'التذكيرات والقوالب ورسالة العناية اللاحقة بالذكاء الاصطناعي والنشرة الإخبارية في ثلاث خطوات.',
   'pk.help.rapportages': 'المالية والحلقات العلاجية والتسويق والجودة، مع منشئ قوائم وتصدير إلى Excel.',
   'pk.help.team': 'الفريق، ومن يحق له أن يرى ماذا ويفعل ماذا، وتسجيل الدخول بخطوتين، وجداول العمل.',
   'pk.help.instellingen': 'الفروع وجداول المواعيد، والبيانات الأساسية، والربط مع Vecozo والمحاسبة، والأمان وحماية البيانات (AVG).',
-  'pk.help.functies': 'كل وظيفة من SkinAdmin، مرتبة حسب القسم، مع الشاشة التي توجد فيها في Pure Praktijk. انقر على وظيفة للانتقال إليها.',
+  'pk.help.functies': 'كل وظيفة من SkinAdmin، مرتبة حسب القسم، مع الشاشة التي توجد فيها في اللوحة. انقر على وظيفة للانتقال إليها.',
 
   'pk.common.save': 'حفظ',
   'pk.common.saved': 'تم الحفظ',

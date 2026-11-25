@@ -40,7 +40,7 @@ const VIEWS: Record<ScreenId, ComponentType> = {
 
 type Props = { now: Date; screen: ScreenId; feature?: string; onScreen: (screen: ScreenId) => void };
 
-/** Pure Praktijk: the practice-management module, sold as its own monthly subscription next to the panel. */
+/** Kliniek (built as Pure Praktijk): the practice-management part of the panel, for admins only for now. */
 export function Praktijk({ now, screen, feature, onScreen }: Props) {
   return (
     <PraktijkProvider now={now} screen={screen} initialFeature={feature} onScreen={onScreen}>

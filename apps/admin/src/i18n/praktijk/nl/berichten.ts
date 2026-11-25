@@ -235,7 +235,7 @@ export const berichten = {
   'pk.berichten.smtp.title': 'Versturen vanaf *eigen adres*',
   'pk.berichten.smtp.help': 'Met een eigen SMTP-server komt elke e-mail van het eigen domein en staat hij ook in de eigen verzonden items.',
   'pk.berichten.smtp.own': 'Eigen SMTP-server gebruiken',
-  'pk.berichten.smtp.ownHint': 'Uit: e-mail gaat via de server van Pure Praktijk',
+  'pk.berichten.smtp.ownHint': 'Uit: e-mail gaat via de server van Pure Clinics',
   'pk.berichten.smtp.host': 'Server',
   'pk.berichten.smtp.port': 'Poort',
   'pk.berichten.smtp.user': 'Gebruikersnaam',

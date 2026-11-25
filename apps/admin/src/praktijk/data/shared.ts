@@ -1,4 +1,4 @@
-import { addDays, LOCATIONS, PRODUCTS, type LocationId, type ProductId, type SpecialistId } from '@pure-clinics/shared';
+import { addDays, LOCATIONS, type LocationId, type SpecialistId } from '@pure-clinics/shared';
 
 import { between, personName, rng } from '../../data/random';
 import { AGENDAS, STAFF, type StaffId } from './core';
@@ -42,20 +42,10 @@ export function seedGiftCards(today: Date): GiftCard[] {
   }).sort((a, b) => b.issued.getTime() - a.issued.getTime());
 }
 
-/* ---------- Stock levels: useShared('stock', seedStock) ---------- */
+/* ---------- Stock levels: useShared('stock', () => stockAt(now)) ---------- */
 
-export type StockLevels = Record<LocationId, Record<ProductId, number>>;
-
-/** Units on the shelf per location; a few run low so the order list has something to show. */
-export function seedStock(): StockLevels {
-  const r = rng('pk-stock');
-  const levels = {} as StockLevels;
-  for (const l of LOCATIONS) {
-    levels[l.id] = {} as Record<ProductId, number>;
-    for (const p of PRODUCTS) levels[l.id][p.id] = p.soldOut ? 0 : between(r, 1, l.id === 'nijmegen' ? 24 : 14);
-  }
-  return levels;
-}
+// The seed lives in src/data/stockSeed.ts, so the overview's webshop shelf can use it without loading this module.
+export { seedStock, type StockLevels } from '../../data/stockSeed';
 
 /* ---------- Agenda access: useShared('agendaAccess', seedAgendaAccess) ---------- */
 

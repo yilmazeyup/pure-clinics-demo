@@ -1,7 +1,7 @@
 import { PRODUCTS, type ProductId } from '@pure-clinics/shared';
 import { useEffect, useMemo, useRef, type CSSProperties } from 'react';
 
-import { orderTotal, ordersUntil, stockOf, type Order } from '../data/shop';
+import { leftNow, orderTotal, ordersUntil, type Order } from '../data/shop';
 import { Accent, useI18n } from '../i18n';
 import { SHOP_VIEW, ShopScene } from '../three/shop';
 import { Stage, type Tip } from '../three/stage';
@@ -20,7 +20,8 @@ export function ShopView({ orders, now, fast }: { orders: Order[]; now: Date; fa
 
   const sold = new Map<ProductId, number>();
   for (const order of today) for (const line of order.lines) sold.set(line.product.id, (sold.get(line.product.id) ?? 0) + line.qty);
-  const levels = new Map(PRODUCTS.map((p) => [p.id, Math.max(0, stockOf(p, now) - (sold.get(p.id) ?? 0))]));
+  // The same stock as the screen in Kliniek: both clinics' shelves, with today's orders taken off.
+  const levels = new Map(PRODUCTS.map((p) => [p.id, leftNow(p, today)]));
   const aftercare = today.filter((o) => o.afterTreatment).length;
 
   describe.current = (id) => {

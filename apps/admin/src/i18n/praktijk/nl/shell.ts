@@ -1,19 +1,14 @@
-// Pure Praktijk: the module frame, words every screen shares, conditions and insurers' plain words.
+// Kliniek (the former Pure Praktijk module): the module frame, words every screen shares, conditions and insurers' plain words.
 // Dutch is the source; the other languages give exactly these keys. Vecozo, COV, AGB, UZOVI, prestatiecode, restitutienota,
 // restnota, DTH, ICF, HMH, MRSA and Anbos stay as they are in every language.
 export const shell = {
-  'pk.nav.label': 'Praktijk',
-  'pk.nav.chip': 'abonnement',
+  'pk.nav.label': 'Kliniek',
 
-  'pk.head.eyebrow': 'Pure Praktijk · maandabonnement',
-  'pk.head.title': 'De hele praktijk, *in één paneel*',
-  'pk.head.help':
-    'Agenda, dossier, facturen, declaraties via Vecozo, voorraad, berichten en rapportages voor Nijmegen, Uden en Blanche Beauty Studio. Een aparte module bij het paneel, per maand af te nemen.',
-  'pk.head.active': 'Abonnement actief',
+  'pk.head.eyebrow': 'Kliniek · Nijmegen en Uden',
   'pk.head.demo': 'Demo · fictieve cliënten, er wordt niets echt verstuurd of gedeclareerd',
   'pk.head.features': '{n} functies · {screens} schermen',
   'pk.head.all': 'Bekijk het functieoverzicht',
-  'pk.subnav.label': 'Onderdelen van Pure Praktijk',
+  'pk.subnav.label': 'Onderdelen van de kliniek',
 
   'pk.screen.overzicht': 'Overzicht',
   'pk.screen.agenda': 'Agenda',
@@ -23,7 +18,7 @@ export const shell = {
   'pk.screen.dossier': 'Dossier',
   'pk.screen.facturen': 'Facturen & kassa',
   'pk.screen.declaraties': 'Declaraties',
-  'pk.screen.voorraad': 'Voorraad',
+  'pk.screen.voorraad': 'Webshop & voorraad',
   'pk.screen.berichten': 'Berichten',
   'pk.screen.rapportages': 'Rapportages',
   'pk.screen.team': 'Team & rechten',
@@ -41,12 +36,12 @@ export const shell = {
   'pk.help.facturen':
     'Factureren vanuit de agenda, restitutienota’s, betalen in delen, cadeaubonnen en strippenkaarten, en de kascontrole aan het eind van de dag.',
   'pk.help.declaraties': 'Declareren bij zorgverzekeraars via Vecozo: versturen per verzekeraar, retourinformatie verwerken, crediteren en opnieuw indienen.',
-  'pk.help.voorraad': 'Voorraad per locatie, leveranciers, een bestellijst die zichzelf vult en de voorraad op elke datum.',
+  'pk.help.voorraad': 'Verkoop, voorraad per locatie, wat binnenkort op is, recensies, leveranciers en aanvragen. Webshop en balie samen.',
   'pk.help.berichten': 'Herinneringen, sjablonen, de nazorgmail met AI en de nieuwsbrief in drie stappen.',
   'pk.help.rapportages': 'Financieel, episodes, marketing en kwaliteit, met een lijstbouwer en export naar Excel.',
   'pk.help.team': 'Het team, wie wat mag zien en doen, inloggen in twee stappen en de werkroosters.',
   'pk.help.instellingen': 'Locaties en agenda’s, stamgegevens, koppelingen met Vecozo en de boekhouding, beveiliging en AVG.',
-  'pk.help.functies': 'Elke functie uit SkinAdmin, per onderdeel, met het scherm waar hij in Pure Praktijk zit. Klik op een functie om erheen te gaan.',
+  'pk.help.functies': 'Elke functie uit SkinAdmin, per onderdeel, met het scherm waar hij in het paneel zit. Klik op een functie om erheen te gaan.',
 
   'pk.common.save': 'Opslaan',
   'pk.common.saved': 'Opgeslagen',

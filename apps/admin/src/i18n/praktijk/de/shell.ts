@@ -1,18 +1,13 @@
 import type { shell as source } from '../nl/shell';
 
 export const shell: Record<keyof typeof source, string> = {
-  'pk.nav.label': 'Praxis',
-  'pk.nav.chip': 'Abo',
+  'pk.nav.label': 'Klinik',
 
-  'pk.head.eyebrow': 'Pure Praktijk · Monatsabo',
-  'pk.head.title': 'Die ganze Praxis, *in einem Panel*',
-  'pk.head.help':
-    'Kalender, Akte, Rechnungen, Abrechnung über Vecozo, Bestand, Nachrichten und Auswertungen für Nijmegen, Uden und Blanche Beauty Studio. Ein eigenes Modul zum Panel, monatlich buchbar.',
-  'pk.head.active': 'Abo aktiv',
+  'pk.head.eyebrow': 'Klinik · Nijmegen und Uden',
   'pk.head.demo': 'Demo · erfundene Kund:innen, nichts wird wirklich verschickt oder abgerechnet',
   'pk.head.features': '{n} Funktionen · {screens} Ansichten',
   'pk.head.all': 'Zur Funktionsübersicht',
-  'pk.subnav.label': 'Bereiche von Pure Praktijk',
+  'pk.subnav.label': 'Bereiche der Klinik',
 
   'pk.screen.overzicht': 'Übersicht',
   'pk.screen.agenda': 'Kalender',
@@ -22,7 +17,7 @@ export const shell: Record<keyof typeof source, string> = {
   'pk.screen.dossier': 'Akte',
   'pk.screen.facturen': 'Rechnungen & Kasse',
   'pk.screen.declaraties': 'Abrechnung',
-  'pk.screen.voorraad': 'Bestand',
+  'pk.screen.voorraad': 'Webshop & Bestand',
   'pk.screen.berichten': 'Nachrichten',
   'pk.screen.rapportages': 'Auswertungen',
   'pk.screen.team': 'Team & Rechte',
@@ -40,12 +35,12 @@ export const shell: Record<keyof typeof source, string> = {
   'pk.help.facturen':
     'Abrechnen aus dem Kalender, restitutienota’s, Ratenzahlung, Gutscheine und Mehrfachkarten sowie die Kassenprüfung am Ende des Tages.',
   'pk.help.declaraties': 'Abrechnung mit Krankenversicherern über Vecozo: pro Versicherer senden, Rückmeldungen verarbeiten, stornieren und neu einreichen.',
-  'pk.help.voorraad': 'Bestand pro Standort, Lieferanten, eine Bestellliste, die sich selbst füllt, und der Bestand zu jedem Datum.',
+  'pk.help.voorraad': 'Verkauf, Bestand pro Standort, was bald ausgeht, Bewertungen, Lieferanten und Anfragen. Webshop und Theke zusammen.',
   'pk.help.berichten': 'Erinnerungen, Vorlagen, die Nachsorge-Mail mit KI und der Newsletter in drei Schritten.',
   'pk.help.rapportages': 'Finanzen, Episoden, Marketing und Qualität, mit einem Listengenerator und Export nach Excel.',
   'pk.help.team': 'Das Team, wer was sehen und tun darf, Anmeldung in zwei Schritten und die Dienstpläne.',
   'pk.help.instellingen': 'Standorte und Kalender, Stammdaten, Schnittstellen zu Vecozo und zur Buchhaltung, Sicherheit und DSGVO.',
-  'pk.help.functies': 'Jede Funktion aus SkinAdmin, nach Bereich, mit der Ansicht, in der sie in Pure Praktijk steckt. Klick auf eine Funktion, um dorthin zu springen.',
+  'pk.help.functies': 'Jede Funktion aus SkinAdmin, nach Bereich, mit der Ansicht, in der sie im Panel steckt. Klick auf eine Funktion, um dorthin zu springen.',
 
   'pk.common.save': 'Speichern',
   'pk.common.saved': 'Gespeichert',

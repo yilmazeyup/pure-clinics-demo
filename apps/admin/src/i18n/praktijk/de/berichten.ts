@@ -234,7 +234,7 @@ export const berichten: Record<keyof typeof source, string> = {
   'pk.berichten.smtp.title': 'Senden von der *eigenen Adresse*',
   'pk.berichten.smtp.help': 'Mit einem eigenen SMTP-Server kommt jede E-Mail von der eigenen Domain und liegt auch in den eigenen gesendeten Elementen.',
   'pk.berichten.smtp.own': 'Eigenen SMTP-Server verwenden',
-  'pk.berichten.smtp.ownHint': 'Aus: E-Mails gehen über den Server von Pure Praktijk',
+  'pk.berichten.smtp.ownHint': 'Aus: E-Mails gehen über den Server von Pure Clinics',
   'pk.berichten.smtp.host': 'Server',
   'pk.berichten.smtp.port': 'Port',
   'pk.berichten.smtp.user': 'Benutzername',

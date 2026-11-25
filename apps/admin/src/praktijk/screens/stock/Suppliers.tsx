@@ -5,10 +5,15 @@ import { useI18n } from '../../../i18n';
 import { usePraktijk } from '../../context';
 import type { Supplier } from '../../data/stock';
 import { PkIcon } from '../../icons';
-import { Card, Field, Kv, Modal, TableWrap, isolate, useMoney } from '../../kit';
+import { Card, Chip, Field, Kv, Modal, TableWrap, Toggle, isolate, useMoney } from '../../kit';
 import { useProductName, useStock } from './common';
 
-/** Suppliers with their products: purchase price and the minimum per location, edited in place. */
+const BLANK: Supplier = { id: '', name: '', contact: '', email: '', phone: '', leadDays: 3, auto: false };
+
+/**
+ * Suppliers with their products: purchase price and the minimum per location, edited in place. A new supplier can be
+ * added; per supplier the request e-mail goes by itself or waits for a look and a click.
+ */
 export function Suppliers() {
   const { t, pct } = useI18n();
   const { demo } = usePraktijk();
@@ -16,33 +21,61 @@ export function Suppliers() {
   const name = useProductName();
   const { suppliers, setSuppliers, info, setInfo, products } = useStock();
   const [editing, setEditing] = useState<Supplier | null>(null);
+  const setAuto = (id: string, auto: boolean) => setSuppliers((list) => list.map((s) => (s.id === id ? { ...s, auto } : s)));
 
   const setPurchase = (id: ProductId, value: number) => setInfo((i) => ({ ...i, [id]: { ...i[id], purchase: Math.max(0, value) } }));
   const setMin = (id: ProductId, l: LocationId, value: number) =>
     setInfo((i) => ({ ...i, [id]: { ...i[id], min: { ...i[id].min, [l]: Math.max(0, Math.round(value)) } } }));
 
   return (
-    <Card eyebrow={t('pk.voorraad.suppliers.eyebrow')} title={t('pk.voorraad.suppliers.title')} help={t('pk.voorraad.suppliers.help')} feature="n.suppliers">
+    <Card
+      eyebrow={t('pk.voorraad.suppliers.eyebrow')}
+      title={t('pk.voorraad.suppliers.title')}
+      help={t('pk.voorraad.suppliers.help')}
+      feature="n.suppliers"
+      actions={
+        <button className="btn btn-ghost btn-small" onClick={() => setEditing(BLANK)}>
+          <PkIcon name="plus" size={14} />
+          {t('pk.voorraad.suppliers.add')}
+        </button>
+      }
+    >
       <div className="pk-st-suppliers">
         {suppliers.map((s) => {
           const own = products.filter((p) => info[p.id].supplier === s.id);
           return (
             <section key={s.id} className="pk-st-supplier">
               <div className="pk-row pk-row--between">
-                <h3 className="pk-subtitle pk-st-inline">{s.name}</h3>
+                <span className="pk-row">
+                  <h3 className="pk-subtitle pk-st-inline">{s.name}</h3>
+                  {s.auto ? (
+                    <Chip tone="good" icon="send">
+                      {t('pk.voorraad.mode.auto')}
+                    </Chip>
+                  ) : (
+                    <Chip tone="neutral">{t('pk.voorraad.mode.manual')}</Chip>
+                  )}
+                </span>
                 <button className="btn btn-ghost btn-small" onClick={() => setEditing(s)}>
                   <PkIcon name="edit" size={14} />
                   {t('pk.common.edit')}
                 </button>
               </div>
-              <Kv
-                rows={[
-                  [t('pk.voorraad.suppliers.contact'), s.contact],
-                  [t('pk.voorraad.suppliers.email'), <span className="pk-mono">{s.email}</span>],
-                  [t('pk.voorraad.suppliers.phone'), <span className="pk-mono">{s.phone}</span>],
-                  [t('pk.voorraad.suppliers.lead'), s.leadDays],
-                ]}
-              />
+              <div className="pk-st-supplier-info">
+                <Kv
+                  rows={[
+                    [t('pk.voorraad.suppliers.contact'), s.contact],
+                    [t('pk.voorraad.suppliers.email'), <span className="pk-mono">{s.email}</span>],
+                    [t('pk.voorraad.suppliers.phone'), <span className="pk-mono">{s.phone}</span>],
+                    [t('pk.voorraad.suppliers.lead'), s.leadDays],
+                  ]}
+                />
+                <div className="pk-st-mode">
+                  <Toggle checked={s.auto} onChange={(on) => setAuto(s.id, on)} label={t('pk.voorraad.mode.toggle')} hint={t('pk.voorraad.mode.toggleHint')} />
+                </div>
+              </div>
+              {own.length ? null : <p className="pk-muted pk-small">{t('pk.voorraad.suppliers.noProducts')}</p>}
+              {own.length ? (
               <TableWrap label={s.name}>
                 <table className="pk-table pk-st-supplier-table pk-cards">
                   <thead>
@@ -99,6 +132,7 @@ export function Suppliers() {
                   </tbody>
                 </table>
               </TableWrap>
+              ) : null}
             </section>
           );
         })}
@@ -109,9 +143,13 @@ export function Suppliers() {
           supplier={editing}
           onClose={() => setEditing(null)}
           onSave={(next) => {
-            setSuppliers((list) => list.map((s) => (s.id === next.id ? next : s)));
+            if (next.id) setSuppliers((list) => list.map((s) => (s.id === next.id ? next : s)));
+            else {
+              setSuppliers((list) => [...list, { ...next, id: `sup-${Date.now()}` }]);
+              demo(t('pk.voorraad.suppliers.added', { name: next.name }));
+            }
             setEditing(null);
-            demo(t('pk.common.demoSaved'));
+            if (next.id) demo(t('pk.common.demoSaved'));
           }}
         />
       ) : null}
@@ -130,14 +168,14 @@ function EditSupplier({ supplier, onClose, onSave }: { supplier: Supplier; onClo
   return (
     <Modal
       open
-      title={t('pk.voorraad.suppliers.edit')}
+      title={supplier.id ? t('pk.voorraad.suppliers.edit') : t('pk.voorraad.suppliers.add')}
       onClose={onClose}
       footer={
         <>
           <button className="btn btn-ghost" onClick={onClose}>
             {t('pk.common.cancel')}
           </button>
-          <button className="btn btn-primary" disabled={!form.name.trim()} onClick={() => onSave(form)}>
+          <button className="btn btn-primary" disabled={!form.name.trim() || !form.email.includes('@')} onClick={() => onSave(form)}>
             {t('pk.common.save')}
           </button>
         </>
@@ -159,6 +197,8 @@ function EditSupplier({ supplier, onClose, onSave }: { supplier: Supplier; onClo
           />
         </Field>
       </div>
+      <Toggle checked={form.auto} onChange={(auto) => setForm({ ...form, auto })} label={t('pk.voorraad.mode.toggle')} hint={t('pk.voorraad.mode.toggleHint')} />
+      {supplier.id ? null : <p className="pk-muted pk-small">{t('pk.voorraad.suppliers.addHint')}</p>}
     </Modal>
   );
 }

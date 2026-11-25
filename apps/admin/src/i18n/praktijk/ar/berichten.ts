@@ -234,7 +234,7 @@ export const berichten: Record<keyof typeof source, string> = {
   'pk.berichten.smtp.title': 'الإرسال من *عنوانك الخاص*',
   'pk.berichten.smtp.help': 'مع خادم SMTP خاص تأتي كل رسالة من نطاقك الخاص، وتظهر أيضًا في مجلد الرسائل المرسلة لديك.',
   'pk.berichten.smtp.own': 'استخدام خادم SMTP خاص',
-  'pk.berichten.smtp.ownHint': 'عند الإيقاف: يُرسل البريد عبر خادم Pure Praktijk',
+  'pk.berichten.smtp.ownHint': 'عند الإيقاف: يُرسل البريد عبر خادم Pure Clinics',
   'pk.berichten.smtp.host': 'الخادم',
   'pk.berichten.smtp.port': 'المنفذ',
   'pk.berichten.smtp.user': 'اسم المستخدم',

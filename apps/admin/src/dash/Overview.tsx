@@ -8,13 +8,13 @@ import { Insights, LiveFeed, type Insight } from '../components/panels';
 import { SalesView } from '../components/SalesView';
 import { ShopView } from '../components/ShopView';
 import { KpiTile, MiniBars, Sparkline, Squares, useToast, type FeedItem } from '../components/ui';
-import { clinicDay, clinicViewDay, isOpen, occupancy, phaseOf, revenueOf, ROOMS, works, type Appt } from '../data/clinics';
+import { clinicDay, isOpen, occupancy, phaseOf, revenueOf, ROOMS, works, type Appt } from '../data/clinics';
 import { courseState, type Course } from '../data/courses';
-import { diaryAt, happenedBy, liveDay, paidBy, revenueAt, weekFrame, weekSales, type LiveEvent } from '../data/live';
-import { orderTotal, ordersUntil, shopDay, stockOf, type Order } from '../data/shop';
+import { diaryAt, happenedBy, paidBy, revenueAt, weekFrame, weekSales, type LiveEvent } from '../data/live';
+import { sendReminders, todayLive, useCourses, useReminderBatches, type ReminderBatch } from '../data/reminders';
+import { leftNow, orderTotal, ordersUntil, shopDay, type Order } from '../data/shop';
 import { useI18n, type Line } from '../i18n';
 
-let feedId = 0;
 const cityOf = (clinic: Appt['clinic']) => LOCATIONS.find((l) => l.id === clinic)?.city ?? '';
 /** Brows, lashes and nails are Blanche Beauty Studio's; everything else is the clinic's. */
 const sourceOf = (a: Appt | Course): FeedItem['source'] => (a.treatment.category === 'beauty' ? 'blanche' : 'clinic');
@@ -26,6 +26,14 @@ function orderDetail(order: Order): Line {
 
 function courseDetail(c: Course): Line {
   return { key: 'ev.course.detail', args: { client: c.client, treatment: { treatment: c.treatment.id }, n: c.done + 1, total: c.total } };
+}
+
+/** A press of Remind (one client) or Remind all (several) in the live feed. */
+function reminderItem(b: ReminderBatch): FeedItem {
+  const [first] = b.courses;
+  return b.courses.length === 1
+    ? { id: b.id, at: b.at, source: sourceOf(first), icon: 'mail', title: { key: 'ev.courseReminder.title' }, detail: courseDetail(first) }
+    : { id: b.id, at: b.at, source: 'clinic', icon: 'mail', title: { key: 'ev.reminders.title', args: { n: b.courses.length } }, detail: { key: 'ev.reminders.detail' } };
 }
 
 /** How each moment of the day reads in the live feed. */
@@ -103,14 +111,15 @@ function feedItem(e: LiveEvent): FeedItem {
 }
 
 /** The one overview of Pure Clinics: both clinics, the treatment series, the webshop and the week, all following the clock. */
-export function Overview({ now, playing }: { now: Date; playing: boolean }) {
+export function Overview({ now, playing, onCourses }: { now: Date; playing: boolean; onCourses: () => void }) {
   const { t, eur, num, pct, locale, weekdayLong } = useI18n();
   const toast = useToast();
   const dayKey = dateKey(now);
-  // The day's stream is fixed; the clock decides how much of it has happened.
-  const live = useMemo(() => liveDay(clinicViewDay(now), now), [dayKey]);
-  const [reminded, setReminded] = useState<Record<string, Date>>({});
-  const [actions, setActions] = useState<FeedItem[]>([]);
+  // The day's stream is fixed; the clock decides how much of it has happened. It is worked out once a day and shared
+  // with the full page of treatment plans, like the reminders sent from either page.
+  const live = todayLive(now);
+  const batches = useReminderBatches();
+  const actions = useMemo(() => batches.filter((b) => b.day === dayKey).map(reminderItem), [batches, dayKey]);
   const [focus, setFocus] = useState<number | null>(null);
 
   // A new language rebuilds the clinic models, which open on both clinics again.
@@ -122,11 +131,7 @@ export function Overview({ now, playing }: { now: Date; playing: boolean }) {
   const appts = useMemo(() => (isClinicDay ? diaryAt(live.appts, now) : live.appts), [live, now, isClinicDay]);
   const todaysOrders = useMemo(() => ordersUntil(live.orders, now), [live, now]);
 
-  const courses = useMemo(() => {
-    const planned = new Map<string, Date>();
-    for (const e of happened) if (e.kind === 'course') planned.set(e.course.id, e.planned);
-    return live.courses.map((c) => ({ ...c, planned: c.planned ?? planned.get(c.id) ?? null, reminded: reminded[c.id] ?? null }));
-  }, [live, happened, reminded]);
+  const courses = useCourses(now, live);
 
   const feed = useMemo(
     () =>
@@ -138,22 +143,8 @@ export function Overview({ now, playing }: { now: Date; playing: boolean }) {
 
   /** Reminders for clients who are due for their next session; in the demo nothing is really sent. */
   const remind = (ids: string[]) => {
-    const picked = courses.filter((c) => ids.includes(c.id) && !c.reminded);
-    if (!picked.length) return;
-    setReminded((current) => ({ ...current, ...Object.fromEntries(picked.map((c) => [c.id, now])) }));
-    const item: FeedItem =
-      picked.length === 1
-        ? { id: `action-${++feedId}`, at: now, source: sourceOf(picked[0]), icon: 'mail', title: { key: 'ev.courseReminder.title' }, detail: courseDetail(picked[0]) }
-        : {
-            id: `action-${++feedId}`,
-            at: now,
-            source: 'clinic',
-            icon: 'mail',
-            title: { key: 'ev.reminders.title', args: { n: picked.length } },
-            detail: { key: 'ev.reminders.detail' },
-          };
-    setActions((current) => [item, ...current]);
-    toast(t('courses.toast', { n: picked.length }));
+    const picked = sendReminders(courses, ids, now);
+    if (picked.length) toast(t('courses.toast', { n: picked.length }));
   };
 
   // Revenue so far: treatments paid at the desk and webshop orders, against the same weekday at this time of day.
@@ -193,10 +184,7 @@ export function Overview({ now, playing }: { now: Date; playing: boolean }) {
   });
   const waiting = due.filter((c) => !c.reminded);
   const aftercare = productById('zo-spf')!;
-  const aftercareLeft = Math.max(
-    0,
-    stockOf(aftercare, now) - todaysOrders.reduce((n, o) => n + o.lines.filter((l) => l.product.id === aftercare.id).reduce((q, l) => q + l.qty, 0), 0),
-  );
+  const aftercareLeft = leftNow(aftercare, todaysOrders);
   const insights: Insight[] = [
     {
       id: 'followUp',
@@ -257,7 +245,7 @@ export function Overview({ now, playing }: { now: Date; playing: boolean }) {
       <ClinicsView key={`clinics-${locale}`} appts={appts} day={clinicsDay} now={now} focus={focus} onFocus={setFocus} events={happened} fast={playing} />
       <LiveFeed items={feed} now={now} />
       <AgendaView appts={appts} day={clinicsDay} now={now} />
-      <CoursesCard courses={courses} now={now} onRemind={remind} />
+      <CoursesCard courses={courses} now={now} onRemind={remind} onOpen={onCourses} />
       <ShopView key={`shop-${locale}`} orders={live.orders} now={now} fast={playing} />
       <SalesView key={`sales-${locale}`} week={week} now={now} events={happened} fast={playing} />
       <Insights items={insights} />

@@ -266,7 +266,7 @@ export const instellingen = {
   'pk.instellingen.imp.mapHelp': 'Welke kolom uit {file} hoort bij welk veld? De meeste zijn al herkend.',
   'pk.instellingen.imp.column': 'Kolom in het bestand',
   'pk.instellingen.imp.example': 'Voorbeeld',
-  'pk.instellingen.imp.field': 'Veld in Pure Praktijk',
+  'pk.instellingen.imp.field': 'Veld in Pure Clinics',
   'pk.instellingen.imp.f.first': 'Voornaam',
   'pk.instellingen.imp.f.last': 'Achternaam',
   'pk.instellingen.imp.f.birth': 'Geboortedatum',

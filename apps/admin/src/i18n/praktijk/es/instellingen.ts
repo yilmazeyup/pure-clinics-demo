@@ -266,7 +266,7 @@ export const instellingen: Record<keyof typeof source, string> = {
   'pk.instellingen.imp.mapHelp': '¿Qué columna de {file} corresponde a cada campo? La mayoría ya se han reconocido.',
   'pk.instellingen.imp.column': 'Columna del archivo',
   'pk.instellingen.imp.example': 'Ejemplo',
-  'pk.instellingen.imp.field': 'Campo en Pure Praktijk',
+  'pk.instellingen.imp.field': 'Campo en Pure Clinics',
   'pk.instellingen.imp.f.first': 'Nombre',
   'pk.instellingen.imp.f.last': 'Apellidos',
   'pk.instellingen.imp.f.birth': 'Fecha de nacimiento',

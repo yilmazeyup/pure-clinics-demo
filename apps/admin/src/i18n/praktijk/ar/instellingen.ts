@@ -266,7 +266,7 @@ export const instellingen: Record<keyof typeof source, string> = {
   'pk.instellingen.imp.mapHelp': 'أي عمود من {file} يقابل أي حقل؟ تم التعرف على معظمها مسبقًا.',
   'pk.instellingen.imp.column': 'العمود في الملف',
   'pk.instellingen.imp.example': 'مثال',
-  'pk.instellingen.imp.field': 'الحقل في Pure Praktijk',
+  'pk.instellingen.imp.field': 'الحقل في Pure Clinics',
   'pk.instellingen.imp.f.first': 'الاسم الأول',
   'pk.instellingen.imp.f.last': 'اسم العائلة',
   'pk.instellingen.imp.f.birth': 'تاريخ الميلاد',

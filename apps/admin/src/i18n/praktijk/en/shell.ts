@@ -1,18 +1,13 @@
 import type { shell as source } from '../nl/shell';
 
 export const shell: Record<keyof typeof source, string> = {
-  'pk.nav.label': 'Practice',
-  'pk.nav.chip': 'subscription',
+  'pk.nav.label': 'Clinic',
 
-  'pk.head.eyebrow': 'Pure Praktijk · monthly subscription',
-  'pk.head.title': 'The whole practice, *in one panel*',
-  'pk.head.help':
-    'Diary, records, invoices, claims via Vecozo, stock, messages and reports for Nijmegen, Uden and Blanche Beauty Studio. A separate module for the panel, available as a monthly subscription.',
-  'pk.head.active': 'Subscription active',
+  'pk.head.eyebrow': 'Clinic · Nijmegen and Uden',
   'pk.head.demo': 'Demo · fictional clients, nothing is really sent or claimed',
   'pk.head.features': '{n} features · {screens} screens',
   'pk.head.all': 'View the feature overview',
-  'pk.subnav.label': 'Parts of Pure Praktijk',
+  'pk.subnav.label': 'Parts of the clinic',
 
   'pk.screen.overzicht': 'Overview',
   'pk.screen.agenda': 'Diary',
@@ -22,7 +17,7 @@ export const shell: Record<keyof typeof source, string> = {
   'pk.screen.dossier': 'Client record',
   'pk.screen.facturen': 'Invoices & till',
   'pk.screen.declaraties': 'Claims',
-  'pk.screen.voorraad': 'Stock',
+  'pk.screen.voorraad': 'Webshop & stock',
   'pk.screen.berichten': 'Messages',
   'pk.screen.rapportages': 'Reports',
   'pk.screen.team': 'Team & permissions',
@@ -40,12 +35,12 @@ export const shell: Record<keyof typeof source, string> = {
   'pk.help.facturen':
     'Invoicing from the diary, the restitutienota, paying in instalments, gift vouchers and session cards, and the cash check at the end of the day.',
   'pk.help.declaraties': 'Claiming from health insurers via Vecozo: send per insurer, process return information, credit and resubmit.',
-  'pk.help.voorraad': 'Stock per location, suppliers, an order list that fills itself and the stock on any date.',
+  'pk.help.voorraad': 'Sales, stock per location, what runs out soon, reviews, suppliers and requests. Webshop and desk together.',
   'pk.help.berichten': 'Reminders, templates, the aftercare email with AI and the newsletter in three steps.',
   'pk.help.rapportages': 'Financial, episodes, marketing and quality, with a list builder and export to Excel.',
   'pk.help.team': 'The team, who may see and do what, two-step sign-in and the work rotas.',
   'pk.help.instellingen': 'Locations and diaries, master data, links with Vecozo and the accounting software, security and GDPR.',
-  'pk.help.functies': 'Every SkinAdmin feature, by section, with the screen where it lives in Pure Praktijk. Click a feature to go there.',
+  'pk.help.functies': 'Every SkinAdmin feature, by section, with the screen where it lives in the panel. Click a feature to go there.',
 
   'pk.common.save': 'Save',
   'pk.common.saved': 'Saved',

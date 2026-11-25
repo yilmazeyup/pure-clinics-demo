@@ -1,5 +1,5 @@
 import { LOCATIONS } from '@pure-clinics/shared';
-import { useEffect, useLayoutEffect, useRef, type CSSProperties } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, type CSSProperties, type MouseEvent } from 'react';
 
 import { byUrgency, courseState, type Course } from '../data/courses';
 import { Accent, useI18n } from '../i18n';
@@ -9,12 +9,40 @@ import { CardHead } from './ui';
 
 const SHOWN = 8;
 
+/** "Booked · Tue 3 Dec 10:00", "2 wk overdue", "Due for session 4" or "Next around Tue 3 Dec": one line per client. */
+export function useCourseStatus(now: Date) {
+  const { t } = useI18n();
+  return useCallback(
+    (c: Course) => {
+      const state = courseState(c, now);
+      if (state === 'planned' && c.planned) return t('courses.planned', { day: { date: c.planned }, time: c.planned });
+      if (state === 'late') return t('courses.late', { n: Math.max(1, Math.round((now.getTime() - c.due.getTime()) / (7 * 86400000))) });
+      if (state === 'due') return t('courses.due', { n: c.done + 1 });
+      return t('courses.onTrack', { day: { date: c.due } });
+    },
+    [t, now],
+  );
+}
+
 /**
  * Laser, acne and pigment treatments come in series. This card lists the clients partway through one,
- * the most urgent first, so nobody drops out of sight; a reminder goes out in one click.
+ * the most urgent first, so nobody drops out of sight; a reminder goes out in one click. A click anywhere else on the
+ * card opens the full page with every client in a plan (…/#trajecten).
  */
-export function CoursesCard({ courses, now, onRemind }: { courses: Course[]; now: Date; onRemind: (ids: string[]) => void }) {
+export function CoursesCard({
+  courses,
+  now,
+  onRemind,
+  onOpen,
+}: {
+  courses: Course[];
+  now: Date;
+  onRemind: (ids: string[]) => void;
+  /** Opens the full page of treatment plans (…/#trajecten). */
+  onOpen?: () => void;
+}) {
   const { t, tn, text, rtl } = useI18n();
+  const status = useCourseStatus(now);
   const wrap = useRef<HTMLDivElement>(null);
   const overlay = useRef<HTMLDivElement>(null);
   const tiles = useRef<CourseTiles | null>(null);
@@ -25,14 +53,6 @@ export function CoursesCard({ courses, now, onRemind }: { courses: Course[]; now
     return (state === 'due' || state === 'late') && !c.reminded;
   });
   const due = sorted.filter((c) => ['due', 'late'].includes(courseState(c, now))).length;
-
-  const status = (c: Course) => {
-    const state = courseState(c, now);
-    if (state === 'planned' && c.planned) return t('courses.planned', { day: { date: c.planned }, time: c.planned });
-    if (state === 'late') return t('courses.late', { n: Math.max(1, Math.round((now.getTime() - c.due.getTime()) / (7 * 86400000))) });
-    if (state === 'due') return t('courses.due', { n: c.done + 1 });
-    return t('courses.onTrack', { day: { date: c.due } });
-  };
 
   const shown = sorted.slice(0, SHOWN);
 
@@ -75,10 +95,32 @@ export function CoursesCard({ courses, now, onRemind }: { courses: Course[]; now
 
   useLayoutEffect(() => measure.current());
 
+  // The whole card opens the full page, except its own buttons (Remind, Remind all, the links), and not while text is
+  // being selected. The link in the head and the one in the foot do the same for the keyboard.
+  const openFromCard = (event: MouseEvent<HTMLElement>) => {
+    if (!onOpen || (event.target as HTMLElement).closest('button, a, input, select')) return;
+    if (window.getSelection()?.toString()) return;
+    onOpen();
+  };
+  const more = Math.max(0, courses.length - SHOWN);
+
   return (
-    <section id="trajecten" className="card courses-card rise" style={{ '--d': '380ms' } as CSSProperties}>
+    <section
+      id="trajecten"
+      className={`card courses-card rise ${onOpen ? 'is-link' : ''}`}
+      style={{ '--d': '380ms' } as CSSProperties}
+      onClick={openFromCard}
+    >
       <CardHead eyebrow={t('courses.eyebrow')} title={<Accent text={tn('courses.title', courses.length)} />}>
-        <span className={`phase ${due ? 'phase--live' : ''}`}>{t('courses.dueCount', { n: due })}</span>
+        <div className="head-actions">
+          <span className={`phase ${due ? 'phase--live' : ''}`}>{t('courses.dueCount', { n: due })}</span>
+          {onOpen ? (
+            <button className="btn btn-ghost btn-small courses-open" onClick={onOpen}>
+              {t('courses.all')}
+              <Icon name="arrow" size={15} />
+            </button>
+          ) : null}
+        </div>
       </CardHead>
       <p className="help">{t('courses.help')}</p>
 
@@ -90,7 +132,9 @@ export function CoursesCard({ courses, now, onRemind }: { courses: Course[]; now
           return (
             <li key={c.id} className={`course course--${state}`} data-course={c.id}>
               <span className="course-who">
-                <strong>{c.client}</strong>
+                <strong>
+                  <bdi>{c.client}</bdi>
+                </strong>
                 <span>
                   {text(c.treatment.name)} · {city}
                 </span>
@@ -128,7 +172,13 @@ export function CoursesCard({ courses, now, onRemind }: { courses: Course[]; now
       </div>
 
       <div className="courses-foot">
-        <span>{t('courses.more', { n: Math.max(0, courses.length - SHOWN) })}</span>
+        {onOpen ? (
+          <button className="courses-more" onClick={onOpen}>
+            {more ? t('courses.more', { n: more }) : t('courses.all')}
+          </button>
+        ) : (
+          <span>{t('courses.more', { n: more })}</span>
+        )}
         <button className="btn btn-primary" disabled={!waiting.length} onClick={() => onRemind(waiting.map((c) => c.id))}>
           <Icon name="mail" size={16} />
           {waiting.length ? t('courses.remindAll', { n: waiting.length }) : t('courses.allSent')}

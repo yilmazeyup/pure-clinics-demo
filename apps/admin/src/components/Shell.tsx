@@ -1,6 +1,9 @@
 import { LOCALE_NAMES, LOCALES, type Locale } from '@pure-clinics/shared';
 import { Fragment, useEffect, useRef, useState } from 'react';
 
+import { type Account } from '../account/accounts';
+import { useAccount } from '../account/context';
+import { AccountAvatar, useJob } from '../account/ui';
 import { Accent, useI18n, useSetLocale, type MessageKey } from '../i18n';
 import { CP_TABS, type CpTab } from '../campagnes/nav';
 import { SCREENS, type ScreenId } from '../praktijk/nav';
@@ -11,14 +14,15 @@ import { useToast } from './ui';
 const HELP_URL = 'https://pureclinics.savastana.com/hulp/';
 
 /**
- * Agenda, Trajecten and Webshop jump to their part of the overview; Praktijk opens the practice module (its own
- * subscription); Campagnes opens the Mailchimp module; Hulp opens the help page; the rest follow later.
+ * Overzicht opens the overview (its agenda and treatment plans are cards there, no longer menu entries); Webshop opens
+ * the stock screen of the Kliniek module, the one place for products, stock and suppliers; Kliniek opens the module with
+ * its screens folded under it; Campagnes opens the Mailchimp module; Hulp opens the help page; the rest follow later.
  */
-const NAV: { icon: IconName; label: MessageKey; section?: string; help?: boolean; praktijk?: boolean; campagnes?: boolean }[] = [
+type NavItem = { icon: IconName; label: MessageKey; shop?: boolean; help?: boolean; praktijk?: boolean; campagnes?: boolean };
+
+const ADMIN_NAV: NavItem[] = [
   { icon: 'grid', label: 'nav.overview' },
-  { icon: 'calendar', label: 'nav.agenda', section: 'agenda' },
-  { icon: 'repeat', label: 'nav.courses', section: 'trajecten' },
-  { icon: 'bag', label: 'nav.webshop', section: 'webshop' },
+  { icon: 'bag', label: 'nav.webshop', shop: true },
   { icon: 'clipboard', label: 'pk.nav.label', praktijk: true },
   { icon: 'users', label: 'nav.clients' },
   { icon: 'mail', label: 'nav.campaigns', campagnes: true },
@@ -26,7 +30,22 @@ const NAV: { icon: IconName; label: MessageKey; section?: string; help?: boolean
   { icon: 'help', label: 'nav.help', help: true },
 ];
 
-type View = 'overview' | 'praktijk' | 'campagnes';
+/** A team member sees her own day and the help page; Kliniek is for the admin only for now. */
+const STAFF_NAV: NavItem[] = [
+  { icon: 'calendar', label: 'acc.nav.day' },
+  { icon: 'help', label: 'nav.help', help: true },
+];
+
+/** A client sees her own page. */
+const CLIENT_NAV: NavItem[] = [{ icon: 'star', label: 'acc.nav.me' }];
+
+const navOf = (account: Account | null) => (account?.role === 'staff' ? STAFF_NAV : account?.role === 'client' ? CLIENT_NAV : ADMIN_NAV);
+
+/** The stock screen sits under Webshop, so the Kliniek group leaves it out. */
+const KLINIEK_SCREENS = SCREENS.filter((s) => s.id !== 'voorraad');
+
+/** `shop` is the stock screen opened from Webshop; `courses` is the full list of treatment plans, part of the overview. */
+type View = 'overview' | 'courses' | 'shop' | 'praktijk' | 'campagnes';
 
 type SidebarProps = {
   view: View;
@@ -63,6 +82,9 @@ function SubMenu({ open, label, items }: { open: boolean; label: string; items: 
  */
 export function Sidebar({ view, onView, screen, onScreen, tab, onTab }: SidebarProps) {
   const { t, locale } = useI18n();
+  const { account, signOut } = useAccount();
+  const jobOf = useJob();
+  const NAV = navOf(account);
   const toast = useToast();
   const [open, setOpen] = useState(false);
   const aside = useRef<HTMLElement>(null);
@@ -115,18 +137,14 @@ export function Sidebar({ view, onView, screen, onScreen, tab, onTab }: SidebarP
     const item = NAV[index];
     if (item.praktijk) onView('praktijk');
     else if (item.campagnes) onView('campagnes');
+    else if (item.shop) onView('shop');
     else if (index === 0 && view !== 'overview') onView('overview');
     else if (index === 0) window.scrollTo({ top: 0, behavior: 'smooth' });
     else if (item.help) window.open(`${HELP_URL}?lang=${locale}`, '_blank', 'noopener');
-    else if (item.section) {
-      const scroll = () => document.getElementById(item.section!)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      if (view === 'overview') scroll();
-      else {
-        onView('overview');
-        window.setTimeout(scroll, 120);
-      }
-    } else toast(t('nav.soon', { label: t(item.label) }));
+    else toast(t('nav.soon', { label: t(item.label) }));
   };
+  // The entry that is the current page: the overview (also while its treatment plans are open full size) or Webshop.
+  const currentOf = (index: number) => (index === 0 ? view === 'overview' || view === 'courses' : NAV[index].shop ? view === 'shop' : false);
   // Inside a module the screen or part under it is the current page; the module itself is then the open group above it.
   const groupOf = (index: number): View | null => (NAV[index].praktijk ? 'praktijk' : NAV[index].campagnes ? 'campagnes' : null);
   const wordmark = (
@@ -161,19 +179,18 @@ export function Sidebar({ view, onView, screen, onScreen, tab, onTab }: SidebarP
             <Fragment key={item.label}>
               <button
                 className={groupOf(index) === view ? 'is-open' : undefined}
-                aria-current={view === 'overview' && index === 0 ? 'page' : undefined}
+                aria-current={currentOf(index) ? 'page' : undefined}
                 aria-expanded={groupOf(index) ? groupOf(index) === view : undefined}
                 onClick={() => go(index)}
               >
                 <Icon name={item.icon} />
                 {t(item.label)}
-                {item.praktijk ? <span className="pk-nav-chip">{t('pk.nav.chip')}</span> : null}
               </button>
               {item.praktijk ? (
                 <SubMenu
                   open={view === 'praktijk'}
                   label={t('pk.subnav.label')}
-                  items={SCREENS.map((s) => ({ id: s.id, label: t(`pk.screen.${s.id}`), current: s.id === screen, onPick: () => pick(() => onScreen(s.id)) }))}
+                  items={KLINIEK_SCREENS.map((s) => ({ id: s.id, label: t(`pk.screen.${s.id}`), current: s.id === screen, onPick: () => pick(() => onScreen(s.id)) }))}
                 />
               ) : null}
               {item.campagnes ? (
@@ -186,6 +203,20 @@ export function Sidebar({ view, onView, screen, onScreen, tab, onTab }: SidebarP
             </Fragment>
           ))}
         </nav>
+
+        {account ? (
+          <div className="acc-box">
+            <AccountAvatar account={account} size="small" />
+            <span className="acc-box-who">
+              <small>{t('acc.signedIn')}</small>
+              <strong>{account.name}</strong>
+              <span>{jobOf(account)}</span>
+            </span>
+            <button className="btn btn-ghost btn-small" onClick={() => pick(signOut)}>
+              {t('acc.signout')}
+            </button>
+          </div>
+        ) : null}
 
         <div className="test-box">
           <strong>{t('test.title')}</strong>
@@ -212,14 +243,24 @@ export function Topbar({ now, playing, progress, onPlay, onStop, onTour, compact
   const { t, clock, locale } = i18n;
   const setLocale = useSetLocale();
   const toast = useToast();
+  const { account } = useAccount();
+  const jobOf = useJob();
+  const admin = !account || account.role === 'admin';
+  const client = account?.role === 'client';
+  const h = now.getHours();
+  // The admin is greeted as the team; a team member or a client by her own first name.
+  const greeting = admin
+    ? i18n.greeting(now)
+    : t('acc.greet', { greeting: t(h < 12 ? 'greet.morning' : h < 18 ? 'greet.afternoon' : 'greet.evening'), name: account!.name.split(' ')[0] });
+  const subline = admin ? t('top.subline') : client ? t('acc.sub.client') : jobOf(account!);
   return (
     <header className={`topbar rise ${compact ? 'topbar--compact' : ''}`}>
       <div>
         <h1 className="greeting">
-          <Accent text={i18n.greeting(now)} />
+          <Accent text={greeting} />
         </h1>
         <p className="subline">
-          {i18n.dayLong(now)} · {t('top.subline')}
+          {i18n.dayLong(now)} · {subline}
         </p>
       </div>
       <div className="top-actions">
@@ -234,16 +275,20 @@ export function Topbar({ now, playing, progress, onPlay, onStop, onTour, compact
             ))}
           </select>
         </label>
-        <button className="tour-button" onClick={onTour}>
-          <Icon name="help" size={17} />
-          {t('top.tour')}
-        </button>
-        <button className="search" onClick={() => toast(t('top.searchSoon'))}>
-          <Icon name="search" size={18} />
-          {t('top.search')}
-          <kbd>⌘K</kbd>
-        </button>
-        {playing ? (
+        {admin ? (
+          <>
+            <button className="tour-button" onClick={onTour}>
+              <Icon name="help" size={17} />
+              {t('top.tour')}
+            </button>
+            <button className="search" onClick={() => toast(t('top.searchSoon'))}>
+              <Icon name="search" size={18} />
+              {t('top.search')}
+              <kbd>⌘K</kbd>
+            </button>
+          </>
+        ) : null}
+        {client ? null : playing ? (
           <button className="play is-playing" onClick={onStop} aria-label={t('top.stop')}>
             <Icon name="stop" size={16} />
             <span className="play-time">{clock(now)}</span>
@@ -257,16 +302,24 @@ export function Topbar({ now, playing, progress, onPlay, onStop, onTour, compact
             {t('top.play')}
           </button>
         )}
-        <span className="live-chip" title={t('top.liveTitle')}>
-          <i className="live-dot" />
-          {playing ? t('top.demoTime') : t('top.live', { time: now })}
-        </span>
+        {client ? null : (
+          <span className="live-chip" title={t('top.liveTitle')}>
+            <i className="live-dot" />
+            {playing ? t('top.demoTime') : t('top.live', { time: now })}
+          </span>
+        )}
         <button className="icon-button" aria-label={t('top.notifications')} onClick={() => toast(t('top.noNotifications'))}>
           <Icon name="bell" />
         </button>
-        <span className="avatar" aria-label={t('top.admin')}>
-          PC
-        </span>
+        {account ? (
+          <span className="acc-top-avatar" title={`${t('acc.signedIn')} ${account.name}`}>
+            <AccountAvatar account={account} />
+          </span>
+        ) : (
+          <span className="avatar" aria-label={t('top.admin')}>
+            PC
+          </span>
+        )}
       </div>
     </header>
   );

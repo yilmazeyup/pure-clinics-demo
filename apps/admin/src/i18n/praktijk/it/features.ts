@@ -251,4 +251,9 @@ export const features: Record<keyof typeof source, string> = {
   'pk.f.more.calendar': 'Collegare l’agenda a Google e Outlook',
   'pk.f.more.membership': 'Membership',
   'pk.f.more.waitlist': 'Lista d’attesa',
+  'pk.f.more.shelf': 'Le scorte come scaffale 3D, per clinica o insieme',
+  'pk.f.more.forecast': 'Quando finisce un prodotto: settimana prossima, mese prossimo, ed entro quando ordinare',
+  'pk.f.more.sales': 'Venduto per prodotto, alla reception e online',
+  'pk.f.more.request': 'Richiesta per prodotto, con e-mail per fornitore, automatica o con approvazione',
+  'pk.f.more.reviews': 'Recensioni per prodotto',
 };

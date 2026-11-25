@@ -156,9 +156,6 @@ export function OverviewScreen() {
             <p className="help">{t('pk.ov.help', { day: i18n.dayLong(today) })}</p>
           </div>
           <div className="pk-ov-hero-side">
-            <Chip tone="good" icon="check">
-              {t('pk.head.active')}
-            </Chip>
             <button type="button" className="pk-ov-features" onClick={() => go('functies')}>
               <strong>{t('pk.head.features', { n: total, screens: SCREENS.length - 1 })}</strong>
               <span>

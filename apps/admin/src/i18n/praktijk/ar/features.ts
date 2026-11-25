@@ -251,4 +251,9 @@ export const features: Record<keyof typeof source, string> = {
   'pk.f.more.calendar': 'ربط جدول المواعيد بـ Google وOutlook',
   'pk.f.more.membership': 'العضويات',
   'pk.f.more.waitlist': 'قائمة الانتظار',
+  'pk.f.more.shelf': 'المخزون كرف ثلاثي الأبعاد، لكل عيادة أو معًا',
+  'pk.f.more.forecast': 'متى ينفد المنتج: الأسبوع القادم، الشهر القادم، وآخر موعد للطلب',
+  'pk.f.more.sales': 'المبيع لكل منتج، في الاستقبال وعبر المتجر الإلكتروني',
+  'pk.f.more.request': 'طلب لكل منتج، مع رسالة طلب لكل مورد، تلقائيًا أو بموافقة',
+  'pk.f.more.reviews': 'تقييمات لكل منتج',
 };

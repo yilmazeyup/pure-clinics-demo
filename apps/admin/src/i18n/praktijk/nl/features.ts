@@ -250,4 +250,9 @@ export const features = {
   'pk.f.more.calendar': 'Agenda koppelen aan Google en Outlook',
   'pk.f.more.membership': 'Memberships',
   'pk.f.more.waitlist': 'Wachtlijst',
+  'pk.f.more.shelf': 'De voorraad als 3D-plank, per kliniek of samen',
+  'pk.f.more.forecast': 'Wanneer een product op is: volgende week, volgende maand, en bestel uiterlijk',
+  'pk.f.more.sales': 'Verkocht per product, aan de balie en via de webshop',
+  'pk.f.more.request': 'Aanvragen per product, met een aanvraagmail per leverancier, automatisch of met akkoord',
+  'pk.f.more.reviews': 'Recensies per product',
 };

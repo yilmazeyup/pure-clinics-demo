@@ -7,7 +7,7 @@ import { HISTORY_START, levelsOn, type Move, type MoveReason } from '../../data/
 import { staffById } from '../../data/core';
 import { PkIcon } from '../../icons';
 import { Card, Chip, Field, Modal, Seg, TableWrap, isolate, useMoney } from '../../kit';
-import { cityOf, fromIsoDay, isoDay, LevelChip, levelOf, useProductName, useStock } from './common';
+import { cityOf, fromIsoDay, isoDay, LevelChip, levelOf, useProductName, useStock, useStockUi } from './common';
 
 type Where = 'all' | LocationId;
 type Adjusting = { product: ProductId; locationId: LocationId; direction: 'in' | 'out' };
@@ -24,7 +24,8 @@ export function Levels() {
   const { today, now } = usePraktijk();
   const money = useMoney();
   const name = useProductName();
-  const { stock, info, products, seeded, booked, book } = useStock();
+  const { stock, info, products, seeded, booked, book, requests } = useStock();
+  const { openProduct, ask } = useStockUi();
   const [where, setWhere] = useState<Where>('all');
   const [query, setQuery] = useState('');
   const [day, setDay] = useState(isoDay(today));
@@ -109,10 +110,10 @@ export function Levels() {
                 return (
                   <tr key={p.id}>
                     <td className="pk-cell-main">
-                      <span className="pk-st-product">
+                      <button type="button" className="pk-st-product pk-st-link" onClick={() => openProduct(p.id)}>
                         <strong>{name(p.id)}</strong>
                         <small className="pk-muted">{t(`pk.voorraad.cat.${p.category}`)}</small>
-                      </span>
+                      </button>
                     </td>
                     {locations.map((l) => {
                       const level = shown[l.id][p.id];
@@ -143,6 +144,17 @@ export function Levels() {
                     {past ? null : (
                       <td className="end pk-cell-full">
                         <span className="pk-st-actions">
+                          {p.soldOut ? null : requests.some((r) => r.product === p.id && (where === 'all' || r.locationId === where)) ? (
+                            <span className="pk-st-asked">
+                              <PkIcon name="check" size={13} />
+                              {t('pk.voorraad.ask.done')}
+                            </span>
+                          ) : (
+                            <button className="btn btn-ghost btn-small" onClick={() => ask(p.id, where === 'all' ? undefined : where)}>
+                              <PkIcon name="truck" size={14} />
+                              {t('pk.voorraad.ask.button')}
+                            </button>
+                          )}
                           <button
                             className="btn btn-ghost btn-small"
                             onClick={() => setAdjusting({ product: p.id, locationId: where === 'all' ? 'nijmegen' : where, direction: 'in' })}
@@ -204,7 +216,7 @@ export function Levels() {
                   <td className="pk-cell-inline">
                     <Chip tone={m.qty > 0 ? 'good' : 'neutral'}>{t(`pk.voorraad.reason.${m.reason}`)}</Chip>
                   </td>
-                  <td className="pk-mono pk-cell-inline">{staffById(m.by).code}</td>
+                  <td className="pk-mono pk-cell-inline">{m.channel === 'webshop' ? 'WEB' : staffById(m.by).code}</td>
                 </tr>
               ))}
             </tbody>

@@ -1,18 +1,13 @@
 import type { shell as source } from '../nl/shell';
 
 export const shell: Record<keyof typeof source, string> = {
-  'pk.nav.label': 'Praktijk',
-  'pk.nav.chip': 'suscripción',
+  'pk.nav.label': 'Clínica',
 
-  'pk.head.eyebrow': 'Pure Praktijk · suscripción mensual',
-  'pk.head.title': 'Toda la clínica, *en un solo panel*',
-  'pk.head.help':
-    'Agenda, expediente, facturas, reclamaciones a aseguradoras vía Vecozo, stock, mensajes e informes para Nijmegen, Uden y Blanche Beauty Studio. Un módulo aparte del panel, con suscripción mensual.',
-  'pk.head.active': 'Suscripción activa',
+  'pk.head.eyebrow': 'Clínica · Nijmegen y Uden',
   'pk.head.demo': 'Demo · clientes ficticios, no se envía ni se factura nada de verdad',
   'pk.head.features': '{n} funciones · {screens} pantallas',
   'pk.head.all': 'Ver el resumen de funciones',
-  'pk.subnav.label': 'Apartados de Pure Praktijk',
+  'pk.subnav.label': 'Apartados de la clínica',
 
   'pk.screen.overzicht': 'Resumen',
   'pk.screen.agenda': 'Agenda',
@@ -22,7 +17,7 @@ export const shell: Record<keyof typeof source, string> = {
   'pk.screen.dossier': 'Expediente',
   'pk.screen.facturen': 'Facturas y caja',
   'pk.screen.declaraties': 'Reclamaciones al seguro',
-  'pk.screen.voorraad': 'Stock',
+  'pk.screen.voorraad': 'Tienda online y stock',
   'pk.screen.berichten': 'Mensajes',
   'pk.screen.rapportages': 'Informes',
   'pk.screen.team': 'Equipo y permisos',
@@ -40,12 +35,12 @@ export const shell: Record<keyof typeof source, string> = {
   'pk.help.facturen':
     'Facturar desde la agenda, restitutienota, pago fraccionado, tarjetas regalo y bonos de sesiones, y el arqueo de caja al final del día.',
   'pk.help.declaraties': 'Reclamar a las aseguradoras de salud vía Vecozo: envío por aseguradora, procesar la información de retorno, abonar y volver a presentar.',
-  'pk.help.voorraad': 'Stock por centro, proveedores, una lista de pedidos que se rellena sola y el stock en cualquier fecha.',
+  'pk.help.voorraad': 'Ventas, stock por centro, lo que se agota pronto, reseñas, proveedores y pedidos. Tienda online y mostrador juntos.',
   'pk.help.berichten': 'Recordatorios, plantillas, el correo de cuidados posteriores con IA y la newsletter en tres pasos.',
   'pk.help.rapportages': 'Finanzas, episodios, marketing y calidad, con un generador de listas y exportación a Excel.',
   'pk.help.team': 'El equipo, quién puede ver y hacer qué, inicio de sesión en dos pasos y los horarios de trabajo.',
   'pk.help.instellingen': 'Centros y agendas, datos maestros, integraciones con Vecozo y la contabilidad, seguridad y RGPD.',
-  'pk.help.functies': 'Cada función de SkinAdmin, por apartado, con la pantalla donde está en Pure Praktijk. Haz clic en una función para ir allí.',
+  'pk.help.functies': 'Cada función de SkinAdmin, por apartado, con la pantalla donde está en el panel. Haz clic en una función para ir allí.',
 
   'pk.common.save': 'Guardar',
   'pk.common.saved': 'Guardado',

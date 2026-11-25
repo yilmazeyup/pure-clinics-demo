@@ -266,7 +266,7 @@ export const instellingen: Record<keyof typeof source, string> = {
   'pk.instellingen.imp.mapHelp': 'Welche Spalte aus {file} gehört zu welchem Feld? Die meisten sind schon erkannt.',
   'pk.instellingen.imp.column': 'Spalte in der Datei',
   'pk.instellingen.imp.example': 'Beispiel',
-  'pk.instellingen.imp.field': 'Feld in Pure Praktijk',
+  'pk.instellingen.imp.field': 'Feld in Pure Clinics',
   'pk.instellingen.imp.f.first': 'Vorname',
   'pk.instellingen.imp.f.last': 'Nachname',
   'pk.instellingen.imp.f.birth': 'Geburtsdatum',

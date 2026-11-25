@@ -92,10 +92,16 @@ Panel: pureclinics.savastana.com/beheer. Menü kodu: `apps/admin/src/components/
     - sayfa e-ticaretle başlasın: online siparişler, durumları, online satış rakamları, sitede görünen stok;
     - stok ve tedarikçi kısmı altta kalsın.
 
-    Sorulan: "platform" derken bol.com gibi bir pazar yeri mi kastediliyor, yoksa Pure'un kendi uygulaması mı?
+    Cevap: "platform" = Pure'un kendi sitesi ve uygulaması. Yapıldı: Webshop & voorraad ekranı iki parçalı.
+    - **Webshop** (ilk açılan):
+      - Bugünkü online satış, paketlenecekler, kuryeye hazırlar, yoldakiler.
+      - **Bestellingen:** site ve uygulamadan gelen her sipariş. Durum: yeni → paketlendi → gönderildi → teslim edildi. Hangi klinikten çıktığı ve filtreler görünüyor. Siparişe tıklayınca ayrıntı, kargo kodu ve paketle/gönder düğmeleri açılıyor.
+      - **Online verkoop:** son 30 gün. Ciro, sipariş sayısı ve ortalama sepet var. Günlük sütunlar uygulama ve site olarak ayrılıyor. En çok satanlar da burada.
+      - **Op de site en in de app:** müşterinin gördüğü stok ("op voorraad / nog n / uitverkocht"), ürünü online gizleme düğmesi ve "bijna op" eşiği.
+    - **Voorraad & inkoop:** eskisi gibi; 3D raf, tahmin, talep listesi, tedarikçiler ve yorumlar burada.
 
 ## Hâlâ açık
 
 - Menünün geri kalanı: Campagnes.
-- Webshop'un e-ticaret kısmı (12. madde).
+
 - Gerçek giriş (şifre, e-posta kodu, sunucu): sonra.

@@ -74,7 +74,7 @@ function Lines({ rows }: { rows: { icon: PkIconName; label: string; value: React
   );
 }
 
-function Section({ title, children, count }: { title: string; children: ReactNode; count?: ReactNode }) {
+export function Section({ title, children, count }: { title: string; children: ReactNode; count?: ReactNode }) {
   return (
     <section className="pk-dt-section">
       <h3>

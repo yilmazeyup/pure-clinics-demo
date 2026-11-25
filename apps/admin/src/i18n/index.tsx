@@ -8,7 +8,7 @@ import { es } from './es';
 import { fr } from './fr';
 import { it } from './it';
 import { nl, type MessageKey as PanelKey, type Messages } from './nl';
-import { loadCampagnesTexts, type CampagnesKey } from './campagnes';
+import { CAMPAGNES_SHELL, loadCampagnesTexts, type CampagnesKey } from './campagnes';
 import { loadPraktijkTexts, PRAKTIJK_SHELL, type PraktijkKey } from './praktijk';
 
 /**
@@ -18,7 +18,7 @@ import { loadPraktijkTexts, PRAKTIJK_SHELL, type PraktijkKey } from './praktijk'
 export type MessageKey = PanelKey | PraktijkKey | CampagnesKey;
 
 const PANEL: Record<Locale, Messages> = { nl, en, ar, fr, de, it, es };
-const MESSAGES = Object.fromEntries(LOCALES.map((l) => [l, { ...PANEL[l], ...PRAKTIJK_SHELL[l] }])) as Record<Locale, Record<MessageKey, string>>;
+const MESSAGES = Object.fromEntries(LOCALES.map((l) => [l, { ...PANEL[l], ...PRAKTIJK_SHELL[l], ...CAMPAGNES_SHELL[l] }])) as Record<Locale, Record<MessageKey, string>>;
 
 /** Pure Praktijk's texts arrive when the module opens; until a language is in, its words fall back to Dutch. */
 const praktijkIn = new Map<Locale, Promise<void>>();

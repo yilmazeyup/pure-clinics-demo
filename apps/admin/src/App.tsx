@@ -113,6 +113,8 @@ function Panel() {
           }
           screen={praktijk?.screen ?? null}
           onScreen={open}
+          tab={campagnes?.tab ?? null}
+          onTab={(tab) => openCampagnes({ tab })}
         />
         <main className="main">
           <Topbar

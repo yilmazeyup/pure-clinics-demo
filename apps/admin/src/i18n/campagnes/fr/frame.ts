@@ -10,14 +10,6 @@ export const frame: Record<keyof typeof source, string> = {
   'cp.head.syncing': 'Synchronisation…',
   'cp.head.demo':
     'Démo · contacts fictifs et chiffres d’exemple. Rien ne part vers Mailchimp : connexion, synchronisation, envoi et rapports sont simulés dans le navigateur.',
-  'cp.tabs': 'Rubriques de Campagnes',
-
-  'cp.tab.overzicht': 'Vue d’ensemble',
-  'cp.tab.kalender': 'Calendrier',
-  'cp.tab.campagnes': 'Campagnes',
-  'cp.tab.segmenten': 'Segments',
-  'cp.tab.contacten': 'Contacts & consentement',
-  'cp.tab.instellingen': 'Réglages',
 
   'cp.help.overzicht': 'La connexion à Mailchimp, ton audience en chiffres, ce qui arrive et comment les campagnes envoyées ont marché.',
   'cp.help.kalender': 'De novembre à janvier, par mois ou par semaine. Clique sur une campagne pour l’ouvrir.',

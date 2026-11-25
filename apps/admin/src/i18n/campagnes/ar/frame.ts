@@ -10,14 +10,6 @@ export const frame: Record<keyof typeof source, string> = {
   'cp.head.syncing': 'جارٍ المزامنة…',
   'cp.head.demo':
     'نسخة تجريبية · جهات اتصال وهمية وأرقام للتوضيح. لا يصل شيء إلى Mailchimp: الربط والمزامنة والإرسال والتقارير كلها محاكاة في المتصفح.',
-  'cp.tabs': 'أقسام الحملات',
-
-  'cp.tab.overzicht': 'نظرة عامة',
-  'cp.tab.kalender': 'التقويم',
-  'cp.tab.campagnes': 'الحملات',
-  'cp.tab.segmenten': 'الشرائح',
-  'cp.tab.contacten': 'جهات الاتصال والموافقة',
-  'cp.tab.instellingen': 'الإعدادات',
 
   'cp.help.overzicht': 'الربط مع Mailchimp، وجمهورك بالأرقام، وما هو قادم، وكيف كان أداء الحملات المُرسلة.',
   'cp.help.kalender': 'من نوفمبر حتى يناير، شهريًا أو أسبوعيًا. انقر على حملة لفتحها.',

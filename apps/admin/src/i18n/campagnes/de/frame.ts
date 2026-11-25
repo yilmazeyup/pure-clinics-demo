@@ -10,14 +10,6 @@ export const frame: Record<keyof typeof source, string> = {
   'cp.head.syncing': 'Wird synchronisiert…',
   'cp.head.demo':
     'Demo · fiktive Kontakte und Beispielzahlen. Nichts geht an Mailchimp: Verbinden, Synchronisieren, Versenden und Berichte werden im Browser simuliert.',
-  'cp.tabs': 'Bereiche der Kampagnen',
-
-  'cp.tab.overzicht': 'Übersicht',
-  'cp.tab.kalender': 'Kalender',
-  'cp.tab.campagnes': 'Kampagnen',
-  'cp.tab.segmenten': 'Segmente',
-  'cp.tab.contacten': 'Kontakte & Einwilligung',
-  'cp.tab.instellingen': 'Einstellungen',
 
   'cp.help.overzicht': 'Die Verbindung mit Mailchimp, deine Audience in Zahlen, was ansteht und wie die versendeten Kampagnen gelaufen sind.',
   'cp.help.kalender': 'November bis Januar, nach Monat oder nach Woche. Klick auf eine Kampagne, um sie zu öffnen.',

@@ -10,14 +10,6 @@ export const frame = {
   'cp.head.syncing': 'Synchroniseren…',
   'cp.head.demo':
     'Demo · fictieve contacten en voorbeeldcijfers. Er gaat niets naar Mailchimp: verbinden, synchroniseren, versturen en rapporten worden in de browser nagebootst.',
-  'cp.tabs': 'Onderdelen van Campagnes',
-
-  'cp.tab.overzicht': 'Overzicht',
-  'cp.tab.kalender': 'Kalender',
-  'cp.tab.campagnes': 'Campagnes',
-  'cp.tab.segmenten': 'Segmenten',
-  'cp.tab.contacten': 'Contacten & toestemming',
-  'cp.tab.instellingen': 'Instellingen',
 
   'cp.help.overzicht': 'De koppeling met Mailchimp, je audience in cijfers, wat eraan komt en hoe de verzonden campagnes het deden.',
   'cp.help.kalender': 'November tot en met januari per maand of per week. Klik op een campagne om hem te openen.',

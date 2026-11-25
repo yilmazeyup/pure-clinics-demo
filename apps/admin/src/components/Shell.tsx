@@ -2,6 +2,7 @@ import { LOCALE_NAMES, LOCALES, type Locale } from '@pure-clinics/shared';
 import { Fragment, useEffect, useRef, useState } from 'react';
 
 import { Accent, useI18n, useSetLocale, type MessageKey } from '../i18n';
+import { CP_TABS, type CpTab } from '../campagnes/nav';
 import { SCREENS, type ScreenId } from '../praktijk/nav';
 import { Icon, type IconName } from './Icon';
 import { useToast } from './ui';
@@ -33,18 +34,38 @@ type SidebarProps = {
   /** The Praktijk screen that is open (null outside Praktijk); its screens sit under Praktijk in the menu. */
   screen: ScreenId | null;
   onScreen: (screen: ScreenId) => void;
+  /** The part of Campagnes that is open (null outside Campagnes); its parts sit under Campagnes in the same way. */
+  tab: CpTab | null;
+  onTab: (tab: CpTab) => void;
 };
 
+type SubItem = { id: string; label: string; current: boolean; onPick: () => void };
+
+/** The parts of a module, folded open under its name in the menu while the module is open. */
+function SubMenu({ open, label, items }: { open: boolean; label: string; items: SubItem[] }) {
+  return (
+    <div className={`nav-sub ${open ? 'is-open' : ''}`} inert={!open}>
+      <div className="nav-sub-list" role="group" aria-label={label}>
+        {items.map((item) => (
+          <button key={item.id} aria-current={open && item.current ? 'page' : undefined} onClick={item.onPick}>
+            {item.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /**
- * The menu. On a wide screen it stands on the left (on the right in Arabic) and Praktijk's screens fold open under
- * Praktijk while it is open. On a phone and a tablet it is one Menu button that slides the same menu in from the side.
+ * The menu. On a wide screen it stands on the left (on the right in Arabic), and the screens of Praktijk and the parts of
+ * Campagnes fold open under their name while that module is open. On a phone and a tablet it is one Menu button that
+ * slides the same menu in from the side.
  */
-export function Sidebar({ view, onView, screen, onScreen }: SidebarProps) {
+export function Sidebar({ view, onView, screen, onScreen, tab, onTab }: SidebarProps) {
   const { t, locale } = useI18n();
   const toast = useToast();
   const [open, setOpen] = useState(false);
   const aside = useRef<HTMLElement>(null);
-  const sub = useRef<HTMLDivElement>(null);
   const menuButton = useRef<HTMLButtonElement>(null);
   const closeButton = useRef<HTMLButtonElement>(null);
 
@@ -70,12 +91,12 @@ export function Sidebar({ view, onView, screen, onScreen }: SidebarProps) {
     };
   }, [open]);
 
-  // Keep the chosen Praktijk screen in sight when the menu is taller than the window, without moving the page.
+  // Keep the chosen screen or part in sight when the menu is taller than the window, without moving the page.
   // It measures once the list has finished folding open.
   useEffect(() => {
     const timer = window.setTimeout(() => {
       const box = aside.current;
-      const item = sub.current?.querySelector<HTMLElement>('[aria-current="page"]');
+      const item = box?.querySelector<HTMLElement>('.nav-sub.is-open [aria-current="page"]');
       if (!box || !item || box.scrollHeight <= box.clientHeight) return;
       const b = box.getBoundingClientRect();
       const r = item.getBoundingClientRect();
@@ -83,11 +104,11 @@ export function Sidebar({ view, onView, screen, onScreen }: SidebarProps) {
       else if (r.bottom > b.bottom - 12) box.scrollTop += r.bottom - (b.bottom - 12);
     }, 360);
     return () => window.clearTimeout(timer);
-  }, [screen]);
+  }, [screen, tab]);
 
-  const pick = (next: ScreenId) => {
+  const pick = (go: () => void) => {
     setOpen(false);
-    onScreen(next);
+    go();
   };
   const go = (index: number) => {
     setOpen(false);
@@ -106,9 +127,8 @@ export function Sidebar({ view, onView, screen, onScreen }: SidebarProps) {
       }
     } else toast(t('nav.soon', { label: t(item.label) }));
   };
-  // Inside Praktijk the screen under it is the current page; Praktijk itself is then the open group above it.
-  const inPraktijk = view === 'praktijk';
-  const current = (index: number) => (view === 'campagnes' ? Boolean(NAV[index].campagnes) : view === 'overview' && index === 0);
+  // Inside a module the screen or part under it is the current page; the module itself is then the open group above it.
+  const groupOf = (index: number): View | null => (NAV[index].praktijk ? 'praktijk' : NAV[index].campagnes ? 'campagnes' : null);
   const wordmark = (
     <div className="logo" role="img" aria-label="Pure Clinics">
       <span className="wordmark" aria-hidden="true">
@@ -140,9 +160,9 @@ export function Sidebar({ view, onView, screen, onScreen }: SidebarProps) {
           {NAV.map((item, index) => (
             <Fragment key={item.label}>
               <button
-                className={item.praktijk && inPraktijk ? 'is-open' : undefined}
-                aria-current={current(index) ? 'page' : undefined}
-                aria-expanded={item.praktijk ? inPraktijk : undefined}
+                className={groupOf(index) === view ? 'is-open' : undefined}
+                aria-current={view === 'overview' && index === 0 ? 'page' : undefined}
+                aria-expanded={groupOf(index) ? groupOf(index) === view : undefined}
                 onClick={() => go(index)}
               >
                 <Icon name={item.icon} />
@@ -150,15 +170,18 @@ export function Sidebar({ view, onView, screen, onScreen }: SidebarProps) {
                 {item.praktijk ? <span className="pk-nav-chip">{t('pk.nav.chip')}</span> : null}
               </button>
               {item.praktijk ? (
-                <div className={`nav-sub ${inPraktijk ? 'is-open' : ''}`} inert={!inPraktijk}>
-                  <div ref={sub} className="nav-sub-list" role="group" aria-label={t('pk.subnav.label')}>
-                    {SCREENS.map((s) => (
-                      <button key={s.id} aria-current={inPraktijk && s.id === screen ? 'page' : undefined} onClick={() => pick(s.id)}>
-                        {t(`pk.screen.${s.id}`)}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                <SubMenu
+                  open={view === 'praktijk'}
+                  label={t('pk.subnav.label')}
+                  items={SCREENS.map((s) => ({ id: s.id, label: t(`pk.screen.${s.id}`), current: s.id === screen, onPick: () => pick(() => onScreen(s.id)) }))}
+                />
+              ) : null}
+              {item.campagnes ? (
+                <SubMenu
+                  open={view === 'campagnes'}
+                  label={t('cp.tabs')}
+                  items={CP_TABS.map((c) => ({ id: c.id, label: t(`cp.tab.${c.id}`), current: c.id === tab, onPick: () => pick(() => onTab(c.id)) }))}
+                />
               ) : null}
             </Fragment>
           ))}

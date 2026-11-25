@@ -1,12 +1,10 @@
-import { useEffect, useRef, type CSSProperties } from 'react';
-
 import { Accent, useI18n } from '../i18n';
 // Campagnes shares Pure Praktijk's building blocks (cards, chips, tables, fields) and adds its own styles on top.
 import '../praktijk/praktijk.css';
 import { PkIcon } from '../praktijk/icons';
 import './campagnes.css';
 import { Composer } from './composer/Composer';
-import { CP_TABS, type CpRoute } from './nav';
+import type { CpRoute } from './nav';
 import { CpProvider, useCp } from './state';
 import { CalendarTab } from './tabs/Calendar';
 import { CampaignsTab } from './tabs/Campaigns';
@@ -28,20 +26,10 @@ export function Campagnes({ now, route, onRoute }: Props) {
 
 function Module() {
   const { t } = useI18n();
-  const { route, open, byId, create, sync } = useCp();
-  const nav = useRef<HTMLElement>(null);
+  const { route, byId, create, sync } = useCp();
   const campaign = route.campaign ? byId(route.campaign) : undefined;
 
-  // Keep the chosen tab in view in the scrolling tab bar on a phone, without scrolling the page.
-  useEffect(() => {
-    const bar = nav.current;
-    const tab = bar?.querySelector<HTMLElement>('[aria-current="page"]');
-    if (bar && tab && bar.scrollWidth > bar.clientWidth) {
-      const b = bar.getBoundingClientRect();
-      const r = tab.getBoundingClientRect();
-      bar.scrollBy({ left: r.left - b.left - (b.width - r.width) / 2 });
-    }
-  }, [route.tab]);
+  // The parts are chosen in the menu, under Campagnes (components/Shell.tsx); the module has no row of tabs of its own.
 
   return (
     <div className="pk cp">
@@ -76,15 +64,6 @@ function Module() {
           {t('cp.head.demo')}
         </p>
       </section>
-
-      <nav ref={nav} className="pk-subnav cp-subnav rise" aria-label={t('cp.tabs')} style={{ '--d': '60ms' } as CSSProperties}>
-        {CP_TABS.map((tab) => (
-          <button key={tab.id} aria-current={tab.id === route.tab && !campaign ? 'page' : undefined} onClick={() => open(tab.id)}>
-            <PkIcon name={tab.icon} size={16} />
-            {t(`cp.tab.${tab.id}`)}
-          </button>
-        ))}
-      </nav>
 
       <div className="pk-body cp-body">
         {campaign ? (

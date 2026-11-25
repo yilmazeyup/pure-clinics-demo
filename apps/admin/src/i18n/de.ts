@@ -118,6 +118,7 @@ export const de: Messages = {
   'agenda.eyebrow': 'Kalender von heute',
   'agenda.eyebrowMonday': 'Kalender von Montag',
   'agenda.title': 'Der ganze Tag, Raum für Raum',
+  'agenda.open': 'Kalender öffnen',
   'agenda.help': 'Jede Zeile ist ein Behandlungsraum. Jeder Block ist ein Termin: links der Morgen, rechts der Abend. Die grüne Linie ist jetzt.',
   'agenda.now': 'Jetzt',
   'cat.consult': 'Erstgespräch',

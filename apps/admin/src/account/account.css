@@ -173,16 +173,36 @@
   font-size: 12px;
 }
 
-/* Who is signed in, at the foot of the menu. */
+/* Who is signed in, at the foot of the menu: a click opens her own settings. */
 .acc-box {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: center;
-  gap: 4px 11px;
-  padding: 12px;
+  gap: 8px;
+  padding: 10px;
   border-radius: var(--radius-control);
   border: 1px solid var(--line);
   background: var(--surface);
+}
+
+.acc-box-open {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 11px;
+  padding: 4px;
+  border-radius: var(--radius-control);
+  text-align: start;
+  color: var(--muted);
+  transition: background 0.2s;
+}
+
+.acc-box-open:hover {
+  background: var(--soft);
+  color: var(--ink);
+}
+
+.acc-box-open:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .acc-box-who {
@@ -198,6 +218,7 @@
 .acc-box-who strong {
   font-size: 13.5px;
   font-weight: 500;
+  color: var(--ink);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -211,18 +232,12 @@
   white-space: nowrap;
 }
 
-.acc-box button {
-  grid-column: 1 / -1;
-  margin-top: 6px;
+.acc-box > .btn {
   justify-content: center;
 }
 
 .side-menu .acc-box {
   margin-top: auto;
-}
-
-.side-menu .acc-box + .test-box {
-  margin-top: 0;
 }
 
 /* ---------- The page of a team member or a client ---------- */

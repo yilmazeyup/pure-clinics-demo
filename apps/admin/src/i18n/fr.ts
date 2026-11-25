@@ -118,6 +118,7 @@ export const fr: Messages = {
   'agenda.eyebrow': 'Agenda du jour',
   'agenda.eyebrowMonday': 'Agenda de lundi',
   'agenda.title': 'Toute la journée, salle par salle',
+  'agenda.open': 'Ouvrir l’agenda',
   'agenda.help': 'Chaque ligne est une salle de soins. Chaque bloc est un rendez-vous : le matin à gauche, le soir à droite. La ligne verte, c’est maintenant.',
   'agenda.now': 'Maintenant',
   'cat.consult': 'Consultation',

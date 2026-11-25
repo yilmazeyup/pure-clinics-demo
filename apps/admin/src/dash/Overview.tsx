@@ -111,7 +111,7 @@ function feedItem(e: LiveEvent): FeedItem {
 }
 
 /** The one overview of Pure Clinics: both clinics, the treatment series, the webshop and the week, all following the clock. */
-export function Overview({ now, playing, onCourses }: { now: Date; playing: boolean; onCourses: () => void }) {
+export function Overview({ now, playing, onCourses, onAgenda }: { now: Date; playing: boolean; onCourses: () => void; onAgenda: () => void }) {
   const { t, eur, num, pct, locale, weekdayLong } = useI18n();
   const toast = useToast();
   const dayKey = dateKey(now);
@@ -244,7 +244,7 @@ export function Overview({ now, playing, onCourses }: { now: Date; playing: bool
       {/* The 3D views draw their labels once, so a new language rebuilds them. */}
       <ClinicsView key={`clinics-${locale}`} appts={appts} day={clinicsDay} now={now} focus={focus} onFocus={setFocus} events={happened} fast={playing} />
       <LiveFeed items={feed} now={now} />
-      <AgendaView appts={appts} day={clinicsDay} now={now} />
+      <AgendaView appts={appts} day={clinicsDay} now={now} onOpen={onAgenda} />
       <CoursesCard courses={courses} now={now} onRemind={remind} onOpen={onCourses} />
       <ShopView key={`shop-${locale}`} orders={live.orders} now={now} fast={playing} />
       <SalesView key={`sales-${locale}`} week={week} now={now} events={happened} fast={playing} />

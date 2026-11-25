@@ -118,6 +118,7 @@ export const en: Messages = {
   'agenda.eyebrow': "Today's diary",
   'agenda.eyebrowMonday': "Monday's diary",
   'agenda.title': 'The whole day, room by room',
+  'agenda.open': 'Open the diary',
   'agenda.help': 'Each row is a treatment room. Each block is an appointment: morning on the left, evening on the right. The green line is now.',
   'agenda.now': 'Now',
   'cat.consult': 'Intake',

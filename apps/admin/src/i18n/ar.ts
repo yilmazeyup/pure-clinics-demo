@@ -119,6 +119,7 @@ export const ar: Messages = {
   'agenda.eyebrow': 'مواعيد اليوم',
   'agenda.eyebrowMonday': 'مواعيد الاثنين',
   'agenda.title': 'اليوم كله، غرفةً غرفة',
+  'agenda.open': 'افتح الأجندة',
   'agenda.help': 'كل صف غرفة علاج. كل مربع موعد: الصباح على اليمين والمساء على اليسار. الخط الأخضر هو الآن.',
   'agenda.now': 'الآن',
   'cat.consult': 'جلسة تعارف',

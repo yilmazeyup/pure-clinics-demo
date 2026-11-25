@@ -11,6 +11,7 @@ import { ToastProvider } from './components/ui';
 import { CoursesPage } from './dash/Courses';
 import { Overview } from './dash/Overview';
 import { campagnesFromHash, campagnesHash, type CpRoute } from './campagnes/nav';
+import { type PageHelp } from './components/Help';
 import { I18nProvider, loadCampagnes, loadPraktijk, useI18n } from './i18n';
 import { screenFromHash, type ScreenId } from './praktijk/nav';
 
@@ -100,6 +101,7 @@ function useRoute() {
 
 function Panel() {
   const { account } = useAccount();
+  const { t } = useI18n();
   const clock = useDemoClock();
   const [touring, setTouring] = useState(false);
   const [route, open, openCampagnes, openCourses] = useRoute();
@@ -115,6 +117,19 @@ function Panel() {
   const courses = Boolean(admin && route && 'courses' in route);
   // The Webshop entry in the menu opens the module's stock screen; the menu shows it as its own entry.
   const view = praktijk ? (praktijk.screen === 'voorraad' ? 'shop' : 'praktijk') : campagnes ? 'campagnes' : courses ? 'courses' : 'overview';
+  // What the open page is and is for, behind the question mark at the top right; its parts are read from the page itself.
+  const page: PageHelp =
+    account?.role === 'staff'
+      ? { title: t('acc.nav.day'), intro: t('hlp.staff') }
+      : account?.role === 'client'
+        ? { title: t('acc.nav.me'), intro: t('hlp.client') }
+        : praktijk
+          ? { title: t(`pk.screen.${praktijk.screen}`), intro: t(`pk.help.${praktijk.screen}`) }
+          : campagnes
+            ? { title: `${t('nav.campaigns')} · ${t(`cp.tab.${campagnes.tab}`)}`, intro: t(`cp.help.${campagnes.tab}`) }
+            : courses
+              ? { title: t('courses.page.title'), intro: t('courses.page.help') }
+              : { title: t('nav.overview'), intro: t('hlp.overview') };
   // The tour walks through the overview, so it starts there.
   const tour = () => {
     open(null);
@@ -146,7 +161,8 @@ function Panel() {
             progress={clock.progress}
             onPlay={clock.play}
             onStop={clock.stop}
-            onTour={tour}
+            onTour={view === 'overview' && admin ? tour : undefined}
+            page={page}
             compact={!!praktijk}
           />
           {account?.role === 'staff' ? (
@@ -160,7 +176,7 @@ function Panel() {
           ) : courses ? (
             <CoursesPage now={clock.now} onBack={() => open(null)} />
           ) : (
-            <Overview now={clock.now} playing={clock.playing} onCourses={openCourses} />
+            <Overview now={clock.now} playing={clock.playing} onCourses={openCourses} onAgenda={() => open('agenda')} />
           )}
         </main>
         {admin ? <Tour open={touring} onOpen={tour} onClose={() => setTouring(false)} /> : null}

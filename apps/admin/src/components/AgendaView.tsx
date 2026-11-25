@@ -1,17 +1,21 @@
 import { LOCATIONS, openingHours, sameDay, type TreatmentCategory } from '@pure-clinics/shared';
-import type { CSSProperties } from 'react';
+import type { CSSProperties, MouseEvent } from 'react';
 
 import { isOpen, phaseOf, ROOMS, works, type Appt } from '../data/clinics';
 import { hourOf } from '../data/format';
 import { useI18n } from '../i18n';
 import { appointmentTip, CATEGORY_COLOR } from './ClinicsView';
+import { Icon } from './Icon';
 import { CardHead } from './ui';
 
 /** Blocks on these colours need white text. */
 const DARK: TreatmentCategory[] = ['conditions', 'hair'];
 
-/** The day as a plain diary: a row per treatment room, an appointment per block, a line for now. Each clinic keeps its own hours. */
-export function AgendaView({ appts, day, now }: { appts: Appt[]; day: Date; now: Date }) {
+/**
+ * The day as a plain diary: a row per treatment room, an appointment per block, a line for now. Each clinic keeps its own
+ * hours. The whole card opens the full diary in Kliniek, where appointments can be moved and booked.
+ */
+export function AgendaView({ appts, day, now, onOpen }: { appts: Appt[]; day: Date; now: Date; onOpen?: () => void }) {
   const i18n = useI18n();
   const { t, text, clock } = i18n;
   const hours = openingHours(day) ?? { open: 9, close: 21 };
@@ -22,9 +26,26 @@ export function AgendaView({ appts, day, now }: { appts: Appt[]; day: Date; now:
   const showNow = isToday && nowHour >= hours.open && nowHour <= hours.close;
   const ticks = Array.from({ length: span + 1 }, (_, i) => hours.open + i);
 
+  // A click anywhere on the card opens the diary, except on its own controls.
+  const open = (event: MouseEvent) => {
+    if (!onOpen || (event.target as HTMLElement).closest('button, a, input, select')) return;
+    onOpen();
+  };
+
   return (
-    <section id="agenda" className="card agenda-card rise" style={{ '--d': '420ms' } as CSSProperties}>
+    <section
+      id="agenda"
+      className={`card agenda-card rise ${onOpen ? 'is-link' : ''}`}
+      style={{ '--d': '420ms' } as CSSProperties}
+      onClick={open}
+    >
       <CardHead eyebrow={isToday ? t('agenda.eyebrow') : t('agenda.eyebrowMonday')} title={t('agenda.title')}>
+        {onOpen ? (
+          <button className="btn btn-ghost btn-small agenda-open" onClick={onOpen}>
+            {t('agenda.open')}
+            <Icon name="arrow" size={14} />
+          </button>
+        ) : null}
         <span className="week-legend">
           {(Object.keys(CATEGORY_COLOR) as TreatmentCategory[]).map((category) => (
             <span key={category}>

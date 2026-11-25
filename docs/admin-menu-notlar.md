@@ -48,7 +48,7 @@ Panel: pureclinics.savastana.com/beheer. Menü kodu: `apps/admin/src/components/
   - Sanne Willems: uydurma bir müşteri.
 - Doğrudan bir hesapla açan link: `…/beheer/?als=client`. Diğer değerler: `admin`, `loubna`, `husna`.
 
-## Yapılanlar (yerelde; ne commit ne yayın yapıldı)
+## Yapılanlar (25 Kasım, canlıda: commit a505532)
 
 - Menü: Diary ve Treatment plans menüden çıktı. Webshop maddesi stok ekranını açıyor. Kliniek'in "abonnement" etiketi kalktı. Kliniek'in özet ekranındaki "Abonnement actief" etiketi de kalktı.
 - Giriş ekranı:
@@ -70,7 +70,32 @@ Panel: pureclinics.savastana.com/beheer. Menü kodu: `apps/admin/src/components/
   - Recensies: uydurma demo yorumlar.
 - Ana sayfadaki webshop rafı ve stok ekranı aynı stoktan okuyor. Bugünkü webshop siparişleri, müşteriye en yakın kliniğin stoğundan düşüyor.
 
+## İkinci tur (25 Kasım, canlıya aldıktan sonra)
+
+7. **Cliënten:** üst menüden kalktı, çünkü Kliniek'in altında zaten var (kullanıcı, 25 Kasım).
+8. **Overview'daki "Agenda van vandaag" kartı:** tıklayınca Kliniek › Agenda açılıyor. Kartın başında bir "Open de agenda" düğmesi de var.
+9. **Instellingen:** üst menüden kalktı.
+   - Sol alttaki isim kutusuna tıklayınca kişinin kendi ayarları açılıyor: ad, e-posta, dil, bildirimler, iki adımlı giriş, şifre değiştirme ve çıkış.
+   - Kliniğin ayarları Kliniek › Instellingen & koppelingen'de, Mailchimp'inkiler Campagnes › Instellingen'de. Ayrı bir menü maddesine gerek yok.
+10. **Hulp & video:** menüden kalktı. Her sayfanın sağ üstünde bir soru işareti var. Tıklayınca açılan panelde şunlar var:
+    - sayfanın ne işe yaradığı;
+    - sayfadaki her bölüm, ne işe yaradığı ve nasıl kullanıldığı; bölüme tıklayınca sayfa oraya gidiyor;
+    - videonun yeri ("binnenkort"); videolar proje bitince yapılacak.
+
+    Overview'da eski "Uitleg" turu da bu panelin içinde.
+11. **"Testomgeving" kutusu, üstteki "Demo · fictieve gegevens" etiketi ve Kliniek özetindeki "Demo · fictieve cliënten" satırı:** kalktı.
+    Kalanlar:
+    - Bir şey gönderince çıkan "In de demo gaat er niets echt de deur uit" bildirimleri.
+    - Yorumlardaki "Demo · verzonnen recensies" etiketi.
+    - Giriş ekranındaki "şifresiz demo" notu.
+12. **Webshop = e-ticaret (kullanıcının sorusu):** Webshop sayfasında online satışlar ve sitedeki stok görünmüyor. Kullanıcıya nasıl çalıştığı anlatıldı ve bir öneri sunuldu:
+    - sayfa e-ticaretle başlasın: online siparişler, durumları, online satış rakamları, sitede görünen stok;
+    - stok ve tedarikçi kısmı altta kalsın.
+
+    Sorulan: "platform" derken bol.com gibi bir pazar yeri mi kastediliyor, yoksa Pure'un kendi uygulaması mı?
+
 ## Hâlâ açık
 
-- Menünün geri kalanı henüz konuşulmadı: Cliënten (üst menüde şu an boş; Kliniek'in altında dolu bir Cliënten var), Campagnes, Instellingen (üst menüde boş), Hulp & video.
+- Menünün geri kalanı: Campagnes.
+- Webshop'un e-ticaret kısmı (12. madde).
 - Gerçek giriş (şifre, e-posta kodu, sunucu): sonra.

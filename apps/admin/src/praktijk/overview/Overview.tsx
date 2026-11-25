@@ -220,10 +220,6 @@ export function OverviewScreen() {
             onClick={() => go('facturen')}
           />
         </div>
-        <p className="pk-demo-line">
-          <PkIcon name="info" size={15} />
-          {t('pk.head.demo')}
-        </p>
       </section>
 
       <Card className="span-8 pk-ov-trend-card" eyebrow={t('pk.ov.trend.eyebrow')} title={t('pk.ov.trend.title')} help={t('pk.ov.trend.help')}>

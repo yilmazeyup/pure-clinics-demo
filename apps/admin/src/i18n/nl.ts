@@ -118,6 +118,7 @@ export const nl = {
   'agenda.eyebrow': 'Agenda van vandaag',
   'agenda.eyebrowMonday': 'Agenda van maandag',
   'agenda.title': 'De hele dag, per kamer',
+  'agenda.open': 'Open de agenda',
   'agenda.help': 'Elke rij is een behandelkamer. Elk blokje is een afspraak: links de ochtend, rechts de avond. De groene streep is nu.',
   'agenda.now': 'Nu',
   'cat.consult': 'Intake',

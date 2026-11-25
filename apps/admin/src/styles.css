@@ -2448,8 +2448,9 @@ li {
   }
 }
 
-/* ---------- Treatment plans: the overview card opens the full page (…/#trajecten) ---------- */
+/* ---------- Treatment plans and the diary: the overview cards open the full page ---------- */
 
+.agenda-card.is-link,
 .courses-card.is-link {
   cursor: pointer;
   transition:
@@ -2457,11 +2458,13 @@ li {
     box-shadow 0.35s;
 }
 
+.agenda-card.is-link:hover,
 .courses-card.is-link:hover {
   border-color: var(--line-strong);
   box-shadow: 0 18px 40px -30px rgba(63, 49, 40, 0.35);
 }
 
+[dir='rtl'] .agenda-open svg,
 [dir='rtl'] .courses-open svg {
   transform: scaleX(-1);
 }

@@ -3,38 +3,33 @@ import { Fragment, useEffect, useRef, useState } from 'react';
 
 import { type Account } from '../account/accounts';
 import { useAccount } from '../account/context';
+import { AccountSettings } from '../account/Settings';
 import { AccountAvatar, useJob } from '../account/ui';
 import { Accent, useI18n, useSetLocale, type MessageKey } from '../i18n';
 import { CP_TABS, type CpTab } from '../campagnes/nav';
 import { SCREENS, type ScreenId } from '../praktijk/nav';
+import { HelpButton, type PageHelp } from './Help';
 import { Icon, type IconName } from './Icon';
 import { useToast } from './ui';
-
-/** The help page with the explainer video and common questions, on the demo site. */
-const HELP_URL = 'https://pureclinics.savastana.com/hulp/';
 
 /**
  * Overzicht opens the overview (its agenda and treatment plans are cards there, no longer menu entries); Webshop opens
  * the stock screen of the Kliniek module, the one place for products, stock and suppliers; Kliniek opens the module with
- * its screens folded under it; Campagnes opens the Mailchimp module; Hulp opens the help page; the rest follow later.
+ * its screens folded under it (Cliënten among them); Campagnes opens the Mailchimp module. There is no Instellingen or Hulp
+ * entry: the clinic's settings are in Kliniek, each person's own open from her name at the foot of the menu, and every
+ * page explains itself behind the question mark at its top right.
  */
-type NavItem = { icon: IconName; label: MessageKey; shop?: boolean; help?: boolean; praktijk?: boolean; campagnes?: boolean };
+type NavItem = { icon: IconName; label: MessageKey; shop?: boolean; praktijk?: boolean; campagnes?: boolean };
 
 const ADMIN_NAV: NavItem[] = [
   { icon: 'grid', label: 'nav.overview' },
   { icon: 'bag', label: 'nav.webshop', shop: true },
   { icon: 'clipboard', label: 'pk.nav.label', praktijk: true },
-  { icon: 'users', label: 'nav.clients' },
   { icon: 'mail', label: 'nav.campaigns', campagnes: true },
-  { icon: 'sliders', label: 'nav.settings' },
-  { icon: 'help', label: 'nav.help', help: true },
 ];
 
-/** A team member sees her own day and the help page; Kliniek is for the admin only for now. */
-const STAFF_NAV: NavItem[] = [
-  { icon: 'calendar', label: 'acc.nav.day' },
-  { icon: 'help', label: 'nav.help', help: true },
-];
+/** A team member sees her own day; Kliniek is for the admin only for now. */
+const STAFF_NAV: NavItem[] = [{ icon: 'calendar', label: 'acc.nav.day' }];
 
 /** A client sees her own page. */
 const CLIENT_NAV: NavItem[] = [{ icon: 'star', label: 'acc.nav.me' }];
@@ -81,8 +76,9 @@ function SubMenu({ open, label, items }: { open: boolean; label: string; items: 
  * slides the same menu in from the side.
  */
 export function Sidebar({ view, onView, screen, onScreen, tab, onTab }: SidebarProps) {
-  const { t, locale } = useI18n();
+  const { t } = useI18n();
   const { account, signOut } = useAccount();
+  const [settings, setSettings] = useState(false);
   const jobOf = useJob();
   const NAV = navOf(account);
   const toast = useToast();
@@ -140,7 +136,6 @@ export function Sidebar({ view, onView, screen, onScreen, tab, onTab }: SidebarP
     else if (item.shop) onView('shop');
     else if (index === 0 && view !== 'overview') onView('overview');
     else if (index === 0) window.scrollTo({ top: 0, behavior: 'smooth' });
-    else if (item.help) window.open(`${HELP_URL}?lang=${locale}`, '_blank', 'noopener');
     else toast(t('nav.soon', { label: t(item.label) }));
   };
   // The entry that is the current page: the overview (also while its treatment plans are open full size) or Webshop.
@@ -206,23 +201,22 @@ export function Sidebar({ view, onView, screen, onScreen, tab, onTab }: SidebarP
 
         {account ? (
           <div className="acc-box">
-            <AccountAvatar account={account} size="small" />
-            <span className="acc-box-who">
-              <small>{t('acc.signedIn')}</small>
-              <strong>{account.name}</strong>
-              <span>{jobOf(account)}</span>
-            </span>
+            <button className="acc-box-open" aria-label={t('acc.set.open')} title={t('acc.set.open')} onClick={() => pick(() => setSettings(true))}>
+              <AccountAvatar account={account} size="small" />
+              <span className="acc-box-who">
+                <small>{t('acc.signedIn')}</small>
+                <strong>{account.name}</strong>
+                <span>{jobOf(account)}</span>
+              </span>
+              <Icon name="sliders" size={16} />
+            </button>
             <button className="btn btn-ghost btn-small" onClick={() => pick(signOut)}>
               {t('acc.signout')}
             </button>
           </div>
         ) : null}
-
-        <div className="test-box">
-          <strong>{t('test.title')}</strong>
-          {t('test.body')}
-        </div>
       </div>
+      {account ? <AccountSettings account={account} open={settings} onClose={() => setSettings(false)} /> : null}
     </aside>
   );
 }
@@ -233,12 +227,15 @@ type TopbarProps = {
   progress: number;
   onPlay: () => void;
   onStop: () => void;
-  onTour: () => void;
+  /** The tour walks through the overview, so only the overview offers it, inside its help. */
+  onTour?: () => void;
+  /** What the open page is called and what it is for, for the question mark at the top right. */
+  page: PageHelp;
   /** Inside a module (Pure Praktijk): a smaller greeting and fewer buttons on a phone, so the module's own content starts high. */
   compact?: boolean;
 };
 
-export function Topbar({ now, playing, progress, onPlay, onStop, onTour, compact = false }: TopbarProps) {
+export function Topbar({ now, playing, progress, onPlay, onStop, onTour, page, compact = false }: TopbarProps) {
   const i18n = useI18n();
   const { t, clock, locale } = i18n;
   const setLocale = useSetLocale();
@@ -264,7 +261,6 @@ export function Topbar({ now, playing, progress, onPlay, onStop, onTour, compact
         </p>
       </div>
       <div className="top-actions">
-        <span className="demo-chip">{t('top.demo')}</span>
         <label className="lang-select">
           <Icon name="globe" size={17} />
           <select value={locale} aria-label={t('lang.label')} onChange={(event) => setLocale(event.target.value as Locale)}>
@@ -276,17 +272,11 @@ export function Topbar({ now, playing, progress, onPlay, onStop, onTour, compact
           </select>
         </label>
         {admin ? (
-          <>
-            <button className="tour-button" onClick={onTour}>
-              <Icon name="help" size={17} />
-              {t('top.tour')}
-            </button>
-            <button className="search" onClick={() => toast(t('top.searchSoon'))}>
-              <Icon name="search" size={18} />
-              {t('top.search')}
-              <kbd>⌘K</kbd>
-            </button>
-          </>
+          <button className="search" onClick={() => toast(t('top.searchSoon'))}>
+            <Icon name="search" size={18} />
+            {t('top.search')}
+            <kbd>⌘K</kbd>
+          </button>
         ) : null}
         {client ? null : playing ? (
           <button className="play is-playing" onClick={onStop} aria-label={t('top.stop')}>
@@ -311,6 +301,7 @@ export function Topbar({ now, playing, progress, onPlay, onStop, onTour, compact
         <button className="icon-button" aria-label={t('top.notifications')} onClick={() => toast(t('top.noNotifications'))}>
           <Icon name="bell" />
         </button>
+        <HelpButton page={page} onTour={onTour} />
         {account ? (
           <span className="acc-top-avatar" title={`${t('acc.signedIn')} ${account.name}`}>
             <AccountAvatar account={account} />

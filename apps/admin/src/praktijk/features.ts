@@ -1,3 +1,4 @@
+import type { CpTab } from '../campagnes/nav';
 import type { ScreenId } from './nav';
 
 /**
@@ -5,7 +6,8 @@ import type { ScreenId } from './nav';
  * Pure Praktijk where it lives. The screen marks the spot with data-feature="<id>" (several ids may share one element,
  * separated by spaces), so the feature overview can jump straight to it. The label is `pk.f.<id>`.
  */
-export type Feature = { id: string; screen: ScreenId };
+/** `campagnes`: the feature lives in Campagnes instead, at that tab (the newsletter moved there on 25 Nov). */
+export type Feature = { id: string; screen: ScreenId; campagnes?: CpTab };
 export type FeatureGroup = { letter: string; features: Feature[] };
 
 const f = (screen: ScreenId, ...ids: string[]): Feature[] => ids.map((id) => ({ id, screen }));
@@ -96,19 +98,17 @@ export const FEATURE_GROUPS: FeatureGroup[] = [
   },
   {
     letter: 'Q',
-    features: f(
-      'berichten',
-      'q.reminders',
-      'q.templates',
-      'q.smtp',
-      'q.ai',
-      'q.newsFilters',
-      'q.newsConsent',
-      'q.newsContent',
-      'q.newsSend',
-      'q.newsUnsub',
-      'q.notepad',
-    ),
+    features: [
+      ...f('berichten', 'q.reminders', 'q.templates', 'q.smtp', 'q.ai'),
+      // The newsletter is made in Campagnes: who gets it in Segmenten, consent and unsubscribing in Contacten, the
+      // mail itself in Campagnes.
+      { id: 'q.newsFilters', screen: 'berichten', campagnes: 'segmenten' },
+      { id: 'q.newsConsent', screen: 'berichten', campagnes: 'contacten' },
+      { id: 'q.newsContent', screen: 'berichten', campagnes: 'campagnes' },
+      { id: 'q.newsSend', screen: 'berichten', campagnes: 'campagnes' },
+      { id: 'q.newsUnsub', screen: 'berichten', campagnes: 'contacten' },
+      ...f('berichten', 'q.notepad'),
+    ],
   },
   { letter: 'R', features: [...f('portaal', 'r.directory'), ...f('instellingen', 'r.starter')] },
   { letter: 'S', features: f('team', 's.employees', 's.profiles', 's.agendaAccess', 's.twofa', 's.lockout', 's.schedules') },

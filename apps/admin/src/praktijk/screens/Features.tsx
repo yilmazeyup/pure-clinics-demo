@@ -41,15 +41,21 @@ export function FeaturesScreen() {
   );
   const extras = EXTRAS.filter((f) => (only === 'all' || f.screen === only) && (!q || fold(t(`pk.f.${f.id}` as MessageKey)).includes(q)));
 
+  // Where a feature lives: a screen of the module, or a part of Campagnes.
+  const where = (f: Feature) => (f.campagnes ? `${t('nav.campaigns')} · ${t(`cp.tab.${f.campagnes}`)}` : t(`pk.screen.${f.screen}`));
   const row = (f: Feature) => (
     <li key={f.id}>
-      <button className="pk-fx-item" onClick={() => go(f.screen, { feature: f.id })} title={t('pk.functies.goto', { screen: t(`pk.screen.${f.screen}`) })}>
+      <button
+        className="pk-fx-item"
+        onClick={() => (f.campagnes ? (window.location.hash = `campagnes/${f.campagnes}`) : go(f.screen, { feature: f.id }))}
+        title={t('pk.functies.goto', { screen: where(f) })}
+      >
         <span className="pk-fx-tick" aria-label={t('pk.functies.present')}>
           <PkIcon name="check" size={13} stroke={2.4} />
         </span>
         <span className="pk-fx-label">{t(`pk.f.${f.id}` as MessageKey)}</span>
         <span className="pk-fx-where">
-          {t(`pk.screen.${f.screen}`)}
+          {where(f)}
           <PkIcon name="arrow" size={13} />
         </span>
       </button>

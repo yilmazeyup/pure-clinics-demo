@@ -36,7 +36,7 @@ export const shell: Record<keyof typeof source, string> = {
     'Fatturare dall’agenda, restitutienota, pagamenti a rate, buoni regalo e carnet, e la verifica di cassa a fine giornata.',
   'pk.help.declaraties': 'Richieste di rimborso alle assicurazioni sanitarie tramite Vecozo: invio per assicurazione, gestione degli esiti, note di credito e nuovo invio.',
   'pk.help.voorraad': 'Vendite, scorte per sede, cosa finisce presto, recensioni, fornitori e richieste. Shop online e banco insieme.',
-  'pk.help.berichten': 'Promemoria, modelli, l’e-mail post-trattamento con l’IA e la newsletter in tre passi.',
+  'pk.help.berichten': 'Promemoria, modelli, l’e-mail post-trattamento con l’IA e il blocco note: messaggi a un cliente alla volta. Le newsletter si fanno in Campagne.',
   'pk.help.rapportages': 'Finanze, episodi, marketing e qualità, con un generatore di elenchi ed esportazione in Excel.',
   'pk.help.team': 'Il team, chi può vedere e fare cosa, l’accesso in due passaggi e i turni di lavoro.',
   'pk.help.instellingen': 'Sedi e agende, dati di base, integrazioni con Vecozo e la contabilità, sicurezza e GDPR.',

@@ -1,11 +1,11 @@
-import { addDays, type TreatmentId } from '@pure-clinics/shared';
+import { type TreatmentId } from '@pure-clinics/shared';
 
 import type { MessageKey } from '../../i18n';
 import { rng } from '../../data/random';
 import type { Channel } from '../screens/messages/template';
 import type { StaffId } from './core';
 
-// Berichten: the templates, earlier newsletters and team notes of the demo. Texts are message keys until someone edits
+// Berichten: the templates and team notes of the demo (newsletters live in Campagnes). Texts are message keys until someone edits
 // them; then the typed text is kept as it is.
 
 export type MessageTemplate = { id: 'reminderEmail' | 'reminderSms' | 'reminderWhatsapp' | 'intakeForm' | 'followUp' | 'review'; channel: Channel };
@@ -30,30 +30,6 @@ export function deliveryOf(apptId: string, channel: Channel): DeliveryStatus {
   if (roll < 0.05) return 'failed';
   return roll < (channel === 'email' ? 0.62 : 0.86) ? 'opened' : 'delivered';
 }
-
-export type Newsletter = {
-  id: string;
-  subject: string | null;
-  subjectKey?: MessageKey;
-  at: Date;
-  recipients: number;
-  /** Share opened, 0 to 1; null while it is a draft. */
-  opened: number | null;
-  draft: boolean;
-};
-
-export function seedNewsletters(today: Date): Newsletter[] {
-  return [
-    { id: 'n3', subject: null, subjectKey: 'pk.berichten.news.seed1', at: addDays(today, -19), recipients: 1184, opened: 0.47, draft: false },
-    { id: 'n2', subject: null, subjectKey: 'pk.berichten.news.seed2', at: addDays(today, -96), recipients: 1121, opened: 0.52, draft: false },
-    { id: 'n1', subject: null, subjectKey: 'pk.berichten.news.seed3', at: addDays(today, -171), recipients: 1063, opened: 0.58, draft: false },
-  ];
-}
-
-export type BlockKind = 'text' | 'image' | 'file';
-export type Block = { id: string; kind: BlockKind; text: string; image: string | null; file: string | null };
-
-export type NewsTemplate = { id: string; name: string | null; nameKey?: MessageKey; subject: string; preview: string; blocks: Block[] };
 
 export type Note = { id: string; author: StaffId; at: Date; text: string | null; textKey?: MessageKey; pinned: boolean };
 

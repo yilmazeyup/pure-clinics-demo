@@ -9,13 +9,12 @@ import { deliveryOf, MESSAGE_TEMPLATES, NEXT_WEEKS, SEED_REMINDERS, seedNotes, t
 import { PORTAL_URL } from '../data/portal';
 import { PkIcon, type PkIconName } from '../icons';
 import { Avatar, Card, Chip, Empty, Field, Seg, Stat, TableWrap, Toggle } from '../kit';
-import { Newsletter } from './messages/Newsletter';
 import { TemplateEditor, TOKEN_ARGS, type Channel, type Token } from './messages/template';
 import './responsive.css';
 import './Messages.css';
 import { useTabInView } from './useTabInView';
 
-type Tab = 'reminders' | 'templates' | 'ai' | 'news' | 'notepad' | 'settings';
+type Tab = 'reminders' | 'templates' | 'ai' | 'notepad' | 'settings';
 
 /** Where each feature of this screen lives, so a jump from the feature overview opens the right tab. */
 const FEATURE_TAB: Record<string, Tab> = {
@@ -23,31 +22,27 @@ const FEATURE_TAB: Record<string, Tab> = {
   'more.whatsapp': 'reminders',
   'q.templates': 'templates',
   'q.ai': 'ai',
-  'q.newsFilters': 'news',
-  'q.newsConsent': 'news',
-  'q.newsContent': 'news',
-  'q.newsSend': 'news',
-  'q.newsUnsub': 'news',
   'q.notepad': 'notepad',
   'q.smtp': 'settings',
 };
 
 const CHANNEL_ICON: Record<Channel, PkIconName> = { email: 'mail', sms: 'sms', whatsapp: 'whatsapp' };
 
-/** Berichten: automatic reminders, the fixed texts, the AI aftercare mail, the newsletter and the team's notepad. */
+/**
+ * Berichten: automatic reminders, the fixed texts, the AI aftercare mail and the team's notepad: messages to one client
+ * at a time. Newsletters and campaigns to many clients at once live in Campagnes (25 Nov: the user wanted them in one place).
+ */
 export function MessagesScreen() {
   const { t } = useI18n();
   const { target } = usePraktijk();
   const [tab, setTab] = useState<Tab>('reminders');
   useTabInView(tab);
-  const [jump, setJump] = useState<{ feature: string; at: number } | null>(null);
 
   useEffect(() => {
     const feature = target?.feature;
     const next = feature ? FEATURE_TAB[feature] : undefined;
     if (!feature || !next) return;
     setTab(next);
-    setJump({ feature, at: target!.at });
   }, [target?.at]);
 
   return (
@@ -61,7 +56,6 @@ export function MessagesScreen() {
           { value: 'reminders', label: t('pk.berichten.tab.reminders'), icon: 'bell' },
           { value: 'templates', label: t('pk.berichten.tab.templates'), icon: 'file' },
           { value: 'ai', label: t('pk.berichten.tab.ai'), icon: 'wand' },
-          { value: 'news', label: t('pk.berichten.tab.news'), icon: 'mail' },
           { value: 'notepad', label: t('pk.berichten.tab.notepad'), icon: 'edit' },
           { value: 'settings', label: t('pk.berichten.tab.settings'), icon: 'cog' },
         ]}
@@ -78,7 +72,6 @@ export function MessagesScreen() {
       {tab === 'reminders' ? <Reminders /> : null}
       {tab === 'templates' ? <Templates /> : null}
       {tab === 'ai' ? <Aftercare /> : null}
-      {tab === 'news' ? <Newsletter jump={jump} /> : null}
       {tab === 'notepad' ? <Notepad /> : null}
       {tab === 'settings' ? <SendSettings /> : null}
     </div>

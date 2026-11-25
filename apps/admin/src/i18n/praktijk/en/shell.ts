@@ -36,7 +36,7 @@ export const shell: Record<keyof typeof source, string> = {
     'Invoicing from the diary, the restitutienota, paying in instalments, gift vouchers and session cards, and the cash check at the end of the day.',
   'pk.help.declaraties': 'Claiming from health insurers via Vecozo: send per insurer, process return information, credit and resubmit.',
   'pk.help.voorraad': 'Sales, stock per location, what runs out soon, reviews, suppliers and requests. Webshop and desk together.',
-  'pk.help.berichten': 'Reminders, templates, the aftercare email with AI and the newsletter in three steps.',
+  'pk.help.berichten': 'Reminders, templates, the aftercare email with AI and the notepad: messages to one client at a time. Newsletters are made in Campaigns.',
   'pk.help.rapportages': 'Financial, episodes, marketing and quality, with a list builder and export to Excel.',
   'pk.help.team': 'The team, who may see and do what, two-step sign-in and the work rotas.',
   'pk.help.instellingen': 'Locations and diaries, master data, links with Vecozo and the accounting software, security and GDPR.',

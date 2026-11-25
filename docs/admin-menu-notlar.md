@@ -100,6 +100,24 @@ Panel: pureclinics.savastana.com/beheer. Menü kodu: `apps/admin/src/components/
       - **Op de site en in de app:** müşterinin gördüğü stok ("op voorraad / nog n / uitverkocht"), ürünü online gizleme düğmesi ve "bijna op" eşiği.
     - **Voorraad & inkoop:** eskisi gibi; 3D raf, tahmin, talep listesi, tedarikçiler ve yorumlar burada.
 
+13. **Campagnes:** kullanıcıya anlatıldı (25 Kasım), kararı bekleniyor. İçinde Mailchimp ile e-posta ve SMS kampanyaları var. Altı bölümü var:
+    - Overzicht
+    - Kalender
+    - Campagnes
+    - Segmenten
+    - Contacten & toestemming
+    - Instellingen
+
+    Fark edilen tekrar: Kliniek › Berichten'in içinde de bir bülten (nieuwsbrief) yazma aracı vardı.
+    Karar (kullanıcı, 25 Kasım): bülten sadece Campagnes'te olacak. Yapıldı:
+    - Berichten'den "Nieuwsbrief" sekmesi kalktı. Geriye hatırlatmalar, şablonlar, AI bakım e-postası, not defteri ve gönderim ayarları kaldı.
+    - Berichten'in üstünde "Naar Campagnes" notu var.
+    - Functieoverzicht'teki bülten maddeleri Campagnes'in ilgili bölümünü açıyor.
+14. **Panelin anlatım videosu (Türkçe, ilkokul çocuğuna anlatır gibi):**
+    - Panel İngilizce kaydedildi, Türkçe altyazı var, anlatılan kısım bir çerçeveyle gösteriliyor ve imleç tıklıyor.
+    - Kayıt kodu scratchpad/video'da (steps.mjs, record.mjs).
+    - Seslendirme Mac'in Türkçe sesiyle (Yelda) yapıldı; kullanıcı ElevenLabs istemedi ("lokalle seslendir"). Video: docs/video/pure-panel-uitleg-tr.mp4 (4 dk 7 sn). Yeniden üretmek için: narrate-local.mjs → run-take.sh (durations ile) → mix.py.
+
 ## Hâlâ açık
 
 - Menünün geri kalanı: Campagnes.

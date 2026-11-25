@@ -36,7 +36,7 @@ export const shell: Record<keyof typeof source, string> = {
     'Abrechnen aus dem Kalender, restitutienota’s, Ratenzahlung, Gutscheine und Mehrfachkarten sowie die Kassenprüfung am Ende des Tages.',
   'pk.help.declaraties': 'Abrechnung mit Krankenversicherern über Vecozo: pro Versicherer senden, Rückmeldungen verarbeiten, stornieren und neu einreichen.',
   'pk.help.voorraad': 'Verkauf, Bestand pro Standort, was bald ausgeht, Bewertungen, Lieferanten und Anfragen. Webshop und Theke zusammen.',
-  'pk.help.berichten': 'Erinnerungen, Vorlagen, die Nachsorge-Mail mit KI und der Newsletter in drei Schritten.',
+  'pk.help.berichten': 'Erinnerungen, Vorlagen, die Nachsorge-Mail mit KI und der Notizblock: Nachrichten an eine Kundin nach der anderen. Newsletter entstehen in Kampagnen.',
   'pk.help.rapportages': 'Finanzen, Episoden, Marketing und Qualität, mit einem Listengenerator und Export nach Excel.',
   'pk.help.team': 'Das Team, wer was sehen und tun darf, Anmeldung in zwei Schritten und die Dienstpläne.',
   'pk.help.instellingen': 'Standorte und Kalender, Stammdaten, Schnittstellen zu Vecozo und zur Buchhaltung, Sicherheit und DSGVO.',

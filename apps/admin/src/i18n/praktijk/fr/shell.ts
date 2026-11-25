@@ -36,7 +36,7 @@ export const shell: Record<keyof typeof source, string> = {
     'Facturer depuis l’agenda, restitutienota, paiement en plusieurs fois, cartes cadeaux et cartes de séances, et le contrôle de caisse en fin de journée.',
   'pk.help.declaraties': 'Déclarer auprès des assureurs santé via Vecozo : envoi par assureur, traitement des informations de retour, avoirs et nouvel envoi.',
   'pk.help.voorraad': 'Ventes, stock par site, ce qui sera bientôt épuisé, avis, fournisseurs et demandes. Boutique en ligne et comptoir ensemble.',
-  'pk.help.berichten': 'Rappels, modèles, l’e-mail après-soin avec l’IA et la newsletter en trois étapes.',
+  'pk.help.berichten': 'Rappels, modèles, l’e-mail après-soin avec l’IA et le bloc-notes : des messages à une cliente à la fois. Les newsletters se font dans Campagnes.',
   'pk.help.rapportages': 'Finances, épisodes, marketing et qualité, avec un générateur de listes et l’export vers Excel.',
   'pk.help.team': 'L’équipe, qui peut voir et faire quoi, la connexion en deux étapes et les plannings.',
   'pk.help.instellingen': 'Sites et agendas, données de base, intégrations avec Vecozo et la comptabilité, sécurité et RGPD.',

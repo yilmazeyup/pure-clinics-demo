@@ -37,7 +37,7 @@ export const shell = {
     'Factureren vanuit de agenda, restitutienota’s, betalen in delen, cadeaubonnen en strippenkaarten, en de kascontrole aan het eind van de dag.',
   'pk.help.declaraties': 'Declareren bij zorgverzekeraars via Vecozo: versturen per verzekeraar, retourinformatie verwerken, crediteren en opnieuw indienen.',
   'pk.help.voorraad': 'Verkoop, voorraad per locatie, wat binnenkort op is, recensies, leveranciers en aanvragen. Webshop en balie samen.',
-  'pk.help.berichten': 'Herinneringen, sjablonen, de nazorgmail met AI en de nieuwsbrief in drie stappen.',
+  'pk.help.berichten': 'Herinneringen, sjablonen, de nazorgmail met AI en het notitieblok: berichten aan één cliënt tegelijk. Nieuwsbrieven maak je in Campagnes.',
   'pk.help.rapportages': 'Financieel, episodes, marketing en kwaliteit, met een lijstbouwer en export naar Excel.',
   'pk.help.team': 'Het team, wie wat mag zien en doen, inloggen in twee stappen en de werkroosters.',
   'pk.help.instellingen': 'Locaties en agenda’s, stamgegevens, koppelingen met Vecozo en de boekhouding, beveiliging en AVG.',

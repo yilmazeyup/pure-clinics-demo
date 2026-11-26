@@ -219,6 +219,33 @@ a.room {
   }
 }
 
+/* ---------- Shop band on the home page: the shop's strip of still lifes ---------- */
+
+.shop-band {
+  padding: clamp(40px, 6vw, 90px) 0 clamp(20px, 3vw, 40px);
+}
+.shop-band-copy {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+  gap: clamp(20px, 5vw, 80px);
+  align-items: end;
+  max-width: var(--max);
+  margin: clamp(28px, 4vw, 56px) auto 0;
+  padding: 0 var(--gut);
+}
+.shop-band-copy .title {
+  margin: 0;
+}
+.shop-band-side p {
+  max-width: 42ch;
+  color: var(--body);
+}
+@media (max-width: 760px) {
+  .shop-band-copy {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ---------- Gift card band and note ---------- */
 
 .gift-band {

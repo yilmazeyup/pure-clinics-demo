@@ -1,0 +1,10 @@
+# Extra packages for the box detector (D-FINE, Apache-2.0), on top of requirements.txt.
+# From third_party/D-FINE/requirements.txt; versions as tested on this Mac.
+faster-coco-eval==1.6.8  # 1.8 expects its own COCO class; torchvision passes pycocotools
+pycocotools
+PyYAML
+tensorboard
+scipy
+calflops
+transformers
+loguru

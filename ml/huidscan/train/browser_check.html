@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Huidscan-model in de browser</title>
+</head>
+<body>
+<pre id="out">bezig…</pre>
+<script type="module">
+// Run by browser_check.mjs in headless Chrome. Three checks:
+//  A  the exported model (fp32 and int8) in onnxruntime-web gives Python's numbers on the reference crops;
+//  B  the app's own model.ts cuts the zones of a face (Python's landmarks) and gets Python's numbers;
+//  C  the app's own run.ts scans that face from scratch (MediaPipe in the browser) and blends the model in,
+//     or, on the server without a model, leaves the colour measures exactly as they are.
+const ORT = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.31.1/dist/';
+const q = new URLSearchParams(location.search);
+const exp = q.get('export');
+const expectModel = q.get('model') !== 'none';
+const result = { ok: false, expectModel };
+
+const loadImage = (src) => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; });
+async function pixelsOf(src, size) {
+  const img = await loadImage(src);
+  const c = document.createElement('canvas'); c.width = size; c.height = size;
+  const g = c.getContext('2d'); g.drawImage(img, 0, 0);
+  const d = g.getImageData(0, 0, size, size).data; const plane = size * size; const px = new Float32Array(3 * plane);
+  for (let i = 0; i < plane; i++) { px[i] = d[4 * i] / 255; px[plane + i] = d[4 * i + 1] / 255; px[2 * plane + i] = d[4 * i + 2] / 255; }
+  return px;
+}
+
+try {
+  if (expectModel) {
+    const ort = await import(ORT + 'ort.wasm.min.mjs');
+    ort.env.wasm.wasmPaths = ORT; ort.env.wasm.numThreads = 1;
+    const info = await (await fetch(exp + 'huidscan.json')).json();
+    const ref = await (await fetch(exp + 'reference/reference.json')).json();
+    const S = info.input.size;
+    result.A = {};
+    for (const prec of ['fp32', 'int8']) {
+      const t0 = performance.now();
+      const sess = await ort.InferenceSession.create(exp + info.files[prec], { executionProviders: ['wasm'] });
+      let maxd = 0;
+      for (const c of ref.crops) {
+        const out = await sess.run({ pixels: new ort.Tensor('float32', await pixelsOf(exp + 'reference/' + c.file, S), [1, 3, S, S]) });
+        for (const h of ref.heads) out[h].data.forEach((v, j) => { maxd = Math.max(maxd, Math.abs(v - c[prec][h][j])); });
+      }
+      result.A[prec] = { crops: ref.crops.length, maxDiff: maxd, ms: Math.round(performance.now() - t0) };
+    }
+
+    // B: model.ts on Python's landmarks.
+    const model = await import('/app-scan/model.js');
+    const zm = await model.loadZoneModel('/');
+    if (!zm) throw new Error('model.ts found no model');
+    const img = await loadImage(exp + 'reference/' + ref.face.file);
+    const canvas = document.createElement('canvas'); canvas.width = img.naturalWidth; canvas.height = img.naturalHeight;
+    canvas.getContext('2d').drawImage(img, 0, 0);
+    const lm = ref.face.landmarks.map(([x, y]) => ({ x, y }));
+    const t0 = performance.now();
+    const readings = await model.readZones(zm, canvas, lm);
+    const ms = Math.round(performance.now() - t0);
+    const prec = zm.info.file.includes('int8') ? 'int8' : 'fp32';
+    const perZone = {}; let maxd = 0;
+    for (const [zone, heads] of Object.entries(ref.face.zones[prec])) {
+      for (const h of zm.info.heads) {
+        const p = heads[h.name];
+        const want = h.classes === 2 ? p[1] : p.reduce((s, v, j) => s + v * j, 0) / (h.classes - 1);
+        const got = readings[zone][h.name];
+        perZone[zone] = { python: +want.toFixed(4), browser: +got.toFixed(4) };
+        maxd = Math.max(maxd, Math.abs(want - got));
+      }
+    }
+    const { zones, pixels } = model.cutZones(canvas, lm, zm.info);
+    // Pixel parity with Python's crops (face_crops_python.png, the zones side by side), per zone, on 0-255.
+    const pyImg = await loadImage(exp + 'reference/face_crops_python.png');
+    const pc = document.createElement('canvas'); pc.width = pyImg.naturalWidth; pc.height = pyImg.naturalHeight;
+    const pg = pc.getContext('2d'); pg.drawImage(pyImg, 0, 0);
+    const pyData = pg.getImageData(0, 0, pc.width, pc.height).data;
+    const pixelDiff = {};
+    zones.forEach((zone, n) => {
+      const plane = S * S; let sum = 0;
+      for (let i = 0; i < plane; i++) {
+        const x = (i % S) + n * S, y = Math.floor(i / S); const o = 4 * (y * pc.width + x);
+        for (let c = 0; c < 3; c++) sum += Math.abs(pixels[n * 3 * plane + c * plane + i] * 255 - pyData[o + c]);
+      }
+      pixelDiff[zone] = +(sum / (3 * plane)).toFixed(2);
+    });
+    const strip = document.createElement('canvas'); strip.width = S * zones.length; strip.height = S;
+    const sg = strip.getContext('2d'); const id = sg.createImageData(S * zones.length, S);
+    zones.forEach((_, n) => { const plane = S * S; for (let i = 0; i < plane; i++) { const x = (i % S) + n * S, y = Math.floor(i / S); const o = 4 * (y * S * zones.length + x); for (let c = 0; c < 3; c++) id.data[o + c] = Math.round(pixels[n * 3 * plane + c * plane + i] * 255); id.data[o + 3] = 255; } });
+    sg.putImageData(id, 0, 0);
+    result.B = { file: zm.info.file, ms, maxDiff: maxd, perZone, pixelDiff, crops: strip.toDataURL('image/png') };
+  }
+
+  // C: the app's whole scan, as advies.tsx calls it.
+  const run = await import('/app-scan/run.js');
+  const face = await loadImage((exp || '/x/') + 'reference/face.jpg');
+  const photo = run.photoFrom(run.toCanvas(face, face.naturalWidth, face.naturalHeight));
+  const t1 = performance.now();
+  const scan = await run.scanPhoto(photo);
+  result.C = { kind: scan.kind, ms: Math.round(performance.now() - t1) };
+  if (scan.kind === 'found') {
+    result.C.modelVersion = scan.outcome.model?.version ?? null;
+    result.C.overall = scan.outcome.overall;
+    result.C.cheekL = scan.outcome.zones.cheekL;
+    result.C.modelReadings = scan.outcome.model?.zones ?? null;
+  }
+  result.ok = true;
+} catch (e) {
+  result.error = String(e && e.stack || e);
+}
+window.__result = result;
+document.getElementById('out').textContent = JSON.stringify(result, null, 2);
+</script>
+</body>
+</html>

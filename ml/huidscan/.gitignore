@@ -1,0 +1,17 @@
+# Code and docs are tracked; data, labels, models and tools are not.
+.venv/
+data/
+runs/
+third_party/
+exports/
+labels/
+fotos/
+__pycache__/
+*.onnx
+*.pt
+*.pth
+*.ckpt
+*.task
+*.csv
+huidscan_*.json
+.DS_Store

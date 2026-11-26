@@ -1,0 +1,13 @@
+# The huidscan pipeline (zones, export, evaluation). Python 3.12, tested on an M1 Mac with MPS.
+#   /opt/homebrew/bin/python3.12 -m venv .venv && .venv/bin/pip install -r train/requirements.txt
+# Licences: torch/torchvision BSD-3, timm Apache-2.0, MediaPipe Apache-2.0, OpenCV Apache-2.0, ONNX and
+# onnxruntime MIT/Apache-2.0. No Ultralytics (AGPL-3.0).
+torch==2.15.0
+torchvision==0.29.2
+timm==1.0.31
+mediapipe==1.2.3
+opencv-python-headless==5.1.0.95
+numpy==2.5.5
+pillow==13.0.0
+onnx==1.23.2
+onnxruntime==1.32.0

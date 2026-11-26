@@ -1,4 +1,5 @@
 import { analyzeSkin, zonePolygons, type Outcome, type Pt, type ZoneId } from './analyze';
+import { withZoneModel } from './model';
 
 // Finding the face, in the browser: MediaPipe's Face Landmarker (Google), loaded from jsDelivr at a fixed version, with
 // Google's own model file. Both are downloaded the first time someone opens the scan, then cached by the browser.
@@ -137,7 +138,10 @@ export async function scanPhoto(photo: ScanPhoto): Promise<ScanResult> {
   g.drawImage(photo.canvas, minX, minY, maxX - minX, maxY - minY, 0, 0, work.width, work.height);
   const pixels = g.getImageData(0, 0, work.width, work.height);
   const local = landmarks.map((p) => ({ x: (p.x * photo.width - minX) * scale, y: (p.y * photo.height - minY) * scale }));
-  const outcome = analyzeSkin(pixels, local);
+  const measured = analyzeSkin(pixels, local);
+  // With a trained model in public/models/, its zone readings are blended in; without one the measures stay as they are.
+  const inPhoto = landmarks.map((p) => ({ x: p.x * photo.width, y: p.y * photo.height }));
+  const outcome = await withZoneModel(measured, photo.canvas, inPhoto);
 
   return { kind: 'found', landmarks, zones: zonePolygons(landmarks), contours: finder.contours, outcome };
 }

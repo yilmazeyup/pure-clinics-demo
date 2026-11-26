@@ -17,6 +17,8 @@ export type Outcome = {
   overall: Signals;
   /** Median lightness of the skin (L*, 0–100): below about 35 the photo is too dark to say much. */
   light: number;
+  /** Only when a trained model sits in public/models/ (see scan/model.ts): its own reading per zone and concern, 0–1. */
+  model?: { version: string; zones: Record<string, Record<string, number>> };
 };
 
 export const ZONES: ZoneId[] = ['forehead', 'cheekL', 'cheekR', 'nose', 'chin'];
@@ -278,9 +280,14 @@ export function analyzeSkin(image: { data: Uint8ClampedArray; width: number; hei
     };
   });
 
+  return { zones, overall: overallOf(zones), light };
+}
+
+/** The face as a whole, from its zones. */
+export function overallOf(zones: Record<ZoneId, Signals>): Signals {
   const avg = (...v: number[]) => v.reduce((s, x) => s + x, 0) / v.length;
   const cheeks = (k: keyof Signals) => avg(zones.cheekL[k], zones.cheekR[k]);
-  const overall: Signals = {
+  return {
     // Redness shows on cheeks and nose; the forehead and chin are the face's own reference.
     redness: Math.max(cheeks('redness'), zones.nose.redness * 0.65),
     tone: 0.8 * cheeks('tone') + 0.2 * zones.forehead.tone,
@@ -288,7 +295,6 @@ export function analyzeSkin(image: { data: Uint8ClampedArray; width: number; hei
     blemish: Math.max(zones.chin.blemish, zones.forehead.blemish, cheeks('blemish'), 0.5 * zones.chin.redness),
     shine: Math.max(zones.forehead.shine, zones.nose.shine),
   };
-  return { zones, overall, light };
 }
 
 /** "nauwelijks", "een beetje", "goed zichtbaar". */

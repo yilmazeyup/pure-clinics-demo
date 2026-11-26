@@ -1,0 +1,745 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Huidscan labelen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600&display=swap" rel="stylesheet">
+<!--
+  Huidscan labelen: the therapists' labelling tool for Pure Clinics' skin-scan model.
+  Runs from this file (file://) or any local server. Photos are read in this browser and never sent anywhere; the
+  only downloads are MediaPipe's face finder (jsDelivr, fixed version) and its model file (Google), as in the app.
+  Labels are kept in this browser (localStorage) per therapist, and exported as files you save yourself:
+    huidscan_zones_<initialen>_<datum>.csv   zone grades 0-3, Monk tone, quality (for prepare.py and kappa.py)
+    huidscan_boxes_<initialen>_<datum>.json  COCO boxes for the three box classes
+  Zones and their landmark numbers match ml/huidscan/train/common.py; keep the two the same.
+-->
+<style>
+  :root {
+    --cream: #f7f3ec;
+    --paper: #fffdf9;
+    --walnut: #6f3a22;
+    --walnut-soft: #8a5a40;
+    --ink: #2b2420;
+    --muted: #776b62;
+    --line: #e3d9cb;
+    --line-strong: #cbbba7;
+    --sand: #efe7da;
+    --red: #b3261e;
+    --blue: #1f5f8b;
+    --ochre: #b77d00;
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font: 400 14px/1.45 Lexend, system-ui, sans-serif;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+  }
+  button, input, select { font: inherit; color: inherit; }
+  header {
+    display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+    padding: 14px 22px; border-bottom: 1px solid var(--line); background: var(--cream);
+  }
+  header h1 { font-size: 17px; font-weight: 500; margin: 0; letter-spacing: 0.01em; }
+  header h1 span { color: var(--muted); font-weight: 300; }
+  .spacer { flex: 1; }
+  .who { display: flex; align-items: center; gap: 8px; color: var(--muted); }
+  .who input { width: 74px; text-transform: uppercase; }
+  input[type=text], select {
+    background: var(--paper); border: 1px solid var(--line-strong); border-radius: 6px; padding: 6px 9px;
+  }
+  input[type=text]:focus, select:focus, button:focus-visible { outline: 2px solid var(--walnut); outline-offset: 1px; }
+  .btn {
+    border: 1px solid var(--walnut); background: transparent; color: var(--walnut);
+    padding: 7px 13px; border-radius: 6px; cursor: pointer; white-space: nowrap;
+  }
+  .btn:hover { background: var(--sand); }
+  .btn.solid { background: var(--walnut); color: var(--cream); }
+  .btn.solid:hover { background: var(--walnut-soft); }
+  .btn.quiet { border-color: transparent; color: var(--muted); }
+  .btn.quiet:hover { color: var(--walnut); background: transparent; text-decoration: underline; }
+  .btn:disabled { opacity: 0.4; cursor: default; }
+
+  main { display: grid; grid-template-columns: 250px minmax(0, 1fr) 360px; min-height: 0; }
+  aside, section { min-height: 0; }
+  #list { border-right: 1px solid var(--line); overflow: auto; padding: 10px 0; }
+  #list .empty { padding: 14px 18px; color: var(--muted); }
+  .item {
+    display: block; width: 100%; text-align: left; border: 0; background: transparent; cursor: pointer;
+    padding: 8px 18px; border-left: 3px solid transparent;
+  }
+  .item:hover { background: var(--sand); }
+  .item.on { border-left-color: var(--walnut); background: var(--paper); }
+  .item .name { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .item .state { display: flex; gap: 10px; font-size: 12px; color: var(--muted); }
+  .item .state .done { color: var(--walnut); }
+  .item .state .bad { color: var(--red); }
+
+  #stageWrap { display: grid; grid-template-rows: auto 1fr; min-height: 0; }
+  .tools {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 10px 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .seg { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 6px; overflow: hidden; }
+  .seg button { border: 0; background: var(--paper); padding: 6px 11px; cursor: pointer; }
+  .seg button + button { border-left: 1px solid var(--line-strong); }
+  .seg button.on { background: var(--walnut); color: var(--cream); }
+  .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: 0; }
+  .tools .note { color: var(--muted); font-size: 12.5px; }
+  #stage { position: relative; overflow: hidden; background: var(--sand); cursor: default; }
+  #stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  #stage.drawing { cursor: crosshair; }
+  #stage.panning { cursor: grabbing; }
+  #stageMsg {
+    position: absolute; left: 16px; bottom: 14px; padding: 6px 10px; border-radius: 6px;
+    background: var(--paper); border: 1px solid var(--line); color: var(--muted); font-size: 12.5px; max-width: 70%;
+  }
+  #stageMsg:empty { display: none; }
+  .welcome {
+    position: absolute; inset: 0; display: grid; place-content: center; text-align: center; gap: 10px; padding: 30px;
+    color: var(--muted);
+  }
+  .welcome h2 { color: var(--ink); font-weight: 400; font-size: 22px; margin: 0; }
+
+  #panel { border-left: 1px solid var(--line); overflow: auto; padding: 4px 20px 30px; background: var(--paper); }
+  #panel h3 {
+    font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted);
+    margin: 22px 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--line);
+  }
+  .row { display: flex; align-items: center; gap: 10px; margin: 8px 0; }
+  .row label { min-width: 92px; color: var(--muted); }
+  .row input[type=text], .row select { flex: 1; min-width: 0; width: 100%; }
+  .monk { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; }
+  .monk button {
+    height: 34px; border: 1px solid var(--line-strong); border-radius: 5px; cursor: pointer; padding: 0;
+    font-size: 11px; display: grid; place-items: end center; padding-bottom: 2px;
+  }
+  .monk button.on { outline: 2px solid var(--walnut); outline-offset: 2px; }
+  .hint { color: var(--muted); font-size: 12.5px; margin: 6px 0; }
+  .checks { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 6px; }
+  .checks label { display: inline-flex; gap: 6px; align-items: center; color: var(--ink); min-width: 0; }
+  .zones { display: grid; gap: 4px; }
+  .zbtn {
+    display: flex; justify-content: space-between; gap: 8px; text-align: left; border: 1px solid var(--line);
+    background: var(--paper); border-radius: 6px; padding: 6px 10px; cursor: pointer;
+  }
+  .zbtn.on { border-color: var(--walnut); background: var(--cream); }
+  .zbtn .zs { color: var(--muted); font-size: 12px; }
+  .zbtn .zs.done { color: var(--walnut); }
+  .zbtn:disabled { opacity: 0.45; cursor: default; }
+  .grade { margin: 12px 0; }
+  .grade .gl { display: flex; justify-content: space-between; margin-bottom: 5px; }
+  .grade .seg { display: flex; }
+  .grade .seg button { flex: 1; padding: 6px 4px; font-size: 13px; }
+  .grade .seg button small { display: block; font-size: 10.5px; color: inherit; opacity: 0.75; }
+  .boxes { display: grid; gap: 3px; margin-top: 6px; }
+  .boxrow { display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 3px 6px; border-radius: 5px; }
+  .boxrow.on { background: var(--cream); }
+  .boxrow button { margin-left: auto; }
+  .flag { color: var(--red); }
+  footer {
+    border-top: 1px solid var(--line); padding: 9px 22px; color: var(--muted); font-size: 12px;
+    display: flex; gap: 18px; flex-wrap: wrap;
+  }
+  footer a { color: var(--walnut); }
+  dialog {
+    border: 1px solid var(--line-strong); border-radius: 10px; background: var(--paper); color: var(--ink);
+    max-width: 560px; padding: 22px 24px;
+  }
+  dialog::backdrop { background: rgba(43, 36, 32, 0.25); }
+  dialog h2 { font-weight: 500; font-size: 18px; margin: 0 0 10px; }
+  dialog ul { padding-left: 18px; }
+  kbd {
+    font: 12px Lexend, sans-serif; border: 1px solid var(--line-strong); border-bottom-width: 2px; border-radius: 4px;
+    padding: 0 5px; background: var(--cream);
+  }
+  @media (max-width: 1100px) {
+    main { grid-template-columns: 200px minmax(0, 1fr) 320px; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Huidscan <span>· labelen</span></h1>
+  <div class="who">
+    <label for="who">Therapeut</label>
+    <input id="who" type="text" maxlength="4" placeholder="NV" autocomplete="off" title="Je initialen. Elke therapeut labelt apart.">
+  </div>
+  <div class="spacer"></div>
+  <input id="files" type="file" accept="image/*" multiple hidden>
+  <button class="btn solid" id="open">Foto's openen</button>
+  <button class="btn" id="export">Exporteren</button>
+  <button class="btn quiet" id="backup">Back-up</button>
+  <button class="btn quiet" id="restore">Back-up terugzetten</button>
+  <input id="restoreFile" type="file" accept="application/json" hidden>
+  <button class="btn quiet" id="help">Uitleg</button>
+</header>
+
+<main>
+  <aside id="list"><div class="empty">Nog geen foto's geopend.</div></aside>
+
+  <section id="stageWrap">
+    <div class="tools">
+      <div class="seg" role="group" aria-label="Werkwijze">
+        <button id="modeZones" class="on" title="Zones beoordelen (Z)">Zones</button>
+        <button id="modeBoxes" title="Vlekjes omkaderen (V)">Vlekjes</button>
+      </div>
+      <div class="seg" id="classes" role="group" aria-label="Soort vlekje"></div>
+      <div class="spacer"></div>
+      <button class="btn quiet" id="fit" title="Passend maken (F)">Passend</button>
+      <button class="btn" id="prev" title="Vorige foto (←)">Vorige</button>
+      <button class="btn" id="next" title="Volgende foto (→)">Volgende</button>
+    </div>
+    <div id="stage">
+      <canvas id="canvas"></canvas>
+      <div class="welcome" id="welcome">
+        <h2>Foto's labelen voor de huidscan</h2>
+        <div>Vul rechtsboven je initialen in en kies "Foto's openen".<br>De foto's blijven op deze computer; er wordt niets verstuurd.</div>
+      </div>
+      <div id="stageMsg"></div>
+    </div>
+  </section>
+
+  <aside id="panel"></aside>
+</main>
+
+<footer>
+  <span>Foto's blijven op deze computer. Labels staan in deze browser; exporteer en maak regelmatig een back-up.</span>
+  <span>Gezichtszones: MediaPipe Face Landmarker (Google, Apache-2.0).</span>
+  <span>Huidtint: <a href="https://skintone.google" target="_blank" rel="noopener">Monk Skin Tone Scale</a> (Dr. Ellis Monk, Google, CC BY 4.0).</span>
+</footer>
+
+<dialog id="helpDialog">
+  <h2>Zo werkt het</h2>
+  <ul>
+    <li>Vul je <b>initialen</b> in. Werken jullie met twee therapeuten aan dezelfde foto's, dan labelt ieder apart onder eigen initialen, zonder elkaars labels te zien. Daarna berekent <code>label/kappa.py</code> hoe goed jullie overeenkomen.</li>
+    <li><b>Zones</b>: klik een zone op de foto of in de lijst en kies per onderwerp 0 tot 3. Leeg laten betekent: niet beoordeeld.</li>
+    <li><b>0 geen</b>: niets te zien. <b>1 licht</b>: zichtbaar als je zoekt. <b>2 duidelijk</b>: valt op. <b>3 sterk</b>: bepaalt hoe de zone eruitziet.</li>
+    <li><b>Vlekjes</b>: kies de soort en sleep een kader om elk vlekje, net ruim genoeg. Zijn ze allemaal omkaderd (ook als er geen zijn), vink dan "Vlekjes klaar" aan.</li>
+    <li><b>Huidtint</b>: kies de Monk-tint die het best past bij de wang, in het licht van de foto.</li>
+    <li><b>Kwaliteit</b>: zet een foto op "slecht" als hij onscherp is, het licht niet klopt, er make-up op zit of het gezicht bedekt is. Die foto's gaan niet mee in de training.</li>
+    <li>We benoemen wat zichtbaar is, nooit een aandoening.</li>
+  </ul>
+  <p><kbd>←</kbd> <kbd>→</kbd> vorige / volgende · <kbd>Z</kbd> zones · <kbd>V</kbd> vlekjes · <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> soort vlekje · <kbd>Delete</kbd> kader weg · scrollen zoomt · <kbd>spatie</kbd> + slepen verschuift · <kbd>F</kbd> passend</p>
+  <form method="dialog"><button class="btn solid">Sluiten</button></form>
+</dialog>
+
+<script type="module">
+// ---- Definitions (same as ml/huidscan/train/common.py) ----------------------------------------------------------
+const MP_VERSION = '0.10.35';
+const MP_CDN = `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_VERSION}`;
+const MP_MODEL = 'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task';
+
+const ZONE_POINTS = {
+  forehead: [67, 109, 10, 338, 297, 299, 296, 336, 9, 107, 66, 69],
+  cheekL: [118, 101, 36, 205, 206, 216, 192, 213, 147, 123, 117],
+  cheekR: [347, 330, 266, 425, 426, 436, 416, 433, 376, 352, 346],
+  nose: [168, 122, 196, 3, 51, 45, 4, 275, 281, 248, 419, 351],
+  chin: [18, 313, 421, 428, 396, 175, 171, 208, 201, 83],
+  underEyeL: [226, 110, 24, 23, 22, 26, 112, 244, 233, 128, 121, 120, 119, 118, 117, 111, 35],
+  underEyeR: [446, 339, 254, 253, 252, 256, 341, 464, 453, 357, 350, 349, 348, 347, 346, 340, 265],
+};
+const SHRINK = { forehead: 0.86, cheekL: 0.86, cheekR: 0.86, nose: 0.8, chin: 0.84, underEyeL: 0.92, underEyeR: 0.92 };
+const ZONES = Object.keys(ZONE_POINTS);
+const ZONE_NL = {
+  forehead: 'Voorhoofd', cheekL: 'Wang, links op de foto', cheekR: 'Wang, rechts op de foto', nose: 'Neus', chin: 'Kin',
+  underEyeL: 'Onder het oog, links op de foto', underEyeR: 'Onder het oog, rechts op de foto',
+};
+// Area of each zone on a frontal face, as a share of face width squared (prepare.py uses the same numbers).
+const FRONT_AREA = { forehead: 0.098, cheekL: 0.040, cheekR: 0.042, nose: 0.020, chin: 0.015, underEyeL: 0.034, underEyeR: 0.036 };
+const MIN_VISIBLE = 0.4;
+const CONCERNS = [
+  { id: 'redness', nl: 'Roodheid' },
+  { id: 'pigmentation', nl: 'Pigment, ongelijke teint' },
+  { id: 'fine_lines', nl: 'Fijne lijntjes' },
+  { id: 'under_eye_dark', nl: 'Donkere oogzone' },
+];
+const APPLIES = {
+  redness: ['forehead', 'cheekL', 'cheekR', 'nose', 'chin'],
+  pigmentation: ['forehead', 'cheekL', 'cheekR', 'nose', 'chin'],
+  fine_lines: ['forehead', 'underEyeL', 'underEyeR'],
+  under_eye_dark: ['underEyeL', 'underEyeR'],
+};
+const GRADES = [['0', 'geen'], ['1', 'licht'], ['2', 'duidelijk'], ['3', 'sterk']];
+const BOX = [
+  { id: 1, name: 'inflamed_blemish', nl: 'Ontstoken onzuiverheid', color: '#b3261e' },
+  { id: 2, name: 'comedone', nl: 'Mee-eter', color: '#1f5f8b' },
+  { id: 3, name: 'dark_spot', nl: 'Pigmentvlek', color: '#b77d00' },
+];
+// Monk Skin Tone Scale (CC BY 4.0), published swatch colours.
+const MONK = ['#f6ede4', '#f3e7db', '#f7ead0', '#eadaba', '#d7bd96', '#a07e56', '#825c43', '#604134', '#3a312a', '#292420'];
+const VIEWS = [['front', 'Vooraanzicht'], ['left', 'Links: linkerwang naar camera'], ['right', 'Rechts: rechterwang naar camera']];
+const QUALITY_REASONS = [['onscherp', 'onscherp'], ['licht', 'licht'], ['make-up', 'make-up'], ['hoek', 'hoek'], ['bedekt', 'haar of bril']];
+
+// ---- Storage: one record per therapist, in this browser --------------------------------------------------------
+const KEY = (who) => `huidscan-label-v1:${who}`;
+let who = (safeGet('huidscan-label-who') || '').toUpperCase();
+let store = loadStore(who);
+function safeGet(k) { try { return localStorage.getItem(k); } catch { return null; } }
+function safeSet(k, v) { try { localStorage.setItem(k, v); return true; } catch { return false; } }
+function loadStore(w) {
+  if (!w) return { photos: {} };
+  try { return JSON.parse(safeGet(KEY(w)) || '') || { photos: {} }; } catch { return { photos: {} }; }
+}
+let saveTimer = null;
+function save() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    if (!who) return;
+    if (!safeSet(KEY(who), JSON.stringify(store))) note('Opslaan in deze browser lukt niet (vol?). Maak nu een back-up.', true);
+  }, 250);
+}
+
+// ---- Photos in this session ------------------------------------------------------------------------------------
+let files = []; // [{ key, file }]
+let index = -1;
+let photo = null; // { key, bitmap, w, h, lm, polys, vis }
+let mode = 'zones';
+let boxClass = 1;
+let zoneSel = null;
+let boxSel = -1;
+const viewT = { s: 1, ox: 0, oy: 0 };
+
+const $ = (id) => document.getElementById(id);
+const canvas = $('canvas');
+const g = canvas.getContext('2d');
+
+function parseName(name) {
+  // Protocol: <pseudoniem>_<jjjjmmdd>_<F|L|R>.jpg, for example PC0042_20261201_F.jpg
+  const m = name.match(/^([A-Za-z]{1,4}\d{2,7})_(\d{8})_([FLR])\b/i);
+  if (!m) return { person: name.replace(/\.[^.]+$/, '').split(/[_\s-]/)[0], view: 'front' };
+  return { person: m[1].toUpperCase(), view: { F: 'front', L: 'left', R: 'right' }[m[3].toUpperCase()] };
+}
+function rec(key) { return store.photos[key]; }
+function ensureRec(key, file) {
+  if (!store.photos[key]) {
+    const p = parseName(file.name);
+    // Same person, another photo already has a Monk tone: start from that.
+    const known = Object.values(store.photos).find((r) => r.person === p.person && r.monk);
+    store.photos[key] = {
+      name: file.name, w: 0, h: 0, person: p.person, view: p.view, monk: known ? known.monk : null,
+      quality: 'ok', reasons: [], zones: {}, boxes: [], boxesDone: false, face: null, updated: null,
+    };
+  }
+  return store.photos[key];
+}
+function touch(r) { r.updated = new Date().toISOString(); save(); }
+
+// ---- Face finder ------------------------------------------------------------------------------------------------
+let finder = null;
+async function faceFinder() {
+  if (!finder) {
+    finder = (async () => {
+      const vision = await import(`${MP_CDN}/vision_bundle.mjs`);
+      const fileset = await vision.FilesetResolver.forVisionTasks(`${MP_CDN}/wasm`);
+      return vision.FaceLandmarker.createFromOptions(fileset, {
+        baseOptions: { modelAssetPath: MP_MODEL, delegate: 'CPU' }, runningMode: 'IMAGE', numFaces: 1,
+      });
+    })();
+    finder.catch(() => { finder = null; });
+  }
+  return finder;
+}
+async function landmarks(bitmap) {
+  const lmk = await faceFinder();
+  const f = Math.min(1, 1280 / Math.max(bitmap.width, bitmap.height));
+  const c = document.createElement('canvas');
+  c.width = Math.round(bitmap.width * f); c.height = Math.round(bitmap.height * f);
+  c.getContext('2d').drawImage(bitmap, 0, 0, c.width, c.height);
+  const res = lmk.detect(c);
+  const pts = res.faceLandmarks && res.faceLandmarks[0];
+  if (!pts || pts.length < 468) return null;
+  return pts.map((p) => ({ x: p.x * bitmap.width, y: p.y * bitmap.height }));
+}
+function hull(points) {
+  const p = [...points].sort((a, b) => a.x - b.x || a.y - b.y);
+  if (p.length < 3) return p;
+  const cross = (o, a, b) => (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x);
+  const lower = []; for (const q of p) { while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], q) <= 0) lower.pop(); lower.push(q); }
+  const upper = []; for (let i = p.length - 1; i >= 0; i--) { while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], p[i]) <= 0) upper.pop(); upper.push(p[i]); }
+  return lower.slice(0, -1).concat(upper.slice(0, -1));
+}
+function zonePolys(lm) {
+  const out = {}; const vis = {};
+  const fw = Math.hypot(lm[454].x - lm[234].x, lm[454].y - lm[234].y) || 1;
+  for (const z of ZONES) {
+    const h = hull(ZONE_POINTS[z].map((i) => lm[i]));
+    const cx = h.reduce((s, q) => s + q.x, 0) / h.length; const cy = h.reduce((s, q) => s + q.y, 0) / h.length;
+    const poly = h.map((q) => ({ x: cx + (q.x - cx) * SHRINK[z], y: cy + (q.y - cy) * SHRINK[z] }));
+    out[z] = poly;
+    let a = 0; for (let i = 0; i < poly.length; i++) { const p = poly[i], q = poly[(i + 1) % poly.length]; a += p.x * q.y - q.x * p.y; }
+    vis[z] = Math.abs(a) / 2 / (fw * fw) / FRONT_AREA[z];
+  }
+  return { polys: out, vis };
+}
+function inside(poly, x, y) {
+  let c = false;
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const a = poly[i], b = poly[j];
+    if ((a.y > y) !== (b.y > y) && x < ((b.x - a.x) * (y - a.y)) / (b.y - a.y) + a.x) c = !c;
+  }
+  return c;
+}
+
+// ---- Opening photos ---------------------------------------------------------------------------------------------
+$('open').onclick = () => { if (!requireWho()) return; $('files').click(); };
+$('files').onchange = (e) => {
+  const chosen = [...e.target.files].filter((f) => f.type.startsWith('image/'));
+  e.target.value = '';
+  const have = new Set(files.map((f) => f.key));
+  for (const f of chosen) {
+    const key = `${f.name}|${f.size}`;
+    if (!have.has(key)) files.push({ key, file: f });
+    ensureRec(key, f);
+  }
+  files.sort((a, b) => a.file.name.localeCompare(b.file.name, 'nl', { numeric: true }));
+  save();
+  renderList();
+  if (index < 0 && files.length) show(0);
+};
+async function show(i) {
+  if (i < 0 || i >= files.length) return;
+  index = i; zoneSel = null; boxSel = -1;
+  const { key, file } = files[i];
+  const r = ensureRec(key, file);
+  $('welcome').style.display = 'none';
+  note('Foto openen…');
+  let bitmap;
+  try { bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' }); }
+  catch { note('Deze foto kan niet geopend worden.', true); return; }
+  if (index !== i) return;
+  photo = { key, bitmap, w: bitmap.width, h: bitmap.height, lm: null, polys: null, vis: null };
+  r.w = bitmap.width; r.h = bitmap.height;
+  fit(); draw(); renderList(); renderPanel();
+  note('Gezicht zoeken…');
+  try {
+    const lm = await landmarks(bitmap);
+    if (index !== i) return;
+    if (lm) {
+      Object.assign(photo, { lm }, (() => { const z = zonePolys(lm); return { polys: z.polys, vis: z.vis }; })());
+      r.face = true;
+      note('');
+    } else {
+      r.face = false;
+      note('Geen gezicht gevonden: zones kunnen niet, vlekjes en kwaliteit wel.');
+    }
+  } catch {
+    note('De gezichtszoeker laadt niet (offline?). Vlekjes en kwaliteit kunnen wel.', true);
+  }
+  save(); draw(); renderPanel(); renderList();
+}
+$('prev').onclick = () => show(index - 1);
+$('next').onclick = () => show(index + 1);
+
+// ---- Drawing ----------------------------------------------------------------------------------------------------
+function resize() {
+  const r = $('stage').getBoundingClientRect(); const d = window.devicePixelRatio || 1;
+  canvas.width = Math.round(r.width * d); canvas.height = Math.round(r.height * d);
+}
+function fit() {
+  resize();
+  if (!photo) return;
+  const d = window.devicePixelRatio || 1; const W = canvas.width / d, H = canvas.height / d;
+  viewT.s = Math.min(W / photo.w, H / photo.h) * 0.96;
+  viewT.ox = (W - photo.w * viewT.s) / 2; viewT.oy = (H - photo.h * viewT.s) / 2;
+}
+const toScreen = (p) => ({ x: p.x * viewT.s + viewT.ox, y: p.y * viewT.s + viewT.oy });
+const toImage = (x, y) => ({ x: (x - viewT.ox) / viewT.s, y: (y - viewT.oy) / viewT.s });
+function draw() {
+  const d = window.devicePixelRatio || 1;
+  g.setTransform(d, 0, 0, d, 0, 0);
+  g.clearRect(0, 0, canvas.width, canvas.height);
+  if (!photo) return;
+  g.imageSmoothingQuality = 'high';
+  g.drawImage(photo.bitmap, viewT.ox, viewT.oy, photo.w * viewT.s, photo.h * viewT.s);
+  const r = rec(photo.key);
+  if (photo.polys && mode === 'zones') {
+    for (const z of ZONES) {
+      const poly = photo.polys[z].map(toScreen);
+      const hidden = photo.vis[z] < MIN_VISIBLE;
+      g.beginPath(); poly.forEach((p, k) => (k ? g.lineTo(p.x, p.y) : g.moveTo(p.x, p.y))); g.closePath();
+      if (z === zoneSel) { g.fillStyle = 'rgba(111, 58, 34, 0.18)'; g.fill(); }
+      g.setLineDash(z === zoneSel ? [] : [5, 4]);
+      g.lineWidth = z === zoneSel ? 2 : 1.3;
+      g.strokeStyle = hidden ? 'rgba(247, 243, 236, 0.35)' : z === zoneSel ? '#6f3a22' : 'rgba(247, 243, 236, 0.95)';
+      g.stroke();
+      if (zoneDone(r, z)) {
+        const c = toScreen(centroidOf(photo.polys[z]));
+        g.setLineDash([]); g.fillStyle = '#f7f3ec'; g.beginPath(); g.arc(c.x, c.y, 4, 0, Math.PI * 2); g.fill();
+      }
+    }
+    g.setLineDash([]);
+  }
+  r.boxes.forEach((b, k) => {
+    const p = toScreen({ x: b.x, y: b.y }); const w = b.w * viewT.s, h = b.h * viewT.s;
+    const col = BOX.find((c) => c.id === b.c).color;
+    g.lineWidth = 3.5; g.strokeStyle = 'rgba(255,255,255,0.9)'; g.strokeRect(p.x, p.y, w, h);
+    g.lineWidth = k === boxSel ? 2.6 : 1.6; g.strokeStyle = col; g.strokeRect(p.x, p.y, w, h);
+  });
+  if (drag && drag.kind === 'box') {
+    const a = toScreen(drag.a), b = toScreen(drag.b);
+    g.lineWidth = 1.5; g.setLineDash([4, 3]); g.strokeStyle = BOX.find((c) => c.id === boxClass).color;
+    g.strokeRect(Math.min(a.x, b.x), Math.min(a.y, b.y), Math.abs(a.x - b.x), Math.abs(a.y - b.y)); g.setLineDash([]);
+  }
+}
+const centroidOf = (poly) => ({ x: poly.reduce((s, q) => s + q.x, 0) / poly.length, y: poly.reduce((s, q) => s + q.y, 0) / poly.length });
+window.addEventListener('resize', () => { const keep = { ...viewT }; resize(); Object.assign(viewT, keep); draw(); });
+
+// ---- Mouse: zoom, pan, select a zone, draw a box ---------------------------------------------------------------
+let drag = null; let space = false;
+const stage = $('stage');
+stage.addEventListener('wheel', (e) => {
+  if (!photo) return; e.preventDefault();
+  const rect = stage.getBoundingClientRect(); const x = e.clientX - rect.left, y = e.clientY - rect.top;
+  const before = toImage(x, y); const f = Math.exp(-e.deltaY * 0.0015);
+  viewT.s = Math.min(40, Math.max(0.02, viewT.s * f));
+  viewT.ox = x - before.x * viewT.s; viewT.oy = y - before.y * viewT.s; draw();
+}, { passive: false });
+stage.addEventListener('mousedown', (e) => {
+  if (!photo) return;
+  const rect = stage.getBoundingClientRect(); const x = e.clientX - rect.left, y = e.clientY - rect.top;
+  const p = toImage(x, y); const r = rec(photo.key);
+  if (space || e.button === 1 || e.button === 2) { drag = { kind: 'pan', x, y, ox: viewT.ox, oy: viewT.oy }; stage.classList.add('panning'); return; }
+  if (mode === 'zones') {
+    const hit = photo.polys && ZONES.find((z) => photo.vis[z] >= MIN_VISIBLE && inside(photo.polys[z], p.x, p.y));
+    if (hit) { zoneSel = hit; draw(); renderPanel(); }
+    else drag = { kind: 'pan', x, y, ox: viewT.ox, oy: viewT.oy };
+    return;
+  }
+  // Boxes: click on a box selects it, otherwise drag a new one.
+  const k = r.boxes.findIndex((b) => p.x >= b.x && p.x <= b.x + b.w && p.y >= b.y && p.y <= b.y + b.h);
+  if (k >= 0 && !e.shiftKey) { boxSel = k; draw(); renderPanel(); return; }
+  drag = { kind: 'box', a: p, b: p };
+});
+window.addEventListener('mousemove', (e) => {
+  if (!drag) return;
+  const rect = stage.getBoundingClientRect(); const x = e.clientX - rect.left, y = e.clientY - rect.top;
+  if (drag.kind === 'pan') { viewT.ox = drag.ox + x - drag.x; viewT.oy = drag.oy + y - drag.y; }
+  else drag.b = toImage(x, y);
+  draw();
+});
+window.addEventListener('mouseup', () => {
+  if (!drag) return;
+  const d = drag; drag = null; stage.classList.remove('panning');
+  if (d.kind === 'box') {
+    const clamp = (v, m) => Math.max(0, Math.min(m, v));
+    const x0 = clamp(Math.min(d.a.x, d.b.x), photo.w), x1 = clamp(Math.max(d.a.x, d.b.x), photo.w);
+    const y0 = clamp(Math.min(d.a.y, d.b.y), photo.h), y1 = clamp(Math.max(d.a.y, d.b.y), photo.h);
+    if ((x1 - x0) * viewT.s >= 4 && (y1 - y0) * viewT.s >= 4) {
+      const r = rec(photo.key);
+      r.boxes.push({ c: boxClass, x: +x0.toFixed(1), y: +y0.toFixed(1), w: +(x1 - x0).toFixed(1), h: +(y1 - y0).toFixed(1) });
+      boxSel = r.boxes.length - 1; touch(r); renderPanel(); renderList();
+    }
+  }
+  draw();
+});
+stage.addEventListener('contextmenu', (e) => e.preventDefault());
+window.addEventListener('keydown', (e) => {
+  if (e.target.matches('input, select, textarea')) return;
+  if (e.key === ' ') { space = true; e.preventDefault(); }
+  else if (e.key === 'ArrowRight') show(index + 1);
+  else if (e.key === 'ArrowLeft') show(index - 1);
+  else if (e.key === 'z' || e.key === 'Z') setMode('zones');
+  else if (e.key === 'v' || e.key === 'V') setMode('boxes');
+  else if (e.key === 'f' || e.key === 'F') { fit(); draw(); }
+  else if (['1', '2', '3'].includes(e.key)) {
+    const c = +e.key;
+    if (mode !== 'boxes') setMode('boxes');
+    if (boxSel >= 0 && photo) { const r = rec(photo.key); r.boxes[boxSel].c = c; touch(r); }
+    boxClass = c; renderTools(); renderPanel(); draw();
+  } else if ((e.key === 'Delete' || e.key === 'Backspace') && boxSel >= 0 && photo) {
+    const r = rec(photo.key); r.boxes.splice(boxSel, 1); boxSel = -1; touch(r); renderPanel(); renderList(); draw();
+  }
+});
+window.addEventListener('keyup', (e) => { if (e.key === ' ') space = false; });
+
+// ---- Tools and panel --------------------------------------------------------------------------------------------
+function setMode(m) { mode = m; boxSel = -1; stage.classList.toggle('drawing', m === 'boxes'); renderTools(); draw(); }
+$('modeZones').onclick = () => setMode('zones');
+$('modeBoxes').onclick = () => setMode('boxes');
+$('fit').onclick = () => { fit(); draw(); };
+function renderTools() {
+  $('modeZones').classList.toggle('on', mode === 'zones');
+  $('modeBoxes').classList.toggle('on', mode === 'boxes');
+  $('classes').style.display = mode === 'boxes' ? '' : 'none';
+  $('classes').innerHTML = BOX.map((c) => `<button data-c="${c.id}" class="${c.id === boxClass ? 'on' : ''}" title="${c.nl} (${c.id})"><span class="swatch" style="background:${c.color}"></span>${c.nl}</button>`).join('');
+  $('classes').querySelectorAll('button').forEach((b) => (b.onclick = () => { boxClass = +b.dataset.c; renderTools(); }));
+}
+function zoneDone(r, z) {
+  const need = CONCERNS.filter((c) => APPLIES[c.id].includes(z));
+  return need.every((c) => Number.isInteger(r.zones[z]?.[c.id]));
+}
+function zonesState(r) {
+  if (r.face === false) return 'geen gezicht';
+  if (!photo || photo.key !== r.key) {
+    const graded = Object.keys(r.zones).filter((z) => zoneDone(r, z)).length;
+    return graded ? `${graded} zones` : '';
+  }
+  return '';
+}
+function esc(s) { return String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+function renderList() {
+  const el = $('list');
+  if (!files.length) { el.innerHTML = '<div class="empty">Nog geen foto\'s geopend.</div>'; return; }
+  el.innerHTML = files.map(({ key, file }, i) => {
+    const r = rec(key) || {};
+    const zones = Object.keys(r.zones || {}).filter((z) => zoneDone(r, z)).length;
+    return `<button class="item ${i === index ? 'on' : ''}" data-i="${i}">
+      <span class="name">${esc(file.name)}</span>
+      <span class="state">
+        <span class="${zones ? 'done' : ''}">${r.face === false ? 'geen gezicht' : `zones ${zones}/7`}</span>
+        <span class="${r.boxesDone ? 'done' : ''}">vlekjes ${r.boxesDone ? 'klaar' : (r.boxes || []).length || '–'}</span>
+        ${r.quality === 'slecht' ? '<span class="bad">slecht</span>' : ''}
+        ${r.monk ? `<span>tint ${r.monk}</span>` : ''}
+      </span></button>`;
+  }).join('');
+  el.querySelectorAll('.item').forEach((b) => (b.onclick = () => show(+b.dataset.i)));
+}
+function renderPanel() {
+  const el = $('panel');
+  if (!photo) { el.innerHTML = '<h3>Foto</h3><p class="hint">Open een foto om te beginnen.</p>'; return; }
+  const r = rec(photo.key);
+  const zoneButtons = ZONES.map((z) => {
+    const hidden = !photo.polys || photo.vis[z] < MIN_VISIBLE;
+    const done = zoneDone(r, z);
+    return `<button class="zbtn ${z === zoneSel ? 'on' : ''}" data-z="${z}" ${hidden ? 'disabled' : ''}>
+      <span>${ZONE_NL[z]}</span><span class="zs ${done ? 'done' : ''}">${hidden ? 'niet zichtbaar' : done ? 'klaar' : ''}</span></button>`;
+  }).join('');
+  const grades = zoneSel ? CONCERNS.filter((c) => APPLIES[c.id].includes(zoneSel)).map((c) => {
+    const v = r.zones[zoneSel]?.[c.id];
+    return `<div class="grade"><div class="gl"><span>${c.nl}</span>${Number.isInteger(v) ? `<button class="btn quiet" data-clear="${c.id}">leeg</button>` : '<span class="hint">niet beoordeeld</span>'}</div>
+      <div class="seg">${GRADES.map(([n, w]) => `<button data-g="${c.id}" data-v="${n}" class="${v === +n ? 'on' : ''}">${n}<small>${w}</small></button>`).join('')}</div></div>`;
+  }).join('') + `<button class="btn quiet" id="allZero">Alles 0 in deze zone</button>` : '<p class="hint">Kies een zone op de foto of hieronder.</p>';
+  const boxCounts = BOX.map((c) => `${c.nl}: ${r.boxes.filter((b) => b.c === c.id).length}`).join(' · ');
+  el.innerHTML = `
+    <h3>Foto</h3>
+    <div class="row"><label for="person">Pseudoniem</label><input id="person" type="text" value="${esc(r.person)}"></div>
+    <div class="row"><label for="view">Aanzicht</label><select id="view">${VIEWS.map(([v, t]) => `<option value="${v}" ${r.view === v ? 'selected' : ''}>${t}</option>`).join('')}</select></div>
+    <h3>Huidtint (Monk)</h3>
+    <div class="monk">${MONK.map((c, k) => `<button data-m="${k + 1}" class="${r.monk === k + 1 ? 'on' : ''}" style="background:${c};color:${k < 5 ? '#2b2420' : '#f7f3ec'}" title="Monk ${k + 1}">${k + 1}</button>`).join('')}</div>
+    <p class="hint">Kies de tint die het best past bij de wang.</p>
+    <h3>Kwaliteit</h3>
+    <div class="seg"><button data-q="ok" class="${r.quality !== 'slecht' ? 'on' : ''}">Goed</button><button data-q="slecht" class="${r.quality === 'slecht' ? 'on' : ''}">Slecht</button></div>
+    ${r.quality === 'slecht' ? `<div class="checks">${QUALITY_REASONS.map(([k, t]) => `<label><input type="checkbox" data-reason="${k}" ${r.reasons.includes(k) ? 'checked' : ''}> ${t}</label>`).join('')}</div>` : ''}
+    <h3>Zones</h3>
+    ${photo.polys ? `<div class="zones">${zoneButtons}</div>${grades}` : `<p class="hint">${r.face === false ? 'Geen gezicht gevonden op deze foto.' : 'Gezicht zoeken…'}</p>`}
+    <h3>Vlekjes</h3>
+    <p class="hint">${boxCounts}</p>
+    <div class="boxes">${r.boxes.map((b, k) => `<div class="boxrow ${k === boxSel ? 'on' : ''}" data-b="${k}"><span class="swatch" style="background:${BOX.find((c) => c.id === b.c).color}"></span>${BOX.find((c) => c.id === b.c).nl}<button class="btn quiet" data-del="${k}">weg</button></div>`).join('')}</div>
+    <div class="checks"><label><input type="checkbox" id="boxesDone" ${r.boxesDone ? 'checked' : ''}> Vlekjes klaar: alles omkaderd (ook als er geen zijn)</label></div>`;
+
+  el.querySelector('#person').onchange = (e) => { r.person = e.target.value.trim().toUpperCase(); touch(r); renderList(); };
+  el.querySelector('#view').onchange = (e) => { r.view = e.target.value; touch(r); };
+  el.querySelectorAll('[data-m]').forEach((b) => (b.onclick = () => { r.monk = +b.dataset.m; touch(r); renderPanel(); renderList(); }));
+  el.querySelectorAll('[data-q]').forEach((b) => (b.onclick = () => { r.quality = b.dataset.q; if (r.quality === 'ok') r.reasons = []; touch(r); renderPanel(); renderList(); }));
+  el.querySelectorAll('[data-reason]').forEach((c) => (c.onchange = () => {
+    r.reasons = QUALITY_REASONS.map(([k]) => k).filter((k) => el.querySelector(`[data-reason="${k}"]`).checked); touch(r);
+  }));
+  el.querySelectorAll('[data-z]').forEach((b) => (b.onclick = () => { zoneSel = b.dataset.z; setMode('zones'); renderPanel(); }));
+  el.querySelectorAll('[data-g]').forEach((b) => (b.onclick = () => {
+    (r.zones[zoneSel] ||= {})[b.dataset.g] = +b.dataset.v; touch(r); renderPanel(); renderList(); draw();
+  }));
+  el.querySelectorAll('[data-clear]').forEach((b) => (b.onclick = () => { delete r.zones[zoneSel][b.dataset.clear]; touch(r); renderPanel(); renderList(); draw(); }));
+  const allZero = el.querySelector('#allZero');
+  if (allZero) allZero.onclick = () => {
+    const z = (r.zones[zoneSel] ||= {});
+    CONCERNS.filter((c) => APPLIES[c.id].includes(zoneSel)).forEach((c) => { z[c.id] = 0; });
+    touch(r); renderPanel(); renderList(); draw();
+  };
+  el.querySelectorAll('[data-b]').forEach((d) => (d.onclick = (e) => { if (e.target.dataset.del) return; boxSel = +d.dataset.b; setMode('boxes'); boxSel = +d.dataset.b; renderPanel(); draw(); }));
+  el.querySelectorAll('[data-del]').forEach((b) => (b.onclick = () => { r.boxes.splice(+b.dataset.del, 1); boxSel = -1; touch(r); renderPanel(); renderList(); draw(); }));
+  el.querySelector('#boxesDone').onchange = (e) => { r.boxesDone = e.target.checked; touch(r); renderList(); };
+}
+function note(text, warn) { const m = $('stageMsg'); m.textContent = text; m.style.color = warn ? 'var(--red)' : ''; }
+
+// ---- Therapist --------------------------------------------------------------------------------------------------
+$('who').value = who;
+$('who').onchange = (e) => {
+  who = e.target.value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+  e.target.value = who;
+  safeSet('huidscan-label-who', who);
+  store = loadStore(who);
+  for (const { key, file } of files) ensureRec(key, file);
+  zoneSel = null; boxSel = -1;
+  renderList(); renderPanel(); draw();
+};
+function requireWho() {
+  if (who) return true;
+  $('who').focus(); note('Vul eerst je initialen in (rechtsboven).', true); return false;
+}
+
+// ---- Export -----------------------------------------------------------------------------------------------------
+const today = () => new Date().toISOString().slice(0, 10).replace(/-/g, '');
+function csvCell(v) { const s = v === null || v === undefined ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; }
+function zonesCsv() {
+  const head = ['image', 'person', 'view', 'labeller', 'monk', 'quality', 'quality_reason', 'zone', ...CONCERNS.map((c) => c.id)];
+  const rows = [head];
+  for (const r of Object.values(store.photos)) {
+    const base = [r.name, r.person, r.view, who, r.monk ?? '', r.quality, (r.reasons || []).join(';')];
+    const graded = ZONES.filter((z) => r.zones[z] && Object.keys(r.zones[z]).length);
+    if (!graded.length) { if (r.monk || r.quality === 'slecht') rows.push([...base, '', ...CONCERNS.map(() => '')]); continue; }
+    for (const z of graded) rows.push([...base, z, ...CONCERNS.map((c) => (Number.isInteger(r.zones[z][c.id]) ? r.zones[z][c.id] : ''))]);
+  }
+  return rows.map((row) => row.map(csvCell).join(',')).join('\n') + '\n';
+}
+function boxesCoco() {
+  const coco = {
+    info: { tool: 'huidscan-label 1', labeller: who, exported: new Date().toISOString() },
+    images: [], annotations: [],
+    categories: BOX.map((c) => ({ id: c.id, name: c.name, name_nl: c.nl })),
+  };
+  for (const r of Object.values(store.photos)) {
+    if (!r.w || !r.h) continue;
+    const id = coco.images.length + 1;
+    coco.images.push({ id, file_name: r.name, width: r.w, height: r.h, person: r.person, view: r.view, monk: r.monk, quality: r.quality, boxes_done: !!r.boxesDone });
+    for (const b of r.boxes) coco.annotations.push({ id: coco.annotations.length + 1, image_id: id, category_id: b.c, bbox: [b.x, b.y, b.w, b.h], area: +(b.w * b.h).toFixed(1), iscrowd: 0 });
+  }
+  return coco;
+}
+function download(name, text, type) {
+  const url = URL.createObjectURL(new Blob([text], { type }));
+  const a = Object.assign(document.createElement('a'), { href: url, download: name });
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+$('export').onclick = () => {
+  if (!requireWho()) return;
+  if (!Object.keys(store.photos).length) { note('Nog niets om te exporteren.', true); return; }
+  download(`huidscan_zones_${who}_${today()}.csv`, zonesCsv(), 'text/csv');
+  setTimeout(() => download(`huidscan_boxes_${who}_${today()}.json`, JSON.stringify(boxesCoco(), null, 1), 'application/json'), 400);
+  note('Geëxporteerd naar je downloadmap. Zet de bestanden in de map van de huidscan op de Mac van de kliniek.');
+};
+$('backup').onclick = () => {
+  if (!requireWho()) return;
+  download(`huidscan_backup_${who}_${today()}.json`, JSON.stringify({ who, store }), 'application/json');
+};
+$('restore').onclick = () => $('restoreFile').click();
+$('restoreFile').onchange = async (e) => {
+  const f = e.target.files[0]; e.target.value = '';
+  if (!f) return;
+  try {
+    const data = JSON.parse(await f.text());
+    if (!data.store || !data.store.photos) throw new Error('geen back-up');
+    if (!confirm(`Back-up van ${data.who} terugzetten? De labels van ${data.who} in deze browser worden vervangen.`)) return;
+    who = data.who; $('who').value = who; safeSet('huidscan-label-who', who);
+    store = data.store; save();
+    for (const { key, file } of files) ensureRec(key, file);
+    renderList(); renderPanel(); draw();
+    note(`Back-up van ${who} teruggezet.`);
+  } catch { note('Dit is geen back-up van dit programma.', true); }
+};
+$('help').onclick = () => $('helpDialog').showModal();
+
+renderTools(); renderPanel(); resize();
+faceFinder().catch(() => {});
+// For the automated check (browser_check of the labelling tool): read-only access to what would be exported.
+window.huidscan = { zonesCsv, boxesCoco, state: () => store, current: () => photo && { name: rec(photo.key).name, lm: !!photo.lm, face: rec(photo.key).face, w: photo.w, h: photo.h } };
+</script>
+</body>
+</html>

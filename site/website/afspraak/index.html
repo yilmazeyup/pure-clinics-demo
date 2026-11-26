@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="nl" data-study="creme">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Afspraak maken · Pure Clinics</title>
+    <meta name="description" content="Plan je afspraak bij Pure Clinics in Nijmegen of Uden." />
+    <meta name="theme-color" content="#f7f3ec" />
+    <link rel="icon" href="../img/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..600&family=Lexend+Peta:wght@100..400&family=Noto+Naskh+Arabic:wght@400;500&display=swap" />
+    <link rel="stylesheet" href="../css/site.css" />
+    <link rel="stylesheet" href="../css/fx.css" />
+    <link rel="stylesheet" href="../css/pages.css" />
+    <script type="module" src="../js/app.js"></script>
+  </head>
+  <body data-page="booking" data-title="ctaBook">
+    <a class="skip" href="#main" data-t="skip">Naar de inhoud</a>
+    <header class="site-header" id="header"></header>
+    <div class="menu" id="menu" hidden></div>
+
+    <main id="main" class="flow">
+      <div class="flow-head">
+        <p class="crumbs"><a href="../">Pure Clinics</a><span aria-hidden="true">/</span><span data-t="ctaBook">Afspraak maken</span></p>
+        <h1 class="title lines" data-t="bookFlowTitle" data-html>Plan <em>je afspraak.</em></h1>
+        <p class="note" data-t="bookFlowNote">Kies wat je wilt, waar en wanneer. We bevestigen de precieze tijd met je.</p>
+      </div>
+      <div class="flow-grid">
+        <div class="flow-steps" id="booking">
+          <fieldset class="flow-step" id="s-treat">
+            <legend><span class="num">I</span> <span data-t="stepTreatment">Behandeling</span></legend>
+            <label class="field select"><span class="sr" data-t="stepTreatment">Behandeling</span><select id="b-treat" name="treatment"></select></label>
+            <p class="fine" id="b-treat-note"></p>
+          </fieldset>
+          <fieldset class="flow-step" id="s-place">
+            <legend><span class="num">II</span> <span data-t="stepPlace">Kliniek</span></legend>
+            <div class="choice-row" id="b-places"></div>
+          </fieldset>
+          <fieldset class="flow-step" id="s-day">
+            <legend><span class="num">III</span> <span data-t="stepDay">Dag</span></legend>
+            <div class="days" id="b-days"></div>
+            <div class="choice-row parts" id="b-parts"></div>
+          </fieldset>
+          <fieldset class="flow-step" id="s-you">
+            <legend><span class="num">IV</span> <span data-t="stepYou">Jouw gegevens</span></legend>
+            <div id="b-you"></div>
+          </fieldset>
+          <fieldset class="flow-step" id="s-note">
+            <legend><span class="num">V</span> <span data-t="stepNote">Opmerking</span> <small data-t="optional">(niet verplicht)</small></legend>
+            <label class="field"><span class="sr" data-t="stepNote">Opmerking</span><textarea id="b-note" rows="3" maxlength="500"></textarea></label>
+          </fieldset>
+          <p class="form-error" id="b-error" role="alert" hidden></p>
+        </div>
+        <aside class="flow-summary" id="b-summary" aria-live="polite"></aside>
+      </div>
+    </main>
+
+    <footer class="footer" id="footer"></footer>
+  </body>
+</html>

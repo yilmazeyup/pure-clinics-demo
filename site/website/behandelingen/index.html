@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="nl" data-study="creme">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Behandelingen · Pure Clinics</title>
+    <meta name="description" content="Alle behandelingen van Pure Clinics in Nijmegen en Uden: laserontharen, acne, pigment, couperose, huidverbetering en meer." />
+    <meta name="theme-color" content="#f7f3ec" />
+    <link rel="icon" href="../img/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..600&family=Lexend+Peta:wght@100..400&family=Noto+Naskh+Arabic:wght@400;500&display=swap" />
+    <link rel="stylesheet" href="../css/site.css" />
+    <link rel="stylesheet" href="../css/fx.css" />
+    <link rel="stylesheet" href="../css/pages.css" />
+    <script type="module" src="../js/app.js"></script>
+  </head>
+  <body data-page="treatments" data-title="navTreatments">
+    <a class="skip" href="#main" data-t="skip">Naar de inhoud</a>
+    <header class="site-header" id="header"></header>
+    <div class="menu" id="menu" hidden></div>
+
+    <main id="main">
+      <section class="page-hero" aria-labelledby="page-title">
+        <div class="page-hero-copy">
+          <p class="crumbs rise"><a href="../">Pure Clinics</a><span aria-hidden="true">/</span><span data-t="navTreatments">Behandelingen</span></p>
+          <h1 id="page-title" class="display lines" data-t="phTreatTitle" data-html>Elke behandeling <em>een eigen kamer.</em></h1>
+          <p class="lede rise" data-t="phTreatLede">Van laserontharen tot huidverbetering. Twijfel je wat bij je past? Begin met een gratis intake.</p>
+          <div class="hero-actions rise">
+            <a class="btn btn-solid" href="../afspraak/?behandeling=consult" data-t="ctaIntakePlan">Plan je gratis intake</a>
+            <a class="btn btn-line" href="../prijzen/" data-t="seePrices">Bekijk de prijzen</a>
+          </div>
+        </div>
+        <figure class="page-hero-photo unveil"><img src="../img/pc-room.webp" alt="" /></figure>
+      </section>
+
+      <!-- Behandelkamers: every treatment its own room; the reel slides sideways and leans with the scroll (after AUGE) -->
+      <section class="rooms" id="kamers" aria-labelledby="rooms-title">
+        <div class="rooms-pin">
+          <div class="rooms-head">
+            <p class="eyebrow" data-t="treatEyebrow">Behandelingen</p>
+            <h2 id="rooms-title" class="title" data-t="roomsTitleShort" data-html>Kies <em>je kamer.</em></h2>
+            <div class="rooms-filter" role="tablist" id="rooms-filter"></div>
+          </div>
+          <div class="rooms-track" id="rooms-track"></div>
+          <div class="rooms-progress" aria-hidden="true"><i id="rooms-bar"></i></div>
+        </div>
+      </section>
+
+      <!-- Alle behandelingen, kort: for who knows what they look for -->
+      <section class="treat-index" aria-labelledby="index-title">
+        <div class="section-head">
+          <p class="eyebrow rise" data-t="indexEyebrow">Van A tot Z</p>
+          <h2 id="index-title" class="title lines" data-t="indexTitle" data-html>Alle behandelingen <em>op een rij.</em></h2>
+        </div>
+        <div class="index-grid" id="treat-index"></div>
+      </section>
+
+      <!-- Onder de huid: three layers come apart into a labelled flat-lay (after Body Layout) -->
+      <section class="layers-sec" id="huidlagen" aria-labelledby="layers-title">
+        <div class="section-head">
+          <p class="eyebrow rise" data-t="tocLayers">Onder de huid</p>
+          <h2 id="layers-title" class="title lines" data-t="layersTitle" data-html>Elke laag <em>een eigen aanpak.</em></h2>
+          <p class="note rise" data-t="layersNote">Je huid bestaat uit lagen. Haal ze uit elkaar en zie waar welke behandeling werkt.</p>
+        </div>
+        <div class="layers" id="layers" data-state="stack">
+          <div class="layers-scene" id="layers-scene"></div>
+          <button class="pill pill-ink layers-toggle" id="layers-toggle" type="button" aria-pressed="false"><span>Haal de lagen uit elkaar</span></button>
+        </div>
+      </section>
+
+      <section class="next-band" aria-label="Verder">
+        <a class="next-link rise" href="../resultaten/"><small data-t="nextUp">Verder</small><span data-t="navResults">Resultaten</span><span class="arr">→</span></a>
+      </section>
+    </main>
+
+    <footer class="footer" id="footer"></footer>
+  </body>
+</html>

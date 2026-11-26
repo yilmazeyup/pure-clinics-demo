@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="nl" data-study="creme">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Product · Pure Clinics</title>
+    <meta name="theme-color" content="#f7f3ec" />
+    <link rel="icon" href="../img/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..600&family=Lexend+Peta:wght@100..400&family=Noto+Naskh+Arabic:wght@400;500&display=swap" />
+    <link rel="stylesheet" href="../css/site.css" />
+    <link rel="stylesheet" href="../css/fx.css" />
+    <link rel="stylesheet" href="../css/pages.css" />
+    <script type="module" src="../js/app.js"></script>
+  </head>
+  <body data-page="product">
+    <a class="skip" href="#main" data-t="skip">Naar de inhoud</a>
+    <header class="site-header" id="header"></header>
+    <div class="menu" id="menu" hidden></div>
+
+    <main id="main">
+      <section class="product-hero">
+        <figure class="product-photo"><img id="p-photo" alt="" /></figure>
+        <div class="product-copy">
+          <p class="crumbs"><a href="../">Pure Clinics</a><span aria-hidden="true">/</span><a href="../shop/" data-t="navShop">Shop</a><span aria-hidden="true">/</span><span id="p-crumb"></span></p>
+          <p class="eyebrow" id="p-brand"></p>
+          <h1 class="display" id="p-name"></h1>
+          <p class="product-price" id="p-price"></p>
+          <p class="lede" id="p-desc"></p>
+          <div class="product-buy">
+            <div class="qty big"><button type="button" id="p-minus" aria-label="−">−</button><span id="p-qty">1</span><button type="button" id="p-plus" aria-label="+">+</button></div>
+            <button type="button" class="btn btn-solid" id="p-add" data-t="addToCart">In winkelmand</button>
+          </div>
+          <p class="fine" data-t="pickupNote">Afhalen in Nijmegen of Uden. Je betaalt bij het ophalen.</p>
+          <div class="product-fits" id="p-fits"></div>
+        </div>
+      </section>
+
+      <section class="treat-more" aria-labelledby="p-more-title">
+        <div class="section-head">
+          <p class="eyebrow" data-t="moreEyebrow">Ook interessant</p>
+          <h2 id="p-more-title" class="title" data-t="moreProducts" data-html>Meer <em>uit de shop.</em></h2>
+        </div>
+        <ul class="shop-grid" id="p-more" role="list"></ul>
+      </section>
+    </main>
+
+    <footer class="footer" id="footer"></footer>
+  </body>
+</html>

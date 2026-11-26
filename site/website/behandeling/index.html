@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="nl" data-study="creme">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Behandeling · Pure Clinics</title>
+    <meta name="theme-color" content="#f7f3ec" />
+    <link rel="icon" href="../img/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..600&family=Lexend+Peta:wght@100..400&family=Noto+Naskh+Arabic:wght@400;500&display=swap" />
+    <link rel="stylesheet" href="../css/site.css" />
+    <link rel="stylesheet" href="../css/fx.css" />
+    <link rel="stylesheet" href="../css/pages.css" />
+    <script type="module" src="../js/app.js"></script>
+  </head>
+  <body data-page="treatment">
+    <a class="skip" href="#main" data-t="skip">Naar de inhoud</a>
+    <header class="site-header" id="header"></header>
+    <div class="menu" id="menu" hidden></div>
+
+    <main id="main" class="treat">
+      <section class="treat-hero">
+        <div class="treat-hero-copy">
+          <p class="crumbs"><a href="../">Pure Clinics</a><span aria-hidden="true">/</span><a href="../behandelingen/" data-t="navTreatments">Behandelingen</a><span aria-hidden="true">/</span><span id="t-crumb"></span></p>
+          <p class="eyebrow" id="t-cat"></p>
+          <h1 class="display" id="t-name"></h1>
+          <p class="lede" id="t-intro"></p>
+          <div id="t-deal"></div>
+          <dl class="facts" id="t-facts"></dl>
+          <div class="hero-actions">
+            <a class="btn btn-solid" id="t-book" href="../afspraak/"></a>
+            <a class="btn btn-line" id="t-intake" href="../afspraak/?behandeling=consult"></a>
+          </div>
+        </div>
+        <figure class="treat-hero-photo"><img id="t-photo" alt="" /></figure>
+      </section>
+
+      <section class="treat-body">
+        <div class="treat-text" id="t-text"></div>
+        <aside class="treat-aside" id="t-aside"></aside>
+      </section>
+
+      <!-- The clinic's own before and after photos of this treatment -->
+      <section class="results treat-ba" aria-labelledby="ba-title">
+        <div class="section-head">
+          <p class="eyebrow" data-t="resultsEyebrow">Resultaten</p>
+          <h2 id="ba-title" class="title" data-t="baTitle" data-html>Voor <em>en na.</em></h2>
+        </div>
+        <p class="era-switch" id="era-switch" data-t="eraSwitch" data-html>Zo was het <button type="button" data-side="voor">voor</button>, en zo <button type="button" data-side="na">na</button>.</p>
+        <div class="compare-wrap">
+          <figure class="compare" id="compare">
+            <img class="compare-na" id="compare-na" alt="" />
+            <div class="compare-voor" id="compare-voor"><img alt="" /></div>
+            <div class="compare-handle" id="compare-handle" role="slider" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+              <i></i><span data-t="before">Voor</span><span data-t="after">Na</span>
+            </div>
+          </figure>
+          <div class="compare-side">
+            <div class="compare-pick" id="compare-pick" role="listbox"></div>
+            <p class="fine" data-t="resultsFine">Resultaten verschillen per persoon. Je huidtherapeut bespreekt in de intake wat je mag verwachten.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Laser only: Pure's package prices -->
+      <section class="prices treat-laser" id="t-laser" aria-labelledby="laser-title">
+        <div class="section-head">
+          <p class="eyebrow" data-t="laserEyebrow">Pakketten</p>
+          <h2 id="laser-title" class="title" data-t="laserTitle" data-html>Laserontharen <em>per pakket.</em></h2>
+          <p class="note" data-t="laserNote">Pakketprijzen voor zes behandelingen, zoals Pure ze aanbiedt.</p>
+        </div>
+        <div class="menu-card" id="laser-packages"></div>
+      </section>
+
+      <section class="faq treat-faq" id="t-faq" aria-labelledby="t-faq-title">
+        <div class="section-head">
+          <p class="eyebrow" data-t="faqEyebrow">Veelgestelde vragen</p>
+          <h2 id="t-faq-title" class="title" data-t="faqTitle" data-html>Goed om <em>te weten</em></h2>
+        </div>
+        <div class="faq-body"><div class="faq-list" id="t-faq-list"></div></div>
+      </section>
+
+      <section class="treat-products" id="t-products" aria-labelledby="t-products-title">
+        <div class="section-head">
+          <p class="eyebrow" data-t="productsEyebrow">Producten</p>
+          <h2 id="t-products-title" class="title" data-t="afterTitle" data-html>Voor thuis, <em>na je behandeling.</em></h2>
+        </div>
+        <div class="tile-row" id="t-product-list"></div>
+      </section>
+
+      <section class="treat-more" id="t-more" aria-labelledby="t-more-title">
+        <div class="section-head">
+          <p class="eyebrow" data-t="moreEyebrow">Ook interessant</p>
+          <h2 id="t-more-title" class="title" data-t="moreTitle" data-html>Behandelingen <em>ernaast.</em></h2>
+        </div>
+        <div class="tile-row" id="t-more-list"></div>
+      </section>
+    </main>
+
+    <footer class="footer" id="footer"></footer>
+  </body>
+</html>

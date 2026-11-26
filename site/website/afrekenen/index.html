@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="nl" data-study="creme">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Afrekenen · Pure Clinics</title>
+    <meta name="theme-color" content="#f7f3ec" />
+    <link rel="icon" href="../img/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..600&family=Lexend+Peta:wght@100..400&family=Noto+Naskh+Arabic:wght@400;500&display=swap" />
+    <link rel="stylesheet" href="../css/site.css" />
+    <link rel="stylesheet" href="../css/fx.css" />
+    <link rel="stylesheet" href="../css/pages.css" />
+    <script type="module" src="../js/app.js"></script>
+  </head>
+  <body data-page="checkout" data-title="checkout">
+    <a class="skip" href="#main" data-t="skip">Naar de inhoud</a>
+    <header class="site-header" id="header"></header>
+    <div class="menu" id="menu" hidden></div>
+
+    <main id="main" class="flow">
+      <div class="flow-head">
+        <p class="crumbs"><a href="../">Pure Clinics</a><span aria-hidden="true">/</span><a href="../shop/" data-t="navShop">Shop</a><span aria-hidden="true">/</span><span data-t="checkout">Afrekenen</span></p>
+        <h1 class="title lines" data-t="checkoutTitle" data-html>Je <em>bestelling.</em></h1>
+      </div>
+      <div class="flow-grid">
+        <div class="flow-steps" id="checkout">
+          <fieldset class="flow-step">
+            <legend><span class="num">I</span> <span data-t="pickupWhere">Waar haal je het op?</span></legend>
+            <div class="choice-row" id="c-places"></div>
+            <form class="address" id="c-address" hidden autocomplete="on" onsubmit="return false">
+              <label class="field"><span data-t="name">Naam</span><input name="name" autocomplete="name" /></label>
+              <label class="field"><span data-t="street">Straat en huisnummer</span><input name="street" autocomplete="street-address" /></label>
+              <div class="field-row">
+                <label class="field"><span data-t="postcode">Postcode</span><input name="postcode" autocomplete="postal-code" /></label>
+                <label class="field"><span data-t="city">Plaats</span><input name="city" autocomplete="address-level2" /></label>
+              </div>
+              <label class="field select"><span data-t="country">Land</span><select name="country" autocomplete="country"><option value="NL">Nederland</option><option value="BE">België</option></select></label>
+            </form>
+          </fieldset>
+          <fieldset class="flow-step">
+            <legend><span class="num">II</span> <span data-t="stepYou">Jouw gegevens</span></legend>
+            <div id="c-you"></div>
+          </fieldset>
+          <fieldset class="flow-step">
+            <legend><span class="num">III</span> <span data-t="stepNote">Opmerking</span> <small data-t="optional">(niet verplicht)</small></legend>
+            <label class="field"><span class="sr" data-t="stepNote">Opmerking</span><textarea id="c-note" rows="3" maxlength="500"></textarea></label>
+          </fieldset>
+          <p class="form-error" id="c-error" role="alert" hidden></p>
+        </div>
+        <aside class="flow-summary" id="c-summary" aria-live="polite"></aside>
+      </div>
+    </main>
+
+    <footer class="footer" id="footer"></footer>
+  </body>
+</html>

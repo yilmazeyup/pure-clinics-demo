@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <!-- A design proposal with the clinic's own texts and photos; the real site is pureclinics.nl. -->
+    <!-- Pure Clinics' new website, with the clinic's own texts and photos; the current site is pureclinics.nl. -->
     <meta name="robots" content="noindex, nofollow" />
     <title>Pure Clinics · Huid in balans</title>
     <meta name="description" content="Huidtherapie en huidverbetering in Nijmegen en Uden. Begin met een gratis intake." />
@@ -11,15 +11,13 @@
     <link rel="icon" href="img/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..600&family=Lexend+Peta:wght@100..400&family=Noto+Naskh+Arabic:wght@400;500&display=swap"
-    />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..600&family=Lexend+Peta:wght@100..400&family=Noto+Naskh+Arabic:wght@400;500&display=swap" />
     <link rel="stylesheet" href="css/site.css" />
     <link rel="stylesheet" href="css/fx.css" />
-    <script type="module" src="js/main.js"></script>
+    <link rel="stylesheet" href="css/pages.css" />
+    <script type="module" src="js/app.js"></script>
   </head>
-  <body>
+  <body data-page="home">
     <!-- Loader: the wordmark builds itself out of small squares while the first photo arrives (after Lama Lama) -->
     <div class="loader" id="loader" aria-hidden="true">
       <div class="loader-logo" data-logo></div>
@@ -27,43 +25,11 @@
       <p class="loader-line" data-t="loaderLine">Even je huid laten rusten…</p>
     </div>
     <a class="skip" href="#main" data-t="skip">Naar de inhoud</a>
-
-    <header class="site-header" id="header">
-      <a class="brand" href="#top" aria-label="Pure Clinics" data-logo></a>
-      <nav class="nav" aria-label="Hoofdmenu">
-        <a href="#behandelingen" data-t="navTreatments">Behandelingen</a>
-        <a href="#resultaten" data-t="navResults">Resultaten</a>
-        <a href="#producten" data-t="navProducts">Producten</a>
-        <a href="#team" data-t="navTeam">Team</a>
-        <a href="#reviews" data-t="navReviews">Reviews</a>
-        <a href="#vragen" data-t="navFaq">Vragen</a>
-      </nav>
-      <div class="header-end">
-        <label class="lang">
-          <span class="sr" data-t="language">Taal</span>
-          <select id="lang" aria-label="Taal"></select>
-        </label>
-        <a class="btn btn-solid" href="../app/afspraak/consult" data-book data-t="ctaIntake">Gratis intake</a>
-        <button class="menu-button" id="menu-button" type="button" aria-expanded="false" aria-controls="menu">
-          <span class="sr" data-t="menu">Menu</span><i></i><i></i>
-        </button>
-      </div>
-    </header>
-
-    <div class="menu" id="menu" hidden>
-      <nav aria-label="Menu">
-        <a href="#behandelingen" data-t="navTreatments">Behandelingen</a>
-        <a href="#resultaten" data-t="navResults">Resultaten</a>
-        <a href="#producten" data-t="navProducts">Producten</a>
-        <a href="#team" data-t="navTeam">Team</a>
-        <a href="#reviews" data-t="navReviews">Reviews</a>
-        <a href="#vragen" data-t="navFaq">Vragen</a>
-      </nav>
-      <a class="btn btn-solid" href="../app/afspraak/consult" data-book data-t="ctaIntakePlan">Plan je gratis intake</a>
-    </div>
+    <header class="site-header" id="header"></header>
+    <div class="menu" id="menu" hidden></div>
 
     <main id="main">
-      <!-- Hero: a close-up, as on the sites Pure admires. Each study frames it differently. -->
+      <!-- Hero: a close-up, as on the sites Pure admires -->
       <section class="hero" id="top" aria-labelledby="hero-title">
         <div class="hero-media">
           <img class="hero-img" id="hero-img" src="img/close/c-web81-hero.webp" alt="" />
@@ -74,16 +40,15 @@
           <img src="img/close/c-lips-s.webp" alt="" />
         </div>
         <div class="hero-copy">
+          <a class="deal-chip rise" id="hero-deal" href="prijzen/#acties" hidden></a>
           <p class="eyebrow rise" data-t="heroEyebrow">Huidtherapie · Nijmegen &amp; Uden</p>
           <h1 id="hero-title" class="display lines" data-t="heroTitle" data-html>Huid in <em>balans.</em></h1>
           <p class="lede rise" data-t="heroLede">Eerlijk advies van hbo-opgeleide huidtherapeuten, en behandelingen die bij jóuw huid passen.</p>
           <div class="hero-actions rise">
-            <a class="btn btn-solid" href="../app/afspraak/consult" data-book data-t="ctaIntakePlan">Plan je gratis intake</a>
-            <a class="btn btn-line" href="#behandelingen" data-t="ctaTreatments">Bekijk behandelingen</a>
+            <a class="btn btn-solid" href="afspraak/?behandeling=consult" data-t="ctaIntakePlan">Plan je gratis intake</a>
+            <a class="btn btn-line" href="behandelingen/" data-t="ctaTreatments">Bekijk behandelingen</a>
           </div>
-          <a class="g-chip rise" href="#reviews">
-            <span class="g-logo" aria-hidden="true"></span><b>4,8</b><span class="stars" aria-hidden="true">★★★★★</span><span data-t="heroReviews">62 Google-reviews</span>
-          </a>
+          <a class="g-chip rise" href="#reviews"><span class="g-logo" aria-hidden="true"></span><b>4,8</b><span class="stars" aria-hidden="true">★★★★★</span><span data-t="heroReviews">62 Google-reviews</span></a>
         </div>
         <p class="hero-scroll" aria-hidden="true"><span data-t="scroll">Scroll</span><i></i></p>
       </section>
@@ -100,7 +65,15 @@
         </div>
       </div>
 
-      <!-- Welkom: the clinic's own words, in a card on a photo, as on MVR -->
+      <!-- Merken en keurmerken: right under the photo, so you see first who we work with (Pure, 27 Nov 2026) -->
+      <section class="brands brands-top" aria-labelledby="brands-title">
+        <p id="brands-title" class="eyebrow center rise" data-t="brandsTitle">Merken en keurmerken waar we mee werken</p>
+        <div class="marquee" id="marquee">
+          <ul class="marquee-track" id="brand-track"></ul>
+        </div>
+      </section>
+
+      <!-- Welkom: the clinic's own words, in a card on a photo -->
       <section class="welcome" aria-labelledby="welcome-title">
         <p class="eyebrow rise" data-t="welcomeEyebrow">Welkom bij Pure Clinics</p>
         <h2 id="welcome-title" class="statement words" data-t="welcomeStatement" data-html>
@@ -110,11 +83,11 @@
           <figure class="philosophy-photo unveil"><img src="img/clinic/web-24.webp" alt="" /></figure>
           <div class="philosophy-card rise">
             <h3 class="card-title" data-t="philTitle" data-html>Onze <em>filosofie</em></h3>
-            <p data-t="philBody1">Onze huidtherapeuten zijn hbo-opgeleid en experts in hun vak. Ze werken met de nieuwste behandelmethoden en technieken, en doen er alles aan om jou weer te laten stralen.</p>
-            <p data-t="philBody2">Elk traject begint met een gratis intake van 30 minuten. Je krijgt eerlijk advies over resultaat, risico's en herstel, en daarna beslis je zelf.</p>
-            <a class="btn btn-ghost" href="../app/afspraak/consult" data-book data-t="ctaAppointment">Maak een afspraak</a>
+            <p data-t="philBody1">Onze huidtherapeuten zijn hbo-opgeleid en experts in hun vak.</p>
+            <p data-t="philBody2">Elk traject begint met een gratis intake van 30 minuten.</p>
+            <a class="btn btn-ghost" href="over-ons/" data-t="aboutMore">Meer over ons</a>
           </div>
-          <ul class="marks rise" aria-label="Keurmerken">
+          <ul class="marks rise" data-t-label="marksLabel">
             <li><i class="mask" data-mask="kp"></i><span class="sr">Kwaliteitsregister Paramedici</span></li>
             <li><i class="mask" data-mask="nvh"></i><span class="sr">Nederlandse Vereniging van Huidtherapeuten</span></li>
             <li class="mark-google"><span class="g-logo" aria-hidden="true"></span><span><b>4,8</b> <span class="stars" aria-hidden="true">★★★★★</span><br /><small data-t="googleReviews">Google-reviews</small></span></li>
@@ -122,29 +95,10 @@
         </div>
       </section>
 
-      <!-- Inhoud: a framed index that docks to the side as you read on (after Shopify Editions) -->
-      <section class="toc" id="inhoud" aria-label="Inhoud">
-        <nav class="toc-frame" id="toc" aria-label="Inhoud van deze pagina">
-          <p class="toc-title" data-t="tocTitle">Inhoud</p>
-          <ol>
-            <li><a href="#huidscan"><i>I</i><span data-t="tocScan">Huidscan</span></a></li>
-            <li><a href="#loep"><i>II</i><span data-t="tocLoupe">De loep</span></a></li>
-            <li><a href="#behandelingen"><i>III</i><span data-t="tocTreat">Behandelingen</span></a></li>
-            <li><a href="#prijzen"><i>IV</i><span data-t="tocPrices">Prijskaart</span></a></li>
-            <li><a href="#resultaten"><i>V</i><span data-t="tocResults">Resultaten</span></a></li>
-            <li><a href="#huidlagen"><i>VI</i><span data-t="tocLayers">Onder de huid</span></a></li>
-            <li><a href="#traject"><i>VII</i><span data-t="tocFilm">Jouw traject</span></a></li>
-            <li><a href="#producten"><i>VIII</i><span data-t="tocProducts">Producten</span></a></li>
-            <li><a href="#team"><i>IX</i><span data-t="tocTeam">Team</span></a></li>
-            <li><a href="#intake"><i>X</i><span data-t="tocIntake">Intake</span></a></li>
-          </ol>
-        </nav>
-      </section>
-
       <!-- Huidscan: pick what you recognise and get a route; particles form the concern's name (after Igloo Inc) -->
       <section class="scan" id="huidscan" aria-labelledby="scan-title">
         <div class="section-head">
-          <p class="eyebrow rise"><span class="num">I</span> <span data-t="tocScan">Huidscan</span></p>
+          <p class="eyebrow rise" data-t="tocScan">Huidscan</p>
           <h2 id="scan-title" class="title lines" data-t="scanTitle" data-html>Waar wil je <em>aan werken?</em></h2>
           <p class="note rise" data-t="scanNote">Tik aan wat je herkent. Je krijgt meteen een route die bij jou past.</p>
         </div>
@@ -159,11 +113,39 @@
             <div class="route-full" id="route-full" hidden>
               <p class="route-kicker"><span data-t="routeKicker">Jouw route</span> · <span id="route-count"></span></p>
               <ol class="route-list" id="route-list"></ol>
-              <a class="pill pill-ink route-cta" id="route-cta" href="../app/afspraak/consult" data-book><span data-t="routeCta">Bespreek dit in je gratis intake</span></a>
+              <a class="pill pill-ink route-cta" id="route-cta" href="afspraak/"><span data-t="routeCta">Bespreek dit in je gratis intake</span></a>
             </div>
           </aside>
         </div>
         <div class="scan-float" id="scan-float" aria-hidden="true"><img alt="" /></div>
+      </section>
+
+      <!-- Ontdek: the rest of the site as an index; a photo peeks out at the pointer -->
+      <section class="discover" aria-labelledby="discover-title">
+        <div class="section-head">
+          <p class="eyebrow rise" data-t="discoverEyebrow">Ontdek Pure</p>
+          <h2 id="discover-title" class="title lines" data-t="discoverTitle" data-html>Alles op <em>zijn eigen plek.</em></h2>
+        </div>
+        <nav class="disc-list" id="discover" data-t-label="discoverEyebrow">
+          <a class="disc-row rise" href="behandelingen/" data-photo="pc-skinpen"><i>I</i><span class="disc-name" data-t="navTreatments">Behandelingen</span><span class="disc-line" data-t="discTreat">23 behandelingen, van laser tot huidverbetering</span><span class="arr">→</span></a>
+          <a class="disc-row rise" href="resultaten/" data-photo="pc-acne-skin"><i>II</i><span class="disc-name" data-t="navResults">Resultaten</span><span class="disc-line" data-t="discResults">Echte cliënten, voor en na</span><span class="arr">→</span></a>
+          <a class="disc-row rise" href="prijzen/" data-photo="clinic/web-69"><i>III</i><span class="disc-name" data-t="navPrices">Prijzen</span><span class="disc-line" data-t="discPrices">Alles op één kaart, met de acties van nu</span><span class="arr">→</span></a>
+          <a class="disc-row rise" href="shop/" data-photo="products/scene-mocha"><i>IV</i><span class="disc-name" data-t="navShop">Shop</span><span class="disc-line" data-t="discShop">Medische huidverzorging, af te halen in de kliniek</span><span class="arr">→</span></a>
+          <a class="disc-row rise" href="cadeaubon/" data-photo="cadeaubon/kaart-47"><i>V</i><span class="disc-name" data-t="navGift">Cadeaubon</span><span class="disc-line" data-t="giftTitle">Geef huidverbetering cadeau</span><span class="arr">→</span></a>
+          <a class="disc-row rise" href="over-ons/" data-photo="clinic/web-5"><i>VI</i><span class="disc-name" data-t="navAbout">Over ons</span><span class="disc-line" data-t="discAbout">Ons team, onze werkwijze en de klinieken</span><span class="arr">→</span></a>
+        </nav>
+        <div class="price-peek" id="price-peek" aria-hidden="true"><img alt="" /></div>
+      </section>
+
+      <!-- Cadeaubon: Pure's own card, from the shoot of November 2026 -->
+      <section class="gift-band" aria-labelledby="gift-band-title">
+        <figure class="gift-band-photo unveil"><img src="img/cadeaubon/kaart-46.webp" alt="" /></figure>
+        <div class="gift-band-copy">
+          <p class="eyebrow rise" data-t="giftEyebrow">Cadeaubon</p>
+          <h2 id="gift-band-title" class="title lines" data-t="giftTitleHtml" data-html>Geef huidverbetering <em>cadeau.</em></h2>
+          <p class="rise" id="gift-band-offer"></p>
+          <a class="btn btn-solid rise" href="cadeaubon/" data-t="giftNoteCta">Bekijk de cadeaubon</a>
+        </div>
       </section>
 
       <!-- Van dichtbij: close-ups drift by -->
@@ -183,164 +165,6 @@
             <figure><img src="img/close/c-mask.webp" alt="" loading="lazy" /></figure>
           </div>
         </div>
-      </section>
-
-      <!-- De loep: pick up the loupe and find what a skin therapist looks at (after metic.) -->
-      <section class="loupe-sec" id="loep" aria-labelledby="loupe-title">
-        <div class="section-head">
-          <p class="eyebrow rise"><span class="num">II</span> <span data-t="tocLoupe">De loep</span></p>
-          <h2 id="loupe-title" class="title lines" data-t="loupeTitle" data-html>Kijk zoals <em>een huidtherapeut.</em></h2>
-          <p class="note rise" data-t="loupeNote">Pak de loep en zoek wat een huidtherapeut in je intake bekijkt.</p>
-          <p class="loupe-meta rise"><span class="found" id="loupe-count" aria-live="polite"></span><button type="button" class="link-arrow" id="loupe-all" data-t="loupeShowAll">Laat alles zien</button></p>
-        </div>
-        <div class="loupe-stage" id="loupe-stage">
-          <img class="loupe-photo" id="loupe-photo" src="img/pc-eyes.webp" alt="" loading="lazy" />
-          <div class="loupe-spots" id="loupe-spots"></div>
-          <button class="loupe" id="loupe" type="button" data-t-label="loupeLabel" aria-label="Loep">
-            <span class="loupe-lens" id="loupe-lens"></span><span class="loupe-handle" aria-hidden="true"></span><span class="loupe-tag" aria-hidden="true" data-t="loupeTag">Pak me op</span>
-          </button>
-        </div>
-      </section>
-
-      <!-- Behandelingen: every treatment its own room; the reel slides sideways and leans with the scroll (after AUGE) -->
-      <section class="rooms" id="behandelingen" aria-labelledby="rooms-title">
-        <div class="rooms-pin">
-          <div class="rooms-head">
-            <p class="eyebrow"><span class="num">III</span> <span data-t="treatEyebrow">Behandelingen</span></p>
-            <h2 id="rooms-title" class="title" data-t="roomsTitle" data-html>Elke behandeling <em>een eigen kamer.</em></h2>
-            <div class="rooms-filter" role="tablist" id="rooms-filter"></div>
-          </div>
-          <div class="rooms-track" id="rooms-track"></div>
-          <div class="rooms-progress" aria-hidden="true"><i id="rooms-bar"></i></div>
-        </div>
-      </section>
-
-      <!-- Prijskaart: every price on one card; a photo peeks out at the pointer -->
-      <section class="prices" id="prijzen" aria-labelledby="prices-title">
-        <div class="section-head">
-          <p class="eyebrow rise"><span class="num">IV</span> <span data-t="tocPrices">Prijskaart</span></p>
-          <h2 id="prices-title" class="title lines" data-t="pricesTitle" data-html>Alles op <em>één kaart.</em></h2>
-          <p class="note rise" data-t="pricesNote">Vanafprijzen per behandeling. In je intake krijg je een prijs op maat, per behandeling of per pakket.</p>
-        </div>
-        <div class="menu-card" id="menu-card"></div>
-        <div class="price-peek" id="price-peek" aria-hidden="true"><img alt="" /></div>
-      </section>
-
-      <!-- Resultaten -->
-      <section class="results" id="resultaten" aria-labelledby="results-title">
-        <!-- One drop of serum stays while the room turns to mocha and the headline slides in (after Oryzo AI) -->
-        <div class="drop-stage" id="drop-stage">
-          <div class="drop-pin">
-            <canvas class="drop-gl" id="drop-gl" aria-hidden="true"></canvas>
-            <p class="eyebrow drop-eyebrow"><span class="num">V</span> <span data-t="resultsEyebrow">Resultaten</span></p>
-            <h2 id="results-title" class="drop-title"><span class="drop-left" data-t="dropLeft">Echte huid,</span> <span class="drop-right" data-t="dropRight" data-html><em>echte cliënten.</em></span></h2>
-            <p class="drop-note" data-t="resultsNote">Foto's van cliënten van Pure Clinics, voor en na. Sleep de lijn.</p>
-          </div>
-        </div>
-        <!-- The words are the switch: "voor" shows the photo before, "na" the one after (after ERA Residence) -->
-        <p class="era-switch rise" id="era-switch" data-t="eraSwitch" data-html>Zo was het <button type="button" data-side="voor">voor</button>, en zo <button type="button" data-side="na">na</button>.</p>
-        <div class="compare-wrap">
-          <figure class="compare" id="compare">
-            <img class="compare-na" id="compare-na" alt="" />
-            <div class="compare-voor" id="compare-voor"><img alt="" /></div>
-            <div class="compare-handle" id="compare-handle" role="slider" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
-              <i></i><span data-t="before">Voor</span><span data-t="after">Na</span>
-            </div>
-          </figure>
-          <div class="compare-side">
-            <p class="compare-caption" id="compare-caption"></p>
-            <div class="compare-pick" id="compare-pick" role="listbox"></div>
-            <p class="fine" data-t="resultsFine">Resultaten verschillen per persoon. Je huidtherapeut bespreekt in de intake wat je mag verwachten.</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Onder de huid: three layers come apart into a labelled flat-lay (after Body Layout) -->
-      <section class="layers-sec" id="huidlagen" aria-labelledby="layers-title">
-        <div class="section-head">
-          <p class="eyebrow rise"><span class="num">VI</span> <span data-t="tocLayers">Onder de huid</span></p>
-          <h2 id="layers-title" class="title lines" data-t="layersTitle" data-html>Elke laag <em>een eigen aanpak.</em></h2>
-          <p class="note rise" data-t="layersNote">Je huid bestaat uit lagen. Haal ze uit elkaar en zie waar welke behandeling werkt.</p>
-        </div>
-        <div class="layers" id="layers" data-state="stack">
-          <div class="layers-scene" id="layers-scene"></div>
-          <button class="pill pill-ink layers-toggle" id="layers-toggle" type="button" aria-pressed="false"><span>Haal de lagen uit elkaar</span></button>
-        </div>
-      </section>
-
-      <!-- Jouw traject: one film that the scroll, or a drag on the timeline, plays forwards and back (after GQ & AP) -->
-      <section class="film" id="traject" aria-labelledby="film-title">
-        <div class="film-pin">
-          <div class="film-frames" id="film-frames">
-            <img src="img/pc-consult.webp" alt="" loading="lazy" />
-            <img src="img/pc-room.webp" alt="" loading="lazy" />
-            <img src="img/pc-tixel.webp" alt="" loading="lazy" />
-            <img src="img/stock-serum.webp" alt="" loading="lazy" />
-          </div>
-          <div class="film-shade" aria-hidden="true"></div>
-          <div class="film-copy">
-            <p class="eyebrow"><span class="num">VII</span> <span data-t="tocFilm">Jouw traject</span></p>
-            <h2 id="film-title" class="title" data-t="filmTitle" data-html>Van eerste vraag <em>tot nazorg.</em></h2>
-          </div>
-          <ol class="film-captions" id="film-captions">
-            <li><span class="num">I</span><h3 data-t="film1Title">Gratis intake</h3><p data-t="film1Text">Dertig minuten met een hbo-opgeleide huidtherapeut. Ze bekijkt je huid en vraagt naar je achtergrond en verzorging.</p></li>
-            <li><span class="num">II</span><h3 data-t="film2Title">Een plan op maat</h3><p data-t="film2Text">Je gaat naar huis met een behandelplan en een duidelijke prijs, per behandeling of per pakket.</p></li>
-            <li><span class="num">III</span><h3 data-t="film3Title">De behandeling</h3><p data-t="film3Text">In Nijmegen of Uden, met de apparatuur die bij jouw huid past.</p></li>
-            <li><span class="num">IV</span><h3 data-t="film4Title">Nazorg</h3><p data-t="film4Text">Je krijgt nazorgadvies mee voor thuis, en met foto's volgen jullie samen je voortgang.</p></li>
-          </ol>
-          <div class="film-bar">
-            <span class="film-chapter" id="film-chapter"></span>
-            <div class="film-track" id="film-track" role="slider" tabindex="0" data-t-label="filmLabel" aria-label="Spoel door je traject" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-              <i class="film-fill" id="film-fill"></i><i class="film-tick" style="--at: 25%"></i><i class="film-tick" style="--at: 50%"></i><i class="film-tick" style="--at: 75%"></i><b class="film-head" id="film-head"></b>
-            </div>
-            <span class="film-time" id="film-time">0%</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- Producten: a strip of still lifes, then a carousel of products, as on MVR -->
-      <section class="products" id="producten" aria-labelledby="products-title">
-        <div class="strip" aria-hidden="true">
-          <figure class="unveil"><img src="img/products/scene-stone.webp" alt="" /></figure>
-          <figure class="unveil"><img src="img/stock-cream.webp" alt="" /></figure>
-          <figure class="unveil"><img src="img/products/scene-mocha.webp" alt="" /></figure>
-          <figure class="unveil"><img src="img/close/c-touch.webp" alt="" /></figure>
-          <figure class="unveil"><img src="img/products/scene-walnut.webp" alt="" /></figure>
-        </div>
-        <div class="products-body">
-          <div class="products-copy">
-            <p class="eyebrow rise" data-t="productsEyebrow">Producten</p>
-            <h2 id="products-title" class="title lines" data-t="productsTitle" data-html>Kwaliteit <em>staat voorop</em></h2>
-            <p class="rise" data-t="productsBody">Je huidtherapeut adviseert de verzorging die bij jouw huid en je behandeling past. Alleen medische huidverzorging van merken met een bewezen werking.</p>
-            <a class="btn btn-line rise" href="../app/shop" data-app data-t="productsShop">Naar de webshop in de app</a>
-          </div>
-          <div class="carousel" id="carousel">
-            <div class="carousel-track" id="carousel-track"></div>
-            <div class="carousel-nav">
-              <button type="button" class="arrow" id="car-prev" aria-label="Vorige">‹</button>
-              <div class="dots" id="car-dots"></div>
-              <button type="button" class="arrow" id="car-next" aria-label="Volgende">›</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Merken -->
-      <section class="brands" aria-labelledby="brands-title">
-        <p id="brands-title" class="eyebrow center rise" data-t="brandsTitle">Merken en keurmerken waar we mee werken</p>
-        <div class="marquee" id="marquee">
-          <ul class="marquee-track" id="brand-track"></ul>
-        </div>
-      </section>
-
-      <!-- Team -->
-      <section class="team" id="team" aria-labelledby="team-title">
-        <div class="section-head">
-          <p class="eyebrow rise" data-t="teamEyebrow">Team</p>
-          <h2 id="team-title" class="title lines" data-t="teamTitle" data-html>Onze specialisten <em>in huidtherapie</em></h2>
-          <p class="note rise" data-t="teamNote">Ervaren huidtherapeuten die werken met de nieuwste behandelmethoden en technieken, zodat jij weer vol zelfvertrouwen in de spiegel kijkt.</p>
-        </div>
-        <ul class="people" id="people" role="list"></ul>
       </section>
 
       <!-- Google reviews -->
@@ -364,31 +188,8 @@
         </div>
       </section>
 
-      <!-- Kwaliteit: four squares on a band, as on MVR -->
-      <section class="quality" aria-label="Waarom Pure Clinics">
-        <div class="quality-grid">
-          <div class="rise"><h3 data-t="q1Title">Hbo-huidtherapeuten</h3><p data-t="q1Body">Onze huidtherapeuten zijn hbo-opgeleid, aangesloten bij de NVH en geregistreerd in het Kwaliteitsregister Paramedici.</p></div>
-          <div class="rise"><h3 data-t="q2Title">Vergoeding mogelijk</h3><p data-t="q2Body">Sommige behandelingen worden (deels) vergoed uit je aanvullende verzekering, zoals acnetherapie, couperose, camouflagetherapie en overbeharing in het gezicht. Soms is een verwijzing nodig.</p></div>
-          <div class="rise"><h3 data-t="q3Title">Apparatuur</h3><p data-t="q3Body">Soprano ICE Platinum en GentleMax Pro Plus voor laserontharing, PicoWay voor tatoeages, en Tixel, Sylfirm X en SkinPen voor huidverbetering.</p></div>
-          <div class="rise"><h3 data-t="q4Title">Nazorg</h3><p data-t="q4Body">Na je behandeling krijg je nazorgadvies en verzorging mee die bij je huid past. Met foto's volgen jullie samen je voortgang.</p></div>
-        </div>
-      </section>
-
-      <!-- Veelgestelde vragen -->
-      <section class="faq" id="vragen" aria-labelledby="faq-title">
-        <div class="section-head">
-          <p class="eyebrow rise" data-t="faqEyebrow">Veelgestelde vragen</p>
-          <h2 id="faq-title" class="title lines" data-t="faqTitle" data-html>Goed om <em>te weten</em></h2>
-        </div>
-        <div class="faq-body">
-          <div class="filters faq-filters" id="faq-filters" role="tablist" aria-label="Onderwerp"></div>
-          <div class="faq-list" id="faq-list"></div>
-        </div>
-      </section>
-
-      <!-- Afspraak -->
+      <!-- Afspraak: wipe the steamed-up mirror (after Why Zero); the button rises out of its rings (after Aether 1) -->
       <section class="book" id="intake" aria-labelledby="book-title">
-        <!-- Wipe the steamed-up mirror; draw a circle and it clears (after Why Zero) -->
         <div class="mirror book-photo" id="mirror">
           <img class="mirror-photo" src="img/close/c-mature-hero.webp" alt="" loading="lazy" />
           <canvas class="mirror-fog" id="mirror-fog" aria-hidden="true"></canvas>
@@ -399,55 +200,17 @@
           <h2 id="book-title" class="title lines" data-t="bookTitle" data-html>Plan <em>nu</em> je afspraak</h2>
           <p class="rise" data-t="bookBody">Of je nu last hebt van een huidprobleem of je huid gewoon wilt verbeteren: we kijken eerst naar het totaalplaatje, en maken dan een plan dat bij jou past.</p>
           <div class="hero-actions rise">
-            <!-- The booking button rises out of its rings (after Aether 1) -->
             <div class="ring-cta" id="ring-cta">
               <i aria-hidden="true"></i><i aria-hidden="true"></i><i aria-hidden="true"></i>
-              <a class="btn btn-solid" href="../app/afspraak/consult" data-book data-t="ctaIntakePlan">Plan je gratis intake</a>
+              <a class="btn btn-solid" href="afspraak/?behandeling=consult" data-t="ctaIntakePlan">Plan je gratis intake</a>
             </div>
-            <a class="btn btn-line" href="../app/boeken" data-app data-t="ctaFollowUp">Vervolgafspraak</a>
+            <a class="btn btn-line" href="afspraak/" data-t="ctaFollowUp">Vervolgafspraak</a>
           </div>
           <p class="book-alt rise"><span data-t="orCall">Of bel</span> <a href="tel:+31246792236">024 679 22 36</a> · <a href="mailto:info@pureclinics.nl">info@pureclinics.nl</a></p>
         </div>
       </section>
     </main>
 
-    <footer class="footer">
-      <div class="footer-cols" id="footer-places"></div>
-      <div class="footer-cols footer-links">
-        <div>
-          <p class="footer-kicker" data-t="footFollow">Volg ons</p>
-          <p><a href="https://www.instagram.com/pureclinics_/" target="_blank" rel="noopener">Instagram</a><br /><a href="https://www.facebook.com/pureclinics.huidtherapie" target="_blank" rel="noopener">Facebook</a></p>
-        </div>
-        <div>
-          <p class="footer-kicker" data-t="footAlso">Ook van Pure</p>
-          <p><a href="../app/" data-app data-t="footApp">De Pure-app</a><br /><a href="../beheer/" data-t="footAdmin">Het beheerpaneel</a><br /><a href="../instagram/" data-t="footInstagram">Instagram-voorbeelden</a><br /><a href="../" data-t="footDemo">Over deze demo</a></p>
-        </div>
-      </div>
-      <div class="footer-mark" data-logo aria-hidden="true"></div>
-      <p class="footer-fine" data-t="footFine">Ontwerpvoorstel voor Pure Clinics, met teksten, prijzen en foto's van pureclinics.nl. Productbeelden zijn illustraties. Boeken gaat in deze demo via de Pure-app.</p>
-    </footer>
-
-    <!-- Treatment explanation -->
-    <dialog class="sheet" id="sheet" aria-labelledby="sheet-title">
-      <div class="sheet-inner">
-        <button class="sheet-close" type="button" id="sheet-close" aria-label="Sluiten">×</button>
-        <figure class="sheet-media"><img id="sheet-img" alt="" /></figure>
-        <div class="sheet-body" id="sheet-body"></div>
-      </div>
-    </dialog>
-
-    <!-- The design studies, for Pure to compare -->
-    <aside class="studies" id="studies" aria-label="Ontwerpstudies">
-      <p class="studies-title" data-t="studiesTitle">Kleurpalet</p>
-      <div class="studies-buttons" role="radiogroup">
-        <button type="button" data-study="creme" role="radio" aria-checked="true"><i></i><span>I · Crème</span></button>
-        <button type="button" data-study="karamel" role="radio" aria-checked="false"><i></i><span>II · Karamel</span></button>
-        <button type="button" data-study="walnoot" role="radio" aria-checked="false"><i></i><span>III · Walnoot</span></button>
-      </div>
-      <p class="studies-note" id="studies-note"></p>
-      <button type="button" class="studies-toggle" id="studies-toggle" aria-expanded="true" aria-label="Inklappen">–</button>
-    </aside>
-
-    <a class="book-bar" id="book-bar" href="../app/afspraak/consult" data-book><span data-t="barText">Gratis intake · 30 min</span><b data-t="barCta">Plan nu</b></a>
+    <footer class="footer" id="footer"></footer>
   </body>
 </html>

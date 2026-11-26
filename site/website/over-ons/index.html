@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="nl" data-study="creme">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Over ons · Pure Clinics</title>
+    <meta name="description" content="Het team van Pure Clinics, onze werkwijze en de klinieken in Nijmegen en Uden." />
+    <meta name="theme-color" content="#f7f3ec" />
+    <link rel="icon" href="../img/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..600&family=Lexend+Peta:wght@100..400&family=Noto+Naskh+Arabic:wght@400;500&display=swap" />
+    <link rel="stylesheet" href="../css/site.css" />
+    <link rel="stylesheet" href="../css/fx.css" />
+    <link rel="stylesheet" href="../css/pages.css" />
+    <script type="module" src="../js/app.js"></script>
+  </head>
+  <body data-page="about" data-title="navAbout">
+    <a class="skip" href="#main" data-t="skip">Naar de inhoud</a>
+    <header class="site-header" id="header"></header>
+    <div class="menu" id="menu" hidden></div>
+
+    <main id="main">
+      <section class="page-hero" aria-labelledby="page-title">
+        <div class="page-hero-copy">
+          <p class="crumbs rise"><a href="../">Pure Clinics</a><span aria-hidden="true">/</span><span data-t="navAbout">Over ons</span></p>
+          <h1 id="page-title" class="display lines" data-t="philTitle" data-html>Onze <em>filosofie</em></h1>
+          <p class="lede rise" data-t="philBody1">Onze huidtherapeuten zijn hbo-opgeleid en experts in hun vak.</p>
+          <p class="note rise" data-t="philBody2">Elk traject begint met een gratis intake van 30 minuten.</p>
+        </div>
+        <figure class="page-hero-photo unveil"><img src="../img/clinic/web-24.webp" alt="" /></figure>
+      </section>
+
+      <!-- Jouw traject: one film that the scroll, or a drag on the timeline, plays forwards and back (after GQ & AP) -->
+      <section class="film" id="traject" aria-labelledby="film-title">
+        <div class="film-pin">
+          <div class="film-frames" id="film-frames">
+            <img src="../img/pc-consult.webp" alt="" loading="lazy" />
+            <img src="../img/pc-room.webp" alt="" loading="lazy" />
+            <img src="../img/pc-tixel.webp" alt="" loading="lazy" />
+            <img src="../img/stock-serum.webp" alt="" loading="lazy" />
+          </div>
+          <div class="film-shade" aria-hidden="true"></div>
+          <div class="film-copy">
+            <p class="eyebrow" data-t="tocFilm">Jouw traject</p>
+            <h2 id="film-title" class="title" data-t="filmTitle" data-html>Van eerste vraag <em>tot nazorg.</em></h2>
+          </div>
+          <ol class="film-captions" id="film-captions">
+            <li><span class="num">I</span><h3 data-t="film1Title">Gratis intake</h3><p data-t="film1Text"></p></li>
+            <li><span class="num">II</span><h3 data-t="film2Title">Een plan op maat</h3><p data-t="film2Text"></p></li>
+            <li><span class="num">III</span><h3 data-t="film3Title">De behandeling</h3><p data-t="film3Text"></p></li>
+            <li><span class="num">IV</span><h3 data-t="film4Title">Nazorg</h3><p data-t="film4Text"></p></li>
+          </ol>
+          <div class="film-bar">
+            <span class="film-chapter" id="film-chapter"></span>
+            <div class="film-track" id="film-track" role="slider" tabindex="0" data-t-label="filmLabel" aria-label="Spoel door je traject" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <i class="film-fill" id="film-fill"></i><i class="film-tick" style="--at: 25%"></i><i class="film-tick" style="--at: 50%"></i><i class="film-tick" style="--at: 75%"></i><b class="film-head" id="film-head"></b>
+            </div>
+            <span class="film-time" id="film-time">0%</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Team -->
+      <section class="team" id="team" aria-labelledby="team-title">
+        <div class="section-head">
+          <p class="eyebrow rise" data-t="teamEyebrow">Team</p>
+          <h2 id="team-title" class="title lines" data-t="teamTitle" data-html>Onze specialisten <em>in huidtherapie</em></h2>
+          <p class="note rise" data-t="teamNote"></p>
+        </div>
+        <ul class="people" id="people" role="list"></ul>
+      </section>
+
+      <!-- Kwaliteit: four squares on a band, as on MVR -->
+      <section class="quality" aria-label="Waarom Pure Clinics">
+        <div class="quality-grid">
+          <div class="rise"><h3 data-t="q1Title">Hbo-huidtherapeuten</h3><p data-t="q1Body"></p></div>
+          <div class="rise"><h3 data-t="q2Title">Vergoeding mogelijk</h3><p data-t="q2Body"></p></div>
+          <div class="rise"><h3 data-t="q3Title">Apparatuur</h3><p data-t="q3Body"></p></div>
+          <div class="rise"><h3 data-t="q4Title">Nazorg</h3><p data-t="q4Body"></p></div>
+        </div>
+      </section>
+
+      <!-- De klinieken -->
+      <section class="places" id="klinieken" aria-labelledby="places-title">
+        <div class="section-head">
+          <p class="eyebrow rise" data-t="placesEyebrow">De klinieken</p>
+          <h2 id="places-title" class="title lines" data-t="placesTitle" data-html>Nijmegen <em>en Uden.</em></h2>
+        </div>
+        <div class="places-grid" id="places"></div>
+      </section>
+    </main>
+
+    <footer class="footer" id="footer"></footer>
+  </body>
+</html>

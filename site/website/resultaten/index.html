@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="nl" data-study="creme">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Resultaten · Pure Clinics</title>
+    <meta name="description" content="Voor- en nafoto's van cliënten van Pure Clinics." />
+    <meta name="theme-color" content="#f7f3ec" />
+    <link rel="icon" href="../img/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..600&family=Lexend+Peta:wght@100..400&family=Noto+Naskh+Arabic:wght@400;500&display=swap" />
+    <link rel="stylesheet" href="../css/site.css" />
+    <link rel="stylesheet" href="../css/fx.css" />
+    <link rel="stylesheet" href="../css/pages.css" />
+    <script type="module" src="../js/app.js"></script>
+  </head>
+  <body data-page="results" data-title="navResults">
+    <a class="skip" href="#main" data-t="skip">Naar de inhoud</a>
+    <header class="site-header" id="header"></header>
+    <div class="menu" id="menu" hidden></div>
+
+    <main id="main">
+      <section class="results" id="resultaten" aria-labelledby="results-title">
+        <!-- One drop of serum stays while the room turns to mocha and the headline slides in (after Oryzo AI) -->
+        <div class="drop-stage" id="drop-stage">
+          <div class="drop-pin">
+            <canvas class="drop-gl" id="drop-gl" aria-hidden="true"></canvas>
+            <p class="eyebrow drop-eyebrow" data-t="resultsEyebrow">Resultaten</p>
+            <h1 id="results-title" class="drop-title"><span class="drop-left" data-t="dropLeft">Echte huid,</span> <span class="drop-right" data-t="dropRight" data-html><em>echte cliënten.</em></span></h1>
+            <p class="drop-note" data-t="resultsNote">Foto's van cliënten van Pure Clinics, voor en na. Sleep de lijn.</p>
+          </div>
+        </div>
+        <!-- The words are the switch: "voor" shows the photo before, "na" the one after (after ERA Residence) -->
+        <p class="era-switch rise" id="era-switch" data-t="eraSwitch" data-html>Zo was het <button type="button" data-side="voor">voor</button>, en zo <button type="button" data-side="na">na</button>.</p>
+        <div class="compare-wrap">
+          <figure class="compare" id="compare">
+            <img class="compare-na" id="compare-na" alt="" />
+            <div class="compare-voor" id="compare-voor"><img alt="" /></div>
+            <div class="compare-handle" id="compare-handle" role="slider" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+              <i></i><span data-t="before">Voor</span><span data-t="after">Na</span>
+            </div>
+          </figure>
+          <div class="compare-side">
+            <p class="compare-caption" id="compare-caption"></p>
+            <div class="compare-pick" id="compare-pick" role="listbox"></div>
+            <p class="fine" data-t="resultsFine">Resultaten verschillen per persoon. Je huidtherapeut bespreekt in de intake wat je mag verwachten.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- De loep: pick up the loupe and find what a skin therapist looks at (after metic.) -->
+      <section class="loupe-sec" id="loep" aria-labelledby="loupe-title">
+        <div class="section-head">
+          <p class="eyebrow rise" data-t="tocLoupe">De loep</p>
+          <h2 id="loupe-title" class="title lines" data-t="loupeTitle" data-html>Kijk zoals <em>een huidtherapeut.</em></h2>
+          <p class="note rise" data-t="loupeNote">Pak de loep en zoek wat een huidtherapeut in je intake bekijkt.</p>
+          <p class="loupe-meta rise"><span class="found" id="loupe-count" aria-live="polite"></span><button type="button" class="link-arrow" id="loupe-all" data-t="loupeShowAll">Laat alles zien</button></p>
+        </div>
+        <div class="loupe-stage" id="loupe-stage">
+          <img class="loupe-photo" id="loupe-photo" src="../img/pc-eyes.webp" alt="" loading="lazy" />
+          <div class="loupe-spots" id="loupe-spots"></div>
+          <button class="loupe" id="loupe" type="button" data-t-label="loupeLabel" aria-label="Loep">
+            <span class="loupe-lens" id="loupe-lens"></span><span class="loupe-handle" aria-hidden="true"></span><span class="loupe-tag" aria-hidden="true" data-t="loupeTag">Pak me op</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="next-band" aria-label="Verder">
+        <a class="next-link rise" href="../afspraak/?behandeling=consult"><small data-t="nextUp">Verder</small><span data-t="ctaIntakePlan">Plan je gratis intake</span><span class="arr">→</span></a>
+      </section>
+    </main>
+
+    <footer class="footer" id="footer"></footer>
+  </body>
+</html>

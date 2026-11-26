@@ -61,9 +61,9 @@ function render() {
   $('#name').textContent = person.name;
   $('#intro').textContent = S(person.role === 'roleTherapist' ? 'teamNote' : 'teamNoteOther');
   $('#book').textContent = S('ctaIntakePlan');
-  $('#book').href = `${BASE}../app/afspraak/consult?lang=${lang}`;
+  $('#book').href = `${BASE}afspraak/?behandeling=consult`;
   $('#back').textContent = S('teamBack');
-  $('#back').href = `${BASE}?lang=${lang}#team`;
+  $('#back').href = `${BASE}over-ons/#team`;
   $('#more-title').textContent = S('teamMore');
   $('#more').innerHTML = TEAM.filter((p) => p.id !== person.id)
     .map(

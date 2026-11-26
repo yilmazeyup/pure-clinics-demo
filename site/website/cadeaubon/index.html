@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="nl" data-study="creme">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Cadeaubon · Pure Clinics</title>
+    <meta name="description" content="Geef huidverbetering cadeau: de cadeaubon van Pure Clinics." />
+    <meta name="theme-color" content="#f7f3ec" />
+    <link rel="icon" href="../img/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..600&family=Lexend+Peta:wght@100..400&family=Noto+Naskh+Arabic:wght@400;500&display=swap" />
+    <link rel="stylesheet" href="../css/site.css" />
+    <link rel="stylesheet" href="../css/fx.css" />
+    <link rel="stylesheet" href="../css/pages.css" />
+    <script type="module" src="../js/app.js"></script>
+  </head>
+  <body data-page="giftcard" data-title="navGift">
+    <a class="skip" href="#main" data-t="skip">Naar de inhoud</a>
+    <header class="site-header" id="header"></header>
+    <div class="menu" id="menu" hidden></div>
+
+    <main id="main">
+      <!-- Pure's own gift card, from the shoot of November 2026 -->
+      <section class="gift-hero" aria-labelledby="page-title">
+        <figure class="gift-hero-photo unveil"><img src="../img/cadeaubon/kaart-46.webp" alt="" /></figure>
+        <div class="gift-hero-copy">
+          <p class="crumbs rise"><a href="../">Pure Clinics</a><span aria-hidden="true">/</span><span data-t="navGift">Cadeaubon</span></p>
+          <h1 id="page-title" class="title lines" data-t="giftTitleHtml" data-html>Geef huidverbetering <em>cadeau.</em></h1>
+          <p class="gift-offer rise" id="gift-offer"></p>
+          <form class="gift-form rise" id="gift-form">
+            <fieldset>
+              <legend class="eyebrow" data-t="giftPick">Kies een bedrag</legend>
+              <div class="amounts" id="amounts"></div>
+            </fieldset>
+            <p class="gift-bonus" id="gift-bonus" hidden></p>
+            <label class="field"><span data-t="giftTo">Voor wie?</span><input name="to" maxlength="60" autocomplete="off" /></label>
+            <label class="field"><span><span data-t="giftMessage">Een persoonlijke boodschap</span> <small data-t="optional">(niet verplicht)</small></span><textarea name="message" rows="2" maxlength="200"></textarea></label>
+            <div class="gift-actions">
+              <div class="qty big"><button type="button" id="g-minus" aria-label="−">−</button><span id="g-qty">1</span><button type="button" id="g-plus" aria-label="+">+</button></div>
+              <button type="submit" class="btn btn-solid" data-t="addToCart">In winkelmand</button>
+            </div>
+            <p class="fine" data-t="giftPickup">Je haalt de cadeaubon op in Nijmegen of Uden en betaalt in de kliniek.</p>
+          </form>
+        </div>
+      </section>
+
+      <section class="steps" aria-labelledby="steps-title">
+        <div class="section-head">
+          <p class="eyebrow rise" data-t="howItWorks">Zo werkt het</p>
+          <h2 id="steps-title" class="title lines" data-t="giftStepsTitle" data-html>In drie <em>stappen.</em></h2>
+        </div>
+        <ol class="steps-list">
+          <li class="rise"><span class="num">I</span><h3 data-t="giftStep1">Kies een bedrag</h3><p data-t="giftStep1Text">Hier op de site, of aan de balie in de kliniek.</p></li>
+          <li class="rise"><span class="num">II</span><h3 data-t="giftStep2">Haal hem op</h3><p data-t="giftStep2Text">In Nijmegen of Uden, binnen de openingstijden. Je betaalt bij het ophalen.</p></li>
+          <li class="rise"><span class="num">III</span><h3 data-t="giftStep3">Geef hem cadeau</h3><p data-t="giftStep3Text">In een mooie envelop, klaar om weg te geven.</p></li>
+        </ol>
+      </section>
+
+      <div class="gift-photos" aria-hidden="true">
+        <figure class="unveil"><img src="../img/cadeaubon/kaart-47.webp" alt="" /></figure>
+        <figure class="unveil tall"><img src="../img/cadeaubon/kaart-29.webp" alt="" /></figure>
+        <figure class="unveil"><img src="../img/cadeaubon/kaart-32.webp" alt="" /></figure>
+      </div>
+    </main>
+
+    <footer class="footer" id="footer"></footer>
+  </body>
+</html>

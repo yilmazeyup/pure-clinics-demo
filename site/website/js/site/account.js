@@ -44,6 +44,12 @@ export const account = {
       return read();
     }
   },
+  /** Ends the account with Pure (Huidly removes the profile; orders and confirmed appointments stay with the clinic). */
+  async remove() {
+    await api.deleteMe();
+    token.set(null);
+    write(null);
+  },
   async signOut() {
     await api.logout();
     token.set(null);

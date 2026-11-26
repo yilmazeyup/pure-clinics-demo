@@ -1661,3 +1661,201 @@ a.chip {
 .cart-total b {
   font-weight: 500;
 }
+
+/* ---------- Campaign marks in the shop ---------- */
+
+.shop-link figure,
+.product-photo {
+  position: relative;
+}
+.deal-badge {
+  position: absolute;
+  top: 10px;
+  inset-inline-start: 10px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+.deal-line {
+  margin: -6px 0 12px;
+  font-size: 13px;
+  color: var(--accent);
+}
+
+/* ---------- Footer: company details and legal links ---------- */
+
+.footer-legal {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px 32px;
+}
+.footer-legal .footer-fine {
+  margin: 0;
+  line-height: 1.7;
+}
+.footer-legal-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+}
+.linklike {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.footer .linklike {
+  text-decoration: none;
+}
+.footer .linklike:hover {
+  text-decoration: underline;
+}
+
+/* ---------- Cookie choice ---------- */
+
+.consent {
+  position: fixed;
+  z-index: 60;
+  inset-inline-start: clamp(12px, 2vw, 28px);
+  bottom: clamp(12px, 2vw, 28px);
+  width: min(460px, calc(100vw - 24px));
+  max-height: calc(100svh - 24px);
+  overflow: auto;
+  padding: 22px 22px 18px;
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: max(var(--radius), 4px);
+  box-shadow: 0 30px 80px -30px rgb(63 49 40 / 0.45);
+  transform: translateY(20px);
+  opacity: 0;
+  transition: transform 0.6s var(--ease), opacity 0.5s var(--ease);
+}
+.consent.show {
+  transform: none;
+  opacity: 1;
+}
+.consent-title {
+  margin: 0 0 8px;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 22px;
+}
+.consent-text {
+  margin: 0 0 14px;
+  font-size: 14px;
+  color: var(--body);
+}
+.consent-text a {
+  color: var(--accent);
+}
+.consent-kinds {
+  display: grid;
+  gap: 10px;
+  margin: 0 0 16px;
+}
+.consent-kinds[hidden] {
+  display: none;
+}
+.consent-kind {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 10px;
+  align-items: start;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: max(var(--radius), 4px);
+  cursor: pointer;
+}
+.consent-kind input {
+  width: 18px;
+  height: 18px;
+  margin: 2px 0 0;
+  accent-color: var(--accent);
+}
+.consent-kind b {
+  display: block;
+  font-weight: 400;
+}
+.consent-kind small {
+  display: block;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.consent-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+}
+.consent-actions .btn {
+  flex: 1 1 150px;
+  min-height: 44px;
+}
+.consent-actions .linklike {
+  font-size: 13px;
+  color: var(--body);
+}
+@media (max-width: 860px) {
+  .consent {
+    inset-inline: 10px;
+    bottom: 10px;
+    width: auto;
+  }
+}
+
+/* ---------- Privacy page ---------- */
+
+.legal {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 0 var(--gut) clamp(60px, 8vw, 120px);
+}
+.legal h2 {
+  margin: 44px 0 12px;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 26px;
+}
+.legal p,
+.legal li {
+  color: var(--body);
+}
+.legal ul {
+  padding-inline-start: 20px;
+}
+.legal table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 10px 0 18px;
+}
+.legal th,
+.legal td {
+  text-align: start;
+  vertical-align: top;
+  padding: 8px 10px 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+.legal th {
+  font-weight: 400;
+  color: var(--ink);
+}
+.legal .note-lang {
+  padding: 12px 16px;
+  border-inline-start: 2px solid var(--accent);
+  background: var(--surface);
+}
+.legal [hidden] {
+  display: none;
+}

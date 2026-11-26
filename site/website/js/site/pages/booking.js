@@ -5,6 +5,7 @@ import { $, L, LOCALE, S, byId, data, esc, img, link, onLang, params, photo, pri
 import { account } from '../account.js';
 import { PART_KEY, api } from '../api.js';
 import { errorText, signIn } from '../signin.js';
+import { track } from '../track.js';
 
 const choice = {
   treatment: byId[params.get('behandeling')] ? params.get('behandeling') : 'consult',
@@ -55,6 +56,7 @@ function byHours(from) {
 
 export function start() {
   const box = $('#booking');
+  track('booking_start', { treatment: choice.treatment, location: choice.location ?? '' });
 
   const drawTreatments = () => {
     $('#b-treat').innerHTML = ['consult', 'removal', 'conditions', 'skin', 'hair']
@@ -160,6 +162,7 @@ export function start() {
       drawDays();
     }
     if (name === 'part') choice.part = value;
+    if (e.target.id === 'b-treat' || ['location', 'date', 'part'].includes(name)) track('booking_step', { step: e.target.id === 'b-treat' ? 'treatment' : name, value });
     drawSummary();
   });
 
@@ -171,6 +174,7 @@ export function start() {
     try {
       const note = $('#b-note').value.trim();
       await api.requestAppointment({ treatment: choice.treatment, location: choice.location, date: choice.date, part: choice.part, ...(note ? { note } : {}) });
+      track('generate_lead', { lead_type: 'appointment_request', treatment: choice.treatment, location: choice.location, day_part: choice.part, value: byId[choice.treatment]?.priceFrom ?? 0, currency: 'EUR' });
       done();
     } catch (err) {
       $('#b-error').textContent = errorText(err);

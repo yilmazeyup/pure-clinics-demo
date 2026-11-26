@@ -23,6 +23,7 @@ import {
   watch,
 } from '../core.js';
 import { laserPackages, results } from '../parts.js';
+import { track } from '../track.js';
 import { PRODUCT_RENDER } from '../shell.js';
 
 const t = byId[params.get('id')];
@@ -34,6 +35,7 @@ export function start() {
   }
   document.body.dataset.title = '';
   onLang(draw);
+  track('view_item', { item_category: 'treatment', item_id: t.id, item_name: t.name.nl, price: t.priceFrom, currency: 'EUR' });
   results({ ids: [t.id], perTreatment: 3 });
   if (t.id === 'laser') laserPackages();
   else $('#t-laser')?.remove();

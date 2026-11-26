@@ -5,6 +5,7 @@ import { account } from '../account.js';
 import { api } from '../api.js';
 import { lineName, lineThumb } from '../shell.js';
 import { errorText, signIn } from '../signin.js';
+import { track } from '../track.js';
 
 const order = { method: 'pickup', location: null };
 let delivery = null; // { fee, countries } from Huidly's catalog; without it, only pickup
@@ -94,6 +95,14 @@ export function start() {
         channel: 'site',
         ...(note ? { note } : {}),
       });
+      track('purchase', {
+        transaction_id: res?.order?.number ?? res?.order?.id ?? '',
+        currency: 'EUR',
+        value: res?.order?.total ?? cart.total() + shipping(),
+        shipping: shipping(),
+        delivery: order.method,
+        items: lines.map((l) => ({ item_id: l.id, item_name: lineName(l), item_category: l.kind, price: cart.price(l), quantity: l.qty })),
+      });
       cart.clear();
       const city = data.locations.find((l) => l.id === order.location)?.city ?? '';
       $('#main').innerHTML = `<section class="flow-done text-only"><div>
@@ -132,4 +141,6 @@ export function start() {
     })
     .catch(() => {});
   account.refresh();
+  const start = cart.lines();
+  if (start.length) track('begin_checkout', { currency: 'EUR', value: cart.total(), items: start.map((l) => ({ item_id: l.id, item_category: l.kind, price: cart.price(l), quantity: l.qty })) });
 }

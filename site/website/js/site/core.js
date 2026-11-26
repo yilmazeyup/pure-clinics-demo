@@ -51,8 +51,10 @@ const pickFrom = (list, ...values) => values.find((v) => list.includes(v)) ?? li
 // The third palette was Bordeaux until 23 Nov 2026; old links and stored choices open Walnoot.
 const renamed = (v) => (v === 'bordeaux' ? 'walnoot' : v);
 
+// Pure chose cream with walnut (Neslihan, Nov 2026): the palette panel is gone and the site always opens in Crème.
+// ?studie=karamel|walnoot still shows the other studies for comparison, without remembering it.
 export const state = {
-  study: pickFrom(STUDIES, renamed(params.get('studie')), renamed(store.get('pure-web-study'))),
+  study: pickFrom(STUDIES, renamed(params.get('studie')), 'creme'),
   lang: pickFrom(LANGS, params.get('lang'), store.get('pure-web-lang')),
 };
 root.dataset.study = state.study;
@@ -98,7 +100,35 @@ export function activeCampaigns(now = new Date()) {
   return acties.campaigns.filter((c) => (!c.from || new Date(c.from) <= now) && (!c.until || now <= new Date(c.until)));
 }
 export const dealsFor = (treatmentId) =>
-  activeCampaigns().flatMap((c) => c.deals.filter((d) => d.treatment === treatmentId).map((d) => ({ campaign: c, deal: d })));
+  activeCampaigns().flatMap((c) => (c.deals ?? []).filter((d) => d.treatment === treatmentId).map((d) => ({ campaign: c, deal: d })));
+export const dealsForProduct = (productId) =>
+  activeCampaigns().flatMap((c) => (c.deals ?? []).filter((d) => d.product === productId).map((d) => ({ campaign: c, deal: d })));
+
+/**
+ * Pure's campaigns and gift card offer come from Huidly, where Pure's team keeps them (Campagnes). The site starts with
+ * its own copy (data/acties.json) so it never waits, then takes Huidly's when it answers. What the site reads is
+ * described in docs/website-kampanyalar.md (pure-ivy).
+ */
+export async function refreshFromHuidly() {
+  const base = 'https://huidly.com/api/klant/pure';
+  const get = (p) =>
+    fetch(`${base}/${p}`, { credentials: 'omit', headers: { Accept: 'application/json' } })
+      .then((r) => (r.ok ? r.json() : null))
+      .catch(() => null);
+  const [c, g] = await Promise.all([get('campaigns'), get('gift-cards')]);
+  let changed = false;
+  if (Array.isArray(c?.campaigns)) {
+    acties.campaigns = c.campaigns.map((x) => ({ ...x, deals: Array.isArray(x.deals) ? x.deals : [] }));
+    changed = true;
+  }
+  if (Array.isArray(g?.giftCards)) {
+    const cards = g.giftCards.map((x) => ({ id: x.id, price: x.price, value: x.value ?? x.price }));
+    const best = cards.filter((x) => x.value > x.price).sort((a, b) => b.value - b.price - (a.value - a.price))[0];
+    acties.giftcard = { active: !!best, amount: best?.price ?? 0, bonus: best ? best.value - best.price : 0, cards };
+    changed = true;
+  }
+  return changed;
+}
 export const untilLine = (c) =>
   S('until', { d: new Intl.DateTimeFormat(LOCALE[state.lang], { day: 'numeric', month: 'long', timeZone: 'Europe/Amsterdam' }).format(new Date(c.until)) });
 
@@ -246,6 +276,13 @@ export const cart = {
     if (same) same.qty += line.qty ?? 1;
     else lines.push({ qty: 1, ...line });
     this.save(lines);
+    // For the statistics (site/track.js), if the visitor agreed to them
+    const p = productById[line.id];
+    document.dispatchEvent(
+      new CustomEvent('pure:cart-add', {
+        detail: { id: line.id, kind: line.kind, qty: line.qty ?? 1, price: this.price(line), name: line.kind === 'giftcard' ? `Cadeaubon ${line.amount}` : (p?.name?.nl ?? line.id) },
+      }),
+    );
   },
   setQty(i, qty) {
     const lines = this.lines();

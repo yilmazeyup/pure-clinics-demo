@@ -32,8 +32,24 @@ import {
   watch,
 } from './core.js';
 import { account } from './account.js';
+import { consentPending, openConsent, startConsent } from './consent.js';
+import { acties } from './core.js';
 
 const page = document.body.dataset.page;
+
+/** Pure's company details, as in its own terms (algemene voorwaarden, pureclinics.nl). */
+export const COMPANY = {
+  address: 'Sint Annastraat 1, 6524 EA Nijmegen',
+  kvk: '64095096',
+  vat: 'NL150584647B01',
+  terms: 'https://www.pureclinics.nl/wp-content/uploads/2022/04/algemene-voorwaarden.pdf',
+};
+
+/** The gift card line: Pure's offer from Huidly (what you pay and what the card is worth), or the card on its own. */
+export function drawGiftOffer() {
+  const g = acties.giftcard;
+  $('#gift-note-offer').textContent = g?.active && g.bonus ? S('giftOffer', { a: money(g.amount), b: money(g.bonus) }) : S('giftPlain');
+}
 
 const NAV = [
   ['treatments', 'behandelingen/', 'navTreatments'],
@@ -84,21 +100,14 @@ function drawFrame() {
       <div><p class="footer-kicker" data-t="footAlso"></p><p><a href="${BASE}../app/" data-t="footApp"></a></p></div>
     </div>
     <div class="footer-mark" data-logo aria-hidden="true"></div>
-    <p class="footer-fine">© ${new Date().getFullYear()} Pure Clinics · <span data-t="footFineLive"></span></p>`;
+    <div class="footer-legal">
+      <p class="footer-fine">© ${new Date().getFullYear()} Pure Clinics · <span data-t="footFineLive"></span><br />${COMPANY.address} · KvK ${COMPANY.kvk} · <span data-t="vatShort"></span> ${COMPANY.vat}</p>
+      <p class="footer-fine footer-legal-links"><a href="${link('privacy/')}" data-t="privacyTitle"></a><button type="button" class="linklike" data-cookie-settings data-t="cookieSettings"></button><a href="${COMPANY.terms}" target="_blank" rel="noopener" data-t="termsTitle"></a></p>
+    </div>`;
 
   document.body.insertAdjacentHTML(
     'beforeend',
-    `<aside class="studies collapsed" id="studies" data-t-label="studiesLabel">
-      <p class="studies-title" data-t="studiesTitle"></p>
-      <div class="studies-buttons" role="radiogroup">
-        <button type="button" data-study="creme" role="radio"><i></i><span>I · Crème</span></button>
-        <button type="button" data-study="karamel" role="radio"><i></i><span>II · Karamel</span></button>
-        <button type="button" data-study="walnoot" role="radio"><i></i><span>III · Walnoot</span></button>
-      </div>
-      <p class="studies-note" id="studies-note"></p>
-      <button type="button" class="studies-toggle" id="studies-toggle" aria-expanded="false">+</button>
-    </aside>
-    <a class="book-bar" id="book-bar" href="${bookLink()}"><span data-t="barText"></span><b data-t="barCta"></b></a>
+    `<a class="book-bar" id="book-bar" href="${bookLink()}"><span data-t="barText"></span><b data-t="barCta"></b></a>
     <aside class="gift-note" id="gift-note" hidden data-t-label="giftEyebrow">
       <a class="gift-note-link" href="${link('cadeaubon/')}">
         <img src="${img('cadeaubon/kaart-46-s.webp')}" alt="" />
@@ -134,8 +143,7 @@ export function applyTexts() {
   $$('.arr').forEach((el) => (el.textContent = state.lang === 'ar' ? '←' : '→'));
   $('#lang').value = state.lang;
   $('#lang').setAttribute('aria-label', S('language'));
-  $('#studies-note').textContent = S('study' + state.study[0].toUpperCase() + state.study.slice(1));
-  $('#gift-note-offer').textContent = S('giftOffer', { a: money(100), b: money(15) });
+  drawGiftOffer();
   drawAccount();
   drawPlaces();
 }
@@ -182,7 +190,11 @@ export function lineName(l) {
   return p ? `${p.brand ? p.brand + ' · ' : ''}${p.name[state.lang] ?? p.name.nl}` : l.id;
 }
 export function lineThumb(l) {
-  return l.kind === 'giftcard' ? img('cadeaubon/kaart-47-s.webp') : img(`products/${PRODUCT_RENDER[l.id] ?? 'jar'}.webp`);
+  return l.kind === 'giftcard' ? img('cadeaubon/kaart-47-s.webp') : productImage(productById[l.id] ?? { id: l.id });
+}
+/** A product's photo: the one Pure keeps in Huidly when there is one (https only), else the site's own still life. */
+export function productImage(p) {
+  return typeof p.image === 'string' && p.image.startsWith('https://') ? p.image : img(`products/${PRODUCT_RENDER[p.id] ?? 'jar'}.webp`);
 }
 export const PRODUCT_RENDER = {
   'zo-cleanser': 'pump',
@@ -227,10 +239,14 @@ const NO_GIFT_NOTE = ['giftcard', 'checkout', 'booking', 'account'];
 export function showGiftNote(delay = 1600) {
   const note = $('#gift-note');
   if (NO_GIFT_NOTE.includes(page) || session.get('pure-gift-note') || params.has('geen-cadeaubon')) return;
-  setTimeout(() => {
-    note.hidden = false;
-    requestAnimationFrame(() => requestAnimationFrame(() => note.classList.add('show')));
-  }, delay);
+  const show = () =>
+    setTimeout(() => {
+      note.hidden = false;
+      requestAnimationFrame(() => requestAnimationFrame(() => note.classList.add('show')));
+    }, delay);
+  // Never on top of the cookie question: the note waits until the visitor has chosen.
+  if (consentPending()) document.addEventListener('pure:consent', show, { once: true });
+  else show();
   const close = () => {
     session.set('pure-gift-note', '1');
     note.classList.remove('show');
@@ -256,29 +272,13 @@ export function startShell() {
     drawCart();
   });
 
-  // Palette
-  const studies = $('#studies');
-  const setStudy = (next) => {
-    state.study = next;
-    root.dataset.study = next;
-    store.set('pure-web-study', next);
-    $('meta[name="theme-color"]')?.setAttribute('content', THEME[next]);
-    $$('.studies-buttons button').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.study === next)));
-    $('#studies-note').textContent = S('study' + next[0].toUpperCase() + next.slice(1));
-    document.dispatchEvent(new CustomEvent('pure:study', { detail: next }));
-    syncUrl();
-  };
-  $('.studies-buttons').addEventListener('click', (e) => {
-    const b = e.target.closest('[data-study]');
-    if (b && STUDIES.includes(b.dataset.study)) setStudy(b.dataset.study);
-  });
-  $('#studies-toggle').addEventListener('click', () => {
-    const c = !studies.classList.contains('collapsed');
-    studies.classList.toggle('collapsed', c);
-    $('#studies-toggle').textContent = c ? '+' : '–';
-    $('#studies-toggle').setAttribute('aria-expanded', String(!c));
-  });
-  setStudy(state.study);
+  // Palette: fixed (Crème, Pure's choice); ?studie= still previews the other studies.
+  root.dataset.study = state.study;
+  $('meta[name="theme-color"]')?.setAttribute('content', THEME[state.study]);
+
+  // Cookies: the banner on a first visit, and "Cookie-instellingen" in the footer to change the choice later.
+  startConsent();
+  document.addEventListener('click', (e) => e.target.closest('[data-cookie-settings]') && openConsent(true));
 
   // Menu
   const header = $('#header');

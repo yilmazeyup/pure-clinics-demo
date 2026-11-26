@@ -1,0 +1,6 @@
+{
+  "_note": "Which visitor-statistics tools the site uses. Empty = off. ga4: a Google Analytics 4 measurement ID (G-XXXXXXX) from Pure's own Google account. metaPixel: the Meta Pixel ID from Pure's Business Suite. firstParty: an address that receives the events as JSON (for example a Huidly endpoint). Each one only runs after the visitor agrees to cookies (stats for ga4 and firstParty, marketing for metaPixel). When one is switched on, the privacy page already names it.",
+  "ga4": "",
+  "metaPixel": "",
+  "firstParty": ""
+}

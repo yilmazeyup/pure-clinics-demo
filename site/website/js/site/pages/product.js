@@ -1,7 +1,8 @@
 // One product: what it is, its price, the treatments it goes with, and add to the cart.
-import { $, L, S, byId, cart, data, esc, img, link, money, onLang, params, productById, treatmentLink, watch } from '../core.js';
-import { PRODUCT_RENDER } from '../shell.js';
+import { $, L, S, byId, cart, data, dealsForProduct, esc, link, money, onLang, params, productById, treatmentLink, untilLine, watch } from '../core.js';
+import { productImage } from '../shell.js';
 import { bindAdd, loadStock, productTile, soldOut } from './shop.js';
+import { track } from '../track.js';
 
 const p = productById[params.get('id')];
 let qty = 1;
@@ -11,7 +12,8 @@ export function start() {
     location.replace(link('shop/'));
     return;
   }
-  $('#p-photo').src = img(`products/${PRODUCT_RENDER[p.id] ?? 'jar'}.webp`);
+  track('view_item', { item_category: 'product', item_id: p.id, item_name: p.name.nl, item_brand: p.brand ?? 'Pure Clinics', price: p.price, currency: 'EUR', value: p.price });
+  $('#p-photo').src = productImage(p);
   const setQty = (n) => {
     qty = Math.max(1, Math.min(9, n));
     $('#p-qty').textContent = String(qty);
@@ -38,6 +40,10 @@ export function start() {
     $('#p-name').textContent = L(p.name);
     $('#p-price').textContent = money(p.price);
     $('#p-desc').textContent = L(p.description);
+    $('#p-photo').src = productImage(p);
+    $('#p-deal').innerHTML = dealsForProduct(p.id)
+      .map(({ campaign, deal }) => `<p class="deal-note"><b>${esc(L(campaign.name))}</b> ${esc(L(deal.text))} <small>${untilLine(campaign)}</small></p>`)
+      .join('');
     const fits = (p.after ?? []).filter((id) => byId[id]);
     $('#p-fits').innerHTML = fits.length
       ? `<p class="eyebrow">${S('fitsAfter')}</p><ul class="chips">${fits.map((id) => `<li><a class="chip" href="${treatmentLink(id)}">${esc(L(byId[id].name))}</a></li>`).join('')}</ul>`

@@ -3,6 +3,7 @@
 import { $, S, esc, state } from './core.js';
 import { account } from './account.js';
 import { api, token } from './api.js';
+import { track } from './track.js';
 
 export const errorText = (e) =>
   S(
@@ -80,6 +81,7 @@ export function signIn(box, { onDone, intro = '' } = {}) {
       form.querySelector('button[type=submit]').disabled = true;
       try {
         const { token: t, me, isNew } = await api.signIn(email, code);
+        track(isNew ? 'sign_up' : 'login', { method: 'email_code' });
         // A new client first gives a name; the page only hears about the sign-in once that is done.
         if (isNew || !me?.name) {
           token.set(t);

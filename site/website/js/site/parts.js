@@ -8,6 +8,7 @@ import { startLoupe } from '../fx/loupe.js';
 import { startMirror } from '../fx/mirror.js';
 import { startParticles } from '../fx/particles.js';
 import { TEAM } from '../team-data.js';
+import { track } from './track.js';
 import {
   $,
   $$,
@@ -196,6 +197,7 @@ export function scan() {
     const on = b.getAttribute('aria-pressed') !== 'true';
     b.setAttribute('aria-pressed', String(on));
     on ? picked.add(b.dataset.id) : picked.delete(b.dataset.id);
+    if (on) track('select_content', { content_type: 'concern', item_id: b.dataset.id });
     route();
   });
   onLang(draw);

@@ -129,7 +129,16 @@ function details(me) {
     <label class="field"><span>${S('phone')} <small>${S('optional')}</small></span><input name="phone" type="tel" autocomplete="tel" value="${esc(me.phone ?? '')}" /></label>
     <p class="form-error" role="alert" hidden></p>
     <button class="btn btn-solid" type="submit">${S('save')}</button>
-  </form>`;
+  </form>
+  <div class="danger-zone"><p class="fine">${S('deleteAccountText')}</p><button type="button" class="linklike" id="delete-account">${S('deleteAccount')}</button></div>`;
+  $('#delete-account').addEventListener('click', async () => {
+    if (!confirm(S('deleteAccountSure'))) return;
+    try {
+      await account.remove();
+    } catch (x) {
+      fail(x);
+    }
+  });
   const form = $('#details');
   form.addEventListener('submit', async (e) => {
     e.preventDefault();

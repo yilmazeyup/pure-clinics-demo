@@ -73,6 +73,7 @@ export const api = {
   logout: () => call('POST', 'auth/logout', {}).catch(() => null),
   me: () => call('GET', 'me'),
   updateMe: (fields) => call('PATCH', 'me', fields),
+  deleteMe: () => call('DELETE', 'me'),
   // What Pure offers
   catalog: () => call('GET', 'catalog'),
   availability: (p) => call('GET', `availability?${q(p)}`),

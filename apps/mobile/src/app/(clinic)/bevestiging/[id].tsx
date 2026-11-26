@@ -1,86 +1,74 @@
-import { CLINIC_COLORS, MEMBER } from '@pure-clinics/shared';
+import { CLINIC_COLORS } from '@pure-clinics/shared';
+import * as Linking from 'expo-linking';
 import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, type ReactNode } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
+import { PART_KEY, STATUS_KEY, type DayPart } from '@/api';
 import { Button, IconButton } from '@/components/Button';
 import { Glass } from '@/components/Glass';
 import { Icon, type IconName } from '@/components/Icon';
-import { EASE_OUT, nativeDriver, PressableScale, prefersReducedMotion, useCountUp } from '@/components/Motion';
+import { EASE_OUT, nativeDriver, prefersReducedMotion, useCountUp } from '@/components/Motion';
 import { Photo } from '@/components/Photo';
-import { QrCode } from '@/components/QrCode';
 import { Screen } from '@/components/Screen';
-import { useToast } from '@/components/Toast';
 import { Txt } from '@/components/Txt';
-import { cityName, roleKey, useClinic, type AppointmentView } from '@/clinic';
 import { useI18n } from '@/i18n';
+import { cityName, locationOf, routeUrl } from '@/places';
+import { treatmentOf } from '@/requests';
+import { useAccount } from '@/state/account';
 import { useTheme } from '@/theme';
 
-// Back to the tabs underneath, then to the Home tab.
-function home() {
+// Back to the tabs underneath, then to a tab.
+function leaveTo(href: '/' | '/mijn') {
   if (router.canDismiss()) router.dismissAll();
-  router.navigate('/');
+  router.navigate(href);
 }
 
-export default function ConfirmationScreen() {
+type Params = { id: string; treatment?: string; location?: string; date?: string; part?: string };
+
+/** After a request: what was asked for, and that the clinic confirms the exact time by phone or e-mail. */
+export default function RequestSent() {
   const theme = useTheme();
-  const { id, moved } = useLocalSearchParams<{ id: string; moved?: string }>();
-  const { t, euro } = useI18n();
-  const clinic = useClinic();
-  const toast = useToast();
-  const appointment = clinic.byId(id);
-  if (!appointment) return <Redirect href="/" />;
-  const status = moved
-    ? t('clinic.confirm.moved')
-    : appointment.treatment.deposit
-      ? t('clinic.confirm.paid', { amount: euro(appointment.treatment.deposit) })
-      : appointment.treatment.priceFrom
-        ? t('clinic.confirm.booked')
-        : t('clinic.confirm.free');
+  const params = useLocalSearchParams<Params>();
+  const { t, text } = useI18n();
+  const { me } = useAccount();
+  const treatment = treatmentOf(params.treatment ?? '');
+  const location = locationOf(params.location);
+  const part = (['morning', 'afternoon', 'evening'] as const).find((p) => p === params.part);
+  if (!treatment || !location || !params.date || !part) return <Redirect href="/" />;
+  const firstName = me?.name?.trim().split(/\s+/)[0] ?? '';
 
   return (
     <Screen gap={24} enter={false}>
       <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-        <IconButton icon="close" label={t('common.close')} tone="surface" onPress={home} />
+        <IconButton icon="close" label={t('common.close')} tone="surface" onPress={() => leaveTo('/')} />
       </View>
 
       <View style={{ gap: 14 }}>
         <Seal />
+        <Rise delay={420}>
+          <Txt variant="eyebrow" color={theme.c.muted}>
+            {t('requestSent')}
+          </Txt>
+        </Rise>
         <Rise delay={500}>
-          <Txt variant="hero">{t('clinic.confirm.title', { name: MEMBER.firstName })}</Txt>
+          <Txt variant="hero">{firstName ? t('thanksBooking', { n: firstName }) : t('orderThanks')}</Txt>
         </Rise>
         <Rise delay={620}>
           <Txt variant="body" color={CLINIC_COLORS.body}>
-            {status}
+            {t('bookingDoneText', { t: text(treatment.name), c: cityName(location) })}
           </Txt>
         </Rise>
       </View>
 
-      <Pass appointment={appointment} />
+      <Pass photo={treatment.photo} name={text(treatment.name)} date={params.date} part={part} place={`${cityName(location)} · ${location.address}`} />
 
       <Rise delay={1100}>
-        <View style={{ gap: 12 }}>
-          <View style={{ flexDirection: 'row', gap: 10 }}>
-            <Button kind="light" size="sm" icon="calendar" label={t('clinic.confirm.calendar')} onPress={() => toast(t('common.demoNote'))} style={{ flex: 1 }} />
-            <Button kind="light" size="sm" icon="pin" label={t('clinic.confirm.route')} onPress={() => toast(t('common.demoNote'))} style={{ flex: 1 }} />
-          </View>
-          <PressableScale
-            onPress={() => toast(t('common.demoNote'))}
-            style={{ flexDirection: 'row', alignItems: 'center', gap: 14, padding: 16, borderRadius: theme.r.card, backgroundColor: theme.c.surface, boxShadow: theme.shadow.card }}
-          >
-            <View style={{ width: 42, height: 42, borderRadius: 12, backgroundColor: theme.c.bg, alignItems: 'center', justifyContent: 'center' }}>
-              <Icon name="list" size={20} />
-            </View>
-            <View style={{ flex: 1, gap: 2 }}>
-              <Txt variant="bodyStrong">{t('clinic.confirm.intake')}</Txt>
-              <Txt variant="small" color={CLINIC_COLORS.body}>
-                {t('clinic.confirm.intakeBody', { name: appointment.specialist.name })}
-              </Txt>
-            </View>
-            <Icon name="chevron" size={18} color={theme.c.muted} />
-          </PressableScale>
-          <Button label={t('clinic.confirm.home')} onPress={home} />
+        <View style={{ gap: 10 }}>
+          <Button kind="light" icon="pin" label={t('route')} onPress={() => Linking.openURL(routeUrl(location))} />
+          <Button label={t('myPure')} onPress={() => leaveTo('/mijn')} />
+          <Button kind="secondary" label={t('clinic.confirm.home')} onPress={() => leaveTo('/')} />
         </View>
       </Rise>
     </Screen>
@@ -137,18 +125,16 @@ function Seal() {
 }
 
 /**
- * The appointment as a pass, like a ticket in a wallet: the treatment photo with the date on glass, a torn-off line,
- * then the details and a check-in code. It lifts up from below and tips upright as it arrives.
+ * The request as a pass, like a ticket in a wallet: the treatment photo with the day on glass, a torn-off line, then
+ * where it is and its status. The exact time follows from the clinic. It lifts up from below as it arrives.
  */
-function Pass({ appointment }: { appointment: AppointmentView }) {
+function Pass({ photo, name, date, part, place }: { photo: Parameters<typeof Photo>[0]['photo']; name: string; date: string; part: DayPart; place: string }) {
   const theme = useTheme();
-  const { t, text, dayLong, time } = useI18n();
+  const { t, dateLong } = useI18n();
   const arrive = useRef(new Animated.Value(prefersReducedMotion() ? 1 : 0)).current;
   useEffect(() => {
     Animated.timing(arrive, { toValue: 1, duration: 1000, delay: 700, easing: EASE_OUT, useNativeDriver: nativeDriver }).start();
   }, [arrive]);
-  const { treatment, specialist, location } = appointment;
-  const end = new Date(appointment.start.getTime() + treatment.minutes * 60000);
   return (
     <Animated.View
       style={{
@@ -162,36 +148,35 @@ function Pass({ appointment }: { appointment: AppointmentView }) {
       }}
     >
       <View style={{ borderRadius: 28, backgroundColor: theme.c.surface, overflow: 'hidden', boxShadow: theme.shadow.lift }}>
-        <Photo photo={treatment.photo} style={{ height: 190 }}>
+        <Photo photo={photo} style={{ height: 190 }}>
           <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(50, 38, 30, 0.18)' }]} />
           <View style={{ position: 'absolute', top: 14, start: 14, end: 14, flexDirection: 'row', justifyContent: 'space-between' }}>
             <Glass style={{ borderRadius: 14, paddingHorizontal: 12, paddingVertical: 8 }}>
               <Txt variant="eyebrow" style={{ fontSize: 10 }}>
-                {dayLong(appointment.start)}
+                {dateLong(date)}
               </Txt>
               <Txt variant="title" style={{ fontSize: 22, lineHeight: 26 }}>
-                {`‎${time(appointment.start)}–${time(end)}`}
+                {t(PART_KEY[part])}
               </Txt>
             </Glass>
           </View>
         </Photo>
         <View style={{ padding: 20, gap: 14 }}>
-          <Txt variant="title">{text(treatment.name)}</Txt>
-          <Row icon="user" value={`${specialist.name} · ${t(roleKey(specialist.role))}`} />
-          <Row icon="pin" value={`${cityName(location)} · ${location.address}`} />
+          <Txt variant="title">{name}</Txt>
+          <Row icon="pin" value={place} />
         </View>
         {/* The tear-off line. */}
         <View style={{ marginHorizontal: 20, borderTopWidth: 1.5, borderStyle: 'dashed', borderColor: theme.c.lineStrong }} />
-        <View style={{ padding: 20, flexDirection: 'row', alignItems: 'center', gap: 18 }}>
-          <View style={{ padding: 8, borderRadius: 12, backgroundColor: theme.c.bg }}>
-            <QrCode seed={appointment.start.getDate() + 3} cell={3.4} color={theme.c.ink} />
+        <View style={{ padding: 20, flexDirection: 'row', alignItems: 'center', gap: 14 }}>
+          <View style={{ width: 42, height: 42, borderRadius: 12, backgroundColor: theme.c.bg, alignItems: 'center', justifyContent: 'center' }}>
+            <Icon name="clock" size={20} color={theme.c.primary} />
           </View>
           <View style={{ flex: 1, gap: 4 }}>
             <Txt variant="eyebrow" color={theme.c.muted}>
-              {t('clinic.pass.checkin')}
+              {t(STATUS_KEY.requested)}
             </Txt>
             <Txt variant="small" color={CLINIC_COLORS.body}>
-              {t('clinic.pass.checkinBody')}
+              {t('confirmLater')}
             </Txt>
           </View>
         </View>

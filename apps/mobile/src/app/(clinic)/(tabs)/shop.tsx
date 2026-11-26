@@ -1,5 +1,5 @@
-import { PRODUCTS, productsAfter, type ShopCategory } from '@pure-clinics/shared';
-import { useLocalSearchParams } from 'expo-router';
+import { PRODUCTS, type ShopCategory } from '@pure-clinics/shared';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 
@@ -9,9 +9,12 @@ import { Icon } from '@/components/Icon';
 import { ProductCard } from '@/components/ProductCard';
 import { Rail, Screen } from '@/components/Screen';
 import { Txt } from '@/components/Txt';
+import { useCampaigns } from '@/campaigns';
+import { GiftThumb } from '@/components/CartLineRow';
+import { PressableScale } from '@/components/Motion';
 import { useI18n } from '@/i18n';
-import { useClinic } from '@/clinic';
 import { PAGE_WIDTH, useLayout } from '@/layout';
+import { treatmentOf } from '@/requests';
 import { useTheme } from '@/theme';
 
 type Category = 'all' | ShopCategory;
@@ -20,8 +23,7 @@ const CATEGORIES: Category[] = ['all', 'face', 'aftercare', 'body', 'kits'];
 export default function Shop() {
   const theme = useTheme();
   const { wide, inner } = useLayout();
-  const { t, text } = useI18n();
-  const clinic = useClinic();
+  const { t } = useI18n();
   const params = useLocalSearchParams<{ category?: string; at?: string }>();
   const [category, setCategory] = useState<Category>('all');
 
@@ -31,9 +33,6 @@ export default function Shop() {
     if (match) setCategory(match);
   }, [params.category, params.at]);
 
-  // Suggestions follow the member's next treatment, or else the most recent one.
-  const basis = clinic.next ?? clinic.past[0];
-  const picks = basis ? productsAfter(basis.treatmentId) : [];
   const products = PRODUCTS.filter((p) => category === 'all' || p.category === category);
   // Two products per row on a phone, four on a computer screen.
   const columns = wide ? 4 : 2;
@@ -52,21 +51,7 @@ export default function Shop() {
         {t('shop.intro')}
       </Txt>
 
-      {basis && picks.length > 0 && category === 'all' ? (
-        <View style={{ gap: 12 }}>
-          <View style={{ gap: 2 }}>
-            <Txt variant="title">{t('shop.forYou', { treatment: text(basis.treatment.name) })}</Txt>
-            <Txt variant="small" color={theme.c.muted}>
-              {t('shop.forYouBody', { name: basis.specialist.name })}
-            </Txt>
-          </View>
-          <Rail gap={columnGap}>
-            {picks.map((p) => (
-              <ProductCard key={p.id} product={p} width={wide ? tile : 148} />
-            ))}
-          </Rail>
-        </View>
-      ) : null}
+      {category === 'all' ? <Offers /> : null}
 
       <Rail gap={8}>
         {CATEGORIES.map((c) => (
@@ -80,12 +65,72 @@ export default function Shop() {
         ))}
       </View>
 
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'center', gap: 8 }}>
         <Icon name="check" size={15} color={theme.c.muted} />
-        <Txt variant="small" color={theme.c.muted}>
-          {`${t('shop.returns')} · iDEAL`}
+        <Txt variant="small" color={theme.c.muted} style={{ flexShrink: 1 }}>
+          {t('shopPayNote')}
         </Txt>
       </View>
     </Screen>
+  );
+}
+
+/**
+ * The gift card offer and the campaign of the moment, at the top of the shop. The campaign's deals are treatments,
+ * so they lead to the treatment page; the gift card goes into the cart like a product.
+ */
+function Offers() {
+  const theme = useTheme();
+  const { wide } = useLayout();
+  const { t, text, euro, untilDay } = useI18n();
+  const { campaigns, gift } = useCampaigns();
+  return (
+    <View style={{ flexDirection: wide ? 'row' : 'column', gap: 12 }}>
+      <PressableScale
+        onPress={() => router.push('/cadeaubon')}
+        accessibilityLabel={t('navGift')}
+        style={{ flex: wide ? 1 : undefined, flexDirection: 'row', alignItems: 'center', gap: 16, padding: 14, borderRadius: theme.r.card, backgroundColor: theme.c.surface, boxShadow: theme.shadow.card }}
+      >
+        <GiftThumb width={72} height={88} />
+        <View style={{ flex: 1, gap: 4 }}>
+          <Txt variant="eyebrow" color={theme.c.muted}>
+            {t('giftEyebrow')}
+          </Txt>
+          <Txt variant="heading">{t('giftTitle')}</Txt>
+          {gift && gift.bonus > 0 ? (
+            <Txt variant="small" color={theme.c.ink}>
+              {t('giftOffer', { a: euro(gift.amount), b: euro(gift.bonus) })}
+            </Txt>
+          ) : null}
+        </View>
+        <Icon name="chevron" size={18} color={theme.c.muted} />
+      </PressableScale>
+      {campaigns.map((c) => (
+        <View key={c.id} style={{ flex: wide ? 1 : undefined, padding: 16, gap: 10, borderRadius: theme.r.card, backgroundColor: theme.c.sand }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+            <Icon name="ticket" size={16} color={theme.c.primary} />
+            <Txt variant="eyebrow" color={theme.c.primary} style={{ flex: 1 }}>
+              {c.until ? `${text(c.name)} · ${t('until', { d: untilDay(c.until) })}` : text(c.name)}
+            </Txt>
+          </View>
+          {c.deals.map((deal, index) => {
+            const treatment = treatmentOf(deal.treatment);
+            return (
+              <PressableScale
+                key={`${deal.treatment}-${index}`}
+                accessibilityRole="link"
+                onPress={() => treatment && router.push({ pathname: '/behandeling/[id]', params: { id: treatment.id } })}
+                style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}
+              >
+                <Txt variant="small" color={theme.c.ink} style={{ flex: 1 }}>
+                  {text(deal.text)}
+                </Txt>
+                <Icon name="chevron" size={14} color={theme.c.muted} />
+              </PressableScale>
+            );
+          })}
+        </View>
+      ))}
+    </View>
   );
 }

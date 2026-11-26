@@ -2,8 +2,6 @@ import {
   CONCERNS,
   concernInfo,
   LOCATIONS,
-  MEMBER,
-  TREATMENTS,
   treatmentById,
   type ConcernId,
   type LocationId,
@@ -24,7 +22,8 @@ import { Screen } from '@/components/Screen';
 import { Segmented } from '@/components/Segmented';
 import { TreatmentCard, useOpenTreatment } from '@/components/TreatmentCard';
 import { Txt } from '@/components/Txt';
-import { cityName } from '@/clinic';
+import { cityName } from '@/places';
+import { PURE_TREATMENTS } from '@/requests';
 import { useI18n } from '@/i18n';
 import { startEdge, useLayout } from '@/layout';
 import { useTheme } from '@/theme';
@@ -37,15 +36,15 @@ const CATEGORIES: { id: Category; photo: PhotoKey }[] = [
   { id: 'conditions', photo: 'pc-acne-skin' },
   { id: 'skin', photo: 'pc-skinbooster' },
   { id: 'hair', photo: 'pc-xlhair' },
-  { id: 'beauty', photo: 'pc-nails' },
 ];
+
 
 export default function BookScreen() {
   const theme = useTheme();
   const { t, text } = useI18n();
   const params = useLocalSearchParams<{ concern?: string; at?: string }>();
   const [category, setCategory] = useState<Category>('all');
-  const [location, setLocation] = useState<LocationId>(MEMBER.locationId);
+  const [location, setLocation] = useState<LocationId>('nijmegen');
   const [concern, setConcern] = useState<ConcernId | null>(null);
   const [query, setQuery] = useState('');
 
@@ -61,7 +60,7 @@ export default function BookScreen() {
 
   const forConcern = concern ? (CONCERNS.find((c) => c.id === concern)?.treatments ?? []) : null;
   const needle = query.trim().toLowerCase();
-  const treatments = TREATMENTS.filter(
+  const treatments = PURE_TREATMENTS.filter(
     (tr) =>
       tr.id !== 'consult' &&
       (category === 'all' || tr.category === category) &&

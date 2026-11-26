@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { Pressable } from 'react-native';
 
 import { useI18n } from '@/i18n';
-import { useDemo } from '@/state/demo';
+import { useApp } from '@/state/app';
 import { useTheme } from '@/theme';
 
 import { Icon } from './Icon';
@@ -12,7 +12,7 @@ import { Txt } from './Txt';
 export function CartButton() {
   const theme = useTheme();
   const { t } = useI18n();
-  const { cart } = useDemo();
+  const { cart } = useApp();
   const count = cart.reduce((n, line) => n + line.qty, 0);
   return (
     <Pressable

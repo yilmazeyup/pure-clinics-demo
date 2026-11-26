@@ -9,27 +9,43 @@ import {
 } from '@pure-clinics/shared';
 import * as Haptics from 'expo-haptics';
 import { router } from 'expo-router';
-import { useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Pressable, useWindowDimensions, View } from 'react-native';
 
 import { Badge } from '@/components/Badge';
 import { Button, IconButton } from '@/components/Button';
+import { FACE_SCAN_AVAILABLE, FaceCapture } from '@/components/FaceCapture';
 import { Icon } from '@/components/Icon';
+import { Notice } from '@/components/Notice';
 import { Photo } from '@/components/Photo';
 import { FadeIn } from '@/components/Motion';
 import { Footer, Screen, useModalTop } from '@/components/Screen';
-import { ScanResult, SkinScan } from '@/components/SkinScan';
+import { PhotoScan, ScanSignals } from '@/components/SkinScan';
 import { Txt } from '@/components/Txt';
 import { useI18n } from '@/i18n';
+import type { Outcome } from '@/scan/analyze';
+import { loadFaceFinder, scanPhoto, type ScanFound, type ScanPhoto } from '@/scan/run';
 import { useTheme } from '@/theme';
 
 type Skin = 'calm' | 'sensitive' | 'reactive';
 const SKINS: Skin[] = ['calm', 'sensitive', 'reactive'];
-const QUESTIONS = 4;
+// Three questions and, in the browser, a selfie; a phone build has no camera module, so there it is three questions.
+const QUESTIONS = FACE_SCAN_AVAILABLE ? 4 : 3;
 // Treatments that can irritate skin that reddens easily; the skin therapist decides at the intake.
 const NOT_FOR_REACTIVE: TreatmentId[] = ['tca', 'skinpen', 'tixel'];
 
-/** Four questions and an optional selfie, then a short list of treatments and the free intake. */
+/** What the photo suggests looking at, from the scan's signals (see scan/analyze.ts); the intake decides. */
+function concernsFromScan(outcome: Outcome): ConcernId[] {
+  const found: ConcernId[] = [];
+  if (outcome.overall.redness >= 0.6) found.push('redness');
+  if (outcome.overall.tone >= 0.35) found.push('pigment');
+  if (outcome.overall.blemish >= 0.45) found.push('acne');
+  return found;
+}
+
+type ScanState = 'capture' | 'working' | 'done' | 'no-face' | 'unavailable';
+
+/** Three questions and an optional selfie scan, then the free intake and a short list of treatments. */
 export default function AdviceScreen() {
   const theme = useTheme();
   const { t } = useI18n();
@@ -37,8 +53,11 @@ export default function AdviceScreen() {
   const [concerns, setConcerns] = useState<ConcernId[]>([]);
   const [skin, setSkin] = useState<Skin | null>(null);
   const [treatedBefore, setTreatedBefore] = useState<boolean | null>(null);
-  // The selfie step runs a demo scan on a sample photo: waiting, scanning, then the outcome.
-  const [scan, setScan] = useState<'idle' | 'scanning' | 'done'>('idle');
+  // The selfie step: take or choose a photo, find the face and measure it on the device, then show what it shows.
+  const [scan, setScan] = useState<ScanState>('capture');
+  const [photo, setPhoto] = useState<ScanPhoto | null>(null);
+  const [found, setFound] = useState<ScanFound | null>(null);
+  const round = useRef(0);
   const top = useModalTop();
   const { width } = useWindowDimensions();
   const scanWidth = Math.min(width - 40, 420);
@@ -47,19 +66,46 @@ export default function AdviceScreen() {
   const next = () => setStep((s) => s + 1);
   const result = step >= QUESTIONS;
 
+  // Start fetching the face finder as soon as the photo step is near, so the scan itself is quick.
+  useEffect(() => {
+    if (FACE_SCAN_AVAILABLE && step >= 2) loadFaceFinder().catch(() => {});
+  }, [step]);
+
+  const onPhoto = (taken: ScanPhoto) => {
+    const mine = ++round.current;
+    setPhoto(taken);
+    setFound(null);
+    setScan('working');
+    scanPhoto(taken).then((r) => {
+      if (mine !== round.current) return;
+      if (r.kind === 'found') setFound(r);
+      else setScan(r.kind);
+    });
+  };
+  const retake = () => {
+    round.current++;
+    setPhoto(null);
+    setFound(null);
+    setScan('capture');
+  };
+
   const footer =
     step < 3 ? (
       <Footer>
         <Button label={t('clinic.ai.next')} disabled={!answered} iconAfter="arrow" onPress={next} />
       </Footer>
     ) : step === 3 ? (
-      scan === 'scanning' ? null : scan === 'done' ? (
+      scan === 'working' ? null : scan === 'done' ? (
         <Footer>
           <Button label={t('clinic.scan.continue')} iconAfter="arrow" onPress={next} />
+          <Button kind="quiet" label={t('scanRetake')} onPress={retake} />
+        </Footer>
+      ) : scan === 'unavailable' ? (
+        <Footer>
+          <Button label={t('clinic.ai.next')} iconAfter="arrow" onPress={next} />
         </Footer>
       ) : (
         <Footer>
-          <Button icon="sparkle" label={t('clinic.scan.start')} onPress={() => setScan('scanning')} />
           <Button kind="quiet" label={t('clinic.ai.skip')} onPress={next} />
         </Footer>
       )
@@ -128,33 +174,48 @@ export default function AdviceScreen() {
         </Question>
       ) : null}
 
-      {step === 3 && scan === 'idle' ? (
-        <Question title={t('clinic.ai.q4')} hint={t('clinic.ai.q4Body')}>
-          <SelfieFrame />
+      {step === 3 && scan === 'capture' ? (
+        <Question title={t('clinic.ai.q4')} hint={t('scanHint')}>
+          <FaceCapture width={Math.min(scanWidth, 300)} onPhoto={onPhoto} />
         </Question>
       ) : null}
 
-      {step === 3 && scan !== 'idle' ? (
+      {step === 3 && scan === 'no-face' ? (
+        <View style={{ gap: 16 }}>
+          <Txt variant="display">{t('clinic.ai.q4')}</Txt>
+          <Notice text={t('scanNoFace')} />
+          <Button icon="camera" label={t('scanRetake')} onPress={retake} />
+        </View>
+      ) : null}
+
+      {step === 3 && scan === 'unavailable' ? (
+        <View style={{ gap: 16 }}>
+          <Txt variant="display">{t('clinic.ai.q4')}</Txt>
+          <Notice text={t('scanUnavailable')} />
+        </View>
+      ) : null}
+
+      {step === 3 && (scan === 'working' || scan === 'done') && photo ? (
         <View style={{ gap: 18 }}>
           <View style={{ gap: 6 }}>
-            <Txt variant="display">{scan === 'done' ? t('clinic.scan.result') : t('clinic.scan.scanning')}</Txt>
+            <Txt variant="display">{scan === 'done' ? t('scanResultTitle') : t('scanLooking')}</Txt>
             <Txt variant="body" color={theme.c.muted}>
-              {scan === 'done' ? t('clinic.scan.resultBody') : t('clinic.scan.sample')}
+              {scan === 'done' ? t('scanResultBody') : found ? t('scanPrivacy') : t('scanPreparing')}
             </Txt>
           </View>
           <View style={{ alignSelf: 'center' }}>
-            <SkinScan width={scanWidth} height={Math.round(scanWidth * 1.18)} onDone={() => setScan('done')} />
+            <PhotoScan photo={photo} result={found} width={scanWidth} onDone={() => setScan('done')} />
           </View>
-          {scan === 'done' ? (
+          {scan === 'done' && found ? (
             <FadeIn>
-              <ScanResult />
+              <ScanSignals outcome={found.outcome} />
             </FadeIn>
           ) : null}
         </View>
       ) : null}
 
       {result ? (
-        <Advice concerns={scan === 'done' && !concerns.includes('pigment') ? [...concerns, 'pigment'] : concerns} skin={skin} treatedBefore={treatedBefore} />
+        <Advice concerns={concerns} fromPhoto={scan === 'done' && found ? concernsFromScan(found.outcome) : []} skin={skin} />
       ) : null}
     </Screen>
   );
@@ -235,39 +296,16 @@ function Option({
   );
 }
 
-/** A portrait frame with corner guides; the camera itself is not used in the demo. */
-function SelfieFrame() {
-  const theme = useTheme();
-  const corner = { position: 'absolute' as const, width: 28, height: 28, borderColor: theme.c.ink };
-  return (
-    <View
-      style={{
-        alignSelf: 'center',
-        width: 220,
-        height: 280,
-        borderRadius: theme.r.card,
-        backgroundColor: CLINIC_COLORS.blush,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <View style={{ ...corner, top: 16, left: 16, borderTopWidth: 2, borderLeftWidth: 2, borderTopLeftRadius: 6 }} />
-      <View style={{ ...corner, top: 16, right: 16, borderTopWidth: 2, borderRightWidth: 2, borderTopRightRadius: 6 }} />
-      <View style={{ ...corner, bottom: 16, left: 16, borderBottomWidth: 2, borderLeftWidth: 2, borderBottomLeftRadius: 6 }} />
-      <View style={{ ...corner, bottom: 16, right: 16, borderBottomWidth: 2, borderRightWidth: 2, borderBottomRightRadius: 6 }} />
-      <Icon name="camera" size={30} color={theme.c.muted} />
-    </View>
-  );
-}
-
-function Advice({ concerns, skin, treatedBefore }: { concerns: ConcernId[]; skin: Skin | null; treatedBefore: boolean | null }) {
+/** The free intake first, always; then up to three treatments for what you chose and what the photo showed. */
+function Advice({ concerns, fromPhoto, skin }: { concerns: ConcernId[]; fromPhoto: ConcernId[]; skin: Skin | null }) {
   const theme = useTheme();
   const { t, text, euro, locale } = useI18n();
-  const picks: { treatment: Treatment; concern: ConcernId }[] = [];
-  for (const concern of concerns) {
+  const picks: { treatment: Treatment; concern: ConcernId; photo: boolean }[] = [];
+  const all = [...concerns, ...fromPhoto.filter((c) => !concerns.includes(c))];
+  for (const concern of all) {
     for (const id of CONCERNS.find((c) => c.id === concern)?.treatments ?? []) {
       if (skin === 'reactive' && NOT_FOR_REACTIVE.includes(id)) continue;
-      if (!picks.some((p) => p.treatment.id === id)) picks.push({ treatment: treatmentById(id), concern });
+      if (!picks.some((p) => p.treatment.id === id)) picks.push({ treatment: treatmentById(id), concern, photo: !concerns.includes(concern) });
     }
   }
   const consult = treatmentById('consult');
@@ -281,11 +319,13 @@ function Advice({ concerns, skin, treatedBefore }: { concerns: ConcernId[]; skin
         </Txt>
       </View>
 
-      {treatedBefore === false ? <Recommendation treatment={consult} note={text(consult.description)} badge={t('clinic.book.startHere')} /> : null}
-      {picks.slice(0, 3).map(({ treatment, concern }) => (
+      <Recommendation treatment={consult} note={text(consult.description)} badge={t('clinic.book.startHere')} />
+      {picks.slice(0, 3).map(({ treatment, concern, photo }) => (
         <Recommendation
           key={treatment.id}
           treatment={treatment}
+          badge={photo ? t('scanFound') : undefined}
+          tone={photo ? 'outline' : 'ink'}
           note={`${t('clinic.ai.match', { concern: inSentence(t(`clinic.concern.${concern}`), locale) })} · ${t('clinic.price.from', { price: euro(treatment.priceFrom) })}`}
         />
       ))}
@@ -300,7 +340,7 @@ function Advice({ concerns, skin, treatedBefore }: { concerns: ConcernId[]; skin
   );
 }
 
-function Recommendation({ treatment, note, badge }: { treatment: Treatment; note: string; badge?: string }) {
+function Recommendation({ treatment, note, badge, tone = 'ink' }: { treatment: Treatment; note: string; badge?: string; tone?: 'ink' | 'outline' }) {
   const theme = useTheme();
   const { text } = useI18n();
   return (
@@ -319,7 +359,7 @@ function Recommendation({ treatment, note, badge }: { treatment: Treatment; note
     >
       <Photo photo={treatment.photo} style={{ width: 72, height: 88, borderRadius: theme.r.small }} />
       <View style={{ flex: 1, gap: 4 }}>
-        {badge ? <Badge label={badge} tone="ink" /> : null}
+        {badge ? <Badge label={badge} tone={tone} /> : null}
         <Txt variant="heading">{text(treatment.name)}</Txt>
         <Txt variant="small" color={theme.c.muted}>
           {note}

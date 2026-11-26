@@ -1,11 +1,7 @@
 import {
   CONCERNS,
   DEALS,
-  LASER_SERIES,
-  locationById,
-  MEMBER,
   PURE_CLINICS,
-  specialistById,
   timeOfDay,
   treatmentById,
   type Concern,
@@ -28,12 +24,18 @@ import { PressableScale, useCountUp } from '@/components/Motion';
 import { Photo } from '@/components/Photo';
 import { PureLogo } from '@/components/PureLogo';
 import { Screen } from '@/components/Screen';
-import { SessionRing } from '@/components/SessionRing';
 import { SkinScan } from '@/components/SkinScan';
 import { TreatmentCard } from '@/components/TreatmentCard';
 import { Txt } from '@/components/Txt';
-import { cityName, useClinic, type AppointmentView } from '@/clinic';
+import { PART_KEY, STATUS_KEY, type RemoteAppointment } from '@/api';
+import { campaignPhoto, useCampaigns, type Campaign } from '@/campaigns';
+import { GiftThumb } from '@/components/CartLineRow';
 import { useI18n } from '@/i18n';
+import { cityOf } from '@/places';
+import { treatmentOf, upcoming } from '@/requests';
+import { useAccount } from '@/state/account';
+import { useApp } from '@/state/app';
+import { useMyAppointments } from '@/state/remote';
 import { PAGE_WIDTH, useLayout } from '@/layout';
 import { useTheme } from '@/theme';
 
@@ -64,7 +66,7 @@ function PhoneHome() {
         <QuickActions />
       </Block>
       <Block>
-        <Journey />
+        <Campaigns />
       </Block>
       <Block>
         <ScanBanner />
@@ -82,6 +84,9 @@ function PhoneHome() {
         <Results />
       </Block>
       <Block>
+        <GiftCard />
+      </Block>
+      <Block>
         <Consult />
       </Block>
       <Block>
@@ -93,16 +98,20 @@ function PhoneHome() {
 
 /** A computer screen: the same parts as on the phone, laid out side by side like a website. */
 function WideHome() {
+  const { campaigns } = useCampaigns();
   return (
     <Screen gap={48} width="page" tabs>
       <Hero height={540} />
       <QuickActions />
-      <View style={{ flexDirection: 'row', gap: 24 }}>
-        <View style={{ flex: 1 }}>
-          <Journey />
-        </View>
-        <View style={{ flex: 1 }}>
+      <View style={{ flexDirection: 'row', gap: 24, alignItems: 'flex-start' }}>
+        {campaigns.length ? (
+          <View style={{ flex: 1.2 }}>
+            <Campaigns />
+          </View>
+        ) : null}
+        <View style={{ flex: 1, gap: 24 }}>
           <ScanBanner />
+          <GiftCard />
         </View>
       </View>
       <Popular />
@@ -155,10 +164,17 @@ function Hero({ height }: { height: number }) {
   const insets = useSafeAreaInsets();
   const { wide } = useLayout();
   const { t, dayLong, time } = useI18n();
-  const clinic = useClinic();
-  const phase = skyPhase(clinic.now);
+  const { now } = useApp();
+  const { me } = useAccount();
+  const appointments = useMyAppointments();
+  const next = upcoming(appointments.data)[0];
+  const phase = skyPhase(now);
   useLightStatusBar(wide ? 0 : height);
-  const greeting = t(`clinic.greeting.${timeOfDay(clinic.now)}`, { name: MEMBER.firstName });
+  const part = timeOfDay(now);
+  const firstName = me?.name?.trim().split(/\s+/)[0];
+  const greeting = firstName
+    ? t(`clinic.greeting.${part}`, { name: firstName })
+    : t(part === 'morning' ? 'greetMorning' : part === 'afternoon' ? 'greetAfternoon' : 'greetEvening');
 
   return (
     <ParallaxPhoto photo="pc-intro" height={height} position={{ left: '54%', top: '50%' }} radius={wide ? 28 : 0}>
@@ -166,10 +182,7 @@ function Hero({ height }: { height: number }) {
       {wide ? null : (
         <View style={{ position: 'absolute', top: insets.top + 14, start: 20, end: 14, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
           <PureLogo width={150} color="#FFFFFF" />
-          <View style={{ flexDirection: 'row', gap: 8 }}>
-            <GlassIcon icon="bell" label={t('common.notifications')} />
-            <GlassIcon icon="user" label={t('common.settings')} onPress={() => router.push('/settings')} />
-          </View>
+          <GlassIcon icon="globe" label={t('settings.language')} onPress={() => router.push('/settings')} />
         </View>
       )}
       <View
@@ -180,14 +193,14 @@ function Hero({ height }: { height: number }) {
       >
         <View style={{ gap: 10, flex: wide ? 1 : undefined }}>
           <Txt variant="eyebrow" color="rgba(255, 255, 255, 0.82)">
-            {`${dayLong(clinic.now)} · ${time(clinic.now)} · ${t(`clinic.sky.${phase}`)}`}
+            {`${dayLong(now)} · ${time(now)} · ${t(`clinic.sky.${phase}`)}`}
           </Txt>
           <Txt variant="hero" color="#FFFFFF" accentColor="#FFFFFF" style={wide ? { fontSize: 64, lineHeight: 66 } : { fontSize: 50, lineHeight: 52 }}>
             {greeting}
           </Txt>
         </View>
         <View style={wide ? { width: 420 } : undefined}>
-          {clinic.next ? <NextCard appointment={clinic.next} /> : <NoNextCard />}
+          {next ? <NextCard appointment={next} /> : <NoNextCard />}
         </View>
       </View>
     </ParallaxPhoto>
@@ -204,28 +217,31 @@ function GlassIcon({ icon, label, onPress }: { icon: IconName; label: string; on
   );
 }
 
-/** The next appointment as a live card: what, when, with whom, and how long until then. */
-function NextCard({ appointment }: { appointment: AppointmentView }) {
+/** The next request or appointment, live from Huidly: what, when, where, and whether the clinic confirmed it. */
+function NextCard({ appointment: a }: { appointment: RemoteAppointment }) {
   const theme = useTheme();
-  const { t, text, relativeDay, time, fromNow } = useI18n();
+  const { t, text, textOf, dateShort, clockTime, fromNow } = useI18n();
+  const treatment = treatmentOf(a.treatment);
+  const name = textOf(a.treatmentName, treatment ? text(treatment.name) : a.treatment);
+  const when = a.start ? `${dateShort(a.start)} · ${clockTime(a.start)}` : `${dateShort(a.date)} · ${t(PART_KEY[a.part] ?? 'part_middag')}`;
   return (
-    <PressableScale onPress={() => router.navigate('/mijn')} accessibilityLabel={t('clinic.home.next')} style={{ borderRadius: 22 }}>
+    <PressableScale onPress={() => router.navigate('/mijn')} accessibilityLabel={name} style={{ borderRadius: 22 }}>
       <Glass style={{ borderRadius: 22, padding: 10, flexDirection: 'row', alignItems: 'center', gap: 12 }} interactive>
-        <Photo photo={appointment.treatment.photo} style={{ width: 60, height: 68, borderRadius: 14 }} />
+        <Photo photo={treatment?.photo ?? 'pc-consult'} style={{ width: 60, height: 68, borderRadius: 14 }} />
         <View style={{ flex: 1, gap: 2 }}>
           <Txt variant="eyebrow" color={theme.c.muted} style={{ fontSize: 10 }}>
-            {t('clinic.home.next')}
+            {a.status === 'confirmed' ? t('clinic.home.next') : t('yourRequest')}
           </Txt>
           <Txt variant="heading" numberOfLines={1}>
-            {text(appointment.treatment.name)}
+            {name}
           </Txt>
           <Txt variant="small" color={theme.c.muted} numberOfLines={1}>
-            {`${relativeDay(appointment.start)} · ${time(appointment.start)} · ${appointment.specialist.name} · ${cityName(appointment.location)}`}
+            {`${when} · ${cityOf(a.location)}`}
           </Txt>
         </View>
-        <View style={{ paddingHorizontal: 10, paddingVertical: 8, borderRadius: 12, backgroundColor: theme.c.ink, marginEnd: 4 }}>
-          <Txt variant="caption" color="#FFFFFF" style={{ fontFamily: theme.f.medium }} numberOfLines={1}>
-            {fromNow(appointment.start)}
+        <View style={{ paddingHorizontal: 10, paddingVertical: 8, borderRadius: 12, backgroundColor: a.status === 'confirmed' ? theme.c.ink : theme.c.sand, marginEnd: 4 }}>
+          <Txt variant="caption" color={a.status === 'confirmed' ? '#FFFFFF' : theme.c.ink} style={{ fontFamily: theme.f.medium }} numberOfLines={1}>
+            {a.status === 'confirmed' && a.start ? fromNow(new Date(a.start)) : t(STATUS_KEY[a.status])}
           </Txt>
         </View>
       </Glass>
@@ -251,7 +267,7 @@ function NoNextCard() {
   );
 }
 
-/** Four shortcuts to what members do most. */
+/** Four shortcuts to what clients do most. */
 function QuickActions() {
   const theme = useTheme();
   const { t } = useI18n();
@@ -259,8 +275,8 @@ function QuickActions() {
   const actions: { icon: IconName; label: string; go: () => void }[] = [
     { icon: 'sparkle', label: t('clinic.quick.scan'), go: () => router.push('/advies') },
     { icon: 'calendarPlus', label: t('clinic.quick.intake'), go: () => router.push('/afspraak/consult') },
-    { icon: 'mic', label: t('clinic.quick.assistant'), go: () => router.push('/assistent') },
-    { icon: 'gift', label: t('clinic.quick.deals'), go: () => router.push({ pathname: '/afspraak/[treatmentId]', params: { treatmentId: 'laser' } }) },
+    { icon: 'gift', label: t('navGift'), go: () => router.push('/cadeaubon') },
+    { icon: 'bag', label: t('navShop'), go: () => router.navigate('/shop') },
   ];
   return (
     <View style={{ flexDirection: 'row', gap: 10 }}>
@@ -270,7 +286,7 @@ function QuickActions() {
           onPress={a.go}
           accessibilityLabel={a.label}
           style={[
-            { flex: 1, minHeight: 96, borderRadius: 20, backgroundColor: theme.c.surface, boxShadow: theme.shadow.card, padding: 12, justifyContent: 'space-between', gap: 10 },
+            { flex: 1, minHeight: 96, borderRadius: 20, backgroundColor: theme.c.surface, boxShadow: theme.shadow.card, padding: 12, paddingHorizontal: 10, justifyContent: 'space-between', gap: 10 },
             // A computer screen has room to set the icon beside its label.
             wide ? { minHeight: 72, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', gap: 14, paddingHorizontal: 16 } : null,
           ]}
@@ -278,7 +294,7 @@ function QuickActions() {
           <View style={{ width: 38, height: 38, borderRadius: 12, backgroundColor: theme.c.bg, alignItems: 'center', justifyContent: 'center' }}>
             <Icon name={a.icon} size={19} />
           </View>
-          <Txt variant="smallStrong" numberOfLines={2} style={wide ? { fontSize: 15 } : { fontSize: 12.5, lineHeight: 16 }}>
+          <Txt variant="smallStrong" numberOfLines={2} style={wide ? { fontSize: 15 } : { fontSize: 12, lineHeight: 16, letterSpacing: -0.1 }}>
             {a.label}
           </Txt>
         </PressableScale>
@@ -287,54 +303,91 @@ function QuickActions() {
   );
 }
 
-/** Six weeks after a laser session: the series as a ring, and the next session with the same skin therapist. */
-function Journey() {
-  const theme = useTheme();
-  const { t, text, time, relativeDayInline } = useI18n();
-  const { followUp } = useClinic();
-  const { wide } = useLayout();
-  if (!followUp) return null;
-  const specialist = specialistById(followUp.slot.specialistId);
-  const location = locationById(followUp.locationId);
+/**
+ * Pure's offers of the moment (Black Friday until 1 December), word for word from the website's acties.json, on the
+ * campaign's own photo. Each deal opens its treatment; the whole block disappears by itself after the last day.
+ */
+function Campaigns() {
+  const { campaigns } = useCampaigns();
+  if (!campaigns.length) return null;
   return (
-    <View style={{ backgroundColor: theme.c.surface, borderRadius: theme.r.card, padding: 18, gap: 16, boxShadow: theme.shadow.card, flex: wide ? 1 : undefined }}>
-      <Txt variant="eyebrow" color={theme.c.muted}>
-        {t('clinic.journey.eyebrow', { treatment: text(followUp.treatment.name) })}
-      </Txt>
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 18 }}>
-        <SessionRing done={followUp.session - 1} total={LASER_SERIES} caption={t('clinic.journey.of', { total: LASER_SERIES })} />
-        <View style={{ flex: 1, gap: 6 }}>
-          <Txt variant="title">{t('clinic.home.followUpTitle')}</Txt>
-          <Txt variant="small" color={theme.c.muted}>
-            {t('clinic.home.followUpEyebrow', { n: followUp.weeksAgo })}
-          </Txt>
-        </View>
-      </View>
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, padding: 12, borderRadius: 16, backgroundColor: theme.c.bg }}>
-        <Icon name="clock" size={18} color={theme.c.highlight} />
-        <Txt variant="small" style={{ flex: 1 }}>
-          {t('clinic.journey.slot', {
-            name: specialist.name,
-            when: `${relativeDayInline(followUp.slot.start)} ${time(followUp.slot.start)}`,
-            city: cityName(location),
-          })}
-        </Txt>
-      </View>
-      <Button
-        label={t('clinic.home.followUpCta')}
-        iconAfter="arrow"
-        onPress={() =>
-          router.push({
-            pathname: '/afspraak/[treatmentId]',
-            params: { treatmentId: followUp.treatment.id, specialist: specialist.id, location: location.id, slot: String(followUp.slot.start.getTime()) },
-          })
-        }
-      />
+    <View style={{ gap: 16 }}>
+      {campaigns.map((c) => (
+        <CampaignCard key={c.id} campaign={c} />
+      ))}
     </View>
   );
 }
 
-/** The AI skin scan, previewed: the light keeps sweeping over a face. */
+function CampaignCard({ campaign }: { campaign: Campaign }) {
+  const theme = useTheme();
+  const { t, text, untilDay } = useI18n();
+  return (
+    <View style={{ borderRadius: theme.r.card, overflow: 'hidden', backgroundColor: theme.c.surface, boxShadow: theme.shadow.card }}>
+      <Photo photo={campaignPhoto(campaign)} scrim style={{ height: 190 }}>
+        <View style={{ position: 'absolute', start: 18, end: 18, bottom: 16, gap: 4 }}>
+          {campaign.until ? (
+            <Txt variant="eyebrow" color="rgba(255, 255, 255, 0.86)">
+              {t('until', { d: untilDay(campaign.until) })}
+            </Txt>
+          ) : null}
+          <Txt variant="hero" color="#FFFFFF" style={{ fontSize: 40, lineHeight: 42 }}>
+            {text(campaign.name)}
+          </Txt>
+        </View>
+      </Photo>
+      <View style={{ paddingHorizontal: 16 }}>
+        {campaign.deals.map((deal, index) => {
+          const treatment = treatmentOf(deal.treatment);
+          return (
+            <PressableScale
+              key={`${deal.treatment}-${index}`}
+              accessibilityRole="link"
+              onPress={() => treatment && router.push({ pathname: '/behandeling/[id]', params: { id: treatment.id } })}
+              style={{ flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 14, borderTopWidth: index === 0 ? 0 : 1, borderTopColor: theme.c.line }}
+            >
+              {treatment ? <Photo photo={treatment.photo} style={{ width: 44, height: 52, borderRadius: theme.r.small }} /> : null}
+              <Txt variant="body" style={{ flex: 1 }}>
+                {text(deal.text)}
+              </Txt>
+              <Icon name="chevron" size={16} color={theme.c.muted} />
+            </PressableScale>
+          );
+        })}
+      </View>
+    </View>
+  );
+}
+
+/** The gift card offer (€ 100, € 15 extra from Pure), as long as Pure runs it. */
+function GiftCard() {
+  const theme = useTheme();
+  const { t, euro } = useI18n();
+  const { gift } = useCampaigns();
+  return (
+    <PressableScale
+      onPress={() => router.push('/cadeaubon')}
+      accessibilityLabel={t('navGift')}
+      style={{ flexDirection: 'row', alignItems: 'center', gap: 16, padding: 16, borderRadius: theme.r.card, backgroundColor: theme.c.surface, boxShadow: theme.shadow.card }}
+    >
+      <GiftThumb width={86} height={104} />
+      <View style={{ flex: 1, gap: 6 }}>
+        <Txt variant="eyebrow" color={theme.c.muted}>
+          {t('giftEyebrow')}
+        </Txt>
+        <Txt variant="title">{t('giftTitle')}</Txt>
+        {gift && gift.bonus > 0 ? (
+          <Txt variant="small" color={theme.c.ink}>
+            {t('giftOffer', { a: euro(gift.amount), b: euro(gift.bonus) })}
+          </Txt>
+        ) : null}
+      </View>
+      <Icon name="chevron" size={18} color={theme.c.muted} />
+    </PressableScale>
+  );
+}
+
+/** The skin scan, previewed: the light keeps sweeping over a face. */
 function ScanBanner() {
   const theme = useTheme();
   const { t } = useI18n();
@@ -350,7 +403,7 @@ function ScanBanner() {
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
           <Icon name="sparkle" size={14} color={theme.c.gold} />
           <Txt variant="eyebrow" color={theme.c.gold}>
-            {t('clinic.home.aiEyebrow')}
+            {t('clinic.quick.scan')}
           </Txt>
         </View>
         <Txt variant="title" color="#FFFFFF" accentColor="#FFFFFF">

@@ -1,4 +1,4 @@
-import { DELIVERY_DAYS, productById, treatmentById, type Product } from '@pure-clinics/shared';
+import { DELIVERY_DAYS, productById, SHIPPING_FEE, treatmentById, type Product } from '@pure-clinics/shared';
 import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { View } from 'react-native';
@@ -13,7 +13,8 @@ import { Stepper } from '@/components/Stepper';
 import { useToast } from '@/components/Toast';
 import { Txt } from '@/components/Txt';
 import { useI18n } from '@/i18n';
-import { useDemo } from '@/state/demo';
+import { useApp } from '@/state/app';
+import { useCatalog, useStock } from '@/state/remote';
 import { useTheme } from '@/theme';
 
 export default function ProductScreen() {
@@ -27,24 +28,35 @@ function ProductDetail({ product }: { product: Product }) {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
   const { t, text, euro } = useI18n();
-  const { addToCart } = useDemo();
+  const { addToCart } = useApp();
+  const stock = useStock();
+  const catalog = useCatalog();
+  const soldOut = stock.soldOut(product.id);
+  const price = stock.prices[product.id] ?? product.price;
+  const delivery = catalog.data?.delivery ?? { fee: SHIPPING_FEE, days: DELIVERY_DAYS };
   const toast = useToast();
   const [qty, setQty] = useState(1);
   const name = text(product.name);
-  const after = product.after?.map(treatmentById) ?? [];
+  const linked = stock.byId.get(product.id)?.afterTreatments ?? product.after ?? [];
+  const after = linked.filter((id) => id !== 'beauty').map((id) => treatmentById(id as Parameters<typeof treatmentById>[0])).filter((tr, i, all) => tr.id !== 'consult' && all.indexOf(tr) === i);
 
   const footer = (
     <Footer>
-      {product.soldOut ? (
-        <Button kind="secondary" icon="bell" label={t('shop.notify')} onPress={() => toast(t('shop.notified'))} />
+      {soldOut ? (
+        <>
+          <Button kind="secondary" label={t('soldOut')} disabled />
+          <Txt variant="caption" color={theme.c.muted} align="center">
+            {t('shopSoldOutNote')}
+          </Txt>
+        </>
       ) : (
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
           <Stepper value={qty} onChange={setQty} />
           <Button
-            label={`${t('shop.add')} · ${euro(Math.round(product.price * qty * 100) / 100)}`}
+            label={`${t('shop.add')} · ${euro(Math.round(price * qty * 100) / 100)}`}
             style={{ flex: 1 }}
             onPress={() => {
-              addToCart(product.id, qty);
+              addToCart({ kind: 'product', id: product.id, qty });
               toast(t('shop.added', { name }));
               router.back();
             }}
@@ -73,7 +85,7 @@ function ProductDetail({ product }: { product: Product }) {
           ) : null}
           <Txt variant="display">{name}</Txt>
           <Txt variant="title" color={theme.c.muted}>
-            {euro(product.price)}
+            {soldOut ? `${euro(price)} · ${t('soldOut')}` : euro(price)}
           </Txt>
         </View>
 
@@ -97,8 +109,8 @@ function ProductDetail({ product }: { product: Product }) {
         ) : null}
 
         <View style={{ backgroundColor: theme.c.surface, borderRadius: theme.r.card, paddingHorizontal: 16 }}>
-          <InfoRow icon="truck" label={`${t('shop.ship')} · ${t('shop.shipNote', { days: DELIVERY_DAYS })}`} first />
-          <InfoRow icon="pin" label={`${t('shop.pickup')} · ${t('shop.pickupNote')}`} />
+          <InfoRow icon="pin" label={t('pickupNote')} first />
+          <InfoRow icon="truck" label={`${t('sendHome')} · ${euro(delivery.fee)} · ${t('shop.shipNote', { days: delivery.days })} · ${t('payRequest')}`} />
           <InfoRow icon="check" label={t('shop.returns')} />
         </View>
       </View>

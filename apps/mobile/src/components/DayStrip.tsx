@@ -14,7 +14,7 @@ type Props = {
   onSelect: (day: Date) => void;
   /** Days that cannot be picked, e.g. Sunday at the clinic. */
   isDisabled?: (day: Date) => boolean;
-  /** Days with something of the member's own, shown as a short bar. */
+  /** Days with something of the client's own (a request), shown as a short bar. */
   isMarked?: (day: Date) => boolean;
 };
 

@@ -15,9 +15,8 @@ export default function ClinicLayout() {
       <Stack.Screen name="afspraak/[treatmentId]" />
       <Stack.Screen name="bevestiging/[id]" options={{ gestureEnabled: false }} />
       <Stack.Screen name="advies" options={{ presentation: 'modal' }} />
-      <Stack.Screen name="assistent" options={{ presentation: 'modal' }} />
-      <Stack.Screen name="journaal" />
       <Stack.Screen name="product/[id]" />
+      <Stack.Screen name="cadeaubon" />
       <Stack.Screen name="winkelmand" />
       <Stack.Screen name="afrekenen" />
       <Stack.Screen name="bestelling/[id]" options={{ gestureEnabled: false }} />

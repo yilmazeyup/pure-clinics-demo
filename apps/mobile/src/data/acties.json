@@ -1,0 +1,67 @@
+{
+  "_note": "Pure's own offers, word for word from Pure's texts (Black Friday mail 2026, cadeaubon message). A campaign shows from 'from' until 'until' and then disappears by itself. Only add what Pure confirmed; the Christmas kits wait for Pure's answer on the Clear Skin Kit price.",
+  "giftcard": {
+    "active": true,
+    "amount": 100,
+    "bonus": 15,
+    "cards": [{ "id": "cadeaubon-100", "price": 100, "value": 115 }]
+  },
+  "campaigns": [
+    {
+      "id": "black-friday-2026",
+      "name": { "nl": "Black Friday", "en": "Black Friday", "es": "Black Friday", "fr": "Black Friday", "de": "Black Friday", "it": "Black Friday", "ar": "بلاك فرايداي" },
+      "until": "2026-12-01T23:59:59+01:00",
+      "photo": "pc-skinpen",
+      "deals": [
+        {
+          "treatment": "prx",
+          "text": {
+            "nl": "PRX: van €125 voor €85",
+            "en": "PRX: from €125 to €85",
+            "es": "PRX: de 125 € a 85 €",
+            "fr": "PRX : de 125 € à 85 €",
+            "de": "PRX: von 125 € für 85 €",
+            "it": "PRX: da 125 € a 85 €",
+            "ar": "PRX: من 125 € إلى 85 €"
+          }
+        },
+        {
+          "treatment": "skinpen",
+          "text": {
+            "nl": "SkinPen: losse behandeling van €195 voor €165, of 3 behandelingen van €545 voor €495, inclusief gratis cleanser t.w.v. €50",
+            "en": "SkinPen: one treatment from €195 to €165, or 3 treatments from €545 to €495, including a free cleanser worth €50",
+            "es": "SkinPen: un tratamiento de 195 € a 165 €, o 3 tratamientos de 545 € a 495 €, con un limpiador gratis valorado en 50 €",
+            "fr": "SkinPen : une séance de 195 € à 165 €, ou 3 séances de 545 € à 495 €, avec un nettoyant offert d’une valeur de 50 €",
+            "de": "SkinPen: eine Behandlung von 195 € für 165 €, oder 3 Behandlungen von 545 € für 495 €, inklusive Gratis-Cleanser im Wert von 50 €",
+            "it": "SkinPen: un trattamento da 195 € a 165 €, oppure 3 trattamenti da 545 € a 495 €, con un detergente in omaggio del valore di 50 €",
+            "ar": "SkinPen: جلسة واحدة من 195 € إلى 165 €، أو 3 جلسات من 545 € إلى 495 €، مع منظف مجاني بقيمة 50 €"
+          }
+        },
+        {
+          "treatment": "sylfirm",
+          "text": {
+            "nl": "SylfirmX + gratis PRX-behandeling t.w.v. €125",
+            "en": "SylfirmX + a free PRX treatment worth €125",
+            "es": "SylfirmX + un tratamiento PRX gratis valorado en 125 €",
+            "fr": "SylfirmX + une séance PRX offerte d’une valeur de 125 €",
+            "de": "SylfirmX + gratis PRX-Behandlung im Wert von 125 €",
+            "it": "SylfirmX + un trattamento PRX in omaggio del valore di 125 €",
+            "ar": "SylfirmX + جلسة PRX مجانية بقيمة 125 €"
+          }
+        },
+        {
+          "treatment": "laser",
+          "text": {
+            "nl": "Laserontharen gehele benen: €295 + gratis bikinilijn t.w.v. €75",
+            "en": "Laser hair removal, full legs: €295 + a free bikini line worth €75",
+            "es": "Depilación láser piernas completas: 295 € + ingles gratis valoradas en 75 €",
+            "fr": "Épilation laser jambes entières : 295 € + maillot offert d’une valeur de 75 €",
+            "de": "Laser-Haarentfernung ganze Beine: 295 € + gratis Bikinizone im Wert von 75 €",
+            "it": "Epilazione laser gambe intere: 295 € + inguine in omaggio del valore di 75 €",
+            "ar": "إزالة الشعر بالليزر للساقين كاملتين: 295 € + خط البكيني مجانًا بقيمة 75 €"
+          }
+        }
+      ]
+    }
+  ]
+}

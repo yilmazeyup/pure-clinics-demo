@@ -1,7 +1,7 @@
 import { CLINIC_COLORS, isRTL, type Locale } from '@pure-clinics/shared';
 import { useMemo } from 'react';
 
-import { useDemo } from './state/demo';
+import { useApp } from './state/app';
 
 export type Palette = {
   bg: string;
@@ -117,6 +117,6 @@ export function makeTheme(locale: Locale): Theme {
 }
 
 export function useTheme(): Theme {
-  const { locale } = useDemo();
+  const { locale } = useApp();
   return useMemo(() => makeTheme(locale), [locale]);
 }

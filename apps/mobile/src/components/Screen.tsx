@@ -7,7 +7,7 @@ import { DETAIL_WIDTH, PAGE_WIDTH, useLayout } from '@/layout';
 import { useTheme } from '@/theme';
 
 import { Glass } from './Glass';
-import { Stagger } from './Motion';
+import { nativeDriver, Stagger } from './Motion';
 import { useTabBarSpace } from './TabBar';
 
 const ScrollYContext = createContext<Animated.Value | null>(null);
@@ -70,7 +70,7 @@ export function Screen({
       <Animated.ScrollView
         showsVerticalScrollIndicator={false}
         scrollEventThrottle={16}
-        onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: true })}
+        onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: nativeDriver })}
         contentContainerStyle={[
           {
             paddingTop: insets.top + 8,

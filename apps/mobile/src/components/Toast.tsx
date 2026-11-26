@@ -4,12 +4,13 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useTheme } from '@/theme';
 
+import { nativeDriver } from './Motion';
 import { Txt } from './Txt';
 
 const ToastContext = createContext<(message: string) => void>(() => {});
 
 /**
- * Short confirmation messages, e.g. after a test payment. The toast sits on top of the screens but under
+ * Short confirmation messages, e.g. after adding to the cart. The toast sits on top of the screens but under
  * modal sheets, so sheets give their feedback inside themselves.
  */
 export function ToastProvider({ children }: PropsWithChildren) {
@@ -23,9 +24,9 @@ export function ToastProvider({ children }: PropsWithChildren) {
     (text: string) => {
       if (timer.current) clearTimeout(timer.current);
       setMessage(text);
-      Animated.timing(opacity, { toValue: 1, duration: 180, useNativeDriver: true }).start();
+      Animated.timing(opacity, { toValue: 1, duration: 180, useNativeDriver: nativeDriver }).start();
       timer.current = setTimeout(() => {
-        Animated.timing(opacity, { toValue: 0, duration: 220, useNativeDriver: true }).start(({ finished }) => {
+        Animated.timing(opacity, { toValue: 0, duration: 220, useNativeDriver: nativeDriver }).start(({ finished }) => {
           if (finished) setMessage(null);
         });
       }, 2600);

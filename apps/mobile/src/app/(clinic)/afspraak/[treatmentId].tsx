@@ -1,138 +1,166 @@
-import {
-  addDays,
-  DEALS,
-  freeSlots,
-  MEMBER,
-  LASER_ZONES,
-  LOCATIONS,
-  openingHours,
-  packagePrice,
-  sameDay,
-  specialistById,
-  specialistsFor,
-  startOfDay,
-  TREATMENTS,
-  type Deal,
-  type FreeSlot,
-  type LocationId,
-  type SpecialistId,
-  type Treatment,
-} from '@pure-clinics/shared';
+import { addDays, DEALS, LASER_ZONES, LOCATIONS, packagePrice, startOfDay, type Deal, type LocationId, type Treatment } from '@pure-clinics/shared';
 import * as Haptics from 'expo-haptics';
 import { Redirect, router, useLocalSearchParams } from 'expo-router';
-import { useMemo, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
 
+import { api, ApiError, isoDay, PART_KEY, type DayPart } from '@/api';
+import { useCampaigns } from '@/campaigns';
 import { Button, IconButton } from '@/components/Button';
 import { Chip } from '@/components/Chip';
 import { DayStrip } from '@/components/DayStrip';
+import { Field } from '@/components/Field';
 import { Icon } from '@/components/Icon';
+import { Notice } from '@/components/Notice';
 import { Photo } from '@/components/Photo';
-import { Footer, Rail, Screen } from '@/components/Screen';
+import { Footer, Screen } from '@/components/Screen';
 import { Segmented } from '@/components/Segmented';
+import { SignIn } from '@/components/SignIn';
 import { Txt } from '@/components/Txt';
 import { useI18n } from '@/i18n';
-import { cityName, roleKey, useClinic } from '@/clinic';
-import { DETAIL_WIDTH, useLayout } from '@/layout';
+import { cityName } from '@/places';
+import { treatmentOf, upcoming } from '@/requests';
+import { useAccount } from '@/state/account';
+import { useAvailability, useCatalog, useMyAppointments } from '@/state/remote';
 import { useTheme } from '@/theme';
 
-type Params = { treatmentId: string; location?: string; specialist?: string; slot?: string; replace?: string; deal?: string };
+type Params = { treatmentId: string; location?: string; deal?: string };
+
+const DAYS = 28;
+const PARTS: DayPart[] = ['morning', 'afternoon', 'evening'];
+const DEFAULT_TIMES: Record<DayPart, [string, string]> = { morning: ['09:00', '12:00'], afternoon: ['12:00', '17:00'], evening: ['17:00', '21:00'] };
 
 export default function BookingScreen() {
   const params = useLocalSearchParams<Params>();
-  const treatment = TREATMENTS.find((tr) => tr.id === params.treatmentId);
+  const treatment = treatmentOf(params.treatmentId);
   if (!treatment) return <Redirect href="/boeken" />;
   return <Booking treatment={treatment} params={params} />;
 }
 
+/** When Huidly cannot be reached: the days the clinic is open, so the form still makes sense (sending will say why not). */
+function byOpeningHours(locationId: LocationId, from: Date): Map<string, DayPart[]> {
+  const location = LOCATIONS.find((l) => l.id === locationId);
+  const out = new Map<string, DayPart[]>();
+  for (let i = 0; i < DAYS; i++) {
+    const day = addDays(from, i);
+    const h = location?.hours[day.getDay()];
+    if (!h) continue;
+    const spans: [DayPart, number, number][] = [
+      ['morning', 0, 12],
+      ['afternoon', 12, 17],
+      ['evening', 17, 24],
+    ];
+    out.set(
+      isoDay(day),
+      spans.filter(([, a, b]) => h.open < b && h.close > a + 0.5).map(([id]) => id),
+    );
+  }
+  return out;
+}
+
+/**
+ * Afspraak aanvragen: treatment, clinic, a day and part of the day from Huidly's availability, and a note. The request
+ * lands in Pure's program (Kliniek › Agenda › Aanvragen), where the team confirms the exact time; the app never
+ * promises a slot. Laser zones and a chosen deal travel along in the note.
+ */
 function Booking({ treatment, params }: { treatment: Treatment; params: Params }) {
   const theme = useTheme();
-  const { wide, inner } = useLayout();
-  const { t, text, euro, time, dayShort } = useI18n();
-  const clinic = useClinic();
-  const replacing = params.replace ? clinic.byId(params.replace) : undefined;
+  const { t, text, euro, dateShort, untilDay } = useI18n();
+  const { me, signOut } = useAccount();
+  const catalog = useCatalog();
+  const { dealsFor } = useCampaigns();
+  const mine = useMyAppointments();
 
-  const [locationId, setLocationId] = useState<LocationId>(
-    () => LOCATIONS.find((l) => l.id === params.location)?.id ?? replacing?.locationId ?? MEMBER.locationId,
-  );
-  const team = specialistsFor(treatment, locationId);
-  const [specialistId, setSpecialistId] = useState<SpecialistId | 'any'>(
-    () => team.find((s) => s.id === params.specialist)?.id ?? 'any',
-  );
-  // The member's other appointments block those times; the one being moved does not.
-  const busy = useMemo(() => clinic.appointments.filter((a) => a.id !== params.replace), [clinic.appointments, params.replace]);
-  const days = useMemo(() => Array.from({ length: 14 }, (_, i) => addDays(startOfDay(clinic.now), i)), [clinic.now]);
-  const slotsOn = (day: Date, who: SpecialistId | 'any' = specialistId, where: LocationId = locationId) =>
-    freeSlots(treatment, who, day, clinic.now, where, busy);
+  // Where somebody gives this treatment, as Huidly knows it.
+  const givenAt = catalog.data?.treatments.find((tr) => tr.id === treatment.id)?.locations;
+  const places = LOCATIONS.filter((l) => !givenAt || givenAt.includes(l.id));
+  const [locationId, setLocationId] = useState<LocationId>(() => places.find((l) => l.id === params.location)?.id ?? places[0]?.id ?? 'nijmegen');
+  const place = places.find((l) => l.id === locationId) ?? places[0];
 
-  const suggested = params.slot ? new Date(Number(params.slot)) : null;
-  const [day, setDay] = useState<Date>(() => (suggested ? startOfDay(suggested) : (days.find((d) => slotsOn(d).length > 0) ?? days[0])));
-  const [slot, setSlot] = useState<FreeSlot | null>(() =>
-    suggested ? (slotsOn(startOfDay(suggested)).find((s) => s.start.getTime() === suggested.getTime()) ?? null) : null,
+  const tomorrow = useMemo(() => addDays(startOfDay(new Date()), 1), []);
+  const days = useMemo(() => Array.from({ length: DAYS }, (_, i) => addDays(tomorrow, i)), [tomorrow]);
+  const availability = useAvailability(treatment.id, locationId, DAYS);
+  const open = useMemo(
+    () => (availability.data ? new Map(availability.data.map((d) => [d.date, d.parts])) : availability.error ? byOpeningHours(locationId, tomorrow) : null),
+    [availability.data, availability.error, locationId, tomorrow],
   );
-  const slots = slotsOn(day);
-  const last = clinic.lastSpecialistFor(treatment.id);
-  const firstTime = treatment.id !== 'consult' && treatment.category !== 'beauty' && !clinic.past.some((a) => a.treatmentId === treatment.id);
-  // Laser is priced per zone. A deal from Home fixes the zones; someone who had laser before starts with last time's zones.
+  const partsOn = (day: string | null) => (day && open?.get(day)) || [];
+
+  const [day, setDay] = useState<string | null>(null);
+  const [part, setPart] = useState<DayPart | null>(null);
+  // Once the open days are known, start on the first one; a day that is no longer open is let go.
+  useEffect(() => {
+    if (!open) return;
+    setDay((current) => (current && (open.get(current) ?? []).length ? current : (days.map(isoDay).find((d) => (open.get(d) ?? []).length > 0) ?? null)));
+    setPart(null);
+  }, [open, days]);
+
+  const times = (p: DayPart) => {
+    const found = catalog.data?.dayParts.find((d) => d.id === p);
+    return found ? [found.from, found.to] : DEFAULT_TIMES[p];
+  };
+
+  // Laser is priced per zone. A deal from Home fixes the zones; otherwise the client picks them.
   const laser = treatment.id === 'laser';
   const [deal, setDeal] = useState<Deal | null>(() => DEALS.find((d) => d.id === params.deal) ?? null);
-  const [zones, setZones] = useState<string[]>(() => (clinic.past.some((a) => a.treatmentId === 'laser') ? ['armpits', 'bikini'] : []));
+  const [zones, setZones] = useState<string[]>([]);
   const [pack, setPack] = useState(false);
   const zoneTotal = zones.reduce((sum, id) => sum + (LASER_ZONES.find((z) => z.id === id)?.price ?? 0), 0);
   const perTime = deal ? deal.price : pack ? packagePrice(zoneTotal) : zoneTotal;
   const needsZone = laser && !deal && zones.length === 0;
-  // Three times per row on a phone, five on a computer screen.
-  const columns = wide ? 5 : 3;
-  const tile = (inner(DETAIL_WIDTH) - 8 * (columns - 1)) / columns;
-  // Moving an appointment keeps the deposit that was already paid.
-  const deposit = replacing ? 0 : treatment.deposit;
 
-  const chooseLocation = (id: LocationId) => {
-    setLocationId(id);
-    const stays = specialistsFor(treatment, id).some((s) => s.id === specialistId);
-    const who = stays ? specialistId : 'any';
-    setSpecialistId(who);
-    setSlot(null);
-    if (slotsOn(day, who, id).length === 0) setDay(days.find((d) => slotsOn(d, who, id).length > 0) ?? day);
-  };
+  const [note, setNote] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<ApiError | null>(null);
+  const campaignDeals = dealsFor(treatment.id);
+  const booked = upcoming(mine.data);
 
-  const chooseSpecialist = (id: SpecialistId | 'any') => {
-    setSpecialistId(id);
-    setSlot(null);
-    if (slotsOn(day, id).length === 0) setDay(days.find((d) => slotsOn(d, id).length > 0) ?? day);
-  };
+  const ready = Boolean(me && day && part && !needsZone && !busy);
 
-  const confirm = () => {
-    if (!slot) return;
-    const id = clinic.bookAppointment({ treatmentId: treatment.id, specialistId: slot.specialistId, locationId, start: slot.start });
-    if (replacing) clinic.cancelAppointment(replacing.id);
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    router.replace({ pathname: '/bevestiging/[id]', params: replacing ? { id, moved: '1' } : { id } });
+  const send = async () => {
+    if (!day || !part || !me) return;
+    // The team reads Dutch, so the zones go along in Dutch whatever the app's language.
+    const extras = [
+      laser && deal ? `Deal: ${deal.zones.nl} (€ ${deal.price})` : null,
+      laser && !deal && zones.length
+        ? `Zones: ${zones.map((id) => LASER_ZONES.find((z) => z.id === id)?.name.nl ?? id).join(', ')}${pack ? ' · pakket 5+1' : ''}`
+        : null,
+    ].filter(Boolean);
+    const fullNote = [...extras, note.trim()].filter(Boolean).join('\n').slice(0, 500);
+    setBusy(true);
+    setError(null);
+    try {
+      const r = await api.requestAppointment({ treatment: treatment.id, location: locationId, date: day, part, ...(fullNote ? { note: fullNote } : {}) });
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      router.replace({
+        pathname: '/bevestiging/[id]',
+        params: { id: r?.appointment?.id ?? 'new', treatment: treatment.id, location: locationId, date: day, part },
+      });
+    } catch (e) {
+      const err = e instanceof ApiError ? e : new ApiError(0, { error: 'offline' });
+      setError(err);
+      if (err.code === 'date-invalid') availability.reload();
+    } finally {
+      setBusy(false);
+    }
   };
 
   const footer = (
     <Footer>
-      {slot ? (
+      {day && part ? (
         <View style={{ flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between', gap: 12 }}>
           <Txt variant="bodyStrong" style={{ flex: 1 }} numberOfLines={1}>
-            {`${dayShort(slot.start)} · ${time(slot.start)} · ${specialistById(slot.specialistId).name}`}
+            {`${dateShort(day)} · ${t(PART_KEY[part])} · ${place ? cityName(place) : ''}`}
           </Txt>
           <Txt variant="small" color={theme.c.muted}>
-            {replacing
-              ? ''
-              : deposit
-                ? t('clinic.book.deposit', { amount: euro(deposit) })
-                : laser
-                  ? euro(perTime)
-                  : treatment.priceFrom
-                    ? t('clinic.price.from', { price: euro(treatment.priceFrom) })
-                    : t('clinic.price.free')}
+            {laser && (deal || zones.length) ? euro(perTime) : treatment.priceFrom ? t('clinic.price.from', { price: euro(treatment.priceFrom) }) : t('clinic.price.free')}
           </Txt>
         </View>
       ) : null}
-      <Button label={deposit ? t('clinic.book.continue') : t('clinic.book.confirmFree')} disabled={!slot || needsZone} onPress={confirm} />
+      {error ? <Notice error={error} /> : null}
+      <Button label={t('requestBooking')} disabled={!ready} onPress={send} />
       <Txt variant="caption" color={theme.c.muted} align="center">
-        {t('clinic.book.policy')}
+        {ready ? t('confirmLater') : t('fillAll')}
       </Txt>
     </Footer>
   );
@@ -140,13 +168,10 @@ function Booking({ treatment, params }: { treatment: Treatment; params: Params }
   return (
     <Screen gap={22} footer={footer}>
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-        <IconButton icon="back" label={t('common.back')} tone="surface" onPress={() => router.back()} />
-        <Txt variant="small" color={theme.c.muted}>
-          {t('clinic.book.step', { n: 2 })}
-        </Txt>
+        <IconButton icon="back" label={t('common.back')} tone="surface" onPress={() => (router.canGoBack() ? router.back() : router.replace('/boeken'))} />
       </View>
 
-      <Txt variant="display">{t('clinic.book.moment')}</Txt>
+      <Txt variant="display">{t('bookTitle')}</Txt>
 
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 14, backgroundColor: theme.c.surface, borderRadius: theme.r.card, padding: 10 }}>
         <Photo photo={treatment.photo} style={{ width: 56, height: 68, borderRadius: theme.r.small }} />
@@ -156,30 +181,30 @@ function Booking({ treatment, params }: { treatment: Treatment; params: Params }
             {`${t('common.minutes', { n: treatment.minutes })} · ${treatment.priceFrom ? t('clinic.price.from', { price: euro(treatment.priceFrom) }) : t('clinic.price.free')}`}
           </Txt>
         </View>
-        <Pressable accessibilityRole="button" onPress={() => router.back()} hitSlop={10} style={{ paddingHorizontal: 8 }}>
+        <Pressable accessibilityRole="button" onPress={() => router.navigate('/boeken')} hitSlop={10} style={{ paddingHorizontal: 8 }}>
           <Txt variant="smallStrong" color={theme.c.primary}>
             {t('common.change')}
           </Txt>
         </Pressable>
       </View>
 
-      {firstTime ? (
-        <View style={{ flexDirection: 'row', gap: 10, padding: 14, borderRadius: theme.r.control, borderWidth: 1, borderColor: theme.c.line }}>
-          <Icon name="leaf" size={18} color={theme.c.primary} />
-          <Txt variant="small" color={theme.c.ink} style={{ flex: 1 }}>
-            {t('clinic.book.firstTime')}
-          </Txt>
-        </View>
-      ) : null}
+      <Hint icon="leaf">{treatment.id === 'consult' ? t('intakeNote') : t('notSureNote')}</Hint>
 
-      {treatment.insurable ? (
-        <View style={{ flexDirection: 'row', gap: 10, padding: 14, borderRadius: theme.r.control, backgroundColor: theme.c.sand }}>
-          <Icon name="wallet" size={18} color={theme.c.primary} />
-          <Txt variant="small" color={theme.c.ink} style={{ flex: 1 }}>
-            {t('clinic.book.insurance')}
-          </Txt>
+      {campaignDeals.map(({ campaign, deal: d }, index) => (
+        <View key={`${campaign.id}-${index}`} style={{ flexDirection: 'row', gap: 10, padding: 14, borderRadius: theme.r.control, backgroundColor: theme.c.sand }}>
+          <Icon name="ticket" size={18} color={theme.c.primary} />
+          <View style={{ flex: 1, gap: 2 }}>
+            <Txt variant="smallStrong" color={theme.c.primary}>
+              {campaign.until ? `${text(campaign.name)} · ${t('until', { d: untilDay(campaign.until) })}` : text(campaign.name)}
+            </Txt>
+            <Txt variant="small" color={theme.c.ink}>
+              {text(d.text)}
+            </Txt>
+          </View>
         </View>
-      ) : null}
+      ))}
+
+      {treatment.insurable ? <Hint icon="wallet">{t('clinic.book.insurance')}</Hint> : null}
 
       {laser && deal ? <DealCard deal={deal} onChange={() => setDeal(null)} /> : null}
       {laser && !deal ? (
@@ -244,88 +269,111 @@ function Booking({ treatment, params }: { treatment: Treatment; params: Params }
         </Group>
       ) : null}
 
-      <Group label={t('clinic.book.location')}>
-        <Segmented
-          label={t('clinic.book.location')}
-          value={locationId}
-          onChange={chooseLocation}
-          options={LOCATIONS.map((l) => ({ value: l.id, label: cityName(l), icon: 'pin' as const }))}
-        />
-      </Group>
+      {places.length > 1 ? (
+        <Group label={t('stepPlace')}>
+          <Segmented
+            label={t('stepPlace')}
+            value={locationId}
+            onChange={(id) => {
+              setLocationId(id);
+              setDay(null);
+              setPart(null);
+            }}
+            options={places.map((l) => ({ value: l.id, label: cityName(l), icon: 'pin' as const }))}
+          />
+          {place ? (
+            <Txt variant="small" color={theme.c.muted}>
+              {place.address}
+            </Txt>
+          ) : null}
+        </Group>
+      ) : null}
 
-      <Group label={t('clinic.book.specialist')}>
-        <Rail gap={8}>
-          <PersonTile name={t('clinic.book.anyone')} note={t('clinic.book.firstAvailable')} selected={specialistId === 'any'} onPress={() => chooseSpecialist('any')} />
-          {team.map((s) => (
-            <PersonTile
-              key={s.id}
-              name={s.name}
-              note={s.id === last ? t('clinic.book.sameAsLast') : t(roleKey(s.role))}
-              selected={specialistId === s.id}
-              onPress={() => chooseSpecialist(s.id)}
-            />
-          ))}
-        </Rail>
-      </Group>
-
-      <Group label={t('clinic.book.dates')}>
-        <DayStrip
-          days={days}
-          selected={day}
-          onSelect={(d) => {
-            setDay(d);
-            setSlot(null);
-          }}
-          isDisabled={(d) => openingHours(d, locationId) === null}
-          isMarked={(d) => clinic.upcoming.some((a) => sameDay(a.start, d))}
-        />
-      </Group>
-
-      <Group label={specialistId === 'any' ? t('clinic.book.timesAll') : t('clinic.book.timesWith', { name: specialistById(specialistId).name })}>
-        {openingHours(day, locationId) === null ? (
+      <Group label={t('stepDay')}>
+        {!open ? (
           <Txt variant="body" color={theme.c.muted}>
-            {t('clinic.book.closed')}
+            {t('loading')}
           </Txt>
-        ) : slots.length === 0 ? (
-          <Txt variant="body" color={theme.c.muted}>
-            {t('clinic.book.noTimes')}
-          </Txt>
+        ) : days.some((d) => partsOn(isoDay(d)).length) ? (
+          <DayStrip
+            days={days}
+            selected={day ? new Date(`${day}T12:00:00`) : days[0]}
+            onSelect={(d) => {
+              setDay(isoDay(d));
+              setPart(null);
+            }}
+            isDisabled={(d) => partsOn(isoDay(d)).length === 0}
+            isMarked={(d) => booked.some((a) => a.date === isoDay(d))}
+          />
         ) : (
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-            {slots.map((s) => {
-              const active = slot?.start.getTime() === s.start.getTime();
+          <Notice text={t('bookNoDays')} />
+        )}
+      </Group>
+
+      {open && day ? (
+        <Group label={t('bookPart')}>
+          <View style={{ flexDirection: 'row', gap: 8 }}>
+            {PARTS.map((p) => {
+              const possible = partsOn(day).includes(p);
+              const active = part === p;
+              const [from, to] = times(p);
               return (
                 <Pressable
-                  key={s.start.getTime()}
-                  accessibilityRole="button"
-                  accessibilityState={{ selected: active }}
+                  key={p}
+                  accessibilityRole="radio"
+                  accessibilityState={{ checked: active, disabled: !possible }}
+                  disabled={!possible}
                   onPress={() => {
                     Haptics.selectionAsync();
-                    setSlot(s);
+                    setPart(p);
                   }}
                   style={({ pressed }) => ({
-                    width: tile,
-                    height: specialistId === 'any' ? 58 : 48,
+                    flex: 1,
+                    height: 64,
                     borderRadius: theme.r.control,
                     backgroundColor: active ? theme.c.ink : theme.c.surface,
                     borderWidth: active ? 0 : 1,
                     borderColor: theme.c.line,
                     alignItems: 'center',
                     justifyContent: 'center',
-                    opacity: pressed ? 0.8 : 1,
+                    gap: 2,
+                    opacity: !possible ? 0.35 : pressed ? 0.8 : 1,
                   })}
                 >
                   <Txt variant="bodyStrong" color={active ? theme.c.onPrimary : theme.c.ink}>
-                    {time(s.start)}
+                    {t(PART_KEY[p])}
                   </Txt>
-                  {specialistId === 'any' ? (
-                    <Txt variant="caption" color={active ? theme.c.onPrimary : theme.c.muted}>
-                      {specialistById(s.specialistId).name}
-                    </Txt>
-                  ) : null}
+                  <Txt variant="caption" color={active ? theme.c.onPrimary : theme.c.muted}>
+                    {`‎${from}–${to}`}
+                  </Txt>
                 </Pressable>
               );
             })}
+          </View>
+        </Group>
+      ) : null}
+
+      <Field label={t('stepNote')} hint={t('optional')} value={note} onChangeText={(v) => setNote(v.slice(0, 450))} multiline placeholder={t('bookNoteHint')} />
+
+      <Group label={t('stepYou')}>
+        {me ? (
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, padding: 16, borderRadius: theme.r.card, backgroundColor: theme.c.surface }}>
+            <Icon name="user" size={20} color={theme.c.muted} />
+            <View style={{ flex: 1, gap: 2 }}>
+              <Txt variant="bodyStrong">{me.name}</Txt>
+              <Txt variant="small" color={theme.c.muted}>
+                {[me.email, me.phone].filter(Boolean).join(' · ')}
+              </Txt>
+            </View>
+            <Pressable accessibilityRole="button" onPress={() => signOut()} hitSlop={8}>
+              <Txt variant="smallStrong" color={theme.c.primary}>
+                {t('notYou')}
+              </Txt>
+            </Pressable>
+          </View>
+        ) : (
+          <View style={{ padding: 16, borderRadius: theme.r.card, backgroundColor: theme.c.surface }}>
+            <SignIn intro={t('signInToBook')} />
           </View>
         )}
       </Group>
@@ -333,7 +381,19 @@ function Booking({ treatment, params }: { treatment: Treatment; params: Params }
   );
 }
 
-/** A deal chosen on Home: its zones and price, with a way back to choosing zones yourself. */
+function Hint({ icon, children }: { icon: 'leaf' | 'wallet'; children: ReactNode }) {
+  const theme = useTheme();
+  return (
+    <View style={{ flexDirection: 'row', gap: 10, padding: 14, borderRadius: theme.r.control, borderWidth: 1, borderColor: theme.c.line }}>
+      <Icon name={icon} size={18} color={theme.c.primary} />
+      <Txt variant="small" color={theme.c.ink} style={{ flex: 1 }}>
+        {children}
+      </Txt>
+    </View>
+  );
+}
+
+/** A laser deal chosen on Home: its zones and price, with a way back to choosing zones yourself. */
 function DealCard({ deal, onChange }: { deal: Deal; onChange: () => void }) {
   const theme = useTheme();
   const { t, text, euro } = useI18n();
@@ -371,38 +431,5 @@ function Group({ label, children }: { label: string; children: ReactNode }) {
       </Txt>
       {children}
     </View>
-  );
-}
-
-function PersonTile({ name, note, selected, onPress }: { name: string; note: string; selected: boolean; onPress: () => void }) {
-  const theme = useTheme();
-  return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityState={{ selected }}
-      onPress={() => {
-        Haptics.selectionAsync();
-        onPress();
-      }}
-      style={({ pressed }) => ({
-        minWidth: 112,
-        height: 60,
-        paddingHorizontal: 14,
-        borderRadius: theme.r.control,
-        backgroundColor: selected ? theme.c.ink : theme.c.surface,
-        borderWidth: selected ? 0 : 1,
-        borderColor: theme.c.line,
-        justifyContent: 'center',
-        gap: 1,
-        opacity: pressed ? 0.85 : 1,
-      })}
-    >
-      <Txt variant="bodyStrong" color={selected ? theme.c.onPrimary : theme.c.ink}>
-        {name}
-      </Txt>
-      <Txt variant="caption" color={selected ? theme.c.onPrimary : theme.c.muted} numberOfLines={1}>
-        {note}
-      </Txt>
-    </Pressable>
   );
 }

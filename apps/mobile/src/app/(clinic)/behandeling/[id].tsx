@@ -3,8 +3,8 @@ import {
   CONCERNS,
   LASER_ZONES,
   packagePrice,
+  PRODUCTS,
   productsAfter,
-  TREATMENTS,
   treatmentInfo,
   type Treatment,
   type TreatmentInfo,
@@ -24,13 +24,16 @@ import { FadeIn, nativeDriver, PressableScale, Stagger } from '@/components/Moti
 import { ProductCard } from '@/components/ProductCard';
 import { Footer, Rail, Screen, useScrollY } from '@/components/Screen';
 import { Txt } from '@/components/Txt';
+import { useCampaigns } from '@/campaigns';
 import { useI18n } from '@/i18n';
 import { DETAIL_WIDTH, startEdge, useLayout } from '@/layout';
+import { treatmentOf } from '@/requests';
+import { useStock } from '@/state/remote';
 import { useTheme } from '@/theme';
 
 export default function TreatmentScreen() {
   const { id, location } = useLocalSearchParams<{ id: string; location?: string }>();
-  const treatment = TREATMENTS.find((tr) => tr.id === id);
+  const treatment = treatmentOf(id);
   if (!treatment) return <Redirect href="/boeken" />;
   return <TreatmentDetail treatment={treatment} location={location} />;
 }
@@ -43,9 +46,14 @@ function TreatmentDetail({ treatment, location }: { treatment: Treatment; locati
   const { t, text, euro } = useI18n();
   const info = treatmentInfo(treatment.id);
   const helps = CONCERNS.filter((c) => c.treatments.includes(treatment.id));
-  const products = productsAfter(treatment.id);
-  // A free intake first makes sense for skin treatments, not for the intake itself or the beauty studio.
-  const intakeFirst = treatment.id !== 'consult' && treatment.category !== 'beauty';
+  // Aftercare as Huidly's shop links it to this treatment, and only what can be ordered now.
+  const stock = useStock();
+  const linked = PRODUCTS.filter((p) => stock.byId.get(p.id)?.afterTreatments?.includes(treatment.id));
+  const products = (stock.byId.size ? linked : productsAfter(treatment.id)).filter((p) => !stock.soldOut(p.id));
+  const { dealsFor } = useCampaigns();
+  const deals = dealsFor(treatment.id);
+  // A free intake first makes sense for every treatment but the intake itself.
+  const intakeFirst = treatment.id !== 'consult';
   const price = treatment.priceFrom ? t('clinic.price.from', { price: euro(treatment.priceFrom) }) : t('clinic.price.free');
   const heroHeight = wide ? 460 : 470 + insets.top;
   const book = () => router.push({ pathname: '/afspraak/[treatmentId]', params: { treatmentId: treatment.id, ...(location ? { location } : {}) } });
@@ -95,6 +103,8 @@ function TreatmentDetail({ treatment, location }: { treatment: Treatment; locati
           <Txt variant="body" color={theme.c.ink} style={{ fontSize: 16, lineHeight: 25 }}>
             {text(info?.intro ?? treatment.description)}
           </Txt>
+
+          {deals.length ? <DealNotes deals={deals} /> : null}
 
           <Facts treatment={treatment} info={info} price={price} />
 
@@ -305,6 +315,27 @@ function CompactBar({ title, heroHeight }: { title: string; heroHeight: number }
         <BackButton />
       </View>
     </>
+  );
+}
+
+/** A campaign that includes this treatment, in Pure's own words, with its last day. */
+function DealNotes({ deals }: { deals: ReturnType<ReturnType<typeof useCampaigns>['dealsFor']> }) {
+  const theme = useTheme();
+  const { t, text, untilDay } = useI18n();
+  return (
+    <View style={{ gap: 10 }}>
+      {deals.map(({ campaign, deal }, index) => (
+        <View key={`${campaign.id}-${index}`} style={{ flexDirection: 'row', gap: 12, padding: 16, borderRadius: theme.r.card, backgroundColor: theme.c.sand }}>
+          <Icon name="ticket" size={20} color={theme.c.primary} />
+          <View style={{ flex: 1, gap: 4 }}>
+            <Txt variant="eyebrow" color={theme.c.primary}>
+              {campaign.until ? `${text(campaign.name)} · ${t('until', { d: untilDay(campaign.until) })}` : text(campaign.name)}
+            </Txt>
+            <Txt variant="bodyStrong">{text(deal.text)}</Txt>
+          </View>
+        </View>
+      ))}
+    </View>
   );
 }
 

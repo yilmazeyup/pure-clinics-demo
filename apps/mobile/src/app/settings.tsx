@@ -1,22 +1,19 @@
 import { LOCALE_NAMES, LOCALES } from '@pure-clinics/shared';
 import { router } from 'expo-router';
-import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 
-import { Button, IconButton } from '@/components/Button';
+import { IconButton } from '@/components/Button';
 import { Icon } from '@/components/Icon';
 import { Screen, useModalTop } from '@/components/Screen';
 import { Txt } from '@/components/Txt';
 import { useI18n } from '@/i18n';
-import { useDemo } from '@/state/demo';
+import { useApp } from '@/state/app';
 import { useTheme } from '@/theme';
 
 export default function Settings() {
   const theme = useTheme();
   const { t } = useI18n();
-  const { locale, setLocale, reset } = useDemo();
-  // Sheets sit above the app-wide toast, so the reset confirms itself on the button.
-  const [resetDone, setResetDone] = useState(false);
+  const { locale, setLocale } = useApp();
   const top = useModalTop();
 
   return (
@@ -60,21 +57,9 @@ export default function Settings() {
         </View>
       </View>
 
-      <View style={{ gap: 12 }}>
-        <Button
-          kind="secondary"
-          label={resetDone ? t('settings.resetDone') : t('settings.reset')}
-          icon={resetDone ? 'check' : undefined}
-          onPress={() => {
-            reset();
-            setResetDone(true);
-            setTimeout(() => setResetDone(false), 2600);
-          }}
-        />
-        <Txt variant="small" color={theme.c.muted}>
-          {t('settings.about')}
-        </Txt>
-      </View>
+      <Txt variant="small" color={theme.c.muted}>
+        {`Pure Clinics · ${t('footFineLive')}`}
+      </Txt>
     </Screen>
   );
 }

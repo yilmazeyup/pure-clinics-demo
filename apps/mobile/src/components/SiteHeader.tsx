@@ -4,7 +4,7 @@ import { Pressable, View } from 'react-native';
 
 import { useI18n } from '@/i18n';
 import { PAGE_WIDTH, useLayout } from '@/layout';
-import { useDemo } from '@/state/demo';
+import { useApp } from '@/state/app';
 import { useTheme } from '@/theme';
 
 import { Icon } from './Icon';
@@ -16,9 +16,9 @@ type Section = 'home' | 'book' | 'shop' | 'mine';
 /** Which menu item a page belongs to, so the menu still shows where you are on a detail page. */
 function sectionOf(path: string): Section | null {
   if (/^\/(boeken|behandeling|afspraak|bevestiging)/.test(path)) return 'book';
-  if (/^\/(shop|product|winkelmand|afrekenen|bestelling)/.test(path)) return 'shop';
-  if (/^\/(mijn|journaal)/.test(path)) return 'mine';
-  if (/^\/$/.test(path) || /^\/(advies|assistent)/.test(path)) return 'home';
+  if (/^\/(shop|product|cadeaubon|winkelmand|afrekenen|bestelling)/.test(path)) return 'shop';
+  if (/^\/mijn/.test(path)) return 'mine';
+  if (/^\/$/.test(path) || /^\/advies/.test(path)) return 'home';
   return null;
 }
 
@@ -27,7 +27,7 @@ export function SiteHeader() {
   const theme = useTheme();
   const { gutter } = useLayout();
   const { t, locale } = useI18n();
-  const { cart } = useDemo();
+  const { cart } = useApp();
   const active = sectionOf(usePathname());
   const inCart = cart.reduce((n, line) => n + line.qty, 0);
   const items = [

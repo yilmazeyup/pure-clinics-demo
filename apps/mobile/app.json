@@ -22,7 +22,13 @@
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "name": "Pure Clinics",
+      "shortName": "Pure Clinics",
+      "lang": "nl",
+      "themeColor": "#F7F3EC",
+      "backgroundColor": "#F7F3EC",
+      "description": "Huidtherapie in Nijmegen en Uden: een afspraak aanvragen, de huidscan, de shop en de cadeaubon."
     },
     "plugins": [
       ["expo-router", { "asyncRoutes": { "web": false } }],

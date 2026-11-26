@@ -1,90 +1,87 @@
-import { LASER_SERIES, LOCATIONS, MEMBER, PURE_CLINICS, openingHours } from '@pure-clinics/shared';
+import { LOCATIONS, PURE_CLINICS, openingHours, productById } from '@pure-clinics/shared';
 import * as Linking from 'expo-linking';
 import { router } from 'expo-router';
-import type { ReactNode } from 'react';
-import { Pressable, View } from 'react-native';
+import { useEffect, useState, type ReactNode } from 'react';
+import { Platform, Pressable, View } from 'react-native';
 
+import { api, ApiError, ORDER_STATUS_KEY, PART_KEY, STATUS_KEY, type Me, type RemoteAppointment, type RemoteOrder } from '@/api';
+import { ask } from '@/ask';
 import { Badge } from '@/components/Badge';
 import { Button, IconButton } from '@/components/Button';
+import { Field } from '@/components/Field';
 import { Glass } from '@/components/Glass';
 import { Icon, type IconName } from '@/components/Icon';
+import { Notice } from '@/components/Notice';
 import { Photo } from '@/components/Photo';
-import { PureLogo } from '@/components/PureLogo';
-import { SessionRing } from '@/components/SessionRing';
 import { Screen } from '@/components/Screen';
+import { SignIn } from '@/components/SignIn';
 import { useToast } from '@/components/Toast';
 import { Txt } from '@/components/Txt';
 import { useI18n } from '@/i18n';
-import { cityName, roleKey, useClinic, type AppointmentView } from '@/clinic';
 import { startEdge } from '@/layout';
-import { useDemo, type Order } from '@/state/demo';
+import { cityName, cityOf } from '@/places';
+import { cancellable, treatmentOf } from '@/requests';
+import { useAccount } from '@/state/account';
+import { useApp } from '@/state/app';
+import { useMyAppointments, useMyOrders } from '@/state/remote';
 import { useTheme } from '@/theme';
 
-/** The help page with the explainer video and common questions, on the demo site. */
-const HELP_URL = 'https://pureclinics.savastana.com/hulp/';
+/** Pure's questions page on the website, next to the app. */
+const FAQ_URL = Platform.OS === 'web' ? '/website/vragen/' : 'https://pureclinics.savastana.com/website/vragen/';
 
-/** Everything the member has planned or bought, the membership, and how to reach both clinics. */
+/**
+ * Mijn Pure: sign in or sign up with a code by e-mail; then your appointment requests, your orders and your details,
+ * all from Huidly, and how to reach both clinics.
+ */
 export default function MyPure() {
   const theme = useTheme();
   const { t, locale } = useI18n();
-  const clinic = useClinic();
-  const { orders } = useDemo();
-  const upcoming = clinic.upcoming;
+  const { me } = useAccount();
 
   return (
     <Screen gap={26} tabs>
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
         <Txt variant="display">{t('clinic.mine.title')}</Txt>
-        <IconButton icon="globe" label={t('common.settings')} tone="surface" onPress={() => router.push('/settings')} />
+        <IconButton icon="globe" label={t('settings.language')} tone="surface" onPress={() => router.push('/settings')} />
       </View>
 
-      <Section title={t('clinic.appts.upcoming')}>
-        {upcoming.length === 0 ? (
-          <View style={{ backgroundColor: theme.c.surface, borderRadius: theme.r.card, padding: 20, gap: 14 }}>
-            <Txt variant="body" color={theme.c.muted}>
-              {t('clinic.appts.empty')}
-            </Txt>
-            <Button size="sm" label={t('clinic.home.consultCta')} onPress={() => router.push('/afspraak/consult')} style={{ alignSelf: 'flex-start' }} />
-          </View>
-        ) : (
-          upcoming.map((appointment) => <AppointmentCard key={appointment.id} appointment={appointment} />)
-        )}
-      </Section>
-
-      <Series />
-
-      <Membership />
-
-      {orders.length > 0 ? (
-        <Section title={t('clinic.mine.orders')}>
-          <List>
-            {orders.map((order, index) => (
-              <OrderRow key={order.id} order={order} first={index === 0} />
-            ))}
-          </List>
-        </Section>
-      ) : null}
-
-      {clinic.past.length > 0 ? (
-        <Section title={t('clinic.appts.past')}>
-          <List>
-            {clinic.past.map((a, index) => (
-              <PastRow key={a.id} appointment={a} first={index === 0} />
-            ))}
-          </List>
-        </Section>
-      ) : null}
+      {me ? (
+        <SignedIn me={me} />
+      ) : (
+        <View style={{ backgroundColor: theme.c.surface, borderRadius: theme.r.card, padding: 18, boxShadow: theme.shadow.card }}>
+          <SignIn intro={t('signInNote')} />
+        </View>
+      )}
 
       <Contact />
 
       <Section title={t('clinic.mine.more')}>
         <List>
-          <LinkRow icon="camera" label={t('clinic.journal.title')} onPress={() => router.push('/journaal')} first />
-          <LinkRow icon="globe" label={t('settings.language')} onPress={() => router.push('/settings')} />
-          <LinkRow icon="video" label={t('clinic.mine.help')} onPress={() => Linking.openURL(`${HELP_URL}?lang=${locale}`)} />
+          <LinkRow icon="globe" label={t('settings.language')} onPress={() => router.push('/settings')} first />
+          <LinkRow icon="list" label={t('mineFaq')} onPress={() => Linking.openURL(`${FAQ_URL}?lang=${locale}`)} />
         </List>
       </Section>
+
+      {me ? <AccountActions /> : null}
     </Screen>
+  );
+}
+
+function SignedIn({ me }: { me: Me }) {
+  const theme = useTheme();
+  const { t } = useI18n();
+  return (
+    <View style={{ gap: 26 }}>
+      <View style={{ gap: 4, marginTop: -12 }}>
+        <Txt variant="title">{t('hello', { n: me.name?.trim().split(/\s+/)[0] ?? '' })}</Txt>
+        <Txt variant="small" color={theme.c.muted}>
+          {me.email}
+        </Txt>
+      </View>
+      <Requests />
+      <Orders />
+      <Details me={me} />
+    </View>
   );
 }
 
@@ -102,139 +99,336 @@ function List({ children }: { children: ReactNode }) {
   return <View style={{ backgroundColor: theme.c.surface, borderRadius: theme.r.card, paddingHorizontal: 16, boxShadow: theme.shadow.card }}>{children}</View>;
 }
 
-/** The laser series so far, as the ring of sessions: done ones in ink, the next one in gold. */
-function Series() {
+function Empty({ text, action }: { text: string; action: { label: string; onPress: () => void } }) {
   const theme = useTheme();
-  const { t, text } = useI18n();
-  const clinic = useClinic();
-  const done = clinic.past.filter((a) => a.treatmentId === 'laser');
-  if (!done.length) return null;
-  const treatment = done[0].treatment;
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 18, padding: 18, borderRadius: theme.r.card, backgroundColor: theme.c.surface, boxShadow: theme.shadow.card }}>
-      <SessionRing done={done.length} total={LASER_SERIES} size={96} show="done" caption={t('clinic.journey.of', { total: LASER_SERIES })} />
-      <View style={{ flex: 1, gap: 6 }}>
-        <Txt variant="eyebrow" color={theme.c.muted}>
-          {t('clinic.journey.eyebrow', { treatment: text(treatment.name) })}
-        </Txt>
-        <Txt variant="heading">{t('clinic.journey.done', { done: done.length, total: LASER_SERIES })}</Txt>
-        <Txt variant="small" color={theme.c.muted}>
-          {t('clinic.journey.with', { name: done[0].specialist.name })}
-        </Txt>
-      </View>
+    <View style={{ backgroundColor: theme.c.surface, borderRadius: theme.r.card, padding: 20, gap: 14 }}>
+      <Txt variant="body" color={theme.c.muted}>
+        {text}
+      </Txt>
+      <Button size="sm" label={action.label} onPress={action.onPress} style={{ alignSelf: 'flex-start' }} />
     </View>
   );
 }
 
-function AppointmentCard({ appointment }: { appointment: AppointmentView }) {
+/** Appointment requests with their status: open ones as cards with a cancel button, the rest as a short list. */
+function Requests() {
+  const { t } = useI18n();
   const theme = useTheme();
-  const { t, text, relativeDay, time } = useI18n();
-  const clinic = useClinic();
+  const list = useMyAppointments();
+  const open = (list.data ?? []).filter((a) => cancellable(a));
+  const rest = (list.data ?? []).filter((a) => !cancellable(a));
+  return (
+    <Section title={t('tab_afspraken')}>
+      {list.loading && !list.data ? (
+        <Txt variant="body" color={theme.c.muted}>
+          {t('loading')}
+        </Txt>
+      ) : list.error ? (
+        <Notice error={list.error} />
+      ) : !list.data?.length ? (
+        <Empty text={t('noBookings')} action={{ label: t('clinic.home.consultCta'), onPress: () => router.push('/afspraak/consult') }} />
+      ) : (
+        <>
+          {open.map((a) => (
+            <RequestCard key={a.id} appointment={a} onChanged={list.reload} />
+          ))}
+          {rest.length ? (
+            <List>
+              {rest.map((a, index) => (
+                <PastRow key={a.id} appointment={a} first={index === 0} />
+              ))}
+            </List>
+          ) : null}
+          <Button kind="secondary" size="sm" label={t('clinic.home.consultCta')} onPress={() => router.push('/afspraak/consult')} style={{ alignSelf: 'flex-start' }} />
+        </>
+      )}
+    </Section>
+  );
+}
+
+function useWhen() {
+  const { t, dateLong, dateTime } = useI18n();
+  return (a: RemoteAppointment) => (a.start ? dateTime(a.start) : `${dateLong(a.date)}, ${t(PART_KEY[a.part] ?? 'part_middag').toLocaleLowerCase()}`);
+}
+
+function RequestCard({ appointment: a, onChanged }: { appointment: RemoteAppointment; onChanged: () => void }) {
+  const theme = useTheme();
+  const { t, text, textOf, dateShort, clockTime } = useI18n();
   const toast = useToast();
-  const { treatment, specialist, location } = appointment;
+  const when = useWhen();
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<ApiError | null>(null);
+  const treatment = treatmentOf(a.treatment);
+  const name = textOf(a.treatmentName, treatment ? text(treatment.name) : a.treatment);
+  const confirmed = a.status === 'confirmed';
+
+  const cancel = async () => {
+    if (!(await ask(t('cancelSure'), t('common.cancel'), t('common.back')))) return;
+    setBusy(true);
+    setError(null);
+    try {
+      await api.cancelAppointment(a.id);
+      toast(t('clinic.appts.cancelled'));
+      onChanged();
+    } catch (e) {
+      setError(e instanceof ApiError ? e : new ApiError(0, { error: 'offline' }));
+    } finally {
+      setBusy(false);
+    }
+  };
 
   return (
     <View style={{ backgroundColor: theme.c.surface, borderRadius: theme.r.card, overflow: 'hidden', boxShadow: theme.shadow.card }}>
-      <Photo photo={treatment.photo} style={{ height: 180 }}>
+      <Photo photo={treatment?.photo ?? 'pc-consult'} style={{ height: 160 }}>
         <Glass style={{ position: 'absolute', top: 14, ...startEdge(theme.rtl, 14), borderRadius: 14, paddingHorizontal: 12, paddingVertical: 8 }}>
           <Txt variant="eyebrow" style={{ fontSize: 10 }}>
-            {relativeDay(appointment.start)}
+            {dateShort(a.start ?? a.date)}
           </Txt>
           <Txt variant="title" style={{ fontSize: 22, lineHeight: 26 }}>
-            {time(appointment.start)}
+            {a.start ? clockTime(a.start) : t(PART_KEY[a.part] ?? 'part_middag')}
           </Txt>
         </Glass>
       </Photo>
       <View style={{ padding: 16, gap: 12 }}>
-        <View style={{ gap: 3 }}>
-          <Txt variant="title">{text(treatment.name)}</Txt>
-          <Txt variant="small" color={theme.c.muted}>{`${t('clinic.home.with', { name: specialist.name })} · ${t(roleKey(specialist.role))}`}</Txt>
+        <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 10 }}>
+          <View style={{ flex: 1, gap: 3 }}>
+            <Txt variant="title">{name}</Txt>
+            <Txt variant="small" color={theme.c.muted}>
+              {when(a)}
+            </Txt>
+          </View>
+          <Badge label={t(STATUS_KEY[a.status])} tone={confirmed ? 'ink' : 'outline'} />
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
           <Icon name="pin" size={16} color={theme.c.muted} />
-          <Txt variant="small" style={{ flex: 1 }}>{`${cityName(location)} · ${location.address}`}</Txt>
+          <Txt variant="small" style={{ flex: 1 }}>
+            {LOCATIONS.find((l) => l.id === a.location) ? `${cityOf(a.location)} · ${LOCATIONS.find((l) => l.id === a.location)?.address}` : cityOf(a.location)}
+          </Txt>
         </View>
-        <View style={{ flexDirection: 'row', gap: 8 }}>
-          <Button
-            kind="secondary"
-            size="sm"
-            label={t('common.reschedule')}
-            style={{ flex: 1 }}
-            onPress={() =>
-              router.push({
-                pathname: '/afspraak/[treatmentId]',
-                params: { treatmentId: treatment.id, location: location.id, specialist: specialist.id, replace: appointment.id },
-              })
-            }
-          />
-          <Button
-            kind="quiet"
-            size="sm"
-            label={t('common.cancel')}
-            style={{ flex: 1 }}
-            onPress={() => {
-              clinic.cancelAppointment(appointment.id);
-              toast(t('clinic.appts.cancelled'));
-            }}
-          />
-        </View>
+        {a.message ? (
+          <View style={{ padding: 12, borderRadius: theme.r.control, backgroundColor: theme.c.bg, gap: 2 }}>
+            <Txt variant="caption" color={theme.c.muted}>
+              {t('mineFromClinic')}
+            </Txt>
+            <Txt variant="body">{`“${a.message}”`}</Txt>
+          </View>
+        ) : null}
+        {!confirmed ? (
+          <Txt variant="small" color={theme.c.muted}>
+            {t('confirmLater')}
+          </Txt>
+        ) : null}
+        {error ? <Notice error={error} /> : null}
+        <Button kind="quiet" size="sm" label={t('common.cancel')} disabled={busy} onPress={cancel} style={{ alignSelf: 'flex-start' }} />
       </View>
     </View>
   );
 }
 
-/** The Pure Clinics membership (pureclinics.nl/membership): its perks, and joining in one tap. */
-function Membership() {
+function PastRow({ appointment: a, first }: { appointment: RemoteAppointment; first: boolean }) {
+  const theme = useTheme();
+  const { t, text, textOf, dateShort } = useI18n();
+  const treatment = treatmentOf(a.treatment);
+  return (
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 14, paddingVertical: 14, borderTopWidth: first ? 0 : 1, borderTopColor: theme.c.line }}>
+      <Photo photo={treatment?.photo ?? 'pc-consult'} style={{ width: 48, height: 58, borderRadius: theme.r.small }} />
+      <View style={{ flex: 1, gap: 2 }}>
+        <Txt variant="bodyStrong">{textOf(a.treatmentName, treatment ? text(treatment.name) : a.treatment)}</Txt>
+        <Txt variant="small" color={theme.c.muted}>{`${dateShort(a.start ?? a.date)} · ${cityOf(a.location)}`}</Txt>
+      </View>
+      {a.status === 'cancelled' ? (
+        <Badge label={t(STATUS_KEY.cancelled)} tone="muted" />
+      ) : treatment ? (
+        <Pressable
+          accessibilityRole="button"
+          hitSlop={8}
+          onPress={() => router.push({ pathname: '/afspraak/[treatmentId]', params: { treatmentId: treatment.id, location: a.location } })}
+        >
+          <Txt variant="smallStrong" color={theme.c.primary}>
+            {t('clinic.appts.bookAgain')}
+          </Txt>
+        </Pressable>
+      ) : null}
+    </View>
+  );
+}
+
+/** Orders from the app and the website, with their status; a new one can still be cancelled. */
+function Orders() {
+  const { t } = useI18n();
+  const theme = useTheme();
+  const list = useMyOrders();
+  return (
+    <Section title={t('tab_bestellingen')}>
+      {list.loading && !list.data ? (
+        <Txt variant="body" color={theme.c.muted}>
+          {t('loading')}
+        </Txt>
+      ) : list.error ? (
+        <Notice error={list.error} />
+      ) : !list.data?.length ? (
+        <Empty text={t('noOrders')} action={{ label: t('toShop'), onPress: () => router.navigate('/shop') }} />
+      ) : (
+        <List>
+          {list.data.map((order, index) => (
+            <OrderRow key={order.id} order={order} first={index === 0} onChanged={list.reload} />
+          ))}
+        </List>
+      )}
+    </Section>
+  );
+}
+
+function OrderRow({ order: o, first, onChanged }: { order: RemoteOrder; first: boolean; onChanged: () => void }) {
+  const theme = useTheme();
+  const { t, text, textOf, euro, dateShort } = useI18n();
+  const toast = useToast();
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<ApiError | null>(null);
+  const what = [
+    ...(o.items ?? []).map((i) => {
+      const product = productById(i.product);
+      return `${i.qty}× ${textOf(i.name, product ? text(product.name) : i.product)}`;
+    }),
+    ...(o.giftCards ?? []).map((g) => `${g.qty}× ${t('giftLine', { a: euro(g.price) })}`),
+  ].join(', ');
+  const where = o.delivery?.method === 'post' ? t('sendHome') : t('pickupIn', { c: cityOf(o.delivery?.location) });
+
+  const cancel = async () => {
+    if (!(await ask(t('cancelOrderSure'), t('common.cancel'), t('common.back')))) return;
+    setBusy(true);
+    setError(null);
+    try {
+      await api.cancelOrder(o.id);
+      toast(t('ostatus_geannuleerd'));
+      onChanged();
+    } catch (e) {
+      setError(e instanceof ApiError ? e : new ApiError(0, { error: 'offline' }));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <View style={{ paddingVertical: 14, gap: 8, borderTopWidth: first ? 0 : 1, borderTopColor: theme.c.line }}>
+      <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 12 }}>
+        <View style={{ width: 44, height: 44, borderRadius: theme.r.small, backgroundColor: theme.c.bg, alignItems: 'center', justifyContent: 'center' }}>
+          <Icon name="bag" size={20} />
+        </View>
+        <View style={{ flex: 1, gap: 2 }}>
+          <Txt variant="bodyStrong">{t('orderNo', { n: o.number ?? o.id })}</Txt>
+          <Txt variant="small" color={theme.c.muted}>
+            {[o.createdAt ? dateShort(o.createdAt) : null, where].filter(Boolean).join(' · ')}
+          </Txt>
+          {what ? (
+            <Txt variant="small" color={theme.c.ink} numberOfLines={3}>
+              {what}
+            </Txt>
+          ) : null}
+          {o.track ? (
+            <Txt variant="small" color={theme.c.muted}>
+              {`Track & trace: ${o.track}`}
+            </Txt>
+          ) : null}
+        </View>
+        <View style={{ alignItems: 'flex-end', gap: 6 }}>
+          <Badge label={t(ORDER_STATUS_KEY[o.status] ?? 'ostatus_nieuw')} tone={o.status === 'ready' ? 'ink' : o.status === 'cancelled' ? 'muted' : 'outline'} />
+          <Txt variant="bodyStrong">{euro(o.total ?? 0)}</Txt>
+        </View>
+      </View>
+      {error ? <Notice error={error} /> : null}
+      {o.status === 'new' ? (
+        <Pressable accessibilityRole="button" disabled={busy} onPress={cancel} hitSlop={8} style={{ alignSelf: 'flex-start', marginStart: 56, opacity: busy ? 0.5 : 1 }}>
+          <Txt variant="smallStrong" color={theme.c.primary}>
+            {t('common.cancel')}
+          </Txt>
+        </Pressable>
+      ) : null}
+    </View>
+  );
+}
+
+/** Name and phone number, editable; the e-mail address is how you sign in, so it stays as it is. */
+function Details({ me }: { me: Me }) {
+  const theme = useTheme();
+  const { t, locale } = useI18n();
+  const { update } = useAccount();
+  const [name, setName] = useState(me.name ?? '');
+  const [phone, setPhone] = useState(me.phone ?? '');
+  const [busy, setBusy] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [error, setError] = useState<ApiError | { code: string } | null>(null);
+  useEffect(() => {
+    setName(me.name ?? '');
+    setPhone(me.phone ?? '');
+  }, [me.name, me.phone]);
+
+  const save = async () => {
+    if (name.trim().length < 2) return setError({ code: 'name-invalid' });
+    setBusy(true);
+    setError(null);
+    setSaved(false);
+    try {
+      const r = await api.updateMe({ name: name.trim(), phone: phone.trim(), locale });
+      update(r?.me ?? { name: name.trim(), phone: phone.trim() });
+      setSaved(true);
+    } catch (e) {
+      setError(e instanceof ApiError ? e : { code: 'offline' });
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <Section title={t('tab_gegevens')}>
+      <View style={{ backgroundColor: theme.c.surface, borderRadius: theme.r.card, padding: 18, gap: 14, boxShadow: theme.shadow.card }}>
+        <Field label={t('name')} value={name} onChangeText={(v) => (setName(v), setSaved(false))} autoComplete="name" />
+        <Field label={t('email')} value={me.email} editable={false} ltr />
+        <Field label={t('phone')} hint={t('optional')} value={phone} onChangeText={(v) => (setPhone(v), setSaved(false))} autoComplete="tel" inputMode="tel" keyboardType="phone-pad" ltr />
+        {error ? <Notice error={error} tone={error.code === 'offline' ? 'box' : 'inline'} /> : null}
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+          <Button size="sm" label={t('save')} disabled={busy} onPress={save} />
+          {saved ? (
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+              <Icon name="check" size={16} color={theme.c.primary} strokeWidth={2.2} />
+              <Txt variant="small" color={theme.c.primary}>
+                {t('mineSaved')}
+              </Txt>
+            </View>
+          ) : null}
+        </View>
+      </View>
+    </Section>
+  );
+}
+
+function AccountActions() {
   const theme = useTheme();
   const { t } = useI18n();
-  const { member, joinMembership } = useDemo();
-  const toast = useToast();
-  const perks = [t('clinic.member.perk1'), t('clinic.member.perk2'), t('clinic.member.perk3'), t('clinic.member.perk4')];
+  const { signOut, deleteAccount } = useAccount();
+  const [error, setError] = useState<ApiError | null>(null);
   return (
-    <View style={{ backgroundColor: theme.c.ink, borderRadius: theme.r.card, padding: 20, gap: 14, boxShadow: theme.shadow.lift, overflow: 'hidden' }}>
-      {/* A member card: the wordmark, a gold line and the member's name, like the card in a wallet. */}
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-        <PureLogo width={128} color="#FFFFFF" />
-        <Txt variant="eyebrow" color={theme.c.gold}>
-          {t('clinic.member.eyebrow')}
+    <View style={{ gap: 12 }}>
+      <Button kind="secondary" label={t('signOut')} onPress={() => signOut()} />
+      <Pressable
+        accessibilityRole="button"
+        onPress={async () => {
+          if (!(await ask(t('mineDeleteSure'), t('mineDelete'), t('common.back')))) return;
+          try {
+            await deleteAccount();
+          } catch (e) {
+            setError(e instanceof ApiError ? e : new ApiError(0, { error: 'offline' }));
+          }
+        }}
+        hitSlop={8}
+        style={{ alignSelf: 'center', paddingVertical: 6 }}
+      >
+        <Txt variant="small" color={theme.c.muted}>
+          {t('mineDelete')}
         </Txt>
-      </View>
-      <View style={{ height: 1, backgroundColor: theme.c.gold, opacity: 0.6 }} />
-      <View style={{ gap: 4 }}>
-        <Txt variant="caption" color="rgba(255, 255, 255, 0.6)">
-          {`${MEMBER.firstName} ${MEMBER.lastName}`}
-        </Txt>
-        <Txt variant="title" color="#FFFFFF" accentColor="#FFFFFF">
-          {member ? t('clinic.member.joined') : t('clinic.member.title')}
-        </Txt>
-      </View>
-      {member ? null : (
-        <Txt variant="body" color="rgba(255, 255, 255, 0.72)">
-          {t('clinic.member.body')}
-        </Txt>
-      )}
-      <View style={{ gap: 8 }}>
-        {perks.map((perk) => (
-          <View key={perk} style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-            <Icon name="check" size={16} strokeWidth={2.2} color={theme.c.gold} />
-            <Txt variant="body" color="#FFFFFF" style={{ flex: 1 }}>
-              {perk}
-            </Txt>
-          </View>
-        ))}
-      </View>
-      {member ? null : (
-        <Button
-          size="sm"
-          kind="light"
-          label={t('clinic.member.join')}
-          style={{ alignSelf: 'flex-start', marginTop: 4 }}
-          onPress={() => {
-            joinMembership();
-            toast(t('clinic.member.joined'));
-          }}
-        />
-      )}
+      </Pressable>
+      {error ? <Notice error={error} /> : null}
     </View>
   );
 }
@@ -243,9 +437,9 @@ function Membership() {
 function Contact() {
   const theme = useTheme();
   const { t } = useI18n();
-  const { now } = useDemo();
+  const { now } = useApp();
   // The left-to-right mark keeps "09:00–17:00" in order inside Arabic text.
-  const hours = (h: { open: number; close: number }) => `\u200E${String(h.open).padStart(2, '0')}:00–${String(h.close).padStart(2, '0')}:00`;
+  const hours = (h: { open: number; close: number }) => `‎${String(h.open).padStart(2, '0')}:00–${String(h.close).padStart(2, '0')}:00`;
   return (
     <Section title={t('clinic.contact.title')}>
       <List>
@@ -302,74 +496,6 @@ function Contact() {
         </Pressable>
       </List>
     </Section>
-  );
-}
-
-function OrderRow({ order, first }: { order: Order; first: boolean }) {
-  const theme = useTheme();
-  const { t, tp, dayShort, euro } = useI18n();
-  const count = order.lines.reduce((n, l) => n + l.qty, 0);
-  return (
-    <Pressable
-      accessibilityRole="button"
-      onPress={() => router.push(`/bestelling/${order.id}`)}
-      style={({ pressed }) => ({
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 12,
-        paddingVertical: 14,
-        borderTopWidth: first ? 0 : 1,
-        borderTopColor: theme.c.line,
-        opacity: pressed ? 0.8 : 1,
-      })}
-    >
-      <View style={{ width: 44, height: 44, borderRadius: theme.r.small, backgroundColor: theme.c.bg, alignItems: 'center', justifyContent: 'center' }}>
-        <Icon name="bag" size={20} />
-      </View>
-      <View style={{ flex: 1, gap: 2 }}>
-        <Txt variant="bodyStrong">{t('shop.orderNumber', { number: order.number })}</Txt>
-        <Txt variant="small" color={theme.c.muted}>{`${dayShort(order.createdAt)} · ${tp('shop.items', count)} · ${euro(order.total)}`}</Txt>
-      </View>
-      <Badge label={order.delivery === 'ship' ? t('shop.statusShip') : t('shop.statusPickup')} tone="outline" />
-    </Pressable>
-  );
-}
-
-function PastRow({ appointment, first }: { appointment: AppointmentView; first: boolean }) {
-  const theme = useTheme();
-  const { t, text, dayShort } = useI18n();
-  const { treatment, specialist, location } = appointment;
-  return (
-    <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 14,
-        paddingVertical: 14,
-        borderTopWidth: first ? 0 : 1,
-        borderTopColor: theme.c.line,
-      }}
-    >
-      <Photo photo={treatment.photo} style={{ width: 54, height: 64, borderRadius: theme.r.small }} />
-      <View style={{ flex: 1, gap: 2 }}>
-        <Txt variant="bodyStrong">{text(treatment.name)}</Txt>
-        <Txt variant="small" color={theme.c.muted}>{`${dayShort(appointment.start)} · ${specialist.name} · ${cityName(location)}`}</Txt>
-      </View>
-      <Pressable
-        accessibilityRole="button"
-        hitSlop={8}
-        onPress={() =>
-          router.push({
-            pathname: '/afspraak/[treatmentId]',
-            params: { treatmentId: treatment.id, location: location.id, specialist: specialist.id },
-          })
-        }
-      >
-        <Txt variant="smallStrong" color={theme.c.primary}>
-          {t('clinic.appts.bookAgain')}
-        </Txt>
-      </Pressable>
-    </View>
   );
 }
 

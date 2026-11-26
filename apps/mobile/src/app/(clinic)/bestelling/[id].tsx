@@ -1,38 +1,32 @@
-import { DELIVERY_DAYS, CLINIC_COLORS, MEMBER, locationById } from '@pure-clinics/shared';
-import { Redirect, router, useLocalSearchParams } from 'expo-router';
+import { CLINIC_COLORS } from '@pure-clinics/shared';
+import { router, useLocalSearchParams } from 'expo-router';
 import { View } from 'react-native';
 
 import { Button, IconButton } from '@/components/Button';
-import { CartLineRow } from '@/components/CartLineRow';
 import { Icon } from '@/components/Icon';
 import { Screen } from '@/components/Screen';
 import { Txt } from '@/components/Txt';
 import { useI18n } from '@/i18n';
-import { cityName } from '@/clinic';
-import { shopItem } from '@/shop';
-import { useDemo } from '@/state/demo';
+import { cityOf, locationOf } from '@/places';
 import { useTheme } from '@/theme';
 
 // Close the checkout screens underneath, then show a tab.
-function leaveTo(href: '/shop' | '/') {
+function leaveTo(href: '/shop' | '/' | '/mijn') {
   if (router.canDismiss()) router.dismissAll();
   router.navigate(href);
 }
 
-export default function OrderConfirmation() {
-  const theme = useTheme();
-  const { id } = useLocalSearchParams<{ id: string }>();
-  const { t, euro } = useI18n();
-  const { orders } = useDemo();
-  const order = orders.find((o) => o.id === id);
-  if (!order) return <Redirect href="/shop" />;
+type Params = { id: string; number?: string; method?: string; location?: string; total?: string };
 
-  const physical = order.lines.some((l) => shopItem(l.id));
-  const location = locationById(order.locationId);
-  const notes = [
-    physical && order.delivery === 'ship' ? t('shop.orderShip', { days: DELIVERY_DAYS }) : null,
-    physical && order.delivery === 'pickup' ? t('shop.orderPickup', { city: cityName(location), address: location.address }) : null,
-  ].filter((n): n is string => Boolean(n));
+/** After an order: its number, and how it goes from here (pick up and pay, or a payment request and then the post). */
+export default function OrderPlaced() {
+  const theme = useTheme();
+  const params = useLocalSearchParams<Params>();
+  const { t, euro } = useI18n();
+  const post = params.method === 'post';
+  const number = params.number || params.id;
+  const location = locationOf(params.location);
+  const total = Number(params.total);
 
   return (
     <Screen gap={24}>
@@ -41,49 +35,37 @@ export default function OrderConfirmation() {
       </View>
 
       <View style={{ gap: 10 }}>
-        <Txt variant="hero">{t('shop.orderTitle', { name: MEMBER.firstName })}</Txt>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+        <Txt variant="eyebrow" color={theme.c.muted}>
+          {t('orderPlaced')}
+        </Txt>
+        <Txt variant="hero">{t('orderThanks')}</Txt>
+        <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 8 }}>
           <Icon name="check" size={18} color={theme.c.primary} strokeWidth={2} />
           <Txt variant="body" color={CLINIC_COLORS.body} style={{ flex: 1 }}>
-            {t('shop.orderPaid', { amount: euro(order.total) })}
+            {post ? t('orderDonePost', { n: number }) : t('orderDoneText', { n: number, c: cityOf(params.location) })}
           </Txt>
         </View>
       </View>
 
-      <View style={{ backgroundColor: theme.c.surface, borderRadius: theme.r.card, padding: 16, gap: 12 }}>
+      <View style={{ backgroundColor: theme.c.surface, borderRadius: theme.r.card, padding: 16, gap: 10 }}>
         <Txt variant="eyebrow" color={theme.c.muted}>
-          {t('shop.orderNumber', { number: order.number })}
+          {t('orderNo', { n: number })}
         </Txt>
-        {notes.map((note) => (
-          <Txt key={note} variant="body">
-            {note}
-          </Txt>
-        ))}
-      </View>
-
-      <View style={{ backgroundColor: theme.c.surface, borderRadius: theme.r.card, paddingHorizontal: 14 }}>
-        {order.lines.map((line, index) => (
-          <CartLineRow key={line.id} line={line} first={index === 0} />
-        ))}
-        <View style={{ borderTopWidth: 1, borderTopColor: theme.c.line, paddingVertical: 14, gap: 8 }}>
-          {physical ? (
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Txt variant="body" color={theme.c.muted}>
-                {t('shop.shipping')}
-              </Txt>
-              <Txt variant="body">{order.shipping ? euro(order.shipping) : t('clinic.price.free')}</Txt>
-            </View>
-          ) : null}
+        {!post && location ? <Txt variant="body">{`${cityOf(location.id)} · ${location.address}`}</Txt> : null}
+        {Number.isFinite(total) && total > 0 ? (
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Txt variant="bodyStrong">{t('shop.total')}</Txt>
-            <Txt variant="bodyStrong">{euro(order.total)}</Txt>
+            <Txt variant="bodyStrong">{t('total')}</Txt>
+            <Txt variant="bodyStrong">{euro(total)}</Txt>
           </View>
-        </View>
+        ) : null}
+        <Txt variant="small" color={theme.c.muted}>
+          {post ? t('payRequestLong') : t('payAtPickup')}
+        </Txt>
       </View>
 
       <View style={{ gap: 10 }}>
-        <Button label={t('shop.continue')} onPress={() => leaveTo('/shop')} />
-        <Button kind="secondary" label={t('clinic.confirm.home')} onPress={() => leaveTo('/')} />
+        <Button label={t('myPure')} onPress={() => leaveTo('/mijn')} />
+        <Button kind="secondary" label={t('shop.continue')} onPress={() => leaveTo('/shop')} />
       </View>
     </Screen>
   );

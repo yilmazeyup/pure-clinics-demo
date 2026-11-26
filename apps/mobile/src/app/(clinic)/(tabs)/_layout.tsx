@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { EASE_OUT } from '@/components/Motion';
 import { TabBar, type TabSpec } from '@/components/TabBar';
 import { useI18n } from '@/i18n';
-import { useDemo } from '@/state/demo';
+import { useApp } from '@/state/app';
 import { useTheme } from '@/theme';
 
 /**
@@ -31,7 +31,7 @@ function tabTransition(rtl: boolean): Pick<BottomTabNavigationOptions, 'animatio
 export default function ClinicTabs() {
   const { t } = useI18n();
   const theme = useTheme();
-  const { cart } = useDemo();
+  const { cart } = useApp();
   const inCart = cart.reduce((n, line) => n + line.qty, 0);
   const transition = useMemo(() => tabTransition(theme.rtl), [theme.rtl]);
   const tabs: TabSpec[] = [

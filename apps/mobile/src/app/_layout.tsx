@@ -14,7 +14,7 @@ import { LocaleProvider, Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { Platform, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { Intro } from '@/components/Intro';
@@ -22,10 +22,13 @@ import { MorphProvider } from '@/components/Morph';
 import { SiteHeader } from '@/components/SiteHeader';
 import { ToastProvider } from '@/components/Toast';
 import { useLayout } from '@/layout';
-import { DemoProvider, useDemo } from '@/state/demo';
+import { addHomeScreenLinks } from '@/pwa';
+import { AccountProvider } from '@/state/account';
+import { AppProvider, useApp } from '@/state/app';
 import { useTheme } from '@/theme';
 
 SplashScreen.preventAutoHideAsync();
+addHomeScreenLinks();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -51,9 +54,11 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider>
-      <DemoProvider>
-        <Shell />
-      </DemoProvider>
+      <AppProvider>
+        <AccountProvider>
+          <Shell />
+        </AccountProvider>
+      </AppProvider>
     </SafeAreaProvider>
   );
 }
@@ -62,12 +67,16 @@ export default function RootLayout() {
 function Shell() {
   const theme = useTheme();
   const direction = theme.rtl ? 'rtl' : 'ltr';
-  const { setLocale } = useDemo();
+  const { locale, setLocale } = useApp();
+  // Browsers, screen readers and translators read the page's language from the html element.
+  useEffect(() => {
+    if (Platform.OS === 'web' && typeof document !== 'undefined') document.documentElement.lang = locale;
+  }, [locale]);
   const { wide } = useLayout();
   // The opening animation plays once, each time the app starts.
   const [intro, setIntro] = useState(true);
-  // A link such as pureclinics://?lang=ar opens the demo straight in that language. Read from the incoming
-  // link itself, not from route params, which stay on a screen and would switch the language back later.
+  // A link such as pureclinics://?lang=ar (or …/app/?lang=ar on the web) opens the app straight in that language.
+  // Read from the incoming link itself, not from route params, which stay on a screen and would switch it back later.
   const url = Linking.useURL();
   useEffect(() => {
     const lang = url ? Linking.parse(url).queryParams?.lang : undefined;

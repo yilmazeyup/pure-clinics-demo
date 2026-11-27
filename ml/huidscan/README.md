@@ -43,6 +43,7 @@ ml/huidscan/
   label/kappa.py            agreement between two therapists (standard library only)
   train/common.py           zones, landmarks, alignment, crops: the single definition
   train/import_photos.py    Pure's existing photo archive -> code_date_view.jpg, without names or EXIF
+  train/import_voor_na.py   Pure's VOOR|NA composites -> graded skin patches;  train/cv_voor_na.py  5-fold test
   train/prepare.py          photos + labels -> aligned zone crops, detector tiles, split by person
   train/train_zones.py      timm classifier, one head per concern (grade 0-3), MPS
   train/train_boxes.py      D-FINE-N wrapper (setup, config, train, predict, smoke test)
@@ -148,6 +149,29 @@ for them. Without those two files the app behaves exactly as before.
 photos from `Huidscan/fotos`, run `prepare.py --leave-out ~/Huidscan/weglaten.txt` again (it rebuilds
 `data/prepared/...` from scratch, so the old crops are gone) and train the next version without them. Delete old
 `data/prepared/*` folders you no longer use.
+
+## First model on Pure's own photos (27 November 2026)
+
+Pure's published before/after photos (pureclinics.nl, 55 images, of which 44 show a face: 26 clients, 78 photo
+halves) were graded by Claude, half by half, for redness and pigmentation 0-3 (`label/voor-na-grades.csv`; two Sylfirm
+images are the same photos as IPL 05 and were left out). Most are close-ups, so `train/import_voor_na.py` cuts skin
+patches instead of face zones (band, VOOR/NA badge, eyes, brows and lips masked), and `train/cv_voor_na.py` trains and
+tests in five folds, each client tested once and never trained on.
+```sh
+.venv/bin/python train/cv_voor_na.py --name voor-na --minutes 3     # about 4 minutes on the M1
+```
+Result per photo half, on clients the model never saw (`runs/voor-na-cv/cv.json`):
+
+| | redness | pigmentation |
+|---|---|---|
+| AUROC visible (grade >= 1) / clear (>= 2) | 0.82 / 0.78 | 0.70 / 0.75 |
+| a plain colour measure on the same patches | 0.81 / 0.79 (mean a*) | 0.50 / 0.46 (dark-pixel share) |
+| grade within one of Claude's grade | 95% | 97% |
+| before/after pairs where the model reads less after | 38 of 55 | 31 of 36 |
+
+In plain words: for redness the colour measure the app already has is as good; for spots and uneven tone the model
+sees what the colour measure misses. It is not in the app yet: 26 clients, nearly all light skin (one Monk 4, one
+Monk 7), and one grader. More of Pure's own before/after photos (Instagram) are the next step.
 
 ## The SCIN pilot (a pipeline test, not a model)
 

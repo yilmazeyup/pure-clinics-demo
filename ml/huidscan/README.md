@@ -1,6 +1,6 @@
 # Huidscan: Pure Clinics' own skin-scan model
 
-The pipeline to train a model on Pure's own photos that sees visible skin concerns in the app's selfie scan. Status, 27 November 2026: **huidscan-v1 is in the app** for spots and uneven
+The pipeline to train a model on Pure's own photos that sees visible skin concerns in the app's selfie scan. Status, 27 November 2026: **huidscan-v2 is in the app** for spots and uneven
 tone only (pigmentation blended 0.5 into the colour measure; redness stays the colour measure's). It was trained on
 Pure's own before/after photos and SCIN, graded by Claude; see "Every graded photo found" for how good it is.
 
@@ -214,6 +214,31 @@ node train/browser_check.mjs runs/huidscan-v1/export
 The app flags spots when the face's tone reaches 0.35; with the blend that takes a model reading of about grade 2
 ("clear") when the colour measure sees little, so the model alone does not flag faint freckles. To take it out of the
 app, delete `apps/mobile/public/models/huidscan.*`: the scan then works exactly as before.
+
+### 7,582 graded photos, huidscan-v2 and EVREN (27 November 2026, evening)
+
+- **Data:** all of SCIN (one image per case, 4,886 new) and PAD-UFES-20 (2,298, CC BY 4.0), graded on contact sheets
+  by ten helper agents against one calibration sheet (`label/make_sheets.py`, `label/merge_grades.py`,
+  `label/genis-grades.csv`). With `label/alle-grades.csv` that is 7,582 photos or halves.
+- **Test set:** 694 photos of 606 people kept apart by person (`train/make_cls_zip.py`, `data/evren/test`); none of
+  the models below trained on them.
+- **EVREN:** public data only went up (Pure's photos never), 19,200 patches per concern, as class-folder ZIPs split
+  below 10 MB (`train/split_zip.py`). YOLO26s-cls, 224 px, 60 epochs, hue/saturation augmentation off, one GPU,
+  about 1.5 CR per model. The ONNX exports say `AGPL-3.0` (Ultralytics) in their metadata.
+- **huidscan-v2 (in the app):** MobileNetV3-large (Apache-2.0), all 7,582 photos minus the test people, 25 minutes
+  on the M1.
+
+AUROC visible / clear and QWK on the 694 test photos (`train/eval_cls_onnx.py`, `runs/evren-compare.json`):
+
+| | redness | pigmentation |
+|---|---|---|
+| huidscan-v1 (previous app model) | 0.74 / 0.71, QWK 0.33 | 0.66 / 0.67, QWK 0.14 |
+| huidscan-v2 (local, now in the app) | **0.88 / 0.84**, QWK 0.55 | 0.81 / 0.86, QWK 0.21 |
+| EVREN YOLO26s-cls | 0.86 / 0.79, QWK 0.52 | **0.83 / 0.86, QWK 0.56** |
+| EVREN YOLO on Pure's own halves (never uploaded) | 0.70 / 0.70 | 0.61 / 0.72 |
+
+v2 is better on redness; EVREN's model grades pigmentation closer to the graders (QWK) at the same ranking.
+The EVREN models (`runs/evren/*.onnx`, git-ignored) are not in the app: their licence is AGPL-3.0.
 
 ## The SCIN pilot (a pipeline test, not a model)
 

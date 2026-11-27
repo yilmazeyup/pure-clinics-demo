@@ -1,0 +1,249 @@
+{
+  "format": 1,
+  "version": "huidscan-v1-2026-11-27",
+  "file": "huidscan.onnx",
+  "files": {},
+  "pilot": false,
+  "input": {
+    "name": "pixels",
+    "size": 128,
+    "layout": "NCHW",
+    "range": "RGB 0-1"
+  },
+  "heads": [
+    {
+      "name": "redness",
+      "classes": 4
+    },
+    {
+      "name": "pigmentation",
+      "classes": 4
+    }
+  ],
+  "zones": [
+    "forehead",
+    "cheekL",
+    "cheekR",
+    "nose",
+    "chin",
+    "underEyeL",
+    "underEyeR"
+  ],
+  "zonePoints": {
+    "forehead": [
+      67,
+      109,
+      10,
+      338,
+      297,
+      299,
+      296,
+      336,
+      9,
+      107,
+      66,
+      69
+    ],
+    "cheekL": [
+      118,
+      101,
+      36,
+      205,
+      206,
+      216,
+      192,
+      213,
+      147,
+      123,
+      117
+    ],
+    "cheekR": [
+      347,
+      330,
+      266,
+      425,
+      426,
+      436,
+      416,
+      433,
+      376,
+      352,
+      346
+    ],
+    "nose": [
+      168,
+      122,
+      196,
+      3,
+      51,
+      45,
+      4,
+      275,
+      281,
+      248,
+      419,
+      351
+    ],
+    "chin": [
+      18,
+      313,
+      421,
+      428,
+      396,
+      175,
+      171,
+      208,
+      201,
+      83
+    ],
+    "underEyeL": [
+      226,
+      110,
+      24,
+      23,
+      22,
+      26,
+      112,
+      244,
+      233,
+      128,
+      121,
+      120,
+      119,
+      118,
+      117,
+      111,
+      35
+    ],
+    "underEyeR": [
+      446,
+      339,
+      254,
+      253,
+      252,
+      256,
+      341,
+      464,
+      453,
+      357,
+      350,
+      349,
+      348,
+      347,
+      346,
+      340,
+      265
+    ]
+  },
+  "shrink": {
+    "forehead": 0.86,
+    "cheekL": 0.86,
+    "cheekR": 0.86,
+    "nose": 0.8,
+    "chin": 0.84,
+    "underEyeL": 0.92,
+    "underEyeR": 0.92
+  },
+  "crop": {
+    "faceWidth": 384,
+    "pad": 1.15,
+    "eyeL": [
+      33,
+      133
+    ],
+    "eyeR": [
+      362,
+      263
+    ],
+    "widthPoints": [
+      234,
+      454
+    ]
+  },
+  "applies": {
+    "redness": [
+      "forehead",
+      "cheekL",
+      "cheekR",
+      "nose",
+      "chin",
+      "patch"
+    ],
+    "pigmentation": [
+      "forehead",
+      "cheekL",
+      "cheekR",
+      "nose",
+      "chin",
+      "patch"
+    ],
+    "fine_lines": [
+      "forehead",
+      "underEyeL",
+      "underEyeR"
+    ],
+    "under_eye_dark": [
+      "underEyeL",
+      "underEyeR"
+    ]
+  },
+  "blend": {
+    "redness": 0.0,
+    "pigmentation": 0.5
+  },
+  "wording": {
+    "redness": "roodheid",
+    "pigmentation": "pigmentvlekken"
+  },
+  "disclaimer": "Geen medische diagnose. Voor persoonlijk advies: de gratis intake.",
+  "trainedOn": "Pure Clinics' own before/after photos (pureclinics.nl, Instagram) and SCIN, graded by Claude",
+  "backbone": "mobilenetv3_large_100",
+  "metrics": {
+    "redness": {
+      "alle": {
+        "crops": 261,
+        "people": 18,
+        "too_small": false,
+        "qwk": 0.29207429993078804
+      },
+      "1-3": {
+        "crops": 211,
+        "people": 15,
+        "too_small": false,
+        "qwk": 0.2024032699222471
+      },
+      "4-6": {
+        "crops": 50,
+        "people": 3,
+        "too_small": true,
+        "qwk": 0.08026755852842826
+      }
+    },
+    "pigmentation": {
+      "alle": {
+        "crops": 261,
+        "people": 18,
+        "too_small": false,
+        "qwk": 0.305235137533274
+      },
+      "1-3": {
+        "crops": 211,
+        "people": 15,
+        "too_small": false,
+        "qwk": 0.19274118498604065
+      },
+      "4-6": {
+        "crops": 50,
+        "people": 3,
+        "too_small": true,
+        "qwk": 0.4314266023432116
+      }
+    }
+  },
+  "checks": {
+    "fp32_vs_torch_max": 5.0067901611328125e-06,
+    "int8_top_class_agreement": 0.970703125,
+    "int8_mean_abs_diff": 0.011079521849751472
+  },
+  "attribution": "Trained in part on the SCIN dataset (Google Research), SCIN Data Use License, https://github.com/google-research-datasets/scin"
+}

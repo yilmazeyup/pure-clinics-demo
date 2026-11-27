@@ -110,6 +110,8 @@ def main() -> None:
     ap.add_argument("--run", type=Path, required=True)
     ap.add_argument("--opset", type=int, default=17)
     ap.add_argument("--blend", type=float, default=0.5, help="weight of the model against the colour measures in the app")
+    ap.add_argument("--blend-only", nargs="+", metavar="HEAD",
+                    help="blend only these heads (the others get weight 0), e.g. --blend-only pigmentation")
     ap.add_argument("--face", type=Path, default=SAMPLE_FACE, help="a face photo for the app-path check (stays local)")
     ap.add_argument("--int8", choices=["weights", "static"], default="weights",
                     help="weights: int8 weights, fp32 arithmetic (default, safe for MobileNetV3); "
@@ -226,7 +228,7 @@ def main() -> None:
         "shrink": cfg["shrink"],
         "crop": {"faceWidth": cfg["face_width"], "pad": cfg["crop_pad"], "eyeL": EYE_L, "eyeR": EYE_R, "widthPoints": [234, 454]},
         "applies": cfg["applies"],
-        "blend": args.blend,
+        "blend": ({h: (args.blend if h in args.blend_only else 0.0) for h in heads} if args.blend_only else args.blend),
         "wording": {h: CONCERN_NL.get(h, h) for h in heads},
         "disclaimer": "Geen medische diagnose. Voor persoonlijk advies: de gratis intake.",
         "trainedOn": cfg["source"],
@@ -234,7 +236,7 @@ def main() -> None:
         "metrics": evals,
         "checks": {"fp32_vs_torch_max": diff32, "int8_top_class_agreement": agree, "int8_mean_abs_diff": mean8},
     }
-    if cfg.get("public_licence") == "SCIN Data Use License":
+    if cfg.get("public_licence") == "SCIN Data Use License" or "SCIN" in str(cfg.get("source", "")):
         info["attribution"] = ("Trained in part on the SCIN dataset (Google Research), SCIN Data Use License, "
                                "https://github.com/google-research-datasets/scin")
     json.dump(info, open(out / "huidscan.json", "w"), indent=2)

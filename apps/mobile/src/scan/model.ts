@@ -23,8 +23,9 @@ export type ModelInfo = {
   shrink: Record<string, number>;
   crop: { faceWidth: number; pad: number; eyeL: number[]; eyeR: number[]; widthPoints: [number, number] };
   applies?: Record<string, string[]>;
-  /** How much the model counts against the colour measures, 0–1. */
-  blend?: number;
+  /** How much the model counts against the colour measures, 0–1: one number for every head, or per head (a head
+   * left out counts 0). */
+  blend?: number | Record<string, number>;
 };
 
 type OrtTensor = { data: Float32Array | ArrayLike<number>; dims: readonly number[] };
@@ -235,7 +236,11 @@ const SIGNAL_OF: Record<string, keyof Signals> = { redness: 'redness', pigmentat
 
 /** Mixes the model's zone readings into the colour measures and works out the whole face again. */
 export function blendOutcome(outcome: Outcome, readings: ZoneReadings, info: ModelInfo): Outcome {
-  const w = Math.min(1, Math.max(0, info.blend ?? 0.5));
+  const weight = (head: string) => {
+    const b = info.blend;
+    const v = typeof b === 'object' && b ? (b[head] ?? 0) : (b ?? 0.5);
+    return Math.min(1, Math.max(0, Number(v) || 0));
+  };
   const zones = { ...outcome.zones };
   for (const zone of ZONES as ZoneId[]) {
     const r = readings[zone];
@@ -243,7 +248,8 @@ export function blendOutcome(outcome: Outcome, readings: ZoneReadings, info: Mod
     const z = { ...zones[zone] };
     for (const [head, signal] of Object.entries(SIGNAL_OF)) {
       const applies = !info.applies?.[head] || info.applies[head].includes(zone);
-      if (applies && typeof r[head] === 'number' && Number.isFinite(r[head])) z[signal] = (1 - w) * z[signal] + w * r[head];
+      const w = weight(head);
+      if (w > 0 && applies && typeof r[head] === 'number' && Number.isFinite(r[head])) z[signal] = (1 - w) * z[signal] + w * r[head];
     }
     zones[zone] = z;
   }

@@ -7,6 +7,7 @@ export const shell: Record<keyof typeof source, string> = {
   'cp.tab.overzicht': 'Overview',
   'cp.tab.kalender': 'Calendar',
   'cp.tab.campagnes': 'Campaigns',
+  'cp.tab.social': 'Social planning',
   'cp.tab.segmenten': 'Segments',
   'cp.tab.contacten': 'Contacts & consent',
   'cp.tab.instellingen': 'Settings',

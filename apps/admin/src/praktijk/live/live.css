@@ -1,0 +1,16 @@
+/* Requests and orders from the business's own site and app (praktijk/live). */
+.pk-live { display: grid; gap: var(--gap, 18px); margin-bottom: 18px; }
+.pk-live-table td { vertical-align: top; }
+.pk-live-sub { display: block; color: var(--muted); font-size: 12.5px; line-height: 1.45; margin-top: 2px; }
+.pk-live-note { font-style: italic; }
+.pk-live-line { display: block; }
+.pk-live-off { opacity: 0.55; }
+.pk-live-edit td { background: var(--paper-2, rgba(36, 64, 47, 0.04)); }
+.pk-live-form { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; padding: 6px 0; }
+.pk-live-form .pk-field--wide { flex: 1 1 260px; }
+.pk-live-failed { color: var(--bad, #a33a2b); font-size: 12.5px; }
+.pk-live-paid { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.pk-live-track { margin-top: 6px; max-width: 150px; }
+.pk-live-count { width: 76px; text-align: end; }
+.pk-live-low { border-color: var(--warn, #b7791f); }
+.pk-ag-online--waiting { font-weight: 600; }

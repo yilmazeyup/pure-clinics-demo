@@ -148,7 +148,8 @@ li {
   gap: 2px;
 }
 
-.nav button {
+.nav button,
+.nav .nav-out {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -161,9 +162,22 @@ li {
   transition: background 0.2s, color 0.2s;
 }
 
-.nav button:hover {
+.nav button:hover,
+.nav .nav-out:hover {
   background: var(--soft);
   color: var(--ink);
+}
+
+/* Kliniek lives in Huidly's program: the entry leaves this admin, with a small arrow at its end. */
+.nav .nav-out {
+  text-decoration: none;
+}
+.nav .nav-out svg:last-child {
+  margin-inline-start: auto;
+  opacity: 0.6;
+}
+[dir='rtl'] .nav .nav-out svg:last-child {
+  transform: scaleX(-1);
 }
 
 .nav button[aria-current='page'] {

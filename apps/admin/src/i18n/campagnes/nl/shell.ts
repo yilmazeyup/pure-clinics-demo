@@ -6,6 +6,7 @@ export const shell = {
   'cp.tab.overzicht': 'Overzicht',
   'cp.tab.kalender': 'Kalender',
   'cp.tab.campagnes': 'Campagnes',
+  'cp.tab.social': 'Social planning',
   'cp.tab.segmenten': 'Segmenten',
   'cp.tab.contacten': 'Contacten & toestemming',
   'cp.tab.instellingen': 'Instellingen',

@@ -5,6 +5,7 @@ export const CP_TABS = [
   { id: 'overzicht', icon: 'grid' },
   { id: 'kalender', icon: 'calendar' },
   { id: 'campagnes', icon: 'send' },
+  { id: 'social', icon: 'camera' },
   { id: 'segmenten', icon: 'layers' },
   { id: 'contacten', icon: 'users' },
   { id: 'instellingen', icon: 'cog' },

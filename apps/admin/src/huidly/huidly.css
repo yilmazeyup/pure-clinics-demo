@@ -1,0 +1,31 @@
+/* The connection to Huidly: a short form in a card, and one quiet line once connected. */
+.hy-form {
+  display: grid;
+  gap: 14px;
+  max-width: 34em;
+}
+.hy-form input {
+  width: 100%;
+}
+.hy-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.hy-error {
+  color: var(--bad);
+  margin: 0;
+}
+.hy-note {
+  margin: 16px 0 0;
+  color: var(--muted);
+  max-width: 60em;
+}
+.hy-connected {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 12px;
+  color: var(--muted);
+}

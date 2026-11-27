@@ -4,6 +4,7 @@ import { composer } from './composer';
 import { frame } from './frame';
 import { settings } from './settings';
 import { shell } from './shell';
+import { social } from './social';
 
 /** Every text of Campagnes in Italian, the same keys as the Dutch source. */
 export const it: Record<keyof typeof nl, string> = {
@@ -12,4 +13,5 @@ export const it: Record<keyof typeof nl, string> = {
   ...audience,
   ...settings,
   ...composer,
+  ...social,
 };

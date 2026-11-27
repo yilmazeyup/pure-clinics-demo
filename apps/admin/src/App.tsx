@@ -12,6 +12,7 @@ import { CoursesPage } from './dash/Courses';
 import { Overview } from './dash/Overview';
 import { campagnesFromHash, campagnesHash, type CpRoute } from './campagnes/nav';
 import { type PageHelp } from './components/Help';
+import { kliniekUrl } from './huidly/client';
 import { I18nProvider, loadCampagnes, loadPraktijk, useI18n } from './i18n';
 import { screenFromHash, type ScreenId } from './praktijk/nav';
 
@@ -117,6 +118,16 @@ function Panel() {
   const courses = Boolean(admin && route && 'courses' in route);
   // The Webshop entry in the menu opens the module's stock screen; the menu shows it as its own entry.
   const view = praktijk ? (praktijk.screen === 'voorraad' ? 'shop' : 'praktijk') : campagnes ? 'campagnes' : courses ? 'courses' : 'overview';
+  // Kliniek is Huidly's program now (huidly.com/app): of its screens only the stock one stays here, as Webshop. A link to
+  // another one opens it in Huidly, in a tab of its own; an old address to one goes there straight away.
+  const elsewhere = praktijk && praktijk.screen !== 'voorraad' ? praktijk.screen : null;
+  useEffect(() => {
+    if (elsewhere) window.location.replace(kliniekUrl(elsewhere));
+  }, [elsewhere]);
+  const openScreen = (screen: ScreenId | null) => {
+    if (screen && screen !== 'voorraad') window.open(kliniekUrl(screen), '_blank', 'noopener');
+    else open(screen);
+  };
   // What the open page is and is for, behind the question mark at the top right; its parts are read from the page itself.
   const page: PageHelp =
     account?.role === 'staff'
@@ -145,12 +156,10 @@ function Panel() {
               ? openCampagnes({ tab: campagnes?.tab ?? lastTab })
               : next === 'shop'
                 ? open('voorraad')
-                : next === 'praktijk'
-                  ? open(praktijk && praktijk.screen !== 'voorraad' ? praktijk.screen : 'overzicht')
-                  : open(null)
+                : open(null)
           }
           screen={praktijk?.screen ?? null}
-          onScreen={open}
+          onScreen={openScreen}
           tab={campagnes?.tab ?? null}
           onTab={(tab) => openCampagnes({ tab })}
         />
@@ -169,14 +178,14 @@ function Panel() {
             <StaffHome now={clock.now} account={account} />
           ) : account?.role === 'client' ? (
             <ClientHome now={clock.now} account={account} />
-          ) : praktijk ? (
-            <Praktijk now={clock.now} screen={praktijk.screen} feature={praktijk.feature} onScreen={open} />
+          ) : elsewhere ? null : praktijk ? (
+            <Praktijk now={clock.now} screen={praktijk.screen} feature={praktijk.feature} onScreen={openScreen} />
           ) : campagnes ? (
             <Campagnes now={clock.now} route={campagnes} onRoute={openCampagnes} />
           ) : courses ? (
             <CoursesPage now={clock.now} onBack={() => open(null)} />
           ) : (
-            <Overview now={clock.now} playing={clock.playing} onCourses={openCourses} onAgenda={() => open('agenda')} />
+            <Overview now={clock.now} playing={clock.playing} onCourses={openCourses} onAgenda={() => openScreen('agenda')} />
           )}
         </main>
         {admin ? <Tour open={touring} onOpen={tour} onClose={() => setTouring(false)} /> : null}

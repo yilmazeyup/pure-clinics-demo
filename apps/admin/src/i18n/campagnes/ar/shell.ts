@@ -7,6 +7,7 @@ export const shell: Record<keyof typeof source, string> = {
   'cp.tab.overzicht': 'نظرة عامة',
   'cp.tab.kalender': 'التقويم',
   'cp.tab.campagnes': 'الحملات',
+  'cp.tab.social': 'تخطيط وسائل التواصل',
   'cp.tab.segmenten': 'الشرائح',
   'cp.tab.contacten': 'جهات الاتصال والموافقة',
   'cp.tab.instellingen': 'الإعدادات',

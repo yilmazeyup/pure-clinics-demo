@@ -7,17 +7,18 @@ import { AccountSettings } from '../account/Settings';
 import { AccountAvatar, useJob } from '../account/ui';
 import { Accent, useI18n, useSetLocale, type MessageKey } from '../i18n';
 import { CP_TABS, type CpTab } from '../campagnes/nav';
-import { SCREENS, type ScreenId } from '../praktijk/nav';
+import { kliniekUrl } from '../huidly/client';
+import { type ScreenId } from '../praktijk/nav';
 import { HelpButton, type PageHelp } from './Help';
 import { Icon, type IconName } from './Icon';
 import { useToast } from './ui';
 
 /**
  * Overzicht opens the overview (its agenda and treatment plans are cards there, no longer menu entries); Webshop opens
- * the stock screen of the Kliniek module, the one place for products, stock and suppliers; Kliniek opens the module with
- * its screens folded under it (Cliënten among them); Campagnes opens the Mailchimp module. There is no Instellingen or Hulp
- * entry: the clinic's settings are in Kliniek, each person's own open from her name at the foot of the menu, and every
- * page explains itself behind the question mark at its top right.
+ * the webshop and stock screen (the real orders from Pure's site and app on top, through Huidly); Kliniek opens Huidly's
+ * program in a tab of its own, since 27 Nov the clinic's agenda, dossiers and kassa live there (huidly.com/app);
+ * Campagnes opens the Mailchimp module with the social planning. There is no Instellingen or Hulp entry: each person's
+ * own settings open from her name at the foot of the menu, and every page explains itself behind the question mark.
  */
 type NavItem = { icon: IconName; label: MessageKey; shop?: boolean; praktijk?: boolean; campagnes?: boolean };
 
@@ -35,9 +36,6 @@ const STAFF_NAV: NavItem[] = [{ icon: 'calendar', label: 'acc.nav.day' }];
 const CLIENT_NAV: NavItem[] = [{ icon: 'star', label: 'acc.nav.me' }];
 
 const navOf = (account: Account | null) => (account?.role === 'staff' ? STAFF_NAV : account?.role === 'client' ? CLIENT_NAV : ADMIN_NAV);
-
-/** The stock screen sits under Webshop, so the Kliniek group leaves it out. */
-const KLINIEK_SCREENS = SCREENS.filter((s) => s.id !== 'voorraad');
 
 /** `shop` is the stock screen opened from Webshop; `courses` is the full list of treatment plans, part of the overview. */
 type View = 'overview' | 'courses' | 'shop' | 'praktijk' | 'campagnes';
@@ -71,8 +69,8 @@ function SubMenu({ open, label, items }: { open: boolean; label: string; items: 
 }
 
 /**
- * The menu. On a wide screen it stands on the left (on the right in Arabic), and the screens of Praktijk and the parts of
- * Campagnes fold open under their name while that module is open. On a phone and a tablet it is one Menu button that
+ * The menu. On a wide screen it stands on the left (on the right in Arabic), and the parts of Campagnes fold open under
+ * its name while it is open. On a phone and a tablet it is one Menu button that
  * slides the same menu in from the side.
  */
 export function Sidebar({ view, onView, screen, onScreen, tab, onTab }: SidebarProps) {
@@ -131,8 +129,7 @@ export function Sidebar({ view, onView, screen, onScreen, tab, onTab }: SidebarP
   const go = (index: number) => {
     setOpen(false);
     const item = NAV[index];
-    if (item.praktijk) onView('praktijk');
-    else if (item.campagnes) onView('campagnes');
+    if (item.campagnes) onView('campagnes');
     else if (item.shop) onView('shop');
     else if (index === 0 && view !== 'overview') onView('overview');
     else if (index === 0) window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -170,7 +167,15 @@ export function Sidebar({ view, onView, screen, onScreen, tab, onTab }: SidebarP
         </div>
 
         <nav className="nav" aria-label={t('nav.label')}>
-          {NAV.map((item, index) => (
+          {NAV.map((item, index) =>
+            item.praktijk ? (
+              // Kliniek is Huidly's program now (huidly.com/app): the entry opens it in a tab of its own.
+              <a key={item.label} className="nav-out" href={kliniekUrl()} target="_blank" rel="noopener" title={t('nav.kliniekOut')}>
+                <Icon name={item.icon} />
+                {t(item.label)}
+                <Icon name="arrow" size={14} />
+              </a>
+            ) : (
             <Fragment key={item.label}>
               <button
                 className={groupOf(index) === view ? 'is-open' : undefined}
@@ -181,13 +186,6 @@ export function Sidebar({ view, onView, screen, onScreen, tab, onTab }: SidebarP
                 <Icon name={item.icon} />
                 {t(item.label)}
               </button>
-              {item.praktijk ? (
-                <SubMenu
-                  open={view === 'praktijk'}
-                  label={t('pk.subnav.label')}
-                  items={KLINIEK_SCREENS.map((s) => ({ id: s.id, label: t(`pk.screen.${s.id}`), current: s.id === screen, onPick: () => pick(() => onScreen(s.id)) }))}
-                />
-              ) : null}
               {item.campagnes ? (
                 <SubMenu
                   open={view === 'campagnes'}
@@ -196,7 +194,8 @@ export function Sidebar({ view, onView, screen, onScreen, tab, onTab }: SidebarP
                 />
               ) : null}
             </Fragment>
-          ))}
+            ),
+          )}
         </nav>
 
         {account ? (

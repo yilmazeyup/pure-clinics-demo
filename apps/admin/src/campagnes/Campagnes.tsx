@@ -12,6 +12,7 @@ import { ContactsTab } from './tabs/Contacts';
 import { OverviewTab } from './tabs/Overview';
 import { SegmentsTab } from './tabs/Segments';
 import { SettingsTab } from './tabs/Settings';
+import { SocialTab } from './tabs/Social';
 
 type Props = { now: Date; route: CpRoute; onRoute: (route: CpRoute, scroll?: boolean) => void };
 
@@ -59,10 +60,13 @@ function Module() {
             </div>
           </div>
         </div>
-        <p className="pk-demo-line">
-          <PkIcon name="info" size={15} />
-          {t('cp.head.demo')}
-        </p>
+        {/* Social planning holds Pure's real posts, so the demo line about Mailchimp does not stand above it. */}
+        {route.tab === 'social' && !campaign ? null : (
+          <p className="pk-demo-line">
+            <PkIcon name="info" size={15} />
+            {t('cp.head.demo')}
+          </p>
+        )}
       </section>
 
       <div className="pk-body cp-body">
@@ -77,6 +81,7 @@ function Module() {
             {route.tab === 'overzicht' ? <OverviewTab /> : null}
             {route.tab === 'kalender' ? <CalendarTab /> : null}
             {route.tab === 'campagnes' ? <CampaignsTab /> : null}
+            {route.tab === 'social' ? <SocialTab /> : null}
             {route.tab === 'segmenten' ? <SegmentsTab /> : null}
             {route.tab === 'contacten' ? <ContactsTab /> : null}
             {route.tab === 'instellingen' ? <SettingsTab /> : null}

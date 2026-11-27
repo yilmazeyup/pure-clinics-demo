@@ -38,6 +38,7 @@ import {
 import { cityOf, useProductName, useStock } from "./common";
 import { Section, SidePanel } from "./Panel";
 import { useTabInView } from "../useTabInView";
+import { ShopOrders } from '../../live/ShopOrders';
 
 // The webshop on Pure's own site and in the app: its orders and how far each one is, what it sold online, and what a
 // customer sees of the stock on the site and in the app. The stock itself is the clinics' (an order goes out of the
@@ -107,6 +108,7 @@ export function Webshop() {
 
   return (
     <>
+      <ShopOrders />
       <div className="pk-stats">
         <Stat
           label={t("pk.voorraad.web.statToday")}

@@ -293,6 +293,28 @@ export const nl = {
   'tour.sales.body': 'Een zuil per kliniek per dag: behandelingen en webshop. De zuilen van vandaag groeien met elke betaling aan de balie.',
   'tour.play.title': 'Zie een hele dag',
   'tour.play.body': 'Druk hierop en de dag speelt zich af in 45 seconden: boekingen, betalingen en bestellingen komen binnen en alles beweegt mee.',
+  // The connection to Huidly, where the real orders and the social planning live (huidly/).
+  'hy.eyebrow': 'Huidly',
+  'hy.title': 'Verbinden met *Huidly*',
+  'hy.email': 'Je e-mailadres bij Huidly',
+  'hy.code': 'Code uit de e-mail',
+  'hy.codeSent': 'Er is een code van zes cijfers gestuurd naar {email}.',
+  'hy.sendCode': 'Stuur een code',
+  'hy.connect': 'Verbinden',
+  'hy.otherEmail': 'Ander e-mailadres',
+  'hy.note': 'Dit werkt alleen voor wie in het team van Pure Clinics op Huidly staat. De verbinding blijft 14 dagen op deze computer.',
+  'hy.connectedAs': 'Verbonden met Huidly als {name}',
+  'hy.disconnect': 'Verbinding verbreken',
+  'hy.err.email': 'Dat e-mailadres klopt niet.',
+  'hy.err.code': 'Die code klopt niet. Kijk nog eens in de e-mail.',
+  'hy.err.expired': 'Die code is verlopen. Vraag een nieuwe aan.',
+  'hy.err.notTeam': 'Dit e-mailadres hoort niet bij het team van Pure Clinics op Huidly.',
+  'hy.err.tooMany': 'Te veel pogingen. Probeer het over een kwartier opnieuw.',
+  'hy.err.offline': 'Huidly is niet bereikbaar. Controleer je verbinding.',
+  'hy.err.generic': 'Dat lukte niet. Probeer het opnieuw.',
+  'hy.why.social': 'De social-planning van Pure staat in Huidly. Verbind dit beheer één keer met je e-mailadres om de posts, stories en reels hier te zien en te plannen.',
+  'hy.why.shop': 'De echte bestellingen van de site en de app komen binnen in Huidly. Verbind dit beheer één keer met je e-mailadres om ze hier te zien en af te handelen.',
+  'nav.kliniekOut': 'Kliniek opent in Huidly, het programma van de kliniek',
 };
 
 export type MessageKey = keyof typeof nl;

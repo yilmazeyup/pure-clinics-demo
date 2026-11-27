@@ -9,6 +9,7 @@ import { dossier } from './dossier';
 import { facturen } from './facturen';
 import { features } from './features';
 import { instellingen } from './instellingen';
+import { live } from './live';
 import { planner } from './planner';
 import { portaal } from './portaal';
 import { rapportages } from './rapportages';
@@ -30,6 +31,7 @@ export const it: Record<keyof typeof nl, string> = {
   ...facturen,
   ...declaraties,
   ...voorraad,
+  ...live,
   ...berichten,
   ...rapportages,
   ...team,

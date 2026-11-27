@@ -1,8 +1,8 @@
 # Huidscan: Pure Clinics' own skin-scan model
 
-The pipeline to train a model on Pure's own photos that sees visible skin concerns in the app's selfie scan. Status, 27 November 2026: **the whole chain works and was proven
-on a small public dataset (SCIN). There is no model to ship yet; that needs Pure's photos and labels.** The app keeps
-its colour measures until a real model is approved.
+The pipeline to train a model on Pure's own photos that sees visible skin concerns in the app's selfie scan. Status, 27 November 2026: **huidscan-v1 is in the app** for spots and uneven
+tone only (pigmentation blended 0.5 into the colour measure; redness stays the colour measure's). It was trained on
+Pure's own before/after photos and SCIN, graded by Claude; see "Every graded photo found" for how good it is.
 
 What the model does: per face zone (forehead, both cheeks, nose, chin, under both eyes) a grade 0–3 for **redness,
 pigmentation/uneven tone, fine lines and under-eye darkness**, and boxes around **inflamed blemishes, comedones and
@@ -197,6 +197,23 @@ AUROC visible / clear, five folds, people never trained on (`runs/*-cv/cv.json`)
 Dark skin is not read as pigmented: on skin graded 0 the pigmentation reading is about the same for Monk 7-10 (0.72)
 as for Monk 1-3. The large model trained on everything is the best overall and on darker skin; on Pure's own (mostly
 light) photos it is about as good as the first model, within the noise of 28 clients.
+
+### In the app: huidscan-v1
+
+The owner said yes on 27 November 2026. The final model is the large one, trained on 90% of the clients (10% kept
+apart to check the export); the browser check gave Python's numbers in onnxruntime-web and ran the app's own scan with
+and without it.
+```sh
+.venv/bin/python train/import_voor_na.py --src data --grades label/alle-grades.csv --out data/prepared/huidscan-v1 \
+    --folds 10 --fold 0 --val-people 12
+.venv/bin/python train/train_zones.py --data data/prepared/huidscan-v1 --name huidscan-v1 --concerns redness pigmentation \
+    --minutes 10 --backbone mobilenetv3_large_100
+.venv/bin/python train/export_onnx.py --run runs/huidscan-v1 --blend 0.5 --blend-only pigmentation --install
+node train/browser_check.mjs runs/huidscan-v1/export
+```
+The app flags spots when the face's tone reaches 0.35; with the blend that takes a model reading of about grade 2
+("clear") when the colour measure sees little, so the model alone does not flag faint freckles. To take it out of the
+app, delete `apps/mobile/public/models/huidscan.*`: the scan then works exactly as before.
 
 ## The SCIN pilot (a pipeline test, not a model)
 

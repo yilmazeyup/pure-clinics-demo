@@ -52,8 +52,13 @@ def main() -> None:
 
     import cv2
 
-    rows = [r for g in args.grades for r in csv.DictReader(open(g, newline="", encoding="utf-8-sig"))
-            if r.get("source") in PUBLIC]
+    rows, seen = [], set()
+    for g in args.grades:
+        for r in csv.DictReader(open(g, newline="", encoding="utf-8-sig")):
+            # A few SCIN cases share one image file; keep its first grade only.
+            if r.get("source") in PUBLIC and (r["file"], r["half"]) not in seen:
+                seen.add((r["file"], r["half"]))
+                rows.append(r)
     if args.out.exists():
         shutil.rmtree(args.out)
     (args.out / "test").mkdir(parents=True)

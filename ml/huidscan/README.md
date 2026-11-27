@@ -1,7 +1,6 @@
 # Huidscan: Pure Clinics' own skin-scan model
 
-The pipeline to train a model on Pure's own consented photos (and later photos from clinics in the same program) that
-sees visible skin concerns in the app's selfie scan. Status, 27 November 2026: **the whole chain works and was proven
+The pipeline to train a model on Pure's own photos that sees visible skin concerns in the app's selfie scan. Status, 27 November 2026: **the whole chain works and was proven
 on a small public dataset (SCIN). There is no model to ship yet; that needs Pure's photos and labels.** The app keeps
 its colour measures until a real model is approved.
 
@@ -12,9 +11,9 @@ dark spots**. Oily/dry is not modelled. It describes what is visible; it never n
 ## Rules
 
 **Data**
-- Only photos of Pure's clients (and later of other clinics' clients) with **explicit, separate consent** for training
-  a skin-analysis model (TOESTEMMING.md), aged 16+. `prepare.py` refuses any photo whose code is not in the consent
-  file or whose consent was withdrawn.
+- Pure's own client photos. They are already covered by Pure's consent for training, so **clients are not asked
+  anything again**: no extra form, no question in the app. Someone who later asks to be left out goes on the
+  leave-out list (`prepare.py --leave-out`).
 - Client photos are health data. They stay **on the clinic's Mac (FileVault) or in the EU** under a processor
   agreement. **Never to EVREN**, never in WhatsApp, e-mail, consumer cloud or git. `data/`, `runs/`, label exports and
   model files are git-ignored.
@@ -39,10 +38,11 @@ swaps left and right zones.
 
 ```
 ml/huidscan/
-  README.md  TOESTEMMING.md  FOTOPROTOCOL.md
+  README.md  FOTOPROTOCOL.md
   label/index.html          labelling tool for the therapists (local, Dutch)
   label/kappa.py            agreement between two therapists (standard library only)
   train/common.py           zones, landmarks, alignment, crops: the single definition
+  train/import_photos.py    Pure's existing photo archive -> code_date_view.jpg, without names or EXIF
   train/prepare.py          photos + labels -> aligned zone crops, detector tiles, split by person
   train/train_zones.py      timm classifier, one head per concern (grade 0-3), MPS
   train/train_boxes.py      D-FINE-N wrapper (setup, config, train, predict, smoke test)
@@ -51,8 +51,7 @@ ml/huidscan/
   train/browser_check.*     runs the export in headless Chrome through the app's own scan code
   train/pilot_scin.py       the SCIN pilot data;  train/run_pilot.sh  the pilot start to finish
   .venv/  data/  runs/  third_party/      (git-ignored)
-apps/mobile/src/scan/model.ts            the app hook
-docs/huidscan-bijdrage-api.md            contract for a future opt-in "deel deze scan"
+apps/mobile/src/scan/model.ts            the app hook (the app sends no photo anywhere)
 ```
 
 ## Set up (once)
@@ -67,15 +66,19 @@ The face model (`face_landmarker.task`, Google, Apache-2.0) downloads itself int
 
 ## The steps
 
-**1. Consent.** Use TOESTEMMING.md (form in the clinic, text in the app). Keep a consent file on the clinic's Mac,
-outside git, one line per person:
+**1. Pure's photos in.** Copy Pure's existing photo archive to the clinic's Mac as it is, one folder per client (or
+all in one folder with the client's name at the start of each file name, then add `--by name`), and run:
+```sh
+.venv/bin/python train/import_photos.py --src ~/Huidscan/archief --out ~/Huidscan/fotos --key ~/Huidscan/sleutel.csv
 ```
-person,training,pool,date,withdrawn
-PC0042,ja,nee,2026-12-01,
-```
+It keeps the photos with a whole face (legs, tattoos and close-ups are skipped), works out front/left/right from the
+face, takes the date from the photo, and saves clean JPEGs as `PC0042_20261201_F.jpg`: no names, no EXIF, no GPS. The
+names sit only in `sleutel.csv` (client -> code), which stays on that Mac; the next import gives every client the same
+code and skips photos it already took. The archive folder can be deleted afterwards.
 
-**2. Photos.** FOTOPROTOCOL.md: same light and camera, no make-up, three views (F, L, R), file names
-`PC0042_20261201_F.jpg`, straight onto the clinic's Mac in `Huidscan/fotos`.
+**2. New photos.** FOTOPROTOCOL.md: same light and camera, no make-up, three views (F, L, R), straight onto the clinic's
+Mac in `Huidscan/fotos` with the client's code from `sleutel.csv`. Old photos in mixed light still help; the protocol
+makes the new ones better.
 
 **3. Labelling.** Open `label/index.html` in Chrome (double-click is enough; or `python3 -m http.server` in `label/`).
 Each therapist enters initials, opens the photos and grades the zones the face finder proposes, draws boxes, sets the
@@ -91,7 +94,7 @@ double-labelling about one client in five, and all of the test set.
 **4. Prepare.**
 ```sh
 .venv/bin/python train/prepare.py --photos ~/Huidscan/fotos --zones ~/Huidscan/labels/huidscan_zones_*.csv \
-  --boxes ~/Huidscan/labels/huidscan_boxes_*.json --consent ~/Huidscan/toestemming.csv --out data/prepared/pure-v1
+  --boxes ~/Huidscan/labels/huidscan_boxes_*.json --out data/prepared/pure-v1
 ```
 Two therapists' grades are averaged (rounded half up); boxes are merged (`--box-merge union|agree`). The test set takes
 the same number of people from each Monk group (1–3, 4–6, 7–10) as far as the data allows; `prepare.json` says which
@@ -141,9 +144,10 @@ zones from the selfie, and blends its redness and pigmentation readings into the
 `huidscan.json`, 0.5 by default); fine lines and the eye zone are kept in `outcome.model` until the screen gets words
 for them. Without those two files the app behaves exactly as before.
 
-**Withdrawal.** Put the date in `withdrawn` in the consent file, delete that person's photos from `Huidscan/fotos`,
-run `prepare.py` again (it rebuilds `data/prepared/...` from scratch, so the old crops are gone) and train the next
-version without them. Delete old `data/prepared/*` folders you no longer use.
+**Someone asks to be left out.** Look up their code in `sleutel.csv`, add it to `Huidscan/weglaten.txt`, delete their
+photos from `Huidscan/fotos`, run `prepare.py --leave-out ~/Huidscan/weglaten.txt` again (it rebuilds
+`data/prepared/...` from scratch, so the old crops are gone) and train the next version without them. Delete old
+`data/prepared/*` folders you no longer use.
 
 ## The SCIN pilot (a pipeline test, not a model)
 
@@ -164,7 +168,7 @@ version without them. Delete old `data/prepared/*` folders you no longer use.
   zones) and without it (colour measures unchanged). The pilot model's answer moved by up to 0.14 on those tiny
   resampling differences: an unstable model. The check reports this, and a model to ship must not do it.
 - **Labelling tool**: run from `file://` in headless Chrome as two therapists; its exports went through `kappa.py` and
-  `prepare.py` (the person without consent and the withdrawn person were left out).
+  `prepare.py`.
 
 ## What Pure needs to provide (estimates)
 
@@ -172,31 +176,24 @@ Rough rules of thumb, to be revised after the first 150 clients:
 
 | | first real test | version 1 (to consider for the app) |
 |---|---|---|
-| clients with consent, 3 views each | 150 | 600 |
+| clients with usable face photos | 150 | 600 |
 | per concern, clients graded 2 or 3 somewhere | 40 | 150 (redness, pigmentation, fine lines, eye zone each) |
 | Monk 4–6 / 7–10 | as many as come | at least 100 / 60, so the test set has 30 per group |
 | boxes | – | about 1,500 per class: ~300 clients with blemishes/comedones, ~300 with dark spots |
 
-Monk 7–10 will be the hardest from Nijmegen and Uden alone; the pool with other clinics is the realistic way there.
+Monk 7–10 will be the hardest from Nijmegen and Uden alone; photos from other clinics in Huidly are the realistic way
+there, later.
 
 Therapist time: zones, tint and quality about 4 minutes per client (three views); boxes about 12 minutes for a
 blemish-prone face, under 2 minutes to confirm a clear one; one calibration session of 2–3 hours. That is roughly
 **35 hours for the first 150 clients** and **130 hours for version 1** (including double-labelling the test set).
 
-## Decisions for the owner
+## Settled
 
-1. **Retention**: TOESTEMMING.md says 5 years after the photo. Confirm or change.
-2. **Privacy review and DPIA**: health data plus a new technology very likely needs a DPIA (gegevensbeschermings-
-   effectbeoordeling). Have TOESTEMMING.md and the pool set-up checked before the first photo.
-3. **Pretrained weights**: ImageNet/COCO-pretrained starting weights are widely used commercially, but their dataset
-   terms are not a clean licence. Accept that (usual practice), or ask a lawyer, or train from scratch (needs more photos).
-4. **Pool with other clinics**: offer the second checkbox from day one, or later.
-5. **Masked crops**: crops of the forehead and under-eye zones show part of the eyes. Greying out everything outside the
-   zone makes shared crops far less identifying but must then be done in training and in the app alike. Needed for the
-   contribution API; a choice for Pure's own data.
-6. **Set-up**: two daylight LED panels with softboxes, a grey card and a fixed spot in each clinic.
-7. **Huidly**: the contribution API needs Huidly running in an EU region with a processor agreement; nothing here
-   depends on it until then.
+- **No extra consent step**: Pure's photos are covered for training; clients are not asked again (owner, 27 Nov 2026).
+- **Pretrained weights**: ImageNet/COCO starting weights, as is usual commercially. Never D-FINE's Objects365 ones.
+- **Masked crops**: not needed; crops never leave the clinic's Mac or the EU training machine.
+- **Light**: two daylight LED panels with softboxes and a grey card make new photos better; not needed to start.
 
 ## Licences and attribution
 

@@ -1,12 +1,11 @@
 # Fotoprotocol huidscan
 
-Voor de huidtherapeuten. Elke foto voor de huidanalyse volgens dit protocol, in Nijmegen en in Uden hetzelfde, zodat
-het model leert van de huid en niet van het licht of de camera.
+Voor de huidtherapeuten. De foto's die jullie al hebben gaan zoals ze zijn mee in de training (README, stap 1). Voor
+**nieuwe** foto's: maak ze volgens dit protocol, in Nijmegen en in Uden hetzelfde, zodat het model leert van de huid en
+niet van het licht of de camera. Aan de cliënt wordt niets extra's gevraagd.
 
 ## Eerst
 
-- **Toestemming**: alleen fotograferen voor de training als het formulier getekend is (TOESTEMMING.md) en de code in het
-  toestemmingsbestand staat. Jonger dan 16: geen trainingsfoto's.
 - **Huid schoon**: geen make-up, geen crème, geen SPF. Reinig en wacht **10 minuten**, zodat roodheid van het wassen
   wegzakt. Niet direct na een behandeling, peeling of sporten.
 - **Gezicht vrij**: haar naar achteren met een haarband, bril af, oorbellen en piercings in het gezicht zo mogelijk uit.
@@ -48,7 +47,9 @@ het hele gezicht in beeld. Niet goed? Meteen opnieuw.
 ## Bestandsnaam
 
 `<code>_<jjjjmmdd>_<F|L|R>.jpg`, bijvoorbeeld `PC0042_20261201_F.jpg`.
-De code komt van het toestemmingsformulier. **Nooit** de naam van de cliënt in de bestandsnaam.
+De code komt uit het sleutelbestand (`Huidscan/sleutel.csv`, zie README): elke cliënt houdt dezelfde code. **Nooit** de
+naam van de cliënt in de bestandsnaam. `train/import_photos.py` geeft de namen ook zelf, als je de foto's per cliënt in
+een map zet.
 
 ## Opslag
 

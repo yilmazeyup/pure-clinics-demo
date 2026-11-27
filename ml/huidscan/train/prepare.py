@@ -2,12 +2,10 @@
 
     python train/prepare.py --photos ~/Huidscan/fotos \
         --zones label-exports/zones_NV_20261201.csv label-exports/zones_ES_20261201.csv \
-        --boxes label-exports/boxes_NV_20261201.json \
-        --consent ~/Huidscan/toestemming.csv --out data/prepared/pure-v1
+        --boxes label-exports/boxes_NV_20261201.json --out data/prepared/pure-v1
 
 What it does, per photo:
-  1. skips it unless the person has given training consent and has not withdrawn (--consent), and skips photos the
-     therapists marked as bad quality;
+  1. skips photos the therapists marked as bad quality, and the clients in --leave-out;
   2. finds the face with MediaPipe Face Landmarker, levels the eyes and scales the face to a fixed width;
   3. cuts the seven zones as squares (common.zone_crops), scales them to --size and saves them as PNG without any
      metadata, named only by the pseudonym and a hash: no names, dates or EXIF reach data/prepared;
@@ -16,10 +14,9 @@ What it does, per photo:
 Then it splits by person (never one person in two splits), with a test set that has the same number of people from
 each Monk group (1-3, 4-6, 7-10) as far as the data allows.
 
-Consent file (CSV, kept by Pure next to the client files, not in git):
-    person,training,pool,date,withdrawn
-    PC0042,ja,nee,2026-12-01,
-Public datasets with a licence that allows training (SCIN) pass --public-licence instead.
+Pure's photos are already covered by Pure's consent for training; clients are not asked again. --leave-out takes a
+text file with one client code per line for anyone who later asks to be left out. Public datasets with a licence that
+allows training (SCIN) pass --public-licence.
 """
 
 from __future__ import annotations
@@ -46,21 +43,16 @@ from common import (  # noqa: E402
 GRADE_COLS = CONCERNS
 
 
-def read_consent(path: Path | None) -> dict[str, dict]:
+def read_leave_out(path: Path | None) -> set[str]:
+    """Client codes to leave out, one per line (a CSV with a first column of codes works too)."""
     if path is None:
-        return {}
-    out = {}
-    for r in csv.DictReader(open(path, newline="", encoding="utf-8-sig")):
-        out[r["person"].strip()] = r
+        return set()
+    out = set()
+    for line in open(path, encoding="utf-8-sig"):
+        code = line.split(",")[0].strip()
+        if code and code.lower() not in {"person", "code"}:
+            out.add(code)
     return out
-
-
-def has_consent(consent: dict, person: str) -> bool:
-    r = consent.get(person)
-    if not r:
-        return False
-    yes = (r.get("training") or "").strip().lower() in {"ja", "yes", "1", "true", "j"}
-    return yes and not (r.get("withdrawn") or "").strip()
 
 
 def read_zone_labels(paths: list[Path]) -> dict:
@@ -233,7 +225,7 @@ def main() -> None:
     ap.add_argument("--zones", type=Path, nargs="+", required=True, help="zone-grade CSVs from the labelling tool")
     ap.add_argument("--boxes", type=Path, nargs="*", default=[], help="COCO JSONs from the labelling tool")
     ap.add_argument("--box-merge", choices=["union", "agree"], default="union")
-    ap.add_argument("--consent", type=Path, help="consent CSV (person,training,pool,date,withdrawn)")
+    ap.add_argument("--leave-out", type=Path, help="client codes to leave out, one per line")
     ap.add_argument("--public-licence", help="name of the licence that allows training, for public datasets only")
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--size", type=int, default=128, help="zone crop size in pixels")
@@ -254,8 +246,6 @@ def main() -> None:
 
     import cv2
 
-    if not args.consent and not args.public_licence:
-        sys.exit("Give --consent (Pure's clients) or --public-licence (a public dataset whose licence allows training).")
     # Research-only datasets never go into weights Pure ships.
     where = f"{args.photos} {args.public_licence or ''}".lower()
     for name in ("acne04", "acnescu", "ffhq"):
@@ -264,7 +254,7 @@ def main() -> None:
     # MST-E (Monk skin tone examples) may be used to evaluate, never to train: everything goes to the test split.
     if "mst-e" in where or "mste" in where:
         args.eval_only = True
-    consent = read_consent(args.consent)
+    leave_out = read_leave_out(args.leave_out)
     labels = read_zone_labels(args.zones)
     boxes = read_boxes(args.boxes, args.box_merge) if args.boxes else {}
 
@@ -285,8 +275,8 @@ def main() -> None:
     for name, im in sorted(labels.items()):
         person = im["person"]
         report["photos_labelled"] += 1
-        if args.consent and not has_consent(consent, person):
-            report["skipped_no_consent_or_withdrawn"] += 1
+        if person in leave_out:
+            report["skipped_left_out"] += 1
             continue
         bad = any(q in {"slecht", "bad"} for q in im["quality"])
         if bad and not args.keep_bad:
@@ -379,7 +369,7 @@ def main() -> None:
 
     counts = Counter((split[r["person"]], monk_group(r["monk"])) for r in rows)
     meta = {
-        "source": str(args.public_licence or "Pure Clinics, with consent"),
+        "source": str(args.public_licence or "Pure Clinics' own photos"),
         "public_licence": args.public_licence,
         "size": args.size, "face_width": FACE_WIDTH, "crop_pad": CROP_PAD,
         "zones": ZONES, "zone_points": ZONE_POINTS, "shrink": SHRINK, "applies": APPLIES,

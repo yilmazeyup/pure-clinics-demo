@@ -1,8 +1,9 @@
 # Huidscan: Pure Clinics' own skin-scan model
 
-The pipeline to train a model on Pure's own photos that sees visible skin concerns in the app's selfie scan. Status, 27 November 2026: **huidscan-v2 is in the app** for spots and uneven
-tone only (pigmentation blended 0.5 into the colour measure; redness stays the colour measure's). It was trained on
-Pure's own before/after photos and SCIN, graded by Claude; see "Every graded photo found" for how good it is.
+The pipeline to train a model on Pure's own photos that sees visible skin concerns in the app's selfie scan. Status, 27 November 2026: **huidscan-v2 and EVREN's YOLO
+pigmentation model are in the app together** for spots and uneven tone only (their mean, blended 0.5 into the colour
+measure; redness stays the colour measure's). v2 was trained here on Pure's own before/after photos and public data,
+the YOLO model on EVREN on public data only; see "In the app: v2 with EVREN's model" for how good they are.
 
 What the model does: per face zone (forehead, both cheeks, nose, chin, under both eyes) a grade 0–3 for **redness,
 pigmentation/uneven tone, fine lines and under-eye darkness**, and boxes around **inflamed blemishes, comedones and
@@ -238,7 +239,38 @@ AUROC visible / clear and QWK on the 694 test photos (`train/eval_cls_onnx.py`, 
 | EVREN YOLO on Pure's own halves (never uploaded) | 0.70 / 0.70 | 0.61 / 0.72 |
 
 v2 is better on redness; EVREN's model grades pigmentation closer to the graders (QWK) at the same ranking.
-The EVREN models (`runs/evren/*.onnx`, git-ignored) are not in the app: their licence is AGPL-3.0.
+
+### In the app: v2 with EVREN's model (27 November 2026, night)
+
+The owner said "Uygulamaya koy" knowing the AGPL-3.0 licence; the app's code is public on GitHub
+(`yilmazeyup/pure-clinics-demo`), and `apps/mobile/public/models/LICENSES.txt` says where its source is.
+```sh
+.venv/bin/python train/add_yolo.py --export runs/huidscan-v2/export \
+    --model pigmentation=runs/evren/pigment.onnx redness=runs/evren/roodheid.onnx --install
+node train/browser_check.mjs runs/huidscan-v2/export
+```
+- **Both together** score better than either alone on the 694 test photos (`runs/evren-together-int8.json`, the
+  files the app ships):
+
+  | | redness | pigmentation |
+  |---|---|---|
+  | huidscan-v2 | 0.88 / 0.84 | 0.82 / 0.86 |
+  | EVREN YOLO | 0.86 / 0.79 | 0.83 / 0.86 |
+  | **mean of the two** | **0.89 / 0.83** | **0.85 / 0.87** |
+
+- **In the app**, huidscan.json lists the YOLO models under `also`; `model.ts` cuts the same zones at 224 px, averages
+  their reading with v2's per zone, and downloads one only when its head's blend is above 0. So only the pigmentation
+  model (5.6 MB) is fetched; the redness one is in `public/models` but off, because on Pure's own halves the colour
+  measure reads redness better (0.81 / 0.79, mean a*) than the YOLO model (0.70 / 0.70). Turning it on is
+  `"blend": {"redness": 0.5}`.
+- **int8**: with every layer in int8 the YOLO models changed their top class for up to 40% of test patches; with the
+  first and last layer kept fp32 (`weight_only_int8(skip_ends=True)`) 1-3%, at 5.6 MB instead of 21.8 MB.
+- **On faces**: YOLO was trained on skin squares and the app gives it face zones. On the 29 Pure halves with a face it
+  read about the same either way (pigmentation 0.67 / 0.60 on zones, redness 0.84 / 0.77); too few to say more.
+- **Calibration**: on clear skin (grade 0) v2 reads pigmentation 0.25 of 1, YOLO 0.05, the mean 0.15; the app flags
+  spots at a tone of 0.35, so the mean flags slightly fewer clean faces than v2 alone.
+- **Browser check**: everything ok; the YOLO model in onnxruntime-web is within 0.026 of Python on the reference face,
+  about 330 ms for seven zones on the M1, and the scan reports `model.also: ["huidscan-pigment-evren.onnx"]`.
 
 ## The SCIN pilot (a pipeline test, not a model)
 
@@ -292,4 +324,7 @@ blemish-prone face, under 2 minutes to confirm a clear one; one calibration sess
 - timm: Apache-2.0. MediaPipe Face Landmarker: Apache-2.0 (Google). onnxruntime(-web): MIT.
 - Monk Skin Tone Scale (used in the labelling tool): CC BY 4.0, Dr. Ellis Monk / Google.
 - SCIN: SCIN Data Use License, Google Research, https://github.com/google-research-datasets/scin ; Ward A, et al.
-  JAMA Netw Open. 2024;7(11):e2446615. Used for the pilot only; nothing from it ships.
+  JAMA Netw Open. 2024;7(11):e2446615. In the training data of huidscan-v2 and the EVREN models (attribution in
+  huidscan.json and `apps/mobile/public/models/LICENSES.txt`).
+- PAD-UFES-20: CC BY 4.0, Pacheco AGC et al., Data in Brief 2020, https://data.mendeley.com/datasets/zr7vgbcyr2/1.
+- Ultralytics YOLO (EVREN's classifiers, `huidscan-*-evren.onnx` in the app): AGPL-3.0.

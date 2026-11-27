@@ -17,8 +17,9 @@ export type Outcome = {
   overall: Signals;
   /** Median lightness of the skin (L*, 0–100): below about 35 the photo is too dark to say much. */
   light: number;
-  /** Only when a trained model sits in public/models/ (see scan/model.ts): its own reading per zone and concern, 0–1. */
-  model?: { version: string; zones: Record<string, Record<string, number>> };
+  /** Only when a trained model sits in public/models/ (see scan/model.ts): its own reading per zone and concern, 0–1;
+   * `also`: the files of the second models averaged in. */
+  model?: { version: string; zones: Record<string, Record<string, number>>; also?: string[] };
 };
 
 export const ZONES: ZoneId[] = ['forehead', 'cheekL', 'cheekR', 'nose', 'chin'];

@@ -150,7 +150,19 @@ try {
     + (stable ? '' : ' -- the model reacts strongly to tiny resampling differences; a model to ship should not'));
   console.log('     per zone (Python / browser):', Object.entries(a.B.perZone).map(([z, v]) => `${z} ${v.python}/${v.browser}`).join(', '));
   fs.writeFileSync(path.join(exportDir, 'reference', 'face_crops_browser.png'), Buffer.from(a.B.crops.split(',')[1], 'base64'));
+  const counts = (head) => {
+    const b = info.blend;
+    return (typeof b === 'object' && b ? (b[head] ?? 0) : (b ?? 0.5)) > 0;
+  };
+  const wantAlso = (info.also || []).filter((x) => counts(x.head)).map((x) => x.file);
+  check(JSON.stringify(a.D.loaded) === JSON.stringify(wantAlso),
+    `D model.ts loads the also-models whose head counts: ${JSON.stringify(a.D.loaded)} of ${JSON.stringify((info.also || []).map((x) => x.file))}`);
+  for (const [file, d] of Object.entries(a.D.perModel)) {
+    check(d.maxDiff < 0.05, `D ${file} on the face's zones (${a.D.ms} ms): max difference to Python ${d.maxDiff.toFixed(3)}`);
+    console.log('     per zone (Python / browser):', Object.entries(d.perZone).map(([z, v]) => `${z} ${v.python}/${v.browser}`).join(', '));
+  }
   check(a.C.kind === 'found' && a.C.modelVersion === info.version, `C run.ts scanPhoto with model: ${a.C.kind}, model ${a.C.modelVersion} (${a.C.ms} ms)`);
+  check(JSON.stringify(a.C.alsoUsed) === JSON.stringify(wantAlso), `C the scan averaged in ${JSON.stringify(a.C.alsoUsed)}`);
   console.log('     overall with model:', JSON.stringify(a.C.overall));
 
   const b = await browser.open(`http://127.0.0.1:${withoutModel.address().port}/check.html?model=none&export=${encodeURIComponent(exportUrl)}`);

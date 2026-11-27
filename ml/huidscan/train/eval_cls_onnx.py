@@ -6,8 +6,9 @@
 --yolo takes ONNX exports of EVREN's YOLO classification models (input 1x3xSxS RGB 0-1, output class probabilities;
 class names are read from the ONNX metadata, e.g. "roodheid-2", so the grade is the number after the dash).
 --huidscan takes the app's model (input "pixels" 128 px, one output per concern).
-Only test patches of photos graded in label/genis-grades.csv count, so huidscan-v1 (trained before those existed) is
-compared on photos neither model has seen. Reports AUROC for "visible" (>= 1) and "clear" (>= 2) per photo, quadratic
+Only test patches of photos graded in label/genis-grades.csv count; huidscan-v2 was trained with the same people
+held out (import_voor_na.py --test-people), so every model is compared on photos it has not seen. With both --yolo
+and --huidscan, "together" scores the mean of the two expected grades, as the app combines them. Reports AUROC for "visible" (>= 1) and "clear" (>= 2) per photo, quadratic
 weighted kappa and within-one agreement, overall and per Monk group; and, for the YOLO models, the same on Pure's
 own before/after halves (which never went to EVREN).
 """
@@ -118,8 +119,11 @@ def main() -> None:
             e = np.array([yolo[head].expected(pats[i]).mean() for i in imgs])
             out[f"evren_yolo_{head}"] = report(y, e, groups)
         if hs is not None:
-            e = np.array([hs.expected(pats[i], head).mean() for i in imgs])
-            out[f"huidscan_v1_{head}"] = report(y, e, groups)
+            eh = np.array([hs.expected(pats[i], head).mean() for i in imgs])
+            out[f"huidscan_{head}"] = report(y, eh, groups)
+            if head in yolo:
+                # Both models together, as the app runs them: the mean of their expected grades.
+                out[f"together_{head}"] = report(y, (e + eh) / 2, groups)
 
     # Pure's own before/after halves: never uploaded to EVREN.
     if yolo:

@@ -4,6 +4,9 @@ import { overallOf, type Outcome, type Pt, type Signals, type ZoneId, ZONES } fr
 // how to cut the zones) and the .onnx file it names, the model is loaded with onnxruntime-web (WASM, from jsDelivr at
 // a fixed version), runs on the same face zones on the device, and its reading per zone is blended into the colour
 // measures. Without those files nothing changes: the scan shows the colour measures exactly as before.
+// huidscan.json may list "also" models (EVREN's YOLO classifiers, one head each, their own input size): they read the
+// same zones and their reading is averaged with the main model's for that head. One is downloaded only when its
+// head's blend is above 0.
 // Training, export and the files' format: ml/huidscan/README.md. The photo never leaves the device.
 
 const ORT_VERSION = '1.31.1';
@@ -26,6 +29,18 @@ export type ModelInfo = {
   /** How much the model counts against the colour measures, 0–1: one number for every head, or per head (a head
    * left out counts 0). */
   blend?: number | Record<string, number>;
+  also?: AlsoInfo[];
+};
+
+/** A second model for one head, as written by ml/huidscan/train/add_yolo.py. */
+export type AlsoInfo = {
+  file: string;
+  head: string;
+  input: { name: string; size: number };
+  output: string;
+  /** The grade (0–3) of each output class, in order. */
+  grades: number[];
+  licence?: string;
 };
 
 type OrtTensor = { data: Float32Array | ArrayLike<number>; dims: readonly number[] };
@@ -36,7 +51,7 @@ type Ort = {
   InferenceSession: { create: (url: string, options?: unknown) => Promise<Session> };
 };
 
-export type ZoneModel = { info: ModelInfo; session: Session; ort: Ort };
+export type ZoneModel = { info: ModelInfo; session: Session; ort: Ort; also: { info: AlsoInfo; session: Session }[] };
 /** Per zone, per head: 0 (not seen) to 1 (clearly visible). */
 export type ZoneReadings = Record<string, Record<string, number>>;
 
@@ -55,7 +70,20 @@ function readInfo(raw: unknown): ModelInfo | null {
   if (!info.input || !(info.input.size > 0) || typeof info.input.name !== 'string') return null;
   if (!Array.isArray(info.heads) || !info.heads.length || !Array.isArray(info.zones) || !info.zones.length) return null;
   if (!info.zonePoints || !info.shrink || !info.crop) return null;
+  const also = Array.isArray(info.also) ? info.also : [];
+  info.also = also.filter(
+    (a) => a && typeof a.file === 'string' && /^[\w.-]+\.onnx$/.test(a.file) && typeof a.head === 'string' &&
+      a.input && a.input.size > 0 && typeof a.input.name === 'string' && typeof a.output === 'string' &&
+      Array.isArray(a.grades) && a.grades.length > 1,
+  );
   return info as ModelInfo;
+}
+
+/** How much a head counts against the colour measures, 0–1 (see ModelInfo.blend). */
+export function blendWeight(info: ModelInfo, head: string): number {
+  const b = info.blend;
+  const v = typeof b === 'object' && b ? (b[head] ?? 0) : (b ?? 0.5);
+  return Math.min(1, Math.max(0, Number(v) || 0));
 }
 
 let loading: Promise<ZoneModel | null> | null = null;
@@ -82,7 +110,16 @@ async function open(base: string): Promise<ZoneModel | null> {
       ort.env.wasm.wasmPaths = ORT_CDN;
       ort.env.wasm.numThreads = 1;
       const session = await ort.InferenceSession.create(`${base}models/${info.file}`, { executionProviders: ['wasm'] });
-      return { info, session, ort };
+      const also: ZoneModel['also'] = [];
+      for (const a of info.also ?? []) {
+        if (blendWeight(info, a.head) <= 0) continue; // does not count, so not downloaded
+        try {
+          also.push({ info: a, session: await ort.InferenceSession.create(`${base}models/${a.file}`, { executionProviders: ['wasm'] }) });
+        } catch {
+          // the main model still works without it
+        }
+      }
+      return { info, session, ort, also };
     } catch {
       return null;
     }
@@ -133,11 +170,10 @@ function hullOf(points: Pt[]): Pt[] {
   return lower.slice(0, -1).concat(upper.slice(0, -1));
 }
 
-/** For each zone, the map from photo pixels to its size×size crop. */
-export function zoneMaps(lm: Pt[], info: ModelInfo): { zone: string; m: Affine }[] {
+/** For each zone, the map from photo pixels to its size×size crop (size: the main model's input unless given). */
+export function zoneMaps(lm: Pt[], info: ModelInfo, size = info.input.size): { zone: string; m: Affine }[] {
   const a = alignment(lm, info.crop);
   const aligned = lm.map((p) => map(a, p));
-  const size = info.input.size;
   return info.zones.map((zone) => {
     const h = hullOf((info.zonePoints[zone] ?? []).map((i) => aligned[i]).filter(Boolean));
     const cx = h.reduce((s, q) => s + q.x, 0) / Math.max(1, h.length);
@@ -162,9 +198,13 @@ export function zoneMaps(lm: Pt[], info: ModelInfo): { zone: string; m: Affine }
  * Cuts the zones out of the photo as one batch of pixels (n × 3 × size × size, RGB 0–1). As in common.cut(): when a
  * zone is shrunk to less than half, the photo is first drawn smaller with the browser's best smoothing, then mapped.
  */
-export function cutZones(source: HTMLCanvasElement, lm: Pt[], info: ModelInfo): { zones: string[]; pixels: Float32Array } {
-  const size = info.input.size;
-  const maps = zoneMaps(lm, info);
+export function cutZones(
+  source: HTMLCanvasElement,
+  lm: Pt[],
+  info: ModelInfo,
+  size = info.input.size,
+): { zones: string[]; pixels: Float32Array } {
+  const maps = zoneMaps(lm, info, size);
   const pixels = new Float32Array(maps.length * 3 * size * size);
   const out = document.createElement('canvas');
   out.width = size;
@@ -230,17 +270,50 @@ export async function readZones(model: ZoneModel, source: HTMLCanvasElement, lm:
   return readings;
 }
 
+/** Runs each "also" model on the same zones, cut at its own input size: per model, per zone, its head's 0–1 reading. */
+export async function readAlso(model: ZoneModel, source: HTMLCanvasElement, lm: Pt[]): Promise<ZoneReadings[]> {
+  const out: ZoneReadings[] = [];
+  for (const { info: a, session } of model.also) {
+    const size = a.input.size;
+    const { zones, pixels } = cutZones(source, lm, model.info, size);
+    const plane = 3 * size * size;
+    const top = Math.max(...a.grades) || 1;
+    const readings: ZoneReadings = {};
+    // One zone at a time: EVREN's exports take a batch of one.
+    for (let n = 0; n < zones.length; n++) {
+      const x = new model.ort.Tensor('float32', pixels.slice(n * plane, (n + 1) * plane), [1, 3, size, size]);
+      const t = (await session.run({ [a.input.name]: x }))[a.output];
+      if (!t) continue;
+      const p = Array.from({ length: a.grades.length }, (_, j) => Number(t.data[j]));
+      readings[zones[n]] = { [a.head]: p.reduce((s, v, j) => s + v * a.grades[j], 0) / top };
+    }
+    out.push(readings);
+  }
+  return out;
+}
+
+/** Per zone and head, the mean of the main model's reading and the "also" models' readings for that head. */
+export function combineReadings(main: ZoneReadings, also: ZoneReadings[]): ZoneReadings {
+  const out: ZoneReadings = {};
+  for (const [zone, heads] of Object.entries(main)) {
+    out[zone] = { ...heads };
+    for (const head of Object.keys(heads)) {
+      const vals = [heads[head], ...also.map((r) => r[zone]?.[head])].filter(
+        (v): v is number => typeof v === 'number' && Number.isFinite(v),
+      );
+      if (vals.length) out[zone][head] = vals.reduce((s, v) => s + v, 0) / vals.length;
+    }
+  }
+  return out;
+}
+
 // Which head feeds which of the scan's signals. Shine is never the model's (oily/dry is not modelled); blemishes will
 // come from the box detector later. Fine lines and the eye zone are kept in outcome.model until the screen shows them.
 const SIGNAL_OF: Record<string, keyof Signals> = { redness: 'redness', pigmentation: 'tone' };
 
 /** Mixes the model's zone readings into the colour measures and works out the whole face again. */
-export function blendOutcome(outcome: Outcome, readings: ZoneReadings, info: ModelInfo): Outcome {
-  const weight = (head: string) => {
-    const b = info.blend;
-    const v = typeof b === 'object' && b ? (b[head] ?? 0) : (b ?? 0.5);
-    return Math.min(1, Math.max(0, Number(v) || 0));
-  };
+export function blendOutcome(outcome: Outcome, readings: ZoneReadings, info: ModelInfo, also: string[] = []): Outcome {
+  const weight = (head: string) => blendWeight(info, head);
   const zones = { ...outcome.zones };
   for (const zone of ZONES as ZoneId[]) {
     const r = readings[zone];
@@ -253,7 +326,8 @@ export function blendOutcome(outcome: Outcome, readings: ZoneReadings, info: Mod
     }
     zones[zone] = z;
   }
-  return { ...outcome, zones, overall: overallOf(zones), model: { version: info.version, zones: readings } };
+  const model = { version: info.version, zones: readings, ...(also.length ? { also } : {}) };
+  return { ...outcome, zones, overall: overallOf(zones), model };
 }
 
 /** The scan's hook: with a model, the blended outcome; without one (or on any error), the outcome as it was. */
@@ -261,7 +335,10 @@ export async function withZoneModel(outcome: Outcome, source: HTMLCanvasElement,
   try {
     const model = await loadZoneModel();
     if (!model) return outcome;
-    return blendOutcome(outcome, await readZones(model, source, lm), model.info);
+    const main = await readZones(model, source, lm);
+    const also = model.also.length ? await readAlso(model, source, lm).catch(() => []) : [];
+    const used = also.length ? model.also.map((a) => a.info.file) : [];
+    return blendOutcome(outcome, combineReadings(main, also), model.info, used);
   } catch {
     return outcome;
   }

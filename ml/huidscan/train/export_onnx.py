@@ -51,12 +51,14 @@ class Exported(nn.Module):
         return tuple(F.softmax(out[k], dim=1) for k in self.heads)
 
 
-def weight_only_int8(src: Path, dst: Path, min_size: int = 512) -> None:
+def weight_only_int8(src: Path, dst: Path, min_size: int = 512, skip_ends: bool = False) -> None:
     """int8 weights (per output channel) with a DequantizeLinear in front of each Conv/Gemm; activations stay fp32.
 
     The download shrinks about 3.5x while the arithmetic stays fp32, so the outputs barely move. Full int8
     (quantize_static/quantize_dynamic) disturbs MobileNetV3 badly (hard-swish, squeeze-excite): on the pilot it changed
     the top class for about 30% of crops. The model is small enough that fp32 arithmetic is quick in WASM.
+    skip_ends keeps the first and the last Conv/Gemm in fp32: EVREN's YOLO classifiers need it (with every layer in
+    int8 the top class changed for 40% of test patches, with the two ends kept for 1-3%).
     """
     import onnx
     from onnx import helper, numpy_helper
@@ -65,8 +67,9 @@ def weight_only_int8(src: Path, dst: Path, min_size: int = 512) -> None:
     g = m.graph
     inits = {i.name: i for i in g.initializer}
     deq = []
-    for n in g.node:
-        if n.op_type not in ("Conv", "Gemm") or len(n.input) < 2 or n.input[1] not in inits:
+    weighted = [n for n in g.node if n.op_type in ("Conv", "Gemm") and len(n.input) >= 2 and n.input[1] in inits]
+    for k, n in enumerate(weighted):
+        if skip_ends and k in (0, len(weighted) - 1):
             continue
         w = numpy_helper.to_array(inits[n.input[1]])
         if w.size < min_size:

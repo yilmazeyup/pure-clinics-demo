@@ -7,11 +7,12 @@
 <body>
 <pre id="out">bezig…</pre>
 <script type="module">
-// Run by browser_check.mjs in headless Chrome. Three checks:
+// Run by browser_check.mjs in headless Chrome. Four checks:
 //  A  the exported model (fp32 and int8) in onnxruntime-web gives Python's numbers on the reference crops;
 //  B  the app's own model.ts cuts the zones of a face (Python's landmarks) and gets Python's numbers;
 //  C  the app's own run.ts scans that face from scratch (MediaPipe in the browser) and blends the model in,
-//     or, on the server without a model, leaves the colour measures exactly as they are.
+//     or, on the server without a model, leaves the colour measures exactly as they are;
+//  D  the "also" models huidscan.json lists (only those whose head counts) give Python's numbers on those zones.
 const ORT = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.31.1/dist/';
 const q = new URLSearchParams(location.search);
 const exp = q.get('export');
@@ -89,6 +90,25 @@ try {
     zones.forEach((_, n) => { const plane = S * S; for (let i = 0; i < plane; i++) { const x = (i % S) + n * S, y = Math.floor(i / S); const o = 4 * (y * S * zones.length + x); for (let c = 0; c < 3; c++) id.data[o + c] = Math.round(pixels[n * 3 * plane + c * plane + i] * 255); id.data[o + 3] = 255; } });
     sg.putImageData(id, 0, 0);
     result.B = { file: zm.info.file, ms, maxDiff: maxd, perZone, pixelDiff, crops: strip.toDataURL('image/png') };
+
+    // D: the "also" models (EVREN's YOLO) on the same zones, against Python's numbers (reference/also.json).
+    result.D = { loaded: zm.also.map((a) => a.info.file), perModel: {} };
+    if (zm.also.length) {
+      const aref = await (await fetch(exp + 'reference/also.json')).json();
+      const t2 = performance.now();
+      const ra = await model.readAlso(zm, canvas, lm);
+      result.D.ms = Math.round(performance.now() - t2);
+      zm.also.forEach(({ info: a }, k) => {
+        let md = 0; const per = {};
+        for (const [zone, p] of Object.entries(aref.files[a.file] || {})) {
+          const want = p.reduce((s, v, j) => s + v * a.grades[j], 0) / Math.max(...a.grades);
+          const got = ra[k][zone]?.[a.head];
+          per[zone] = { python: +want.toFixed(4), browser: got == null ? null : +got.toFixed(4) };
+          md = Math.max(md, got == null ? 1 : Math.abs(want - got));
+        }
+        result.D.perModel[a.file] = { maxDiff: md, perZone: per };
+      });
+    }
   }
 
   // C: the app's whole scan, as advies.tsx calls it.
@@ -100,6 +120,7 @@ try {
   result.C = { kind: scan.kind, ms: Math.round(performance.now() - t1) };
   if (scan.kind === 'found') {
     result.C.modelVersion = scan.outcome.model?.version ?? null;
+    result.C.alsoUsed = scan.outcome.model?.also ?? [];
     result.C.overall = scan.outcome.overall;
     result.C.cheekL = scan.outcome.zones.cheekL;
     result.C.modelReadings = scan.outcome.model?.zones ?? null;

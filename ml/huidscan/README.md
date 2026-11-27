@@ -173,6 +173,31 @@ In plain words: for redness the colour measure the app already has is as good; f
 sees what the colour measure misses. It is not in the app yet: 26 clients, nearly all light skin (one Monk 4, one
 Monk 7), and one grader. More of Pure's own before/after photos (Instagram) are the next step.
 
+### Every graded photo found (27 November 2026, later)
+
+Pure's Instagram (159 posts, 13 highlights) had two more real before/after images; the rest are treatment shots and
+information cards. All 316 SCIN images (licence allows commercial training) were graded the same way; they add skin
+tones Pure's photos lack (Monk 4-6: 91 images, Monk 7-10: 16) and many more red-skin examples.
+`label/alle-grades.csv` holds all 398 graded photos (halves); `cv_voor_na.py` now reports per source and Monk group.
+```sh
+.venv/bin/python train/cv_voor_na.py --name alle-large --minutes 6 --backbone mobilenetv3_large_100   # ~40 min
+```
+AUROC visible / clear, five folds, people never trained on (`runs/*-cv/cv.json`):
+
+| | first model (Pure only, small) | all photos, small | all photos, large |
+|---|---|---|---|
+| redness, all | – | 0.75 / 0.77 | **0.79 / 0.78** |
+| redness, Pure's photos | 0.82 / 0.78 | 0.67 / 0.86 | 0.76 / 0.72 |
+| redness, Monk 4-6 | – | 0.66 / 0.78 | **0.77 / 0.90** |
+| pigmentation, all | – | 0.73 / 0.59 | **0.78 / 0.76** |
+| pigmentation, Pure's photos | 0.70 / 0.75 | 0.64 / 0.80 | 0.65 / 0.79 |
+| pigmentation, Monk 4-6 | – | 0.63 / 0.48 | **0.71 / 0.73** |
+| before/after pairs read right (redness, pigmentation) | 38/55, 31/36 | 40/57, 33/37 | 42/57, 26/37 |
+
+Dark skin is not read as pigmented: on skin graded 0 the pigmentation reading is about the same for Monk 7-10 (0.72)
+as for Monk 1-3. The large model trained on everything is the best overall and on darker skin; on Pure's own (mostly
+light) photos it is about as good as the first model, within the noise of 28 clients.
+
 ## The SCIN pilot (a pipeline test, not a model)
 
 `train/run_pilot.sh` does it all. What it showed:

@@ -12,7 +12,9 @@ and gives each patch the grade of its half (VOOR or NA) from the grades file:
     ipl-pure-clinics-voor-na_03.jpg,na,ipl03,2,1,0,
     pigment-before.jpg,whole,pig-single,7,0,3,
 
-`half` is voor (left), na (right) or whole (a single photo). `person` groups the photos of one client, so a client is
+`half` is voor (left), na (right), boven/onder (top/bottom) or whole (a single photo). `file` is relative to --src;
+an optional `source` column (pure-site, pure-instagram, scin) is carried into zones.csv for the report. `person` groups
+the photos of one client, so a client is
 never in two splits. Grades 0-3 as in the labelling tool; -1 or empty means not graded.
 
 Per half it removes the white Pure Clinics band and the round VOOR/NA badge, keeps skin only (colour test, and eyes,
@@ -81,11 +83,16 @@ def mask_features(mask: np.ndarray, lm: np.ndarray) -> None:
     mask[m > 0] = False
 
 
-def halves(rgb: np.ndarray, half: str) -> np.ndarray:
-    """The part of the image that belongs to `half`, the rows of the white band, and the corner of the badge."""
+def halves(rgb: np.ndarray, half: str) -> tuple[np.ndarray, np.ndarray, str | None]:
+    """The part of the image that belongs to `half`, the rows of the white band, and the corner of the badge.
+    voor/na: left/right of a side-by-side photo; boven/onder: top/bottom of a stacked one (Instagram)."""
     h, w = rgb.shape[:2]
     if half == "whole":
         return rgb, np.zeros(h, bool), None
+    if half in ("boven", "onder"):
+        seam = int(h * 0.02)
+        part = rgb[: h // 2 - seam] if half == "boven" else rgb[h // 2 + seam:]
+        return part, band_rows(part), "left"
     seam = int(w * 0.02)
     mid = w // 2
     part = rgb[:, : mid - seam] if half == "voor" else rgb[:, mid + seam:]
@@ -178,16 +185,16 @@ def main() -> None:
                 "crop": name, "image": image_id, "person": r["person"], "view": r["half"], "monk": r["monk"],
                 "monk_group": monk_group(r["monk"]), "zone": "patch", "visible": 1.0, "split": split[r["person"]],
                 "redness": grade("redness"), "pigmentation": grade("pigmentation"), "fine_lines": -1,
-                "under_eye_dark": -1,
+                "under_eye_dark": -1, "source": r.get("source", ""),
             })
             report["patches"] += 1
-    cols = ["crop", "image", "person", "view", "monk", "monk_group", "zone", "visible", "split"] + CONCERNS
+    cols = ["crop", "image", "person", "view", "monk", "monk_group", "zone", "visible", "split"] + CONCERNS + ["source"]
     with open(args.out / "zones.csv", "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=cols)
         w.writeheader()
         w.writerows(out_rows)
     meta = {
-        "source": "Pure Clinics' own published before/after photos (pureclinics.nl), graded per half",
+        "source": "Pure Clinics' own before/after photos (pureclinics.nl, Instagram) and SCIN, graded by Claude",
         "public_licence": None,
         "size": args.size, "face_width": FACE_WIDTH, "crop_pad": CROP_PAD,
         "zones": ZONES, "zone_points": ZONE_POINTS, "shrink": SHRINK, "applies": APPLIES,

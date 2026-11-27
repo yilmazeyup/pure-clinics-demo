@@ -147,6 +147,8 @@ def main() -> None:
     ap.add_argument("--fold", type=int, default=0)
     ap.add_argument("--val-people", type=int, default=3)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--test-people", type=Path,
+                    help="CSV with a person column (e.g. data/evren/test/test.csv): exactly these people are the test set")
     args = ap.parse_args()
 
     import cv2
@@ -156,7 +158,10 @@ def main() -> None:
     rng = random.Random(args.seed)
     order = people[:]
     rng.shuffle(order)
-    test = set(order[args.fold:: args.folds])
+    if args.test_people:
+        test = {r["person"] for r in csv.DictReader(open(args.test_people))} & set(people)
+    else:
+        test = set(order[args.fold:: args.folds])
     rest = [p for p in order if p not in test]
     val = set(rest[: args.val_people])
     split = {p: "test" if p in test else "val" if p in val else "train" for p in people}

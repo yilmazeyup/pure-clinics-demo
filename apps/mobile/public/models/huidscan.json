@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "version": "huidscan-v1-2026-11-27",
+  "version": "huidscan-v2-2026-11-27",
   "file": "huidscan.onnx",
   "files": {},
   "pilot": false,
@@ -198,52 +198,11 @@
   "disclaimer": "Geen medische diagnose. Voor persoonlijk advies: de gratis intake.",
   "trainedOn": "Pure Clinics' own before/after photos (pureclinics.nl, Instagram) and SCIN, graded by Claude",
   "backbone": "mobilenetv3_large_100",
-  "metrics": {
-    "redness": {
-      "alle": {
-        "crops": 261,
-        "people": 18,
-        "too_small": false,
-        "qwk": 0.29207429993078804
-      },
-      "1-3": {
-        "crops": 211,
-        "people": 15,
-        "too_small": false,
-        "qwk": 0.2024032699222471
-      },
-      "4-6": {
-        "crops": 50,
-        "people": 3,
-        "too_small": true,
-        "qwk": 0.08026755852842826
-      }
-    },
-    "pigmentation": {
-      "alle": {
-        "crops": 261,
-        "people": 18,
-        "too_small": false,
-        "qwk": 0.305235137533274
-      },
-      "1-3": {
-        "crops": 211,
-        "people": 15,
-        "too_small": false,
-        "qwk": 0.19274118498604065
-      },
-      "4-6": {
-        "crops": 50,
-        "people": 3,
-        "too_small": true,
-        "qwk": 0.4314266023432116
-      }
-    }
-  },
+  "metrics": {},
   "checks": {
-    "fp32_vs_torch_max": 5.0067901611328125e-06,
-    "int8_top_class_agreement": 0.970703125,
-    "int8_mean_abs_diff": 0.011079521849751472
+    "fp32_vs_torch_max": 5.125999450683594e-06,
+    "int8_top_class_agreement": 0.9765625,
+    "int8_mean_abs_diff": 0.008377846330404282
   },
   "attribution": "Trained in part on the SCIN dataset (Google Research), SCIN Data Use License, https://github.com/google-research-datasets/scin"
 }

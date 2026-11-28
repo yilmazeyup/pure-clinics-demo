@@ -162,7 +162,7 @@ export const voorraad: Record<keyof typeof source, string> = {
   'pk.voorraad.shelf.legendOk': 'Suficiente',
   'pk.voorraad.shelf.legendMonth': 'Se agota en un mes',
   'pk.voorraad.shelf.legendWeek': 'Se agota en una semana',
-  'pk.voorraad.shelf.webshop': 'Las ventas de la tienda online cuentan: un pedido sale del stock de la clínica más cercana.',
+  'pk.voorraad.shelf.webshop': 'Las ventas online también cuentan: un pedido sale de la estantería de la clínica donde se recoge, un paquete primero de Nimega.',
   'pk.voorraad.shelf.left': 'quedan {n}',
   'pk.voorraad.shelf.short.camouflage': 'Set de camuflaje',
   'pk.voorraad.shelf.short.laser': 'Set de cuidados',

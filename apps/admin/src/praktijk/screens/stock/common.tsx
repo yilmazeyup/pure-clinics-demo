@@ -11,7 +11,6 @@ import {
   seedProductInfo,
   seedReviews,
   stockAt,
-  webshopToday,
   type Forecast,
   type Move,
   type ProductInfo,
@@ -35,7 +34,8 @@ export function useStock() {
   const [suppliers, setSuppliers] = useShared<Supplier[]>('stockSuppliers', () => SEED_SUPPLIERS);
   const [orders, setOrders] = useShared<StockOrder[]>('stockOrders', () => seedOrders(today));
   // Today's webshop orders so far are already in the log, like the overview's webshop shelf counts them.
-  const [booked, setBooked] = useShared<Move[]>('stockMoves', () => webshopToday(now));
+  // Moves booked here and the webshop's sales, which Huidly adds as it sells.
+  const [booked, setBooked] = useShared<Move[]>('stockMoves', () => []);
   const [seeded] = useShared<Move[]>('stockMovesSeed', () => seedMoves(today));
   const [requests, setRequests] = useShared<StockRequest[]>('stockRequests', () => []);
   const [reviews] = useShared<Review[]>('stockReviews', () => seedReviews(today));

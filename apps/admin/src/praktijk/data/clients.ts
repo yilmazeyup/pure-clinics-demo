@@ -192,3 +192,22 @@ export function parseDmy(text: string): Date | null {
   const date = new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1]));
   return date.getDate() === Number(m[1]) && date.getMonth() === Number(m[2]) - 1 ? date : null;
 }
+
+export type Duplicates = { clients: PracticeClient[]; pairs: DuplicatePair[] };
+
+/**
+ * The client register as Cliënten shows it: everyone in the agenda's window, the duplicates waiting to be merged and the
+ * clients added by hand, with the edits and removals applied. The business's own admin builds the very same list from
+ * the same pieces kept at Huidly (clients, clients:duplicates, clients:edits, clients:removed).
+ */
+export function registerOf(
+  base: PracticeClient[],
+  added: PracticeClient[],
+  dups: Duplicates,
+  edits: Record<string, Partial<PracticeClient>>,
+  removed: string[],
+): PracticeClient[] {
+  const gone = new Set(removed);
+  const all = [...added, ...base, ...dups.clients].filter((c) => !gone.has(c.id));
+  return all.map((c) => (edits[c.id] ? { ...c, ...edits[c.id] } : c));
+}

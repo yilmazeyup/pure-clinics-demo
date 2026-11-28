@@ -31,28 +31,34 @@ export type Segment = {
   lag: number;
 };
 
-/** "Alle e-mailabonnees" is the audience itself; the others are synced to Mailchimp as tags. */
+/**
+ * "Alle e-mailabonnees" is the audience itself; the others are synced to Mailchimp as tags. How many clients are in each
+ * is worked out from the client register at Huidly (register.ts campaignData).
+ */
 export const SEGMENTS: Segment[] = [
-  { id: 'app2000', tag: 'app-laatste-2000', count: 2000, email: 1968, sms: 702, rules: 4, source: 'app', lag: 0 },
-  { id: 'members', tag: 'members', count: 486, email: 471, sms: 233, rules: 2, source: 'kassa', lag: 0 },
-  { id: 'acne', tag: 'acnetraject', count: 312, email: 268, sms: 121, rules: 3, source: 'agenda', lag: 0 },
-  { id: 'pigment', tag: 'pigment', count: 274, email: 241, sms: 96, rules: 2, source: 'agenda', lag: 0 },
-  { id: 'zo', tag: 'zo-skin-health', count: 538, email: 497, sms: 204, rules: 2, source: 'shop', lag: 0 },
-  { id: 'gift', tag: 'cadeaubon', count: 167, email: 142, sms: 58, rules: 2, source: 'kassa', lag: 0 },
-  { id: 'nijmegen', tag: 'nijmegen', count: 4105, email: 3236, sms: 1190, rules: 1, source: 'file', lag: 0 },
-  { id: 'uden', tag: 'uden', count: 2637, email: 2082, sms: 774, rules: 1, source: 'file', lag: 0 },
-  { id: 'sms', tag: 'sms-toestemming', count: 1964, email: 1602, sms: 1964, rules: 3, source: 'app', lag: 0 },
+  { id: 'app2000', tag: 'app-laatste-2000', count: 0, email: 0, sms: 0, rules: 4, source: 'app', lag: 0 },
+  { id: 'members', tag: 'members', count: 0, email: 0, sms: 0, rules: 2, source: 'kassa', lag: 0 },
+  { id: 'acne', tag: 'acnetraject', count: 0, email: 0, sms: 0, rules: 3, source: 'agenda', lag: 0 },
+  { id: 'pigment', tag: 'pigment', count: 0, email: 0, sms: 0, rules: 2, source: 'agenda', lag: 0 },
+  { id: 'zo', tag: 'zo-skin-health', count: 0, email: 0, sms: 0, rules: 2, source: 'shop', lag: 0 },
+  { id: 'gift', tag: 'cadeaubon', count: 0, email: 0, sms: 0, rules: 2, source: 'kassa', lag: 0 },
+  { id: 'nijmegen', tag: 'nijmegen', count: 0, email: 0, sms: 0, rules: 1, source: 'file', lag: 0 },
+  { id: 'uden', tag: 'uden', count: 0, email: 0, sms: 0, rules: 1, source: 'file', lag: 0 },
+  { id: 'sms', tag: 'sms-toestemming', count: 0, email: 0, sms: 0, rules: 3, source: 'app', lag: 0 },
 ];
 
-/** The audience in Mailchimp, by status; together they make the contacts. */
+/**
+ * The audience in Mailchimp, by status; together they make the contacts. The numbers come from the client register at
+ * Huidly (register.ts campaignData); this is only its shape.
+ */
 export const AUDIENCE = {
-  subscribed: 5318,
-  unsubscribed: 412,
-  cleaned: 96,
-  pending: 38,
-  transactional: 878,
-  sms: 1964,
-  smsUnsubscribed: 23,
+  subscribed: 0,
+  unsubscribed: 0,
+  cleaned: 0,
+  pending: 0,
+  transactional: 0,
+  sms: 0,
+  smsUnsubscribed: 0,
 };
 export const contactsOf = (a: typeof AUDIENCE) => a.subscribed + a.unsubscribed + a.cleaned + a.pending + a.transactional;
 
@@ -428,30 +434,8 @@ export type Contact = {
   confirmedDaysAgo: number | null;
 };
 
-/** A sample of synced contacts; every name, address and number is plainly made up. */
-export const CONTACTS: Contact[] = [
-  { id: 'k1', first: 'Anna', last: 'Voorbeeld', email: 'anna.voorbeeld@example.com', phone: '06-00000101', birthday: '03/14', location: 'nijmegen', tags: ['app2000', 'members', 'zo', 'nijmegen', 'sms'], emailStatus: 'subscribed', smsStatus: 'subscribed', confirmedDaysAgo: 412 },
-  { id: 'k2', first: 'Bram', last: 'Testpersoon', email: 'bram.testpersoon@example.com', phone: '06-00000102', birthday: '07/02', location: 'uden', tags: ['app2000', 'uden'], emailStatus: 'unsubscribed', smsStatus: 'none', confirmedDaysAgo: 230 },
-  { id: 'k3', first: 'Chantal', last: 'Demo', email: 'chantal.demo@example.com', phone: '06-00000103', birthday: '11/29', location: 'nijmegen', tags: ['app2000', 'acne', 'nijmegen'], emailStatus: 'subscribed', smsStatus: 'none', confirmedDaysAgo: 61 },
-  { id: 'k4', first: 'Daan', last: 'Proef', email: 'daan.proef@example.com', phone: '06-00000104', birthday: '01/08', location: 'uden', tags: ['uden'], emailStatus: 'pending', smsStatus: 'none', confirmedDaysAgo: null },
-  { id: 'k5', first: 'Eva', last: 'Fictief', email: 'eva.fictief@example.com', phone: '06-00000105', birthday: '05/21', location: 'nijmegen', tags: ['pigment', 'gift', 'nijmegen', 'sms'], emailStatus: 'subscribed', smsStatus: 'subscribed', confirmedDaysAgo: 803 },
-  { id: 'k6', first: 'Fatima', last: 'Voorbeeld', email: 'fatima.voorbeeld@example.com', phone: '06-00000106', birthday: '09/30', location: 'uden', tags: ['app2000', 'members', 'uden'], emailStatus: 'subscribed', smsStatus: 'unsubscribed', confirmedDaysAgo: 145 },
-  { id: 'k7', first: 'Gijs', last: 'Testdata', email: 'gijs.testdata@example.com', phone: '06-00000107', birthday: '12/12', location: 'nijmegen', tags: ['nijmegen'], emailStatus: 'cleaned', smsStatus: 'none', confirmedDaysAgo: 977 },
-  { id: 'k8', first: 'Hanna', last: 'Demo', email: 'hanna.demo@example.com', phone: '06-00000108', birthday: '04/03', location: 'nijmegen', tags: ['members', 'zo', 'nijmegen'], emailStatus: 'transactional', smsStatus: 'none', confirmedDaysAgo: null },
-];
-
 /** Unsubscribes, bounces and complaints that came back from Mailchimp and changed the client's file in the panel. */
 export type BackFlow = { id: string; contact: string; kind: 'unsubscribe' | 'smsUnsubscribe' | 'bounce' | 'complaint'; minutesAgo: number; campaign: string | null };
-
-export const BACKFLOW: BackFlow[] = [
-  { id: 'f1', contact: 'k2', kind: 'unsubscribe', minutesAgo: 280, campaign: 'bf-mail' },
-  { id: 'f2', contact: 'k7', kind: 'bounce', minutesAgo: 340, campaign: 'bf-mail' },
-  { id: 'f3', contact: 'k6', kind: 'smsUnsubscribe', minutesAgo: 60 * 52, campaign: null },
-  { id: 'f4', contact: 'k9', kind: 'complaint', minutesAgo: 60 * 75, campaign: null },
-];
-
-/** A contact who only appears in the flow back. */
-export const EXTRA_CONTACTS: Record<string, { first: string; last: string }> = { k9: { first: 'Iris', last: 'Proefpersoon' } };
 
 /* ---------- Settings ---------- */
 

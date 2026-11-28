@@ -12,10 +12,12 @@ import {
   type TreatmentId,
 } from '@pure-clinics/shared';
 
-import { clinicDay, works, type Appt } from '../../data/clinics';
+import { agendaNow, diaryOn } from '../../data/live';
+import type { AgendaState } from './agenda';
+import { works, type Appt } from '../../data/clinics';
 import { rng } from '../../data/random';
 
-// Figures for the reports, worked out from the same diary as the agenda and the overview (clinicDay), so the numbers
+// Figures for the reports, worked out from the agenda itself, with every change kept at Huidly (diaryOn), so the numbers
 // of the last weeks agree everywhere. Days up to today count as realised; later days are what is booked so
 // far, and what is still likely to be booked fills the forecast. A diary day takes a while to generate, so days far
 // from today (a whole year, a forecast) are estimated from a weekday profile of the real diary days around today,
@@ -33,12 +35,22 @@ const EXACT_AHEAD = 0;
 /** Revenue per month relative to the year, from busy winter (laser season) to a quiet summer. */
 const SEASON = [1.04, 1.02, 0.98, 0.95, 0.9, 0.86, 0.8, 0.84, 0.94, 1.02, 1.06, 0.97];
 
-/** The appointments of a day, remembered: a year of reports asks for every day more than once. */
+/**
+ * The appointments of a day as the agenda has them (moves, deletions and new ones included), remembered: a year of
+ * reports asks for every day more than once. A change in the agenda starts the reports afresh.
+ */
+let cachedFor: AgendaState | null = null;
 export function apptsOn(day: Date): Appt[] {
+  const agenda = agendaNow();
+  if (agenda !== cachedFor) {
+    cachedFor = agenda;
+    dayCache.clear();
+    profileCache.clear();
+  }
   const key = dateKey(day);
   let list = dayCache.get(key);
   if (!list) {
-    list = clinicDay(day);
+    list = diaryOn(day, agenda);
     dayCache.set(key, list);
   }
   return list;

@@ -28,14 +28,15 @@ export type LiveOrder = {
   client: Person;
 };
 
-export type LiveStock = { product: string; brand: string | null; name: L10n; price: number; stock: number; hidden: boolean };
+/** A product of the webshop with the one stock: both clinics together and each apart (counted in Voorraad & inkoop). */
+export type LiveStock = { product: string; brand: string | null; name: L10n; price: number; stock: number; byLocation?: Record<string, number>; hidden: boolean };
 
 export const live = {
   orders: () => teamCall<{ orders: LiveOrder[] }>('/orders').then((r) => r.orders),
   updateOrder: (id: string, body: { status?: OrderStatus; paid?: boolean; track?: string; message?: string }) =>
     teamCall<{ order: LiveOrder }>(`/orders/${encodeURIComponent(id)}`, jsonInit('POST', body)).then((r) => r.order),
   stock: () => teamCall<{ stock: LiveStock[] }>('/stock').then((r) => r.stock),
-  setStock: (body: { product: string; stock?: number; hidden?: boolean }) => teamCall<{ stock: LiveStock[] }>('/stock', jsonInit('POST', body)).then((r) => r.stock),
+  setStock: (body: { product: string; hidden?: boolean }) => teamCall<{ stock: LiveStock[] }>('/stock', jsonInit('POST', body)).then((r) => r.stock),
 };
 
 /**

@@ -2,9 +2,9 @@ import { LOCATIONS, PRODUCTS, type LocationId, type ProductId } from '@pure-clin
 
 import { between, rng } from './random';
 
-// What stands on the shelves at the start of today, per clinic. One seed for the whole panel: the stock screen in
-// Kliniek starts from it, and the overview's webshop shelf shows the two clinics together, because a webshop order is
-// sent from the clinic nearest to the customer. Today's webshop orders come off it in both places.
+// What stands on the shelves at the start, per clinic: the one stock of the business. Kliniek starts from it, and so
+// does the webshop at Huidly (the catalogue carries it, api/src/catalog/pure.json "stock"). Once anything changes, the
+// stock is the piece "stock" kept at Huidly: Kliniek's counts and the webshop's sales both change that one piece.
 
 export type StockLevels = Record<LocationId, Record<ProductId, number>>;
 

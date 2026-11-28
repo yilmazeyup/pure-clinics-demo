@@ -27,7 +27,7 @@ export const live: Record<keyof typeof nl, string> = {
   "pk.live.orders.st.cancelled": "ملغى",
   "pk.live.orders.track": "تتبع الشحنة",
   "pk.live.stock.title": "مخزون *المتجر الإلكتروني*",
-  "pk.live.stock.help": "الكمية التي يمكن للعميلات طلبها بعد على موقعك وفي تطبيقك (الفرعان معًا). الطلب يخصمها، والإلغاء يعيدها.",
+  "pk.live.stock.help": "الكمية التي يمكن للعميلات طلبها بعد على موقعك وفي تطبيقك: رفوف الفرعين، وهي المخزون نفسه في «المخزون والمشتريات». الطلب يخصمها والإلغاء يعيدها؛ الجرد وإعادة التعبئة يتمّان في «المخزون والمشتريات».",
   "pk.live.stock.product": "المنتج",
   "pk.live.stock.count": "المخزون",
   "pk.live.stock.shown": "في المتجر",

@@ -4,6 +4,7 @@ import { dayAppts, onlineBookings, type AgAppt, type AgendaState } from '../prak
 import { clinicDay, ROOMS, type Appt } from './clinics';
 import { courseState, coursesOn, type Course } from './courses';
 import { between, pick, rng } from './random';
+import { sharedGet, useSharedValue } from './sharedStore';
 import { clinicOfOrder, type Order } from './shop';
 
 /** Something that happens at a set moment of the day; the overview plays these as the clock runs. */
@@ -61,6 +62,11 @@ export const NO_CHANGES: DayChanges = {
   joined: [],
   requests: [],
 };
+
+/** The agenda as it stands in this program now: kept at Huidly (data/sharedStore.ts 'agenda'), or no changes yet. */
+export const agendaNow = (): AgendaState => sharedGet<AgendaState>('agenda') ?? NO_CHANGES.agenda;
+/** The same, for a screen: a new value whenever the agenda changes, so what it works out follows. */
+export const useAgendaNow = (): AgendaState => useSharedValue<AgendaState>('agenda') ?? NO_CHANGES.agenda;
 
 /** An appointment of Kliniek's agenda in its specialist's room; null in a column without a room (the front desk). */
 export function asAppt(a: AgAppt, firstVisit = false): Appt | null {

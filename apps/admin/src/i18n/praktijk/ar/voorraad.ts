@@ -162,7 +162,7 @@ export const voorraad: Record<keyof typeof source, string> = {
   'pk.voorraad.shelf.legendOk': 'كافٍ',
   'pk.voorraad.shelf.legendMonth': 'ينفد خلال شهر',
   'pk.voorraad.shelf.legendWeek': 'ينفد خلال أسبوع',
-  'pk.voorraad.shelf.webshop': 'مبيعات المتجر الإلكتروني محسوبة: يخرج الطلب من مخزون أقرب عيادة.',
+  'pk.voorraad.shelf.webshop': 'مبيعات المتجر الإلكتروني محسوبة أيضًا: يُخصم الطلب من رف العيادة التي يُستلم منها، والطرد يُخصم أولًا من نايميخن.',
   'pk.voorraad.shelf.left': 'متبقٍّ {n}',
   'pk.voorraad.shelf.short.camouflage': 'مجموعة التمويه',
   'pk.voorraad.shelf.short.laser': 'مجموعة العناية',

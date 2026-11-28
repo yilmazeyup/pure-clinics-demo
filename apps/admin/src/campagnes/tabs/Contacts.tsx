@@ -3,7 +3,7 @@ import { addDays, locationById } from '@pure-clinics/shared';
 import { useI18n, type MessageKey } from '../../i18n';
 import { PkIcon } from '../../praktijk/icons';
 import { Card, Chip, TableWrap, type Tone } from '../../praktijk/kit';
-import { BACKFLOW, CONTACTS, EXTRA_CONTACTS, type EmailStatus, type SmsStatus } from '../data';
+import { type EmailStatus, type SmsStatus } from '../data';
 import { useCp } from '../state';
 import { Tag, useSince } from '../ui';
 
@@ -31,7 +31,9 @@ const e164 = (phone: string) => `+31 ${phone.replace(/\D/g, '').slice(1, 2)} ${p
 export function ContactsTab() {
   const i18n = useI18n();
   const { t, num, dayMonth } = i18n;
-  const { now, sync, segment, campaigns } = useCp();
+  const { now, sync, segment, campaigns, contacts, backflow } = useCp();
+  // The newest clients of the register at Huidly, as they go to Mailchimp.
+  const sample = contacts.slice(0, 8);
   const since = useSince();
   const a = sync.audience;
   const tagOf = (id: Parameters<typeof segment>[0]) => segment(id).tag;
@@ -142,8 +144,8 @@ export function ContactsTab() {
 
       <Card eyebrow={t('cp.ct.backEyebrow')} title={t('cp.ct.backTitle')} help={t('cp.ct.backHelp')}>
         <ul className="pk-list cp-rows">
-          {BACKFLOW.map((f) => {
-            const c = CONTACTS.find((x) => x.id === f.contact) ?? { ...EXTRA_CONTACTS[f.contact] };
+          {backflow.map((f) => {
+            const c = contacts.find((x) => x.id === f.contact) ?? { first: '', last: '' };
             const at = new Date(now.getTime() - f.minutesAgo * 60000);
             return (
               <li key={f.id}>
@@ -186,7 +188,7 @@ export function ContactsTab() {
               </tr>
             </thead>
             <tbody>
-              {CONTACTS.map((c) => (
+              {sample.map((c) => (
                 <tr key={c.id}>
                   <td className="nowrap">
                     <span className="cp-person">

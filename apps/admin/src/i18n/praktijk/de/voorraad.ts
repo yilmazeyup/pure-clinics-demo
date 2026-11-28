@@ -162,7 +162,7 @@ export const voorraad: Record<keyof typeof source, string> = {
   'pk.voorraad.shelf.legendOk': 'Genug',
   'pk.voorraad.shelf.legendMonth': 'Leer innerhalb eines Monats',
   'pk.voorraad.shelf.legendWeek': 'Leer innerhalb einer Woche',
-  'pk.voorraad.shelf.webshop': 'Webshop-Verkäufe zählen mit: Eine Bestellung geht vom Bestand der nächstgelegenen Klinik ab.',
+  'pk.voorraad.shelf.webshop': 'Webshop-Verkäufe zählen mit: eine Bestellung geht vom Regal der Klinik ab, in der sie abgeholt wird, ein Paket zuerst von Nijmegen.',
   'pk.voorraad.shelf.left': 'noch {n}',
   'pk.voorraad.shelf.short.camouflage': 'Camouflage-Set',
   'pk.voorraad.shelf.short.laser': 'Nachsorge-Set',

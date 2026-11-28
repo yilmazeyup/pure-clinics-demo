@@ -162,7 +162,7 @@ export const voorraad: Record<keyof typeof source, string> = {
   'pk.voorraad.shelf.legendOk': 'Suffisant',
   'pk.voorraad.shelf.legendMonth': 'Épuisé sous un mois',
   'pk.voorraad.shelf.legendWeek': 'Épuisé sous une semaine',
-  'pk.voorraad.shelf.webshop': 'Les ventes de la boutique en ligne comptent : une commande part du stock de la clinique la plus proche.',
+  'pk.voorraad.shelf.webshop': 'Les ventes en ligne comptent aussi : une commande sort de l’étagère de la clinique où elle est retirée, un colis d’abord de Nimègue.',
   'pk.voorraad.shelf.left': 'encore {n}',
   'pk.voorraad.shelf.short.camouflage': 'Coffret camouflage',
   'pk.voorraad.shelf.short.laser': 'Coffret soins',

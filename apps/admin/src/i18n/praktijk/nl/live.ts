@@ -25,7 +25,7 @@ export const live = {
   "pk.live.orders.st.cancelled": "Geannuleerd",
   "pk.live.orders.track": "Track & trace",
   "pk.live.stock.title": "Voorraad van de *webshop*",
-  "pk.live.stock.help": "Zoveel kunnen klanten nog bestellen op je site en in je app (beide vestigingen samen). Een bestelling haalt het eraf, een annulering zet het terug.",
+  "pk.live.stock.help": "Zoveel kunnen klanten nog bestellen op je site en in je app: de schappen van beide vestigingen, dezelfde voorraad als in Voorraad & inkoop. Een bestelling haalt het eraf, een annulering zet het terug; tellen en aanvullen doe je in Voorraad & inkoop.",
   "pk.live.stock.product": "Product",
   "pk.live.stock.count": "Voorraad",
   "pk.live.stock.shown": "In de shop",

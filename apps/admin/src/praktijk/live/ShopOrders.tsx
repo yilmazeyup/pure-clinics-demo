@@ -150,11 +150,11 @@ function Orders({ list, update }: { list: LiveOrder[]; update: (id: string, body
   );
 }
 
-function Stock({ list, save }: { list: LiveStock[]; save: (body: { product: string; stock?: number; hidden?: boolean }) => Promise<void> }) {
+function Stock({ list, save }: { list: LiveStock[]; save: (body: { product: string; hidden?: boolean }) => Promise<void> }) {
   const { t, text } = useI18n();
   const money = useMoney();
   const [failed, setFailed] = useState<string | null>(null);
-  const act = (product: string, body: { stock?: number; hidden?: boolean }) => {
+  const act = (product: string, body: { hidden?: boolean }) => {
     setFailed(null);
     save({ product, ...body }).catch(() => setFailed(product));
   };
@@ -179,19 +179,9 @@ function Stock({ list, save }: { list: LiveStock[]; save: (body: { product: stri
                 </td>
                 <td className="end nowrap">{money(p.price)}</td>
                 <td className="end">
-                  <input
-                    className={`pk-input pk-input--small pk-live-count ${p.stock <= 3 ? 'pk-live-low' : ''}`}
-                    type="number"
-                    min={0}
-                    max={9999}
-                    defaultValue={p.stock}
-                    key={`${p.product}-${p.stock}`}
-                    aria-label={t('pk.live.stock.count')}
-                    onBlur={(e) => {
-                      const n = Number(e.target.value);
-                      if (Number.isInteger(n) && n >= 0 && n !== p.stock) act(p.product, { stock: n });
-                    }}
-                  />
+                  {/* The one stock, counted in Voorraad & inkoop: both clinics together, each apart underneath. */}
+                  <span className={`pk-live-count ${p.stock <= 3 ? 'pk-live-low' : ''}`}>{p.stock}</span>
+                  <small className="pk-live-sub">{LOCATIONS.map((l) => `${l.city} ${p.byLocation?.[l.id] ?? 0}`).join(' · ')}</small>
                   {failed === p.product ? <small className="pk-live-failed">{t('pk.live.failed')}</small> : null}
                 </td>
                 <td>

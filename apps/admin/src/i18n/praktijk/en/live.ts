@@ -27,7 +27,7 @@ export const live: Record<keyof typeof nl, string> = {
   "pk.live.orders.st.cancelled": "Cancelled",
   "pk.live.orders.track": "Track & trace",
   "pk.live.stock.title": "Stock of the *webshop*",
-  "pk.live.stock.help": "How many clients can still order on your site and in your app (both locations together). An order takes it off, a cancellation puts it back.",
+  "pk.live.stock.help": "How many clients can still order on your site and in your app: the shelves of both locations, the same stock as in Stock & purchasing. An order takes it off, a cancellation puts it back; counting and restocking happen in Stock & purchasing.",
   "pk.live.stock.product": "Product",
   "pk.live.stock.count": "Stock",
   "pk.live.stock.shown": "In the shop",

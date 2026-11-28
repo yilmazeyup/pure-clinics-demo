@@ -1,7 +1,6 @@
 import { addDays, LOCATIONS, PRODUCTS, productById, startOfDay, type LocationId, type ProductId } from '@pure-clinics/shared';
 
 import { between, personName, pick, rng } from '../../data/random';
-import { clinicOfOrder, ordersUntil, shopDay } from '../../data/shop';
 import type { StaffId } from './core';
 import { seedStock, type StockLevels } from './shared';
 
@@ -419,28 +418,10 @@ export function seedReviews(today: Date): Review[] {
 }
 
 /**
- * Today's webshop orders so far, as stock movements: each order goes out of the clinic nearest to the customer. These are
- * the same orders the overview's webshop shelf takes off, so the two show the same stock.
+ * The shelves as the program starts them: the built-in stock, the same the webshop sells from at Huidly. Real webshop
+ * orders come off at Huidly itself (the piece "stock", with a "WEB" line in "stockMoves"), so every screen and the
+ * webshop show one number. `now` is kept for the callers; the start does not depend on the time.
  */
-export function webshopToday(now: Date): Move[] {
-  return ordersUntil(shopDay(now), now).flatMap((order) =>
-    order.lines.map((line, i) => ({
-      id: `w-${order.number}-${i}`,
-      at: order.at,
-      locationId: clinicOfOrder(order),
-      product: line.product.id,
-      qty: -line.qty,
-      reason: 'sale' as const,
-      // Nobody at the desk booked it; the log shows WEB for webshop sales.
-      by: 'husna' as StaffId,
-      channel: 'webshop' as const,
-    })),
-  );
-}
-
-/** The shelves as they stand now: the start of today with today's webshop orders so far taken off. */
-export function stockAt(now: Date): StockLevels {
-  const levels = seedStock();
-  for (const m of webshopToday(now)) levels[m.locationId][m.product] = Math.max(0, levels[m.locationId][m.product] + m.qty);
-  return levels;
+export function stockAt(_now: Date): StockLevels {
+  return seedStock();
 }

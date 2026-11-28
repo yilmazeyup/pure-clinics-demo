@@ -1,10 +1,8 @@
 import { useCallback, useMemo } from 'react';
 
 import { usePraktijk, useShared } from '../../context';
-import { seedDuplicates, type DuplicatePair } from '../../data/clients';
+import { registerOf, seedDuplicates, type Duplicates } from '../../data/clients';
 import { practiceClients, type PracticeClient } from '../../data/core';
-
-type Duplicates = { clients: PracticeClient[]; pairs: DuplicatePair[] };
 
 /**
  * The client register as both Cliënten and Dossier see it: everyone in the agenda's window, the duplicates waiting to be
@@ -21,11 +19,7 @@ export function useClients() {
   const [foreign, setForeignAll] = useShared<Record<string, string>>('clients:foreign', () => ({}));
   const setForeign = useCallback((id: string, code: string) => setForeignAll((all) => ({ ...all, [id]: code })), [setForeignAll]);
 
-  const list = useMemo(() => {
-    const gone = new Set(removed);
-    const all = [...added, ...base, ...dups.clients].filter((c) => !gone.has(c.id));
-    return all.map((c) => (edits[c.id] ? { ...c, ...edits[c.id] } : c));
-  }, [added, base, dups, edits, removed]);
+  const list = useMemo(() => registerOf(base, added, dups, edits, removed), [added, base, dups, edits, removed]);
 
   const addedIds = useMemo(() => new Set(added.map((c) => c.id)), [added]);
   const pairs = useMemo(() => dups.pairs.filter((p) => !removed.includes(p.a) && !removed.includes(p.b)), [dups, removed]);

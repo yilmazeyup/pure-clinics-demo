@@ -11,9 +11,9 @@ import {
   type TreatmentId,
 } from '@pure-clinics/shared';
 
+import { agendaNow, diaryOn } from '../../data/live';
 import { between, pick, rng } from '../../data/random';
 import {
-  agendaDay,
   clientFor,
   codesOf,
   conditionOf,
@@ -338,7 +338,7 @@ const WEIGHTED_METHODS: PayMethod[] = ['pin', 'pin', 'pin', 'pin', 'pin', 'pin',
 
 export type BillingSeed = { invoices: Invoice[]; claims: Claim[]; bookings: CashBooking[]; checks: CashCheck[]; strips: StripCard[]; giftUses: Record<string, GiftUse[]> };
 
-let cache: { key: string; seed: BillingSeed } | null = null;
+let cache: { key: string; agenda: unknown; seed: BillingSeed } | null = null;
 
 /**
  * The last two weeks at the desk, the same on every load: an invoice for every finished appointment (today only those
@@ -346,14 +346,16 @@ let cache: { key: string; seed: BillingSeed } | null = null;
  */
 export function seedBilling(today: Date, now: Date): BillingSeed {
   const key = dateKey(today);
-  if (cache?.key === key) return cache.seed;
+  // The invoices follow the agenda as it stands, moves and new appointments included.
+  const agenda = agendaNow();
+  if (cache?.key === key && cache.agenda === agenda) return cache.seed;
   const invoices: Invoice[] = [];
   const claims: Claim[] = [];
   const cutoff = now.getTime() - 60 * 60_000;
 
   for (let offset = -13; offset <= 0; offset++) {
     const day = addDays(today, offset);
-    for (const a of agendaDay(day)) {
+    for (const a of diaryOn(day, agenda)) {
       if (offset === 0 && a.end.getTime() > cutoff) continue;
       const r = rng(`inv-${a.id}`);
       const client = clientFor(a.client, a.clinic, today);
@@ -504,7 +506,7 @@ export function seedBilling(today: Date, now: Date): BillingSeed {
   checks[0].included = firstMoves.map((m) => m.id);
 
   const seed: BillingSeed = { invoices, claims, bookings, checks, strips: seedStrips(today), giftUses: seedGiftUses(seedGiftCards(today)) };
-  cache = { key, seed };
+  cache = { key, agenda, seed };
   return seed;
 }
 

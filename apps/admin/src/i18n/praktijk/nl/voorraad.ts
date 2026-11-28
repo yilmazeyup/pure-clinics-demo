@@ -163,7 +163,7 @@ export const voorraad = {
   'pk.voorraad.shelf.legendOk': 'Genoeg',
   'pk.voorraad.shelf.legendMonth': 'Op binnen een maand',
   'pk.voorraad.shelf.legendWeek': 'Op binnen een week',
-  'pk.voorraad.shelf.webshop': 'Webshopverkopen tellen mee: een bestelling gaat van de voorraad van de dichtstbijzijnde kliniek af.',
+  'pk.voorraad.shelf.webshop': 'Webshopverkopen tellen mee: een bestelling gaat van de plank van de kliniek waar ze wordt opgehaald af, een verzending eerst van Nijmegen.',
   'pk.voorraad.shelf.left': 'nog {n}',
   'pk.voorraad.shelf.short.camouflage': 'Camouflageset',
   'pk.voorraad.shelf.short.laser': 'Nazorgset',

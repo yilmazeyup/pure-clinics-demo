@@ -229,6 +229,11 @@ export const nl = {
   'ev.reminders.detail': 'Per e-mail en in de app, met een link om direct te plannen',
   'ev.member.title': 'Nieuwe member',
   'ev.member.detail': '{client} · via de app',
+  'ev.request.title': 'Nieuwe aanvraag · {client}',
+  'ev.request.detail': '{treatment} · {city} · {day}, {part}',
+  'ev.part.morning': '\'s ochtends',
+  'ev.part.afternoon': '\'s middags',
+  'ev.part.evening': '\'s avonds',
   'ev.order.title': 'Bestelling #{number}',
   'ev.order.detail': '{customer} · {product}',
   'ev.order.giftDetail': '{customer} · cadeaubon',
@@ -317,9 +322,11 @@ export const nl = {
   'hy.why.social': 'De social-planning van Pure staat in Huidly. Verbind dit beheer één keer met je e-mailadres om de posts, stories en reels hier te zien en te plannen.',
   'hy.why.shop': 'De echte bestellingen van de site en de app komen binnen in Huidly. Verbind dit beheer één keer met je e-mailadres om ze hier te zien en af te handelen.',
   'hy.why.overview': 'Het overzicht laat de dag zien zoals Huidly hem heeft: de agenda zoals het team hem in Kliniek bijhoudt, de echte bestellingen en nieuwe members. Verbind dit beheer één keer met je e-mailadres om hem hier te zien.',
+  'hy.why.campaigns': 'De campagnes, segmenten en de social-planning van Pure worden bij Huidly bewaard, zodat het hele team dezelfde ziet. Verbind dit beheer één keer met je e-mailadres om ze hier te zien en te plannen.',
   'hy.day.loading': 'De dag wordt bij Huidly opgehaald…',
   'hy.day.failed': 'Huidly is niet bereikbaar. Het overzicht kan nu niet worden geladen.',
   'hy.day.retry': 'Opnieuw proberen',
+  'hy.notSaved': 'Deze wijziging is niet opgeslagen bij Huidly. Probeer het opnieuw.',
   'nav.kliniekOut': 'Kliniek opent in Huidly, het programma van de kliniek',
 };
 

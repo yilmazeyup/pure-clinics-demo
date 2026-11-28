@@ -50,9 +50,9 @@ const TAB_OF: Record<string, Tab> = {
 };
 
 /**
- * Webshop & voorraad. First the webshop on Pure's own site and app: its orders, what it sold online and what a customer
- * sees. Then Voorraad & inkoop: one stock per clinic, with the webshop's sales counted in (an order goes out of the nearest
- * clinic's stock). On top the shelf in 3D; below it the stock, what sold and when it runs out, the request list with
+ * Webshop & voorraad. First the webshop on Pure's own site and app as Huidly has it: its real orders and the stock it
+ * sells from. Then Voorraad & inkoop: one stock per clinic, the very same as in Kliniek (kept at Huidly, see
+ * data/sharedStore.ts). On top the shelf in 3D; below it the stock, what sold and when it runs out, the request list with
  * its e-mails, the suppliers, the reviews and the product list.
  */
 export function StockScreen() {

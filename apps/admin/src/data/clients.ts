@@ -15,8 +15,11 @@ import {
 } from '@pure-clinics/shared';
 
 import type { MessageKey } from '../i18n';
+import type { AgendaState } from '../praktijk/data/agenda';
+import { clientFor, type PracticeClient } from '../praktijk/data/core';
 import { works, type Appt } from './clinics';
 import { COURSE_PLAN } from './courses';
+import { diaryOn } from './live';
 import { between, pick, rng, type Rng } from './random';
 
 /** A one-line note the therapist wrote after a visit; the words live in the language files. */
@@ -180,6 +183,40 @@ export function clientFile(appt: Appt): ClientFile {
     next,
     // The file keeps the last six at most; the intake drops off once there are more recent visits.
     visits: visits.slice(0, 6),
+  };
+}
+
+/**
+ * A client's file as the clinic's program has it (the agenda kept at Huidly and her client file there): her visits are
+ * the appointments she had in the agenda in the last four months, the next one is her next appointment in it, and she
+ * has been a client since the date her file says. Only the skin type and the therapist's notes are worked out here.
+ */
+export function agendaFile(appt: Appt, agenda: AgendaState, edits: Record<string, Partial<PracticeClient>> = {}): ClientFile {
+  const made = clientFile(appt);
+  const r = rng(`client-notes-${appt.client}`);
+  const today = startOfDay(appt.start);
+  const visits: Visit[] = [];
+  for (let offset = -1; offset >= -120 && visits.length < 6; offset--) {
+    for (const a of diaryOn(addDays(today, offset), agenda).reverse()) {
+      if (a.client !== appt.client || visits.length >= 6) continue;
+      visits.push({ date: a.start, treatment: a.treatment, specialist: a.specialist, price: a.price, note: pick(r, notesFor(a.treatment)) });
+    }
+  }
+  let next: ClientFile['next'] = null;
+  for (let offset = 0; offset <= 90 && !next; offset++) {
+    const found = diaryOn(addDays(today, offset), agenda).find((a) => a.client === appt.client && a.start.getTime() >= appt.end.getTime());
+    if (found) next = { date: found.start, treatment: found.treatment, specialist: found.specialist };
+  }
+  const plan = COURSE_PLAN[appt.treatment.id];
+  const done = visits.filter((v) => v.treatment.id === appt.treatment.id).length;
+  const file = clientFor(appt.client, appt.clinic, today);
+  const since = edits[file.id]?.since ?? file.since;
+  return {
+    ...made,
+    since: appt.firstVisit ? today : since,
+    series: plan ? { session: Math.min(plan.sessions, done + 1), total: plan.sessions } : null,
+    next,
+    visits,
   };
 }
 

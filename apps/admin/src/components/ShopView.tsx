@@ -1,7 +1,8 @@
 import { PRODUCTS, type ProductId } from '@pure-clinics/shared';
 import { useEffect, useMemo, useRef, type CSSProperties } from 'react';
 
-import { leftNow, orderTotal, ordersUntil, type Order } from '../data/shop';
+import { orderTotal, ordersUntil, type Order } from '../data/shop';
+import type { LiveStock } from '../praktijk/live/api';
 import { Accent, useI18n } from '../i18n';
 import { SHOP_VIEW, ShopScene } from '../three/shop';
 import { Stage, type Tip } from '../three/stage';
@@ -11,7 +12,7 @@ import { CardHead } from './ui';
  * Today's webshop as a small 3D shop: the products on their shelves with the stock on the shelf edge. Every order lifts
  * its products into a parcel that leaves the counter; the latest orders are listed underneath.
  */
-export function ShopView({ orders, now, fast }: { orders: Order[]; now: Date; fast: boolean }) {
+export function ShopView({ orders, stock, now, fast }: { orders: Order[]; stock: LiveStock[]; now: Date; fast: boolean }) {
   const { t, tn, eur, clock, text } = useI18n();
   const host = useRef<HTMLDivElement>(null);
   const scene = useRef<ShopScene | null>(null);
@@ -20,8 +21,8 @@ export function ShopView({ orders, now, fast }: { orders: Order[]; now: Date; fa
 
   const sold = new Map<ProductId, number>();
   for (const order of today) for (const line of order.lines) sold.set(line.product.id, (sold.get(line.product.id) ?? 0) + line.qty);
-  // The same stock as the screen in Kliniek: both clinics' shelves, with today's orders taken off.
-  const levels = new Map(PRODUCTS.map((p) => [p.id, leftNow(p, today)]));
+  // What the webshop has left, as Huidly counts it: each real order has already come off.
+  const levels = new Map(PRODUCTS.map((p) => [p.id, stock.find((s) => s.product === p.id)?.stock ?? 0]));
   const aftercare = today.filter((o) => o.afterTreatment).length;
 
   describe.current = (id) => {

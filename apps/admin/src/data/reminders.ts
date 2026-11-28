@@ -1,12 +1,15 @@
 import { dateKey } from '@pure-clinics/shared';
-import { useMemo, useSyncExternalStore } from 'react';
+import { useMemo } from 'react';
 
 import { clinicViewDay } from './clinics';
 import { courseState, type Course } from './courses';
 import { happenedBy, liveDay, type DayChanges, type LiveDay } from './live';
+import { sharedGet, sharedSet, useSharedValue } from './sharedStore';
 
 // The clients in a series and the reminders sent to them, shared by the overview card and the full page of treatment
-// plans (…/#trajecten): a reminder sent on one shows as sent on the other, and in the overview's live feed.
+// plans (…/#trajecten): a reminder sent on one shows as sent on the other, and in the overview's live feed. The
+// reminders are kept at Huidly ("reminders" in data/sharedStore.ts), so Kliniek's "Mijn dag" and the business's own
+// admin show the same ones, also after a reload.
 
 /**
  * The day's stream, worked out once per day and again when Huidly has something new, so every page sees the very same
@@ -26,18 +29,13 @@ export function todayLive(now: Date, changes: DayChanges): LiveDay {
 /** One press of Remind or Remind all: who got a reminder, and when. */
 export type ReminderBatch = { id: string; at: Date; day: string; courses: Course[] };
 
-let batches: ReminderBatch[] = [];
-const listeners = new Set<() => void>();
-let nextId = 0;
-
-const subscribe = (listener: () => void) => {
-  listeners.add(listener);
-  return () => listeners.delete(listener);
-};
+const NONE: ReminderBatch[] = [];
+/** Enough for weeks of reminders; older ones no longer change what a page shows. */
+const KEEP = 300;
 
 /** Every reminder sent so far, newest first. */
 export function useReminderBatches(): ReminderBatch[] {
-  return useSyncExternalStore(subscribe, () => batches);
+  return useSharedValue<ReminderBatch[]>('reminders') ?? NONE;
 }
 
 /**
@@ -47,8 +45,8 @@ export function useReminderBatches(): ReminderBatch[] {
 export function sendReminders(courses: Course[], ids: string[], now: Date): Course[] {
   const picked = courses.filter((c) => ids.includes(c.id) && !c.reminded && ['due', 'late'].includes(courseState(c, now)));
   if (!picked.length) return picked;
-  batches = [{ id: `reminders-${++nextId}`, at: new Date(now), day: dateKey(now), courses: picked }, ...batches];
-  listeners.forEach((listener) => listener());
+  const batch: ReminderBatch = { id: `reminders-${Date.now().toString(36)}`, at: new Date(now), day: dateKey(now), courses: picked };
+  sharedSet('reminders', [batch, ...(sharedGet<ReminderBatch[]>('reminders') ?? [])].slice(0, KEEP));
   return picked;
 }
 

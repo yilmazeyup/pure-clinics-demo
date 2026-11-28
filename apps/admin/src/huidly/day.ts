@@ -1,14 +1,15 @@
 import { productById, startOfDay, LOCATIONS, type Product } from '@pure-clinics/shared';
 import { useEffect, useSyncExternalStore } from 'react';
 
-import type { DayChanges } from '../data/live';
+import type { DayChanges, OpenRequest } from '../data/live';
 import type { Order } from '../data/shop';
 import { agendaFromData, type AgendaData } from '../praktijk/data/agendaSync';
 import type { LiveOrder, LiveStock } from '../praktijk/live/api';
 import { teamCall, useHuidlyTeam } from './client';
 
 // The day as Huidly has it, for the overview: the agenda as the team changed it in Kliniek (huidly.com/app), the real
-// webshop orders of the site and the app, the stock and the clients who joined the app. Loaded through the team's Huidly
+// webshop orders of the site and the app, the stock, the clients who joined the app and the online requests still
+// waiting for an answer. Loaded through the team's Huidly
 // connection (./client.ts) and again every minute while a screen shows it; every screen of this admin reads this one
 // copy, and Kliniek reads the same agenda with the same code (praktijk/data/agendaSync.ts), so nothing shows a day of
 // its own.
@@ -48,18 +49,22 @@ function asOrder(o: LiveOrder): Order {
   };
 }
 
+/** A request as Huidly's requests list gives it (the part this admin uses). */
+type RequestRow = { id: string; status: string; treatment: string; location: OpenRequest['location']; date: string; part: OpenRequest['part']; createdAt: string; client: { name: string; email: string } };
+
 async function load(token: string) {
   if (loading) return loading;
   loading = (async () => {
     try {
-      const [agenda, orders, stock, joined] = await Promise.all([
+      const [agenda, orders, stock, joined, requests] = await Promise.all([
         teamCall<AgendaData>('/agenda'),
         teamCall<{ orders: LiveOrder[] }>('/orders'),
         teamCall<{ stock: LiveStock[] }>('/stock'),
         teamCall<{ joined: { name: string; at: string }[] }>('/joined'),
+        teamCall<{ requests: RequestRow[] }>('/requests'),
       ]);
       if (forToken !== token) return;
-      const text = JSON.stringify([agenda, orders, stock, joined]);
+      const text = JSON.stringify([agenda, orders, stock, joined, requests]);
       // Nothing new: the screens keep the very same day, so nothing is worked out again.
       if (text === lastText && snapshot.status === 'ready') return;
       lastText = text;
@@ -67,6 +72,17 @@ async function load(token: string) {
         agenda: agendaFromData(agenda, startOfDay(new Date())),
         orders: orders.orders.filter((o) => o.status !== 'cancelled').map(asOrder),
         joined: joined.joined.map((j) => ({ name: j.name, at: new Date(j.at) })),
+        requests: requests.requests
+          .filter((r) => r.status === 'requested')
+          .map((r) => ({
+            id: r.id,
+            client: r.client.name.trim().split(/\s+/)[0] || r.client.email.split('@')[0],
+            treatment: r.treatment,
+            location: r.location,
+            date: r.date,
+            part: r.part,
+            at: new Date(r.createdAt),
+          })),
       };
       set({ status: 'ready', changes, stock: stock.stock });
     } catch {

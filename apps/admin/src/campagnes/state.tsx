@@ -1,6 +1,10 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, type ReactNode } from 'react';
 
 import { useToast } from '../components/ui';
+import { retryShared, sharedGet, sharedSet, useSharedStatus, useSharedValue } from '../data/sharedStore';
+import { HuidlyConnect } from '../huidly/Connect';
+import { useHuidlyTeam } from '../huidly/client';
+import { Card } from '../praktijk/kit';
 import { useI18n, type Arg, type MessageKey } from '../i18n';
 import {
   AUDIENCE,
@@ -37,6 +41,12 @@ export type Prefs = { senderId: string; fromName: string; replyTo: string; windo
 type Memory = { campaigns: Campaign[]; sync: SyncState; prefs: Prefs; created: number };
 
 const minutes = (m: number) => m * 60000;
+/**
+ * The campaigns, the Mailchimp sync and the preferences are kept at Huidly as one piece ("campagnes" in
+ * data/sharedStore.ts): everyone in the team sees the same campaigns, also after a reload. Until someone changes
+ * something, they are the built-in ones below.
+ */
+const KEY = 'campagnes';
 let memory: Memory | null = null;
 
 function initial(now: Date): Memory {
@@ -96,12 +106,14 @@ type Props = { now: Date; route: CpRoute; onRoute: (route: CpRoute, scroll?: boo
 export function CpProvider({ now, route, onRoute, children }: Props) {
   const { t } = useI18n();
   const toast = useToast();
-  const [state, setState] = useState<Memory>(() => (memory ??= initial(now)));
+  const stored = useSharedValue<Memory>(KEY);
+  const state = stored ?? (memory ??= initial(now));
+  const setState = useCallback((next: (m: Memory) => Memory) => {
+    sharedSet(KEY, next(sharedGet<Memory>(KEY) ?? (memory ??= initial(now))));
+    // `now` only matters for the very first, built-in campaigns.
+  }, []);
   const timer = useRef(0);
 
-  useEffect(() => {
-    memory = state;
-  }, [state]);
   useEffect(() => () => window.clearTimeout(timer.current), []);
 
   const open = useCallback((tab: CpTab, campaign?: string) => onRoute({ tab, campaign }), [onRoute]);
@@ -222,6 +234,26 @@ export function CpProvider({ now, route, onRoute, children }: Props) {
     [now, route, open, state, update, toast],
   );
   return <CpContext.Provider value={value}>{children}</CpContext.Provider>;
+}
+
+/** Campagnes shows the team's campaigns as Huidly keeps them: without the team's connection it asks for one first. */
+export function CpGate({ children }: { children: ReactNode }) {
+  const { t } = useI18n();
+  const team = useHuidlyTeam();
+  const shared = useSharedStatus();
+  if (!team) return <HuidlyConnect what={t('hy.why.campaigns')} />;
+  if (shared !== 'ready') {
+    return (
+      <Card eyebrow={t('hy.eyebrow')} title={t(shared === 'error' ? 'hy.day.failed' : 'hy.day.loading')} className="hy-connect">
+        {shared === 'error' ? (
+          <button className="btn btn-ghost" type="button" onClick={retryShared}>
+            {t('hy.day.retry')}
+          </button>
+        ) : null}
+      </Card>
+    );
+  }
+  return <>{children}</>;
 }
 
 /** The segment's name in the reader's language; the tag in Mailchimp stays as it is. */

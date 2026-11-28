@@ -1,7 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { phaseOf, type Appt } from '../data/clinics';
-import { clientFile, ROMAN } from '../data/clients';
+import { NO_CHANGES } from '../data/live';
+import { agendaFile, ROMAN } from '../data/clients';
+import { useSharedValue } from '../data/sharedStore';
+import { useHuidlyDay } from '../huidly/day';
+import type { PracticeClient } from '../praktijk/data/core';
 import { useI18n } from '../i18n';
 import { Icon } from './Icon';
 
@@ -11,7 +15,11 @@ import { Icon } from './Icon';
  */
 export function ClientCard({ appt, now, onClose }: { appt: Appt; now: Date; onClose: () => void }) {
   const { t, text, eur, monthYear, dayMonth } = useI18n();
-  const file = useMemo(() => clientFile(appt), [appt]);
+  // Her file as Huidly has it: the agenda kept there and the edits to her client file (data/clients.ts agendaFile).
+  const huidly = useHuidlyDay();
+  const edits = useSharedValue<Record<string, Partial<PracticeClient>>>('clients:edits');
+  const agenda = huidly.changes?.agenda;
+  const file = useMemo(() => agendaFile(appt, agenda ?? NO_CHANGES.agenda, edits), [appt, agenda, edits]);
   const card = useRef<HTMLElement>(null);
   const list = useRef<HTMLOListElement>(null);
   // The last visit fades out while there is more to scroll to.

@@ -8,6 +8,7 @@ import { useDemoClock } from './clock';
 import { Sidebar, Topbar } from './components/Shell';
 import { Tour } from './components/Tour';
 import { ToastProvider } from './components/ui';
+import { SharedConnection } from './huidly/shared';
 import { CoursesPage } from './dash/Courses';
 import { Overview } from './dash/Overview';
 import { campagnesFromHash, campagnesHash, type CpRoute } from './campagnes/nav';
@@ -149,6 +150,7 @@ function Panel() {
   return (
     <div className="app">
       <ToastProvider>
+        <SharedConnection />
         <Sidebar
           view={view}
           onView={(next) =>

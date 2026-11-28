@@ -5,7 +5,7 @@ import { PkIcon } from '../praktijk/icons';
 import './campagnes.css';
 import { Composer } from './composer/Composer';
 import type { CpRoute } from './nav';
-import { CpProvider, useCp } from './state';
+import { CpGate, CpProvider, useCp } from './state';
 import { CalendarTab } from './tabs/Calendar';
 import { CampaignsTab } from './tabs/Campaigns';
 import { ContactsTab } from './tabs/Contacts';
@@ -19,9 +19,11 @@ type Props = { now: Date; route: CpRoute; onRoute: (route: CpRoute, scroll?: boo
 /** Campagnes: e-mail and SMS campaigns through Mailchimp, planned, written, sent and measured from the panel. */
 export function Campagnes({ now, route, onRoute }: Props) {
   return (
-    <CpProvider now={now} route={route} onRoute={onRoute}>
-      <Module />
-    </CpProvider>
+    <CpGate>
+      <CpProvider now={now} route={route} onRoute={onRoute}>
+        <Module />
+      </CpProvider>
+    </CpGate>
   );
 }
 

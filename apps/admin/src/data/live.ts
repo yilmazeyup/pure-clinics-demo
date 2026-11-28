@@ -19,7 +19,12 @@ export type LiveEvent =
   | { id: string; at: Date; kind: 'order'; order: Order }
   /** A client in a series booked her next session. */
   | { id: string; at: Date; kind: 'course'; course: Course; planned: Date }
-  | { id: string; at: Date; kind: 'member'; client: string };
+  | { id: string; at: Date; kind: 'member'; client: string }
+  /** A client asked for an appointment on the site or in the app; the clinic answers it in Kliniek. */
+  | { id: string; at: Date; kind: 'request'; request: OpenRequest };
+
+/** An online request for an appointment, as Huidly has it, still waiting for the clinic's answer. */
+export type OpenRequest = { id: string; client: string; treatment: string; location: LocationId; date: string; part: 'morning' | 'afternoon' | 'evening' };
 
 export type LiveDay = {
   /** The day the clinics show: today, or Monday while both clinics are closed on Sunday. */
@@ -41,13 +46,20 @@ const minuteOf = (date: Date) => date.getHours() * 60 + date.getMinutes();
  * and, in the business's own admin, the real webshop orders and the clients who joined the app. Without it nothing is
  * shown, so no screen can tell a day of its own.
  */
-export type DayChanges = { agenda: AgendaState; orders: Order[]; joined: { name: string; at: Date }[] };
+export type DayChanges = {
+  agenda: AgendaState;
+  orders: Order[];
+  joined: { name: string; at: Date }[];
+  /** Online requests still waiting, with the moment they came in. */
+  requests: (OpenRequest & { at: Date })[];
+};
 
 /** No changes: the diary as it is, for the demo accounts on this computer and for screens that only need the series. */
 export const NO_CHANGES: DayChanges = {
   agenda: { moved: {}, deleted: [], added: [], notes: {}, confirmed: [], reports: {}, rules: [], waitPlanned: [] },
   orders: [],
   joined: [],
+  requests: [],
 };
 
 /** An appointment of Kliniek's agenda in its specialist's room; null in a column without a room (the front desk). */
@@ -114,6 +126,9 @@ export function liveDay(day: Date, today: Date, changes: DayChanges): LiveDay {
     const planned = addDays(startOfDay(today), between(cr, 2, 12));
     planned.setHours(pick(cr, [9, 10, 11, 13, 14, 15, 16, 18]), pick(cr, [0, 15, 30, 45]), 0, 0);
     events.push({ id: `course-${course.id}`, at: at(today, between(cr, 8 * 60, 21 * 60)), kind: 'course', course, planned });
+  }
+  for (const { at: when, ...request } of changes.requests) {
+    if (sameDay(when, today)) events.push({ id: `request-${request.id}`, at: when, kind: 'request', request });
   }
   changes.joined.forEach((j, i) => {
     if (sameDay(j.at, today)) events.push({ id: `member-${i}-${j.at.getTime()}`, at: j.at, kind: 'member', client: j.name });

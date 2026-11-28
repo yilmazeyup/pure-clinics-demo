@@ -3,6 +3,10 @@ import { createContext, useCallback, useContext, useMemo, useRef, useState, type
 
 import { useToast } from '../components/ui';
 import { useI18n } from '../i18n';
+import { retryShared, sharedGet, sharedHas, sharedSet, useSharedStatus, useSharedValue } from '../data/sharedStore';
+import { HuidlyConnect } from '../huidly/Connect';
+import { useHuidlyTeam } from '../huidly/client';
+import { Card } from './kit';
 import type { ScreenId } from './nav';
 
 /** An appointment handed from one screen to another, e.g. from the agenda to a new invoice. */
@@ -42,8 +46,6 @@ type Ctx = {
   setClientId: (id: string) => void;
   /** Says that, in the demo, nothing really leaves the building (or a message of the screen's own). */
   demo: (message?: string) => void;
-  store: Record<string, unknown>;
-  setStore: (update: (store: Record<string, unknown>) => Record<string, unknown>) => void;
   seed: <T>(key: string, init: () => T) => T;
   /** The side panel's trail: the last one is shown, the ones before it are where the back arrow leads. */
   details: Detail[];
@@ -61,19 +63,21 @@ export function usePraktijk(): Ctx {
 
 /**
  * State that outlives a screen and is shared between screens, e.g. the invoices that both Facturen and Declaraties
- * show. Works like useState; `init` runs once per key for the whole module.
+ * show. Works like useState; `init` runs once per key for the whole module. The value is the business's own data, kept
+ * at Huidly (data/sharedStore.ts): once someone changes it, every screen here and in the business's own admin shows the
+ * change, also after a reload.
  */
 export function useShared<T>(key: string, init: () => T): [T, (next: T | ((prev: T) => T)) => void] {
-  const { store, setStore, seed } = usePraktijk();
-  const value = (key in store ? store[key] : seed(key, init)) as T;
+  const { seed } = usePraktijk();
+  const stored = useSharedValue<T>(key);
+  const value = stored !== undefined ? stored : seed(key, init);
   const set = useCallback(
-    (next: T | ((prev: T) => T)) =>
-      setStore((s) => {
-        const prev = (key in s ? s[key] : seed(key, init)) as T;
-        return { ...s, [key]: typeof next === 'function' ? (next as (p: T) => T)(prev) : next };
-      }),
+    (next: T | ((prev: T) => T)) => {
+      const prev = (sharedHas(key) ? sharedGet<T>(key) : seed(key, init)) as T;
+      sharedSet(key, typeof next === 'function' ? (next as (p: T) => T)(prev) : next);
+    },
     // `init` is only used for the first value, so it may change between renders.
-    [key, setStore, seed],
+    [key, seed],
   );
   return [value, set];
 }
@@ -92,7 +96,6 @@ export function PraktijkProvider({ now, screen, initialFeature, onScreen, childr
   const [target, setTarget] = useState<Target | null>(() => (initialFeature ? { feature: initialFeature, at: Date.now() } : null));
   const [clientId, setClientId] = useState<string | null>(null);
   const [details, setDetails] = useState<Detail[]>([]);
-  const [store, setStoreState] = useState<Record<string, unknown>>({});
   const seeds = useRef(new Map<string, unknown>());
   const dayKey = dateKey(now);
   const today = useMemo(() => startOfDay(now), [dayKey]);
@@ -117,6 +120,11 @@ export function PraktijkProvider({ now, screen, initialFeature, onScreen, childr
     [onScreen],
   );
 
+  // The module shows the business's own data as Huidly keeps it (data/sharedStore.ts), through the team's Huidly
+  // connection: without it, it asks for one; until the data is in, it waits, so it never shows data of its own.
+  const team = useHuidlyTeam();
+  const shared = useSharedStatus();
+
   const value = useMemo<Ctx>(
     () => ({
       now,
@@ -127,15 +135,29 @@ export function PraktijkProvider({ now, screen, initialFeature, onScreen, childr
       clientId,
       setClientId,
       demo: (message?: string) => toast(message ?? t('pk.common.demoSent')),
-      store,
-      setStore: setStoreState,
       seed,
       details,
       openDetail,
       backDetail,
       closeDetail,
     }),
-    [now, today, screen, go, target, clientId, store, seed, t, toast, details, openDetail, backDetail, closeDetail],
+    [now, today, screen, go, target, clientId, seed, t, toast, details, openDetail, backDetail, closeDetail],
   );
-  return <PraktijkContext.Provider value={value}>{children}</PraktijkContext.Provider>;
+  return (
+    <PraktijkContext.Provider value={value}>
+      {!team ? (
+        <HuidlyConnect what={t('hy.why.shop')} />
+      ) : shared !== 'ready' ? (
+        <Card eyebrow={t('hy.eyebrow')} title={t(shared === 'error' ? 'hy.day.failed' : 'hy.day.loading')} className="hy-connect">
+          {shared === 'error' ? (
+            <button className="btn btn-ghost" type="button" onClick={retryShared}>
+              {t('hy.day.retry')}
+            </button>
+          ) : null}
+        </Card>
+      ) : (
+        children
+      )}
+    </PraktijkContext.Provider>
+  );
 }

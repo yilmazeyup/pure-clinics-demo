@@ -1,4 +1,4 @@
-import { addDays, dateKey, LOCATIONS, productById, sameDay } from '@pure-clinics/shared';
+import { addDays, dateKey, LOCATIONS, productById, sameDay, treatmentById, type TreatmentId } from '@pure-clinics/shared';
 import { useEffect, useMemo, useState } from 'react';
 
 import { HuidlyConnect } from '../huidly/Connect';
@@ -118,6 +118,26 @@ function feedItem(e: LiveEvent): FeedItem {
       return { ...base, source: sourceOf(e.course), icon: 'repeat', title: { key: 'ev.course.title' }, detail: courseDetail(e.course), accent: true };
     case 'member':
       return { ...base, source: 'clinic', icon: 'star', title: { key: 'ev.member.title' }, detail: { key: 'ev.member.detail', args: { client: e.client } } };
+    case 'request': {
+      const r = e.request;
+      const treatment = treatmentById(r.treatment as TreatmentId);
+      return {
+        ...base,
+        source: treatment?.category === 'beauty' ? 'blanche' : 'clinic',
+        icon: 'queue',
+        title: { key: 'ev.request.title', args: { client: r.client } },
+        detail: {
+          key: 'ev.request.detail',
+          args: {
+            treatment: treatment ? { treatment: treatment.id } : r.treatment,
+            city: cityOf(r.location),
+            day: { date: new Date(`${r.date}T12:00:00`) },
+            part: { msg: `ev.part.${r.part}` },
+          },
+        },
+        accent: true,
+      };
+    }
   }
 }
 
@@ -285,7 +305,7 @@ function OverviewDay({ now, playing, onCourses, onAgenda, changes, stock }: Prop
       <LiveFeed items={feed} now={now} />
       <AgendaView appts={appts} day={clinicsDay} now={now} onOpen={onAgenda} />
       <CoursesCard courses={courses} now={now} onRemind={remind} onOpen={onCourses} />
-      <ShopView key={`shop-${locale}`} orders={live.orders} now={now} fast={playing} />
+      <ShopView key={`shop-${locale}`} orders={live.orders} stock={stock} now={now} fast={playing} />
       <SalesView key={`sales-${locale}`} week={week} now={now} events={happened} fast={playing} />
       <Insights items={insights} />
     </div>

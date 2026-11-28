@@ -265,6 +265,7 @@ export function startShell() {
   $('#lang').addEventListener('change', (e) => {
     state.lang = e.target.value;
     store.set('pure-web-lang', state.lang);
+    window.PureLang?.choose(state.lang);
     applyTexts();
     runLang();
     watch();

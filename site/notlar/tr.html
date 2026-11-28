@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Pure Clinics · Çalışma notları</title>
+    <script src="../lang.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@200;300;400;500&family=Lexend+Peta:wght@200;300&display=swap" />
+    <style>
+      /* Work notes for Pure Clinics: day by day, the social media report, next week, and how Huidly fits in.
+         Pure's cream and walnut, Lexend (the letter of Pure's logo), the whole width of the screen. */
+      :root {
+        --bg: #f6efe6;
+        --paper: #fdfaf5;
+        --ink: #3f3128;
+        --body: #5e4c40;
+        --muted: #8a7665;
+        --line: #e5d9ca;
+        --walnut: #6f3a22;
+        --walnut-soft: #efe2d4;
+        --pad: clamp(20px, 4vw, 64px);
+        --text: 'Lexend', ui-sans-serif, system-ui, sans-serif;
+        --wide: 'Lexend Peta', 'Lexend', ui-sans-serif, system-ui, sans-serif;
+      }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--body);
+        font: 300 16px/1.6 var(--text);
+        -webkit-font-smoothing: antialiased;
+      }
+      a { color: var(--walnut); }
+      img { display: block; max-width: 100%; }
+      h1, h2, h3 { color: var(--ink); font-weight: 200; margin: 0; }
+      .cap { font: 300 11px/1.4 var(--wide); letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); }
+
+      /* Top bar */
+      .top {
+        position: sticky; top: 0; z-index: 5;
+        display: flex; align-items: center; justify-content: space-between; gap: 20px;
+        padding: 14px var(--pad);
+        background: color-mix(in srgb, var(--bg) 92%, transparent);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--line);
+      }
+      .mark { font: 300 15px/1 var(--wide); letter-spacing: 0.32em; color: var(--ink); text-decoration: none; white-space: nowrap; }
+      .mark b { font-weight: 400; }
+      .top nav { display: flex; gap: clamp(12px, 2.4vw, 32px); flex-wrap: wrap; justify-content: flex-end; }
+      .top nav a { color: var(--body); text-decoration: none; font-size: 14px; }
+      .top nav a:hover { color: var(--walnut); }
+      .top .end { display: flex; align-items: center; gap: clamp(16px, 2.4vw, 32px); }
+      .langs { display: inline-flex; gap: 2px; padding: 3px; border: 1px solid var(--line); background: var(--paper); }
+      .langs a { font-size: 12px; letter-spacing: 0.08em; line-height: 1; padding: 6px 9px; color: var(--muted); text-decoration: none; }
+      .langs a:hover { color: var(--walnut); }
+      .langs a[aria-current] { background: var(--ink); color: var(--bg); }
+
+      /* Opening */
+      .intro {
+        display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: var(--pad);
+        padding: clamp(40px, 7vw, 96px) var(--pad) clamp(32px, 5vw, 64px);
+        align-items: end;
+      }
+      .intro h1 { font-size: clamp(40px, 6.2vw, 92px); line-height: 1.02; letter-spacing: -0.02em; margin-top: 18px; }
+      .intro h1 em { font-style: normal; color: var(--walnut); }
+      .intro .lead { margin: 26px 0 0; max-width: 620px; font-size: clamp(16px, 1.4vw, 19px); }
+      .strip { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+      .strip img { aspect-ratio: 4 / 5; object-fit: cover; border-radius: 4px; }
+      .strip figcaption { grid-column: 1 / -1; font-size: 12px; color: var(--muted); }
+      .facts { display: flex; flex-wrap: wrap; gap: 10px 28px; margin-top: 28px; font-size: 14px; color: var(--muted); }
+      .facts b { color: var(--ink); font-weight: 400; }
+
+      section.block { padding: clamp(40px, 6vw, 88px) var(--pad); border-top: 1px solid var(--line); }
+      .head { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr); gap: var(--pad); align-items: end; margin-bottom: clamp(28px, 4vw, 48px); }
+      .head h2 { font-size: clamp(30px, 4vw, 56px); line-height: 1.05; letter-spacing: -0.015em; margin-top: 12px; }
+      .head p { margin: 0; max-width: 720px; }
+
+      /* Day by day */
+      .day { display: grid; grid-template-columns: 220px minmax(0, 1fr) 240px; gap: 0 var(--pad); padding: 28px 0; border-top: 1px solid var(--line); }
+      .day:first-of-type { border-top: 0; }
+      .when { position: sticky; top: 72px; align-self: start; }
+      .when .d { font-size: clamp(30px, 3vw, 44px); font-weight: 200; color: var(--ink); line-height: 1; }
+      .when .w { margin-top: 8px; }
+      .items { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+      .items li { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 14px; align-items: baseline; }
+      .tag { font: 300 10px/1.3 var(--wide); letter-spacing: 0.16em; text-transform: uppercase; color: var(--walnut); padding-top: 3px; }
+      .side img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 4px; }
+      .side figcaption { font-size: 12px; color: var(--muted); margin-top: 6px; }
+      .side.two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-content: start; }
+      .side.two figcaption { grid-column: 1 / -1; }
+
+      /* Social media */
+      .kpis { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); border-top: 1px solid var(--ink); border-bottom: 1px solid var(--line); }
+      .kpi { padding: 20px 16px 22px 0; }
+      .kpi + .kpi { padding-left: 16px; border-left: 1px solid var(--line); }
+      .kpi .n { font-size: clamp(28px, 3vw, 44px); font-weight: 200; color: var(--ink); line-height: 1; }
+      .kpi .c { margin-top: 6px; font-size: 13px; }
+      .kpi .up { color: var(--walnut); }
+      .kpi .down { color: var(--muted); }
+      .three { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--pad); margin-top: clamp(32px, 4vw, 56px); }
+      .three h3 { font-size: 24px; padding-bottom: 12px; border-bottom: 1px solid var(--ink); margin-bottom: 16px; }
+      .three ol { margin: 0; padding: 0; list-style: none; counter-reset: n; display: grid; gap: 16px; }
+      .three li { counter-increment: n; display: grid; grid-template-columns: 26px minmax(0, 1fr); }
+      .three li::before { content: counter(n, decimal-leading-zero); font: 300 11px/2 var(--wide); color: var(--muted); }
+      .three li b { color: var(--ink); font-weight: 400; }
+      .compare { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; margin-top: clamp(32px, 4vw, 56px); background: var(--line); border: 1px solid var(--line); }
+      .compare > div { background: var(--paper); padding: 18px; }
+      .compare .n { font-size: 28px; font-weight: 200; color: var(--ink); }
+      .more { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 12px 28px; font-size: 15px; }
+
+      /* Next week */
+      .week { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
+      .slot { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+      .slot .d { font-size: 22px; font-weight: 200; color: var(--ink); line-height: 1; }
+      .slot img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 3px; }
+      .slot p { margin: 0; font-size: 14px; }
+      .slot .st { font-size: 12px; color: var(--muted); }
+      .lanes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--pad); margin-top: clamp(32px, 4vw, 56px); }
+      .lanes h3 { font-size: 22px; padding-bottom: 10px; border-bottom: 1px solid var(--ink); margin-bottom: 14px; }
+      .lanes ul { margin: 0; padding-left: 18px; display: grid; gap: 10px; }
+
+      /* Huidly */
+      .flow { display: grid; grid-template-columns: minmax(0, 1fr) 140px minmax(0, 1.1fr) 140px minmax(0, 1fr); align-items: center; gap: 0; }
+      .box { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 20px; }
+      .box.core { background: var(--ink); color: #efe5d8; border-color: var(--ink); }
+      .box.core h3, .box.core b { color: #fff; }
+      .box h3 { font-size: 24px; margin-bottom: 8px; }
+      .box ul { margin: 10px 0 0; padding-left: 18px; font-size: 14px; display: grid; gap: 4px; }
+      .arrow { text-align: center; font-size: 12px; color: var(--muted); }
+      .arrow::before { content: ''; display: block; height: 1px; background: var(--walnut); margin: 0 10px 8px; }
+      .stack { display: grid; gap: 12px; }
+      .examples { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--pad); margin-top: clamp(32px, 4vw, 56px); }
+      .examples h3 { font-size: 20px; margin-bottom: 8px; }
+      .examples p { margin: 0; font-size: 15px; }
+      .why { margin-top: clamp(32px, 4vw, 56px); display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr); gap: var(--pad); }
+      .why ul { margin: 0; padding-left: 18px; display: grid; gap: 8px; }
+
+      footer { padding: 32px var(--pad) 48px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
+
+      @media (max-width: 1180px) {
+        .day { grid-template-columns: 160px minmax(0, 1fr); }
+        .day .side { grid-column: 2; max-width: 420px; margin-top: 16px; }
+        .kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .kpi:nth-child(4) { border-left: 0; padding-left: 0; }
+        .kpi:nth-child(n+4) { border-top: 1px solid var(--line); }
+        .week { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .lanes, .examples { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .flow { grid-template-columns: 1fr; gap: 10px; }
+        .arrow::before { width: 1px; height: 24px; margin: 0 auto 6px; }
+      }
+      @media (max-width: 760px) {
+        .top nav { display: none; }
+        .intro, .head, .why { grid-template-columns: 1fr; }
+        .day { grid-template-columns: 1fr; }
+        .when { position: static; display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px; }
+        .day .side { grid-column: 1; }
+        .items li { grid-template-columns: 1fr; gap: 2px; }
+        .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .kpi:nth-child(n) { border-left: 0; padding-left: 0; }
+        .kpi:nth-child(even) { padding-left: 16px; border-left: 1px solid var(--line); }
+        .kpi .cap { letter-spacing: 0.1em; hyphens: auto; -webkit-hyphens: auto; overflow-wrap: anywhere; }
+        .kpi:nth-child(n+3) { border-top: 1px solid var(--line); }
+        .three, .lanes, .examples { grid-template-columns: 1fr; }
+        .compare { grid-template-columns: 1fr 1fr; }
+        .week { grid-template-columns: 1fr 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="top">
+      <a class="mark" href="../"><b>PURE</b> CLINICS</a>
+      <div class="end">
+      <nav aria-label="Bölümler">
+        <a href="#gun-gun">Gün gün</a>
+        <a href="#sosyal-medya">Sosyal medya</a>
+        <a href="#gelecek-hafta">Gelecek hafta</a>
+        <a href="#huidly">Huidly ile birlikte</a>
+      </nav>
+      <div class="langs" role="group" aria-label="Dil · Taal · Language">
+        <a href="tr.html" data-pure-lang="tr" lang="tr" title="Türkçe" aria-current="page">TR</a>
+        <a href="index.html?lang=nl" data-pure-lang="nl" lang="nl" title="Nederlands">NL</a>
+        <a href="en.html" data-pure-lang="en" lang="en" title="English">EN</a>
+      </div>
+      </div>
+    </header>
+
+    <section class="intro">
+      <div>
+        <div class="cap">Çalışma notları · son güncelleme 28 Kasım 2026</div>
+        <h1>Gün gün ne yaptık, <em>sırada</em> ne var.</h1>
+        <p class="lead">Pure Clinics için yapılan bütün işler tek yerde. Site, uygulama, yönetim paneli, Instagram, cilt tarama modeli ve Huidly. En yeni gün en üstte. Ardından sosyal medya raporu, gelecek haftanın planı ve Huidly'nin Pure ile nasıl birlikte çalıştığı geliyor.</p>
+        <div class="facts">
+          <span><b>26 Ekim'den beri</b> 78 güncelleme</span>
+          <span><b>26</b> hizmetin hepsi uygulamada önerilebiliyor</span>
+          <span><b>7 gün</b> boyunca günde 50 model eğitimi</span>
+        </div>
+      </div>
+      <figure class="strip">
+        <img src="../instagram/img/pakket/02-1.jpg" alt="Black Friday kaydırmalısının kapağı" />
+        <img src="../instagram/img/pakket/07-1.jpg" alt="Laser gehele benen postu" />
+        <img src="../instagram/img/pakket/10-1.jpg" alt="Hediye kartı postu" />
+        <img src="../instagram/img/pakket/12-1.jpg" alt="Stralende kerst postu" />
+        <figcaption>Kasım–Aralık paketinden, Pure'un kendi çekim fotoğraflarıyla.</figcaption>
+      </figure>
+    </section>
+
+    <section class="block" id="gun-gun">
+      <div class="head">
+        <div>
+          <div class="cap">Bölüm 1</div>
+          <h2>Gün gün</h2>
+        </div>
+        <p>Her gün yapılanlar, alana göre etiketli. Sosyal medyada yapılan her paylaşım Neslihan Hanım'ın onayından sonra planlandı. Fiyat ve bilgiler yalnızca Pure'un kendi metinlerinden.</p>
+      </div>
+
+      <article class="day">
+        <div class="when"><div class="d">28 Kas</div><div class="w cap">Cumartesi</div></div>
+        <ul class="items">
+          <li><span class="tag">Uygulama</span><span>Cilt danışmanı artık Pure'un <b>26 hizmetinin hepsini</b> önerebiliyor. İlk soruya dört yeni seçenek geldi: doffe huid, tattoo, adertjes op de benen, wenkbrauwen/wimpers/nagels. Bir de "Weet ik nog niet" eklendi. Hiçbiri uymazsa genel öneri olarak Facial çıkıyor.</span></li>
+          <li><span class="tag">Cilt tarama</span><span>Yeni yüz modeli kırışıklık ve göz altını okuyor. Hiç görmediği yüzlerde kırışıklıkta 100 üzerinden 94, göz altında 89 aldı. Taramada iki yeni çubuk var.</span></li>
+          <li><span class="tag">Uygulama</span><span>Fiyatlar, süreler, şube adres ve saatleri, ürünler, lazer bölge ve paket fiyatları her açılışta Huidly'den geliyor. Ekranlar değişmedi.</span></li>
+          <li><span class="tag">Panel</span><span>"Wat gebeurt er nu?" günü Huidly'deki ajandadan gösteriyor. Webshopta yalnızca gerçek siparişler görünüyor. Kampanyaların hedef kitlesi müşteri listesinden geliyor.</span></li>
+          <li><span class="tag">Cilt tarama</span><span>4.716 yüzün her biri ikinci bir puanlayıcıdan da puan aldı; iki puanlayıcının uyumu kırışıklıkta 0,93. 3.890 yeni yüz eklendi. EVREN'de dört veri seti açıldı ve 7 günlük, günde 50 eğitimlik plan başladı.</span></li>
+          <li><span class="tag">Huidly</span><span>Bugün Huidly'ye eklenenler:
+            <br />· resmi fatura numarası ve değiştirilemez arşiv;
+            <br />· akıllı sipariş önerisi ve gerçek sipariş e-postası;
+            <br />· ajandadan vardiya önerisi;
+            <br />· sözleşme ve maaş;
+            <br />· üç aylık BTW beyanı;
+            <br />· kasa günlüğü ve Z raporu.
+            <br />Online randevu saatleri artık Kliniek'teki vardiya ve izinlerden geliyor.</span></li>
+        </ul>
+        <div></div>
+      </article>
+
+      <article class="day">
+        <div class="when"><div class="d">27 Kas</div><div class="w cap">Cuma</div></div>
+        <ul class="items">
+          <li><span class="tag">Site</span><span>Yeni site çok sayfalı oldu: tedaviler, sonuçlar, fiyatlar, shop, hediye kartı, hakkımızda, sık sorulanlar, randevu, Mijn Pure, ödeme. Markalar yukarıda, açılışta hediye kartı notu. Gizlilik sayfası ve çerez seçimi eklendi. Ziyaretçi ölçümü hazır ama Pure'un GA4 numarasını bekliyor.</span></li>
+          <li><span class="tag">Uygulama</span><span>Gerçek yüz taraması geldi. Üyelik, randevu ve shop Huidly üzerinden çalışıyor. Uygulama telefona kurulabiliyor, örnek veriler kaldırıldı.</span></li>
+          <li><span class="tag">Cilt tarama</span><span>Pure'un önce/sonra fotoğrafları, SCIN ve PAD-UFES-20 ile toplam 7.582 puanlı fotoğraf. Uygulamaya huidscan-v2 kondu; leke ölçümünü EVREN'deki modelle birlikte yapıyor.</span></li>
+          <li><span class="tag">Panel</span><span>Webshop siparişleri ve sosyal medya planlaması Huidly'den geliyor. Menüdeki Kliniek, Huidly'nin programını açıyor.</span></li>
+          <li><span class="tag">Sosyal medya</span><span>Black Friday analizi ve Aralık önerileri hazırlandı; ayrıntısı aşağıda. Akşam 20:00'de lazer postu yayında, yılın ilk akşam denemesi.</span></li>
+          <li><span class="tag">Huidly</span><span>Pure'un sitesi ve uygulaması için müşteri bağlantısı: üyelik, randevu isteği, sipariş, hediye kartı. Huidly Türkçe de konuşuyor. Programda yalnızca klinik bölümü var.</span></li>
+        </ul>
+        <figure class="side"><img src="../instagram/img/pakket/07-1.jpg" alt="" /><figcaption>27 Kasım 20:00 · lazer postu</figcaption></figure>
+      </article>
+
+      <article class="day">
+        <div class="when"><div class="d">26 Kas</div><div class="w cap">Perşembe</div></div>
+        <ul class="items">
+          <li><span class="tag">Huidly</span><span>huidly.com yayına girdi: cilt klinikleri ve salonlar için bir program. Pure ilk müşteri, giriş e-posta koduyla.</span></li>
+          <li><span class="tag">Panel</span><span>Pure'un panelindeki Kliniek bölümü Huidly'nin programına taşındı.</span></li>
+          <li><span class="tag">Sosyal medya</span><span>Black Friday videosu story olarak 10:00 ve 20:00'de yayında.</span></li>
+        </ul>
+        <div></div>
+      </article>
+
+      <article class="day">
+        <div class="when"><div class="d">25 Kas</div><div class="w cap">Çarşamba</div></div>
+        <ul class="items">
+          <li><span class="tag">Sosyal medya</span><span>Dört fırsatlı Black Friday kaydırmalısı yayında ve <b>Kasım'ın en çok etkileşim alan postu</b> oldu. Slaytları aynı gün story olarak da gitti.</span></li>
+          <li><span class="tag">Sosyal medya</span><span>Lazer görselleri, Neslihan Hanım'ın gönderdiği lazer başlığı fotoğrafıyla yenilendi.</span></li>
+          <li><span class="tag">Panel</span><span>Praktijk ve Campagnes menüsü düzenlendi. Yönetici, çalışan ve müşteri girişleri, tedavi planları ve yeni stok ekranı eklendi. Her sayfada soru işaretli yardım var.</span></li>
+        </ul>
+        <figure class="side"><img src="../instagram/img/pakket/02-1.jpg" alt="" /><figcaption>25 Kasım · Black Friday kaydırmalısı</figcaption></figure>
+      </article>
+
+      <article class="day">
+        <div class="when"><div class="d">24 Kas</div><div class="w cap">Salı</div></div>
+        <ul class="items">
+          <li><span class="tag">Sosyal medya</span><span>Neslihan Hanım'ın düzeltmeleri işlendi: önce PRX, ikinci satırlar kalktı, SkinPen 3 seans €495. "Tamam" gelince Black Friday haftasının bütün post ve story'leri 1 Aralık'a kadar Meta'da planlandı.</span></li>
+          <li><span class="tag">Sosyal medya</span><span>Teaser postu 10:00'da, teaser story 21:00'de yayınlandı. Aralık (Noel) seti Hollandaca hazırlandı.</span></li>
+          <li><span class="tag">Site</span><span>Her ekip üyesine yürüyüş videolu bir sayfa.</span></li>
+          <li><span class="tag">Panel</span><span>Praktijk'e grafikli bir özet ekranı ve 3D yoğunluk haritası geldi. Bütün ekranlar telefona uyuyor.</span></li>
+        </ul>
+        <div></div>
+      </article>
+
+      <article class="day">
+        <div class="when"><div class="d">23 Kas</div><div class="w cap">Pazartesi</div></div>
+        <ul class="items">
+          <li><span class="tag">Marka</span><span>Renk kararı krem ve ceviz kahvesi oldu. Bordo ve pudra pembe her yerden çıktı.</span></li>
+          <li><span class="tag">Sosyal medya</span><span>Profil satırları Pure'un kendi çekim fotoğraflarından yapıldı ve her satıra "Mooi / Liever niet" oylaması kondu. Neslihan Hanım Fluweel, Licht ve Woord satırlarını seçti.</span></li>
+          <li><span class="tag">Sosyal medya</span><span>Meta Business Suite erişimi geldi. 45 postluk paylaşım saati analizi Türkçe ve Hollandaca olarak siteye kondu.</span></li>
+          <li><span class="tag">Sosyal medya</span><span>"AI görünmesin" isteği üzerine Black Friday teaser'ı Pure'un gerçek lazer fotoğrafıyla yeniden yapıldı.</span></li>
+          <li><span class="tag">Site</span><span>İlk sitenin güzel bölümleri, Pure'un istekleri korunarak geri geldi: yükleme animasyonu, tedavi odaları, buğulu ayna.</span></li>
+        </ul>
+        <div></div>
+      </article>
+
+      <article class="day">
+        <div class="when"><div class="d">21–22 Kas</div><div class="w cap">Hafta sonu</div></div>
+        <ul class="items">
+          <li><span class="tag">Sosyal medya</span><span>Pure'un çekim fotoğraflarından neler yapıldı:
+            <br />· altı tedavi postu;
+            <br />· Black Friday seti: kaydırmalı, story'ler ve 15 saniyelik video;
+            <br />· Noel seti;
+            <br />· hediye kartı animasyonu ve "Licht" filmi.</span></li>
+          <li><span class="tag">Sosyal medya</span><span>32 parçalık inceleme paketi (PDF ve 11 video) Neslihan Hanım'a gönderildi. Dönüşleri numara numara alındı.</span></li>
+        </ul>
+        <figure class="side two"><img src="../instagram/img/pakket/17-1.jpg" alt="" /><img src="../instagram/img/pakket/15-1.jpg" alt="" /><figcaption>Noel seti ve hediye kartı</figcaption></figure>
+      </article>
+
+      <article class="day">
+        <div class="when"><div class="d">20 Kas</div><div class="w cap">Cuma</div></div>
+        <ul class="items">
+          <li><span class="tag">Sosyal medya</span><span>Black Friday'den yeni yıla kadar Instagram, Facebook ve Mailchimp (e-posta ve SMS) planı hazırlandı.</span></li>
+          <li><span class="tag">Site</span><span>Site, Pure'un logosundaki yazı tipine (Lexend) geçti. Panelde Mailchimp'li Campagnes bölümü açıldı.</span></li>
+        </ul>
+        <div></div>
+      </article>
+
+      <article class="day">
+        <div class="when"><div class="d">14 Kas</div><div class="w cap">Cumartesi</div></div>
+        <ul class="items">
+          <li><span class="tag">Toplantı</span><span>Pure ile toplantıdan sonra yapılanlar:
+            <br />· yeni site çalışmaları ve İspanyolca;
+            <br />· panelde 3D gerçek ekip;
+            <br />· Pure Praktijk: SkinAdmin'in bütün özellikleri, 13 ekran ve 178 madde.</span></li>
+        </ul>
+        <div></div>
+      </article>
+
+      <article class="day">
+        <div class="when"><div class="d">13 Kas</div><div class="w cap">Cuma</div></div>
+        <ul class="items">
+          <li><span class="tag">Sosyal medya</span><span>Instagram örnek postları sayfası yayına girdi: 9 post, dört görünüm, Hollandaca metinler.</span></li>
+        </ul>
+        <div></div>
+      </article>
+
+      <article class="day">
+        <div class="when"><div class="d">1 Kas</div><div class="w cap">Pazar</div></div>
+        <ul class="items">
+          <li><span class="tag">Yayın</span><span>Bütün çalışmalar pureclinics.savastana.com adresine taşındı.</span></li>
+        </ul>
+        <div></div>
+      </article>
+
+      <article class="day">
+        <div class="when"><div class="d">26–29 Eki</div><div class="w cap">Başlangıç</div></div>
+        <ul class="items">
+          <li><span class="tag">Uygulama</span><span>Müşteri uygulaması ve 3D yönetim paneli yapıldı, Hollandaca bir açıklama videosu hazırlandı. Demo, Pure Clinics adını aldı.</span></li>
+          <li><span class="tag">Site</span><span>İlk görsel web sitesi yapıldı; 2026'da ödül alan sitelerden birer fikir alındı.</span></li>
+        </ul>
+        <div></div>
+      </article>
+    </section>
+
+    <section class="block" id="sosyal-medya">
+      <div class="head">
+        <div>
+          <div class="cap">Bölüm 2 · 27 Kasım itibarıyla</div>
+          <h2>Sosyal medya raporu</h2>
+        </div>
+        <p>Pure'un Meta Business Suite verisi. Son 28 gün 29 Ekim – 25 Kasım arası; değişim önceki 28 güne göre. Tam rapor ayrı sayfada: <a href="../sosyal-medya/tr.html">Black Friday ve Aralık analizi</a>.</p>
+      </div>
+      <div class="kpis">
+        <div class="kpi"><div class="cap">Takipçi</div><div class="n">5.821</div><div class="c down">28 günde +20 / −32</div></div>
+        <div class="kpi"><div class="cap">Görüntülenme</div><div class="n">14.311</div><div class="c up">+%9</div></div>
+        <div class="kpi"><div class="cap">Erişim</div><div class="n">3,9 bin</div><div class="c up">+%29</div></div>
+        <div class="kpi"><div class="cap">Etkileşim</div><div class="n">166</div><div class="c up">+%113</div></div>
+        <div class="kpi"><div class="cap">Link tıklaması</div><div class="n">114</div><div class="c up">+%57</div></div>
+        <div class="kpi"><div class="cap">Profil ziyareti</div><div class="n">233</div><div class="c up">+%14</div></div>
+      </div>
+
+      <div class="three">
+        <div>
+          <h3>İyi yaptıklarımız</h3>
+          <ol>
+            <li><span><b>Black Friday kaydırmalısı Kasım'ın en iyi postu oldu:</b> 17 etkileşim; ayın ortası 9. O gün 1.738 görüntülenmeyle son 28 günün en iyi günüydü.</span></li>
+            <li><span><b>Etkileşim iki katından fazla arttı</b> (+%113). Link tıklamaları +%57.</span></li>
+            <li><span><b>Doğru biçim:</b> kaydırmalı ve video, tek fotoğraftan çok daha iyi görülüyor. En çok paylaşılan konu tedavi anlatımları.</span></li>
+            <li><span><b>Sakin, gerçek görseller:</b> Pure'un kendi fotoğrafları, az yazı, fırsatlar metinde. Her şey Neslihan Hanım'ın onayıyla önceden planlandı.</span></li>
+          </ol>
+        </div>
+        <div>
+          <h3>İzlemeye devam</h3>
+          <ol>
+            <li><span><b>Story erişimi:</b> Black Friday story'lerini 83–147 kişi gördü; önceki story'leri 234–377 kişi görmüştü. Aynı kareleri 12 saat içinde ikinci kez koymayacağız.</span></li>
+            <li><span><b>Akşam mı sabah mı:</b> 27 Kasım 20:00 postunun 48 saatlik sonucunu 25 Kasım 10:00 postuyla karşılaştıracağız (29 Kasım). Sonuca göre saat seçilecek.</span></li>
+            <li><span><b>Takipçiler:</b> net 12 eksildi. Takipçilerin yalnızca üçte biri Hollanda'da ve etkileşimin %99'u mevcut takipçilerden geliyor. Nijmegen, Arnhem ve Uden çevresinden yeni kişilere ulaşmamız lazım.</span></li>
+            <li><span><b>Randevular:</b> Meta, gelen randevuyu göremiyor. Black Friday'de kaç randevu ve hediye kartı geldiğini Pure'a soracağız.</span></li>
+          </ol>
+        </div>
+        <div>
+          <h3>Geliştireceklerimiz</h3>
+          <ol>
+            <li><span><b>Tek fotoğrafı azaltmak:</b> Aralık'taki kit postları kaydırmalı olacak (kutu, içindekiler, fiyat).</span></li>
+            <li><span><b>Story düzeni:</b> günde bir seri ve en fazla 5 kare. İlk kare soru ya da fiyat, son kare link.</span></li>
+            <li><span><b>Öne çıkanlar:</b> "ACTIES" ve "CADEAUBON", krem-ceviz kapaklarla.</span></li>
+            <li><span><b>Aralık ortasında Noel çekilişi.</b> Yılın en iyi iki postu çekilişti; Ocak'taki çekiliş 6.648 kez görüntülendi. Katılım koşulları yazılı olacak.</span></li>
+            <li><span><b>Ölçüm:</b>
+              <br />· sitenin hediye kartı sayfası hazır;
+              <br />· linklere kaynak etiketi eklenecek;
+              <br />· sitede GA4 ve Meta pikseli açılacak.</span></li>
+            <li><span><b>Facebook:</b> postlar otomatik gitmeye devam edecek. Story'lere ayrıca emek vermeye gerek yok, 0–9 kişi görüyor.</span></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="compare">
+        <div><div class="cap">Kaydırmalı</div><div class="n">+%31</div><span>görüntülenme, ayın ortasına göre</span></div>
+        <div><div class="cap">Video</div><div class="n">+%19</div><span>görüntülenme</span></div>
+        <div><div class="cap">Tek fotoğraf</div><div class="n">−%9</div><span>görüntülenme</span></div>
+        <div><div class="cap">Takipçilerin</div><div class="n">%34</div><span>Hollanda'da</span></div>
+      </div>
+      <p class="more"><a href="../sosyal-medya/tr.html">Tam rapor: Black Friday nasıl gitti, Aralık'ta ne değişmeli</a><a href="../analyse/?lang=tr">Ne zaman paylaşmalı? (45 postun analizi)</a><a href="../instagram/">Instagram çalışmaları</a></p>
+      <p class="cap" style="margin-top:22px">Not: Pure'un gelen kutusunda sahte "Meta Verified" mesajları var. Tıklanmamalı, şifre girilmemeli.</p>
+    </section>
+
+    <section class="block" id="gelecek-hafta">
+      <div class="head">
+        <div>
+          <div class="cap">Bölüm 3 · 29 Kasım – 6 Aralık</div>
+          <h2>Gelecek hafta</h2>
+        </div>
+        <p>Saatler Hollanda saati. Her paylaşım en geç iki gün önce Neslihan Hanım'a gider ve onaydan sonra planlanır. Kit fiyatları gibi Pure'dan beklenen bilgiler gelmeden o paylaşımlar yayınlanmaz.</p>
+      </div>
+      <div class="week">
+        <div class="slot"><div class="d">Paz 29</div><img src="../instagram/img/pakket/08-1.jpg" alt="" /><p>"Laatste kans" videosu story olarak, 10:00 ve 20:00.</p><span class="st">Planlı · akşam/sabah karşılaştırması</span></div>
+        <div class="slot"><div class="d">Pzt 30</div><img src="../instagram/img/pakket/10-1.jpg" alt="" /><p>Hediye kartı: €100 alana €15 hediye. Kaydırmalı ya da 10 saniyelik video, aynı gün story ve link.</p><span class="st">Onay bekliyor</span></div>
+        <div class="slot"><div class="d">Sal 1</div><img src="../instagram/img/pakket/11-1.jpg" alt="" /><p>Black Friday'in son günü story'si.</p><span class="st">Planlı</span></div>
+        <div class="slot"><div class="d">Çar 2</div><img src="../instagram/img/pakket/12-1.jpg" alt="" /><p>Stralende kerst: ZO Skin Health kitleri, kaydırmalı.</p><span class="st">Kit fiyatları bekleniyor</span></div>
+        <div class="slot"><div class="d">Per–Cum</div><img src="../instagram/img/pakket/15-1.jpg" alt="" /><p>"Nog een cadeau voor pakjesavond?": hediye kartı, Sinterklaas öncesi.</p><span class="st">Onay bekliyor</span></div>
+        <div class="slot"><div class="d">Cmt 5</div><img src="../instagram/img/pakket/16-1.jpg" alt="" /><p>Fijne pakjesavond: story.</p><span class="st">Onay bekliyor</span></div>
+      </div>
+
+      <div class="lanes">
+        <div>
+          <h3>Sosyal medya</h3>
+          <ul>
+            <li>Öne çıkanlar: Black Friday bitince "ACTIES" Noel kitlerine geçecek, yeni "CADEAUBON" eklenecek.</li>
+            <li>Günde bir story serisi, en fazla 5 kare.</li>
+            <li>Noel çekilişi önerisi Neslihan Hanım'a gidecek.</li>
+            <li>Hafta sonunda erişim, kaydetme ve link tıklamalarına bakılacak.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Cilt tarama modeli</h3>
+          <ul>
+            <li>29 Kasım – 5 Aralık her gün EVREN'de en az 50 eğitim (ücretsiz kredilerle).</li>
+            <li>Her sabah sonuçlar aynı zor test setinde ölçülüp kısa bir rapor verilecek.</li>
+            <li>Bu Mac'te 12 kat büyük bir model de eğitiliyor.</li>
+            <li>Daha iyi bir model çıkarsa uygulamaya onaydan sonra girecek.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Site, uygulama, Huidly</h3>
+          <ul>
+            <li>Noel kitleri, fiyatlar onaylanınca sitede ve uygulamada.</li>
+            <li>Sitede GA4 ve Meta pikseli (numaralar bekleniyor).</li>
+            <li>Huidly'de gerçek işletme moduna geçiş ve SkinAdmin'den veri aktarımı.</li>
+            <li>Huidly'de faturanın PDF'i ve e-postası.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Pure'dan beklenenler</h3>
+          <ul>
+            <li>Kit fiyatları: Clear Skin €125 mi, €99 mu? Ultimate Glow'daki "extraatje" ne?</li>
+            <li>Hediye kartı koşulları ve bayram çalışma saatleri.</li>
+            <li>Black Friday'de gelen randevu ve hediye kartı sayısı.</li>
+            <li>GA4 numarası ve SkinAdmin'den dışa aktarım dosyası.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="huidly">
+      <div class="head">
+        <div>
+          <div class="cap">Bölüm 4</div>
+          <h2>Huidly ile Pure Clinics birlikte nasıl çalışıyor?</h2>
+        </div>
+        <p><a href="https://huidly.com" target="_blank" rel="noopener">huidly.com</a> klinikler için yapılmış bir program ve SkinAdmin'in yerini alacak. Pure onun ilk müşterisi. Pure'un sitesi, uygulaması ve yönetim paneli Pure'un kendi markasıyla kalıyor ama verilerini Huidly'den alıyor ve Huidly'ye yazıyor. Kendilerine ait ayrı bir kopya tutmuyorlar.</p>
+      </div>
+
+      <div class="flow">
+        <div class="stack">
+          <div class="box"><h3>Pure'un sitesi</h3>Tedaviler, fiyatlar, shop, hediye kartı, üyelik, randevu isteği.</div>
+          <div class="box"><h3>Pure uygulaması</h3>Cilt taraması ve danışman, randevular, siparişler, hesap.</div>
+        </div>
+        <div class="arrow">okur ve yazar</div>
+        <div class="box core">
+          <h3>Huidly</h3>
+          <b>Tek veri, tek doğru.</b>
+          <ul>
+            <li>Ajanda ve randevu istekleri</li>
+            <li>Danışan dosyaları ve tedavi planları</li>
+            <li>Kasa, faturalar, BTW</li>
+            <li>Tek stok: klinik ve webshop</li>
+            <li>Ekip, vardiya, sözleşme</li>
+            <li>Tedavi ve ürün fiyatları</li>
+          </ul>
+        </div>
+        <div class="arrow">ekip burada çalışır</div>
+        <div class="stack">
+          <div class="box"><h3>Kliniek</h3>huidly.com/app · Neslihan Hanım ve ekip, e-posta koduyla giriş.</div>
+          <div class="box"><h3>Pure'un paneli</h3>Kampanyalar, sosyal medya planı, webshop. Veri Huidly'den.</div>
+        </div>
+      </div>
+
+      <div class="examples">
+        <div><h3>Randevu</h3><p>Müşteri uygulamada ya da sitede gün ve saat aralığı ister. İstek Kliniek'te "Aanvragen" olarak düşer. Ekip kesin saati verir ve müşteri onayı kendi hesabında görür.</p></div>
+        <div><h3>Sipariş</h3><p>Webshop siparişi Huidly'deki tek stoktan düşer: önce teslim alınacak klinikten, yoksa diğerinden. Sipariş Kliniek'te ve Pure'un panelinde aynı anda görünür.</p></div>
+        <div><h3>Fiyat ve saat</h3><p>Kliniek'te bir fiyat ya da açılış saati değişirse, site ve uygulama bir sonraki açılışta yenisini gösterir. Lazer bölgeleri ve paketler de buna dahil.</p></div>
+        <div><h3>Kampanya</h3><p>Kampanyaların hedef kitlesi Huidly'deki müşteri listesinden ve faturalardan çıkar. Sosyal medya planı da Huidly'de saklanır.</p></div>
+      </div>
+
+      <div class="why">
+        <div><div class="cap">Neden böyle?</div></div>
+        <ul>
+          <li>Aynı bilgi iki yere girilmiyor; site, uygulama ve klinik aynı şeyi gösteriyor.</li>
+          <li>SkinAdmin aboneliğine gerek kalmıyor. Pure'a özel istekler programa doğrudan ekleniyor.</li>
+          <li>Pure'un markası korunuyor: müşteri Huidly'yi görmüyor, Pure'u görüyor.</li>
+          <li>Huidly başka klinik ve salonlara da satılabilir; Pure ilk ve örnek müşteri.</li>
+          <li><b>Bugünkü durum:</b> canlıda çalışıyor. Pure'un gerçek randevuları henüz SkinAdmin'de; aktarım için SkinAdmin'den dışa aktarım dosyası lazım.</li>
+        </ul>
+      </div>
+    </section>
+
+    <footer>
+      <span>Pure Clinics · çalışma notları · Hazırlayan: Eyüp Yılmaz</span>
+      <span>Son güncelleme: 28 Kasım 2026</span>
+    </footer>
+  </body>
+</html>

@@ -305,6 +305,7 @@
       <footer data-t="footer"></footer>
     </div>
 
+    <script src="../lang.js"></script>
     <script>
       const TEXT = {
         nl: {
@@ -545,14 +546,6 @@
       let chapters = [];
       let lang = 'nl';
 
-      function stored() {
-        try {
-          return localStorage.getItem('demo-lang');
-        } catch {
-          return null;
-        }
-      }
-
       const clock = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 
       /** Dutch viewers get Dutch subtitles; everyone else the English ones. */
@@ -623,16 +616,14 @@
         renderChapters();
         renderFaq();
         subtitles();
-        try {
-          localStorage.setItem('demo-lang', lang);
-        } catch {
-          // Private windows may refuse storage; the page still works.
-        }
       }
 
       video.addEventListener('loadedmetadata', subtitles);
       video.addEventListener('timeupdate', markChapter);
-      select.addEventListener('change', () => apply(select.value));
+      select.addEventListener('change', () => {
+        PureLang.choose(select.value);
+        apply(select.value);
+      });
       fetch('chapters.json')
         .then((r) => r.json())
         .then((list) => {
@@ -640,8 +631,8 @@
           renderChapters();
         })
         .catch(() => {});
-      const fromLink = new URLSearchParams(location.search).get('lang');
-      apply(TEXT[fromLink] ? fromLink : TEXT[stored()] ? stored() : 'nl');
+      // A ?lang= link, else the visitor's own choice on a Pure page, else Dutch (lang.js).
+      apply(PureLang.pick(Object.keys(TEXT)));
     </script>
   </body>
 </html>

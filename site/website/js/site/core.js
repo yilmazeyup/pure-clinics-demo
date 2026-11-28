@@ -1,6 +1,7 @@
 // What every page of the Pure Clinics website shares: language, palette, the clinic's data, links and small helpers.
 // Since 27 Nov 2026 the site is many pages instead of one long one; each page folder loads ../js/app.js.
 import { LANGS, STRINGS } from '../i18n.js';
+import '../../../lang.js';
 import { PAGE_STRINGS } from '../i18n-pages.js';
 
 /** The website's root folder (…/website/), whatever page we are on. */
@@ -55,7 +56,8 @@ const renamed = (v) => (v === 'bordeaux' ? 'walnoot' : v);
 // ?studie=karamel|walnoot still shows the other studies for comparison, without remembering it.
 export const state = {
   study: pickFrom(STUDIES, renamed(params.get('studie')), 'creme'),
-  lang: pickFrom(LANGS, params.get('lang'), store.get('pure-web-lang')),
+  // A ?lang= link, the visitor's own choice (here or on another Pure page, ../../lang.js), else Dutch.
+  lang: pickFrom(LANGS, params.get('lang'), store.get('pure-web-lang'), window.PureLang?.pick(LANGS)),
 };
 root.dataset.study = state.study;
 

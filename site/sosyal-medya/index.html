@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Pure Instagram-analyse</title>
+<script src="../lang.js"></script>
+<script>PureLang.route({ nl: 'index.html', tr: 'tr.html', en: 'en.html' });</script>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@200;300;400;500&family=Lexend+Peta:wght@300&display=swap">
+<style>
+  /* Layout: one reading column in Pure's cream and walnut, the same family as the posting-time report.
+     Plain answers first, then Black Friday item by item, then the year, the audience, and December. */
+  :root {
+    --bg: #f6efe6;
+    --surface: #fdfaf5;
+    --ink: #3f3128;
+    --body: #5e4c40;
+    --muted: #8a7665;
+    --line: #e5d9ca;
+    --walnut: #6f3a22;
+    --walnut-soft: #efe2d4;
+    --down: #9a8270;
+    --display: 'Lexend', ui-sans-serif, system-ui, sans-serif;
+    --text: 'Lexend', ui-sans-serif, system-ui, sans-serif;
+    --wide: 'Lexend Peta', 'Lexend', ui-sans-serif, system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1d1612; --surface: #261d18; --ink: #f3e9de; --body: #dccbbb; --muted: #a8937f; --line: #3a2d25;
+      --walnut: #d59a70; --walnut-soft: #35261d; --down: #8c7866; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1d1612; --surface: #261d18; --ink: #f3e9de; --body: #dccbbb; --muted: #a8937f; --line: #3a2d25;
+    --walnut: #d59a70; --walnut-soft: #35261d; --down: #8c7866; color-scheme: dark;
+  }
+  body { background: var(--bg); color: var(--ink); font-family: var(--text); font-weight: 300; font-size: 16px; line-height: 1.6; }
+  .page { max-width: 780px; margin: 0 auto; padding-block: 40px 72px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 52px; }
+  .eyebrow { font-family: var(--wide); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin: 0; }
+  h1 { font-family: var(--display); font-weight: 200; font-size: clamp(34px, 6.4vw, 52px); line-height: 1.05; letter-spacing: -.03em; margin: 10px 0 0; text-wrap: balance; }
+  h1 em { font-style: normal; color: var(--walnut); }
+  h2 { font-family: var(--display); font-weight: 300; font-size: 25px; letter-spacing: -.01em; margin: 0; text-wrap: balance; }
+  h3 { font-weight: 400; font-size: 17px; margin: 0; color: var(--ink); }
+  p { margin: 0; color: var(--body); max-width: 64ch; }
+  .lead { font-size: 18px; margin-top: 18px; }
+  .source { font-size: 13px; color: var(--muted); margin-top: 12px; }
+  section { display: grid; gap: 16px; min-width: 0; }
+  b, strong { font-weight: 400; color: var(--ink); }
+
+  .key { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13px; color: var(--muted); margin-top: 14px; }
+  .m { display: inline-block; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 0 6px; border: 1px solid var(--line); color: var(--muted); vertical-align: 2px; margin-left: 4px; white-space: nowrap; line-height: 17px; }
+  .m.calc { border-style: dashed; }
+  .m.est { border-color: var(--walnut); color: var(--walnut); }
+
+  .answers { display: grid; gap: 12px; counter-reset: a; }
+  .answer { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 14px; align-items: start; background: var(--surface); border: 1px solid var(--line); padding: 18px 18px 18px 12px; }
+  .answer::before { counter-increment: a; content: counter(a); font-family: var(--display); font-weight: 200; font-size: 32px; line-height: 1; color: var(--walnut); text-align: center; }
+  .answer h3 { margin-bottom: 4px; }
+  .answer p { font-size: 15px; }
+
+  .panel { background: var(--surface); border: 1px solid var(--line); padding: 20px 18px; display: grid; gap: 12px; min-width: 0; }
+  .note { font-size: 13px; color: var(--muted); }
+
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 14.5px; font-variant-numeric: tabular-nums; }
+  th { text-align: left; font-family: var(--wide); font-weight: 300; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); padding: 0 12px 8px 0; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  th.n, td.n { text-align: right; }
+  td { padding: 11px 12px 11px 0; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--body); }
+  td:first-child { color: var(--ink); }
+  td small { display: block; font-size: 12px; color: var(--muted); }
+  tr.wait td { color: var(--muted); }
+  td.hi { color: var(--walnut); font-weight: 400; }
+
+  /* line chart */
+  .linechart { position: relative; }
+  .linechart svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .linechart .grid { stroke: var(--line); stroke-width: 1; }
+  .linechart .axis-t { fill: var(--muted); font-size: 11px; font-family: var(--text); }
+  .linechart .area { fill: var(--walnut); opacity: .1; }
+  .linechart .ln { fill: none; stroke: var(--walnut); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+  .linechart .bf { fill: var(--walnut-soft); }
+  .linechart .bf-t { fill: var(--walnut); font-size: 11px; font-family: var(--text); font-weight: 400; }
+  .linechart .end { fill: var(--walnut); stroke: var(--surface); stroke-width: 2; }
+  .linechart .cross { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 3; }
+  .linechart .dot { fill: var(--surface); stroke: var(--walnut); stroke-width: 2; }
+  .linechart .hit { fill: transparent; cursor: crosshair; }
+
+  /* horizontal bars */
+  .bars { display: grid; gap: 8px; }
+  .brow { display: grid; grid-template-columns: 150px minmax(0, 1fr) 46px; gap: 12px; align-items: center; font-variant-numeric: tabular-nums; }
+  .brow .k { font-size: 13.5px; color: var(--ink); line-height: 1.3; }
+  .brow .k small { display: block; font-size: 11px; color: var(--muted); }
+  .brow .t { position: relative; height: 18px; }
+  .brow .b { position: absolute; left: 0; top: 2px; height: 14px; background: var(--walnut); border-radius: 0 3px 3px 0; }
+  .brow .b.own { background: var(--down); }
+  .brow .v { font-size: 13.5px; text-align: right; color: var(--ink); }
+  .group-t { font-family: var(--wide); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-top: 6px; }
+
+  /* diverging bars vs month average */
+  .drow { display: grid; grid-template-columns: 150px minmax(0, 1fr) 54px; gap: 12px; align-items: center; font-variant-numeric: tabular-nums; }
+  .drow .k { font-size: 13.5px; color: var(--ink); line-height: 1.3; }
+  .drow .k small { display: block; font-size: 11px; color: var(--muted); }
+  .drow .t { position: relative; height: 20px; }
+  .drow .t::before { content: ""; position: absolute; left: 50%; top: -3px; bottom: -3px; width: 1px; background: var(--muted); opacity: .6; }
+  .drow .b { position: absolute; top: 3px; height: 14px; background: var(--walnut); }
+  .drow .b.pos { border-radius: 0 3px 3px 0; }
+  .drow .b.neg { background: var(--down); border-radius: 3px 0 0 3px; }
+  .drow .v { font-size: 13.5px; text-align: right; color: var(--ink); }
+  .drow .v.neg { color: var(--muted); }
+  .daxis { display: grid; grid-template-columns: 150px minmax(0, 1fr) 54px; gap: 12px; font-size: 11px; color: var(--muted); }
+  .daxis span:nth-child(2) { display: flex; justify-content: space-between; }
+  .daxis i { font-style: normal; }
+  .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+
+  .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; }
+  .fact { border-top: 1px solid var(--ink); padding-top: 10px; min-width: 0; }
+  .fact b { display: block; font-family: var(--display); font-weight: 200; font-size: 32px; line-height: 1.1; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .fact span { font-size: 13.5px; color: var(--body); display: block; }
+
+  .callout { background: var(--walnut-soft); padding: 16px 18px; font-size: 15px; color: var(--ink); display: grid; gap: 6px; }
+  .callout p { color: var(--ink); font-size: 15px; }
+
+  .todo { display: grid; gap: 0; counter-reset: t; }
+  .todo li { list-style: none; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+  .todo li::before { counter-increment: t; content: counter(t); font-family: var(--display); font-weight: 200; font-size: 26px; line-height: 1; color: var(--walnut); }
+  .todo h3 { margin-bottom: 4px; }
+  .todo p { font-size: 15px; }
+  .todo .when { font-family: var(--wide); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--walnut); display: block; margin-bottom: 4px; }
+  ol.todo { padding: 0; margin: 0; }
+
+  .tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--bg); font-size: 12.5px; line-height: 1.35; padding: 7px 10px; white-space: nowrap; transform: translate(-50%, calc(-100% - 12px)); z-index: 5; font-variant-numeric: tabular-nums; }
+  .tip[hidden] { display: none; }
+  .hoverable { position: relative; }
+  .hoverable:hover .b, .hoverable:focus-visible .b { filter: brightness(1.12); }
+  .hoverable:focus-visible { outline: 2px solid var(--walnut); outline-offset: 3px; }
+
+  footer p { font-size: 13px; color: var(--muted); }
+
+  @media (max-width: 560px) {
+    .brow, .drow, .daxis { grid-template-columns: 108px minmax(0, 1fr) 44px; gap: 8px; }
+    .brow .k, .drow .k { font-size: 12.5px; }
+    .answer { grid-template-columns: 30px minmax(0, 1fr); gap: 10px; }
+    table { font-size: 13.5px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 0; padding: 14px clamp(20px, 4vw, 64px); font: 300 14px/1.4 var(--text); }
+  .topbar .back { color: var(--walnut); }
+  .langs { display: inline-flex; gap: 2px; padding: 3px; border: 1px solid var(--line); background: var(--surface); }
+  .langs a { font-size: 12px; letter-spacing: 0.08em; line-height: 1; padding: 6px 9px; color: var(--muted); text-decoration: none; }
+  .langs a:hover { color: var(--walnut); }
+  .langs a[aria-current] { background: var(--ink); color: var(--bg); }
+</style>
+</head>
+<body>
+<nav class="topbar" aria-label="Pure Clinics">
+  <a class="back" href="../notlar/">← Werknotities</a>
+  <span class="langs" role="group" aria-label="Dil · Taal · Language">
+    <a href="tr.html" data-pure-lang="tr" lang="tr" title="Türkçe">TR</a>
+    <a href="index.html?lang=nl" data-pure-lang="nl" lang="nl" title="Nederlands" aria-current="page">NL</a>
+    <a href="en.html" data-pure-lang="en" lang="en" title="English">EN</a>
+  </span>
+</nav>
+
+
+<main class="page">
+  <header>
+    <p class="eyebrow">Pure Clinics · Instagram en Facebook · 27 november 2026</p>
+    <h1>Hoe ging Black Friday, en wat moet er <em>in december</em> anders?</h1>
+    <p class="lead">We hebben in Meta Business Suite gekeken naar alle Instagram-posts van Pure van dit jaar, de stories van november, de volgers en Facebook. Eerst de korte antwoorden, dan de cijfers, en tot slot voorstellen voor het decemberplan.</p>
+    <p class="source">Bron: Meta Business Suite van Pure Clinics, afgelezen op 27 november om 00:10 (Turkse tijd). Laatste 28 dagen = 29 oktober – 25 november. Alle tijden zijn Nederlandse tijd. De cijfers van een story blijven 24 uur lang oplopen; de stories van 26 november waren nog niet afgelopen.</p>
+    <p class="key"><span>Naast de cijfers:</span><span>zonder label = afgelezen in Meta</span><span><i class="m calc">berekend</i> = door ons berekend uit de afgelezen cijfers</span><span><i class="m est">schatting</i> = schatting, niet zeker</span></p>
+  </header>
+
+  <section>
+    <h2>In het kort</h2>
+    <div class="answers">
+      <div class="answer"><div><h3>De Black Friday-carrousel deed het goed.</h3><p>De post van 25 november met de vier aanbiedingen kreeg de meeste interacties (likes, reacties, delen en opslaan) van alle posts in november: 17, tegen een middenwaarde van 9 voor de maand. Die dag was de beste Instagram-dag van de laatste 28 dagen: 1.738 weergaven.</p></div></div>
+      <div class="answer"><div><h3>De stories bleven achter.</h3><p>Elke Black Friday-story werd door 83–147 mensen bekeken. De drie stories die we eerder in november plaatsten, werden door 234–377 mensen bekeken. We plaatsten dezelfde vijf slides twee keer, met 12 uur ertussen; in de tweede reeks keken er bij elke slide minder mensen (van 112 naar 83).</p></div></div>
+      <div class="answer"><div><h3>Het aantal volgers staat stil.</h3><p>In 28 dagen begonnen 20 mensen met volgen en stopten er 32: netto 12 minder. Slechts een derde van de volgers zit in Nederland; de rest woont in landen waar ze nooit klant van Pure kunnen worden.</p></div></div>
+      <div class="answer"><div><h3>De beste posts van het jaar zijn de winacties.</h3><p>De winactie van januari kreeg 6.648 weergaven, 150 interacties en werd 33 keer gedeeld; geen enkele andere post dit jaar kwam daar in de buurt. Naast de winacties werken carrousels en video's het best, en als onderwerp uitleg over behandelingen en acties. Losse foto's scoren onder het gemiddelde.</p></div></div>
+      <div class="answer"><div><h3>Op Facebook gebeurt bijna niets.</h3><p>Posts die alleen op Facebook stonden, werden dit jaar doorgaans door 66 mensen gezien en kregen doorgaans 1 interactie. De Black Friday-stories werden op Facebook door 0–9 mensen bekeken. De moeite kan beter naar Instagram.</p></div></div>
+    </div>
+  </section>
+
+  <section id="bf">
+    <h2>Black Friday, één voor één</h2>
+    <p>Weergaven: hoe vaak iets is bekeken. Bereik: hoeveel verschillende accounts het zagen. Interacties: likes, reacties, keren gedeeld en keren opgeslagen bij elkaar opgeteld.</p>
+    <div class="panel">
+      <div class="table-wrap"><table>
+        <thead><tr><th>Wat, wanneer</th><th class="n">Weergaven</th><th class="n">Bereik</th><th class="n">Interacties</th><th>Opmerking</th></tr></thead>
+        <tbody>
+          <tr><td>Teaserpost<small>Dinsdag 24 nov · 10:00 · losse foto</small></td><td class="n">363</td><td class="n">170</td><td class="n">8</td><td>7 likes. De minst bekeken post van november (middenwaarde van de maand: 684).</td></tr>
+          <tr><td>Teaserstory<small>Dinsdag 24 nov · 21:00</small></td><td class="n">147</td><td class="n">118</td><td class="n">1</td><td>1 antwoord</td></tr>
+          <tr><td>4 stories met aanbiedingen<small>Dinsdag 24 nov · 21:49</small></td><td class="n">134–144</td><td class="n">105</td><td class="n">2</td><td>1 keer gedeeld, 1 antwoord. De laserslide is verwijderd en om 22:22 vervangen door een nieuwe: 110.</td></tr>
+          <tr><td>Carrousel, 5 slides<small>Woensdag 25 nov · 10:00</small></td><td class="n hi">862</td><td class="n">354</td><td class="n hi">17</td><td>13 likes, 3 keer gedeeld, 1 keer opgeslagen. De post met de meeste interacties in november.</td></tr>
+          <tr><td>Dezelfde 5 slides als story<small>Woensdag 25 nov · 10:00</small></td><td class="n">112 → 83</td><td class="n">–</td><td class="n">0</td><td>Per slide: 112, 93, 87, 85, 83.</td></tr>
+          <tr><td>Videostory van 15 sec<small>Donderdag 26 nov · 10:00</small></td><td class="n">122</td><td class="n">–</td><td class="n">0</td><td>Cijfer na 12 uur; de story liep nog.</td></tr>
+          <tr><td>Dezelfde videostory<small>Donderdag 26 nov · 20:00</small></td><td class="n">57</td><td class="n">–</td><td class="n">0</td><td>Stond bij het aflezen pas 9 minuten online.</td></tr>
+          <tr class="wait"><td>Laserpost en "Black Friday is begonnen"-stories<small>Vrijdag 27 nov · 08:00 en 20:00</small></td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td>Was bij het aflezen nog niet geplaatst. De post van 20:00 is de eerste avondtest van het jaar.</td></tr>
+          <tr><td>Dezelfde content op Facebook<small>24–26 nov</small></td><td class="n">28 · 42</td><td class="n">–</td><td class="n">2 · 1</td><td>Teaser · carrousel. Facebook-stories: 0–9 mensen.</td></tr>
+        </tbody>
+      </table></div>
+      <p class="note">Business Suite laat voor deze stories niet zien hoe vaak er vooruit of terug is getikt, of hoe vaak mensen zijn weggegaan. Alleen de story van 27 november heeft een linksticker, en die stond nog niet online. Hoeveel afspraken er zijn binnengekomen, ziet Meta niet: dat moeten we aan Pure vragen.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>De laatste 28 dagen, per dag</h2>
+    <p>Hoeveel weergaven Instagram elke dag had. De Black Friday-dagen zijn de twee hoogste.</p>
+    <div class="panel">
+      <div class="linechart" id="daily" role="img" aria-label="Instagram-weergaven per dag, 29 oktober – 25 november 2026. Hoogste dag 25 november: 1.738."></div>
+      <p class="note">Bron: Inzichten › Resultaten › Instagram. In deze 28 dagen in totaal 14.311 weergaven (+9% ten opzichte van de 28 dagen ervoor), 3,9 duizend accounts bereikt (+29%), 166 interacties (+113%), 114 linkklikken (+57%), 233 profielbezoeken (+14%).</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Hoeveel mensen zagen de stories?</h2>
+    <p>Elke balk is één storyslide. Onze eigen stories van eerder in november naast de Black Friday-stories.</p>
+    <div class="panel">
+      <div class="bars" id="stories"></div>
+      <p class="note">Lichte balken: stories van vóór Black Friday. De videostory van 26 november 10:00 liep nog (cijfer na 12 uur). Het bereik is ongeveer 2% van het aantal volgers (5.821) <i class="m calc">berekend</i>.</p>
+    </div>
+    <div class="callout">
+      <p><b>Waarom zo laag?</b> <i class="m est">schatting</i> Drie dingen kwamen samen. Eén: dezelfde slides werden binnen 12 uur twee keer geplaatst; wie de tweede reeks bekeek, had de slides al gezien. Twee: er kwamen op één dag 5–10 slides achter elkaar; Instagram kan de stories van een account dat veel stories plaatst aan minder mensen laten zien. Drie: de slides zagen eruit als reclame; de eerdere stories waren persoonlijker.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Wat werkte dit jaar goed?</h2>
+    <p>De 50 Instagram-posts van 2026. We vergeleken elke post met de middenwaarde van zijn eigen maand, omdat alles in januari veel vaker werd bekeken. Balk naar rechts: meer interacties dan de middenwaarde van die maand; naar links: minder. De twee winacties hebben we apart gehouden, anders vertekenen ze alles.</p>
+    <div class="two">
+      <div class="panel">
+        <h3>Vorm</h3>
+        <div class="daxis"><span></span><span><i>−50%</i><i>middenwaarde</i><i>+50%</i></span><span></span></div>
+        <div id="format"></div>
+      </div>
+      <div class="panel">
+        <h3>Onderwerp</h3>
+        <div class="daxis"><span></span><span><i>−50%</i><i>middenwaarde</i><i>+50%</i></span><span></span></div>
+        <div id="topic"></div>
+      </div>
+    </div>
+    <p class="note">Cijfers <i class="m calc">berekend</i>: interacties van elke post ÷ de middenwaarde (mediaan) van de interacties in die maand, daarna het gemiddelde per groep. Het onderwerp hebben we zelf bepaald uit de tekst van de post. Bij weergaven: carrousel +31%, video +19%, losse foto −9%. De meeste gedeelde posts gaan over uitleg van behandelingen (23 keer gedeeld dit jaar).</p>
+    <div class="callout">
+      <p><b>Winacties:</b> de winactie van januari (2 januari, video): 6.648 weergaven, 4.082 accounts bereikt, 150 interacties, 25 reacties, 33 keer gedeeld. De winactie van februari (4 februari): 1.518 weergaven, 104 interacties, 18 reacties. Op de derde plaats qua interacties staat de korting "10 jaar Pure Clinics" van januari: 3.204 weergaven, 33 interacties.</p>
+    </div>
+    <p>Meta meet niet wat er op een foto staat; daarom kunnen we niet met cijfers zeggen welke foto het goed deed. Wat we wel zien: posts met tekst op een effen beige achtergrond ("Did you know?", "Onze ervaren huidtherapeuten") bleven onder de middenwaarde van de maand <i class="m est">schatting, weinig voorbeelden</i>.</p>
+  </section>
+
+  <section>
+    <h2>Wie zijn de volgers?</h2>
+    <div class="facts">
+      <div class="fact"><b>5.821</b><span>Instagram-volgers (25 nov). Het profiel toont vandaag 5.822.</span></div>
+      <div class="fact"><b>+20 / −32</b><span>nieuwe volgers / gestopt met volgen in 28 dagen. Netto −12.</span></div>
+      <div class="fact"><b>70,9%</b><span>vrouw. Grootste groepen: vrouwen van 25–34 (24,7%) en 35–44 (23,8%).</span></div>
+      <div class="fact"><b>33,8%</b><span>in Nederland. Daarna India 5,3%, Indonesië 1,9%, China 1,6%, VS 1,5%.</span></div>
+    </div>
+    <div class="panel">
+      <h3>Steden</h3>
+      <div class="bars" id="cities"></div>
+      <p class="note">Meta laat alleen de top 10 steden zien. Nijmegen, Arnhem, Uden, Oss, Wijchen, 's-Hertogenbosch en Veghel samen: 13,9% van de volgers <i class="m calc">berekend</i>.</p>
+    </div>
+    <div class="facts">
+      <div class="fact"><b>699</b><span>volgers bereikt (in 28 dagen). 12% van de volgers <i class="m calc">berekend</i>.</span></div>
+      <div class="fact"><b>3.140</b><span>niet-volgers bereikt (+35%). Nieuwe mensen zien ons, maar…</span></div>
+      <div class="fact"><b>99%</b><span>…99% van de interacties komt van volgers. Nieuwe mensen liken niet en gaan niet volgen.</span></div>
+      <div class="fact"><b>0</b><span>Instagram-gesprekken gestart in 28 dagen, volgens Meta. Als berichten in de app worden beantwoord, zijn ze hier misschien niet te zien.</span></div>
+    </div>
+    <div class="callout">
+      <p><b>Wat betekent dit?</b> Alleen meer volgers levert niets op; twee derde zit buiten Nederland. Waar het om gaat: nieuwe mensen bereiken rond Nijmegen, Arnhem en Uden, en ze een afspraak laten maken.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Vergeleken met soortgelijke bedrijven en concurrenten</h2>
+    <div class="panel">
+      <div class="table-wrap"><table>
+        <thead><tr><th>Vergelijking van Meta (28 dagen)</th><th class="n">Pure</th><th class="n">Soortgelijke</th></tr></thead>
+        <tbody>
+          <tr><td>Geplaatste posts en stories</td><td class="n">27</td><td class="n">23</td></tr>
+          <tr><td>Instagram-volgers</td><td class="n">5.821</td><td class="n">1.105</td></tr>
+          <tr><td>Nieuwe volgers</td><td class="n">20</td><td class="n">19</td></tr>
+          <tr><td>Interacties</td><td class="n">166</td><td class="n">218</td></tr>
+        </tbody>
+      </table></div>
+      <p class="note">Meta vergelijkt Pure in de categorie "Lifestylediensten" met bedrijven die in 28 dagen een vergelijkbaar bereik hadden ("soortgelijke" = mediaan). Pure heeft meer volgers, maar krijgt minder interacties.</p>
+    </div>
+    <div class="panel">
+      <div class="table-wrap"><table>
+        <thead><tr><th>Openbaar profiel (27 nov)</th><th class="n">Volgers</th><th class="n">Posts</th><th>Opmerking</th></tr></thead>
+        <tbody>
+          <tr><td>soap.socials</td><td class="n">42 duizend</td><td class="n">874</td><td>Keten met 17 vestigingen. De cadeaubonvideo die Neslihan mooi vond, komt hiervandaan.</td></tr>
+          <tr><td>uma.clinic.amsterdam</td><td class="n">11 duizend</td><td class="n">369</td><td>Eén kliniek, zwart-witte feed.</td></tr>
+          <tr><td>pureclinics_</td><td class="n">5.822</td><td class="n">160</td><td>Twee klinieken.</td></tr>
+        </tbody>
+      </table></div>
+      <p class="note">Meta laat ons de likes en het bereik van concurrenten niet zien; dit zijn alleen de getallen op hun profiel. Als ze in Business Suite aan de lijst "Bedrijven om in de gaten te houden" worden toegevoegd, kunnen we ze daar ook vergelijken (nog niet gedaan).</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Instagram en Facebook</h2>
+    <div class="panel">
+      <div class="table-wrap"><table>
+        <thead><tr><th></th><th class="n">Instagram</th><th class="n">Facebook</th></tr></thead>
+        <tbody>
+          <tr><td>Volgers</td><td class="n">5.821</td><td class="n">1.900</td></tr>
+          <tr><td>Weergaven, 28 dagen</td><td class="n">14.311</td><td class="n">4.900</td></tr>
+          <tr><td>Interacties, 28 dagen</td><td class="n">166</td><td class="n">12</td></tr>
+          <tr><td>Linkklikken, 28 dagen</td><td class="n">114</td><td class="n">110</td></tr>
+          <tr><td>Nieuwe volgers, 28 dagen</td><td class="n">20</td><td class="n">1</td></tr>
+          <tr><td>Posts alleen op dat kanaal, 2026, mediaan</td><td class="n">689 weergaven · 9 interacties</td><td class="n">66 weergaven · 1 interactie</td></tr>
+        </tbody>
+      </table></div>
+      <p class="note">Het enige opvallende cijfer op Facebook zijn de linkklikken (110). Mensen gebruiken de websitelink op de Facebookpagina nog steeds; de afsprakenlink op de pagina moet dus actueel blijven.</p>
+    </div>
+  </section>
+
+  <section id="aralik">
+    <h2>Wat moet er in december anders?</h2>
+    <p>Het decemberplan (Sinterklaas, kerst, oud en nieuw) is klaar, maar nog niet naar Neslihan gestuurd. Op basis van de cijfers stellen we deze wijzigingen voor.</p>
+    <ol class="todo">
+      <li><div><span class="when">30 november · cadeaubon</span><h3>Een carrousel of korte video in plaats van een losse foto.</h3><p>Drie slides in plaats van de losse foto in het plan (05-cadeaubon): de bon, "bij een cadeaubon van €100 krijg je €15 cadeau", en waar je hem koopt. Of de kant-en-klare cadeaubonvideo van 10 seconden. Dezelfde dag dezelfde slides één keer als story, met link. Let op: er is nog geen cadeaubonpagina op de site (daar vroeg Neslihan ook om). Tot die pagina er is, kan de link in de story naar de afsprakenpagina gaan.</p></div></li>
+      <li><div><span class="when">2 december · kerstcarrousel</span><h3>De vorm klopt; plaats hem om 10:00.</h3><p>In het plan staan alle posts op 19:30. De avond testen we voor het eerst met de laserpost van 27 november om 20:00. Op 29 november vergelijken we de cijfers van die post na 48 uur met de post van 25 november om 10:00. Werkt de avond beter, dan stappen we vanaf 4 december over op de avond; anders blijft het de ochtend. Tot dan: 10:00.</p></div></li>
+      <li><div><span class="when">7 en 11 december · kitposts</span><h3>Minder losse foto's.</h3><p>Het decemberplan heeft 7 losse foto's. Laten we de kitposts omzetten naar carrousels: de doos, de inhoud, de prijs. De posts met feestwensen (23 en 29 december) kunnen losse foto's blijven.</p></div></li>
+      <li><div><span class="when">Elke dag · story</span><h3>Eén reeks per dag, hooguit 5 slides, elke slide maar één keer.</h3><p>Zoals Neslihan wil, gaan de slides van de post op de dag van de post ook als story online. Maar we plaatsen dezelfde slides niet twee keer binnen 24 uur. De eerste slide: een duidelijke vraag of een prijs; de laatste slide: de link. Daartussen een vraagkaart zoals "Welke kit past bij jou?", zodat mensen per bericht kunnen antwoorden.</p></div></li>
+      <li><div><span class="when">Hoogtepunten</span><h3>Houd de aanbiedingen op het profiel.</h3><p>Zet de Black Friday-slides tot 1 december in het hoogtepunt "ACTIES", en daarna de kerstkits in plaats daarvan. Een apart hoogtepunt "CADEAUBON" voor de cadeaubon: hoe je hem koopt en hoe lang hij geldig is. De covers van de hoogtepunten in crème en walnoot. Als Neslihan akkoord gaat.</p></div></li>
+      <li><div><span class="when">Half december</span><h3>Een kerstwinactie.</h3><p>De twee beste posts van het jaar waren winacties. Voor een ZO-kit of een cadeaubon: volg ons en tag een vriend of vriendin. De snelste manier om nieuwe volgers uit de buurt te krijgen. De actievoorwaarden moeten op schrift staan (in Nederland moeten de voorwaarden van een winactie openbaar zijn). We stellen het voor aan Neslihan.</p></div></li>
+      <li><div><span class="when">Facebook</span><h3>Posts automatisch mee, stories hoeven niet.</h3><p>Laat de feedposts automatisch naar Facebook blijven gaan. Facebook-stories bereiken 0–9 mensen; daar hoeven we bij het plannen geen extra moeite in te steken.</p></div></li>
+      <li><div><span class="when">Meten</span><h3>Tel afspraken, geen likes.</h3><p>Meta kan niet zien hoeveel afspraken Black Friday heeft opgeleverd. Laten we bij Neslihan navragen hoeveel afspraken en cadeaubonnen er tijdens BF zijn binnengekomen. En laten we bronlabels aan de links toevoegen, zodat bezoekers via Instagram apart worden geteld.</p></div></li>
+    </ol>
+    <div class="callout">
+      <p><b>Verder:</b> in de inbox van Pure staan berichten van onbekende accounts die zeggen dat "je pagina een gratis Meta Verified-badge heeft gewonnen". Die zijn nep: niet op klikken, geen wachtwoord invullen. Goed om Neslihan en het team hierop te wijzen.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>Hoe we het berekenden: Meta Business Suite › Inzichten › Content (Instagram, "Dit jaar", alleen posts) en de pagina's Resultaten, Doelgroep en Benchmarking. Bij posts die ook op Facebook zijn gedeeld, zijn de weergaven van beide kanalen opgeteld. Interacties = likes + reacties + keren gedeeld + keren opgeslagen. Ruwe gegevens: marketing/analyse/sosyal-medya-2026-11-27.py en .json. Er is niets gedeeld, ingepland of gewijzigd; alleen afgelezen.</p>
+  </footer>
+</main>
+
+<div class="tip" id="tip" hidden></div>
+
+<script>
+(function () {
+  const tip = document.getElementById('tip');
+  function showTip(text, x, y) { tip.textContent = text; tip.style.left = x + 'px'; tip.style.top = y + 'px'; tip.hidden = false; }
+  function hideTip() { tip.hidden = true; }
+  function pageXY(el, dx, dy) { const r = el.getBoundingClientRect(); return [r.left + window.scrollX + dx, r.top + window.scrollY + dy]; }
+  const fmt = n => n.toLocaleString('nl-NL');
+
+  /* daily views, 29 Oct – 25 Nov */
+  const views = [287, 359, 727, 318, 318, 733, 591, 295, 785, 220, 204, 296, 277, 971, 274, 239, 184, 1070, 286, 455, 629, 182, 779, 187, 292, 597, 1052, 1738];
+  const inter = [1, 12, 8, 1, 4, 8, 12, 2, 9, 0, 0, 0, 1, 16, 2, 0, 0, 13, 1, 2, 4, 1, 9, 2, 0, 8, 12, 38];
+  const start = new Date(2026, 9, 29);
+  const months = ['jan', 'feb', 'mrt', 'apr', 'mei', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'];
+  const day = i => { const d = new Date(start); d.setDate(d.getDate() + i); return d.getDate() + ' ' + months[d.getMonth()]; };
+  const W = 700, H = 240, L = 40, R = 14, T = 22, B = 28, ymax = 2000;
+  const x = i => L + (W - L - R) * i / (views.length - 1);
+  const y = v => T + (H - T - B) * (1 - v / ymax);
+  const ns = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(ns, 'svg');
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  const add = (tag, attrs, parent = svg) => { const e = document.createElementNS(ns, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; };
+  // Black Friday band (24–25 Nov = index 26–27)
+  const bx = x(25.5);
+  add('rect', { x: bx, y: T, width: x(27) - bx + 6, height: H - T - B, class: 'bf' });
+  const bft = add('text', { x: x(26.5) - 4, y: T - 7, 'text-anchor': 'end', class: 'bf-t' }); bft.textContent = 'Black Friday';
+  for (const v of [0, 500, 1000, 1500, 2000]) {
+    add('line', { x1: L, x2: W - R, y1: y(v), y2: y(v), class: 'grid' });
+    const t = add('text', { x: L - 8, y: y(v) + 4, 'text-anchor': 'end', class: 'axis-t' }); t.textContent = v === 0 ? '0' : fmt(v);
+  }
+  for (const i of [0, 7, 14, 21, 27]) {
+    const t = add('text', { x: x(i), y: H - 8, 'text-anchor': i === 0 ? 'start' : i === 27 ? 'end' : 'middle', class: 'axis-t' }); t.textContent = day(i);
+  }
+  const pts = views.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`);
+  add('path', { d: `M${x(0)},${y(0)} L${pts.join(' L')} L${x(views.length - 1)},${y(0)} Z`, class: 'area' });
+  add('path', { d: `M${pts.join(' L')}`, class: 'ln' });
+  add('circle', { cx: x(27), cy: y(1738), r: 5, class: 'end' });
+  const lab = add('text', { x: x(27) - 10, y: y(1738) + 4, 'text-anchor': 'end', class: 'bf-t' }); lab.textContent = '1.738';
+  const cross = add('line', { x1: 0, x2: 0, y1: T, y2: H - B, class: 'cross', visibility: 'hidden' });
+  const dot = add('circle', { r: 5, class: 'dot', visibility: 'hidden' });
+  const hit = add('rect', { x: L, y: T, width: W - L - R, height: H - T - B, class: 'hit' });
+  const box = document.getElementById('daily');
+  box.appendChild(svg);
+  function move(ev) {
+    const r = svg.getBoundingClientRect();
+    const px = (ev.clientX - r.left) * W / r.width;
+    const i = Math.max(0, Math.min(views.length - 1, Math.round((px - L) / ((W - L - R) / (views.length - 1)))));
+    cross.setAttribute('x1', x(i)); cross.setAttribute('x2', x(i)); cross.setAttribute('visibility', 'visible');
+    dot.setAttribute('cx', x(i)); dot.setAttribute('cy', y(views[i])); dot.setAttribute('visibility', 'visible');
+    const sx = r.left + window.scrollX + x(i) * r.width / W, sy = r.top + window.scrollY + y(views[i]) * r.height / H;
+    showTip(`${day(i)}: ${fmt(views[i])} weergaven · ${inter[i]} ${inter[i] === 1 ? 'interactie' : 'interacties'}`, sx, sy);
+  }
+  hit.addEventListener('pointermove', move);
+  hit.addEventListener('pointerleave', () => { cross.setAttribute('visibility', 'hidden'); dot.setAttribute('visibility', 'hidden'); hideTip(); });
+
+  /* plain bars */
+  function bars(el, rows, max) {
+    for (const r of rows) {
+      if (r.group) { const g = document.createElement('p'); g.className = 'group-t'; g.textContent = r.group; el.appendChild(g); continue; }
+      const row = document.createElement('div'); row.className = 'brow hoverable'; row.tabIndex = 0;
+      row.innerHTML = '<span class="k"></span><span class="t"><span class="b"></span></span><span class="v"></span>';
+      row.querySelector('.k').textContent = r.k;
+      if (r.s) { const s = document.createElement('small'); s.textContent = r.s; row.querySelector('.k').appendChild(s); }
+      const b = row.querySelector('.b'); b.style.width = (100 * r.v / max) + '%'; if (r.own) b.classList.add('own');
+      row.querySelector('.v').textContent = r.label || fmt(r.v);
+      const t = r.tip || `${r.k}${r.s ? ' · ' + r.s : ''}: ${r.label || fmt(r.v)}`;
+      const on = () => { const [px, py] = pageXY(b, b.offsetWidth, 0); showTip(t, px, py); };
+      row.addEventListener('pointerenter', on); row.addEventListener('focus', on);
+      row.addEventListener('pointerleave', hideTip); row.addEventListener('blur', hideTip);
+      el.appendChild(row);
+    }
+  }
+  bars(document.getElementById('stories'), [
+    { group: 'November, vóór Black Friday' },
+    { k: '11 nov', s: 'rond de middag', v: 377, own: true },
+    { k: '20 nov', s: 'rond de middag', v: 262, own: true },
+    { k: '20 nov', s: 'later op de middag', v: 234, own: true },
+    { group: 'Black Friday' },
+    { k: 'Teaser', s: '24 nov 21:00', v: 147 },
+    { k: 'Aanbieding 1–4', s: '24 nov 21:49', v: 144, label: '134–144', tip: '24 nov 21:49, vier slides: 134, 138, 140, 144' },
+    { k: 'Laser, nieuw', s: '24 nov 22:22', v: 110 },
+    { k: 'Slide 1', s: '25 nov 10:00', v: 112 },
+    { k: 'Slide 2', s: '25 nov', v: 93 },
+    { k: 'Slide 3', s: '25 nov', v: 87 },
+    { k: 'Slide 4', s: '25 nov', v: 85 },
+    { k: 'Slide 5', s: '25 nov', v: 83 },
+    { k: 'Video', s: '26 nov 10:00 · loopt nog', v: 122 },
+  ], 400);
+  bars(document.getElementById('cities'), [
+    { k: 'Nijmegen', v: 6.8, label: '6,8%' }, { k: 'Arnhem', v: 3.2, label: '3,2%' }, { k: 'Uden', v: 1.5, label: '1,5%' },
+    { k: 'Amsterdam', v: 0.9, label: '0,9%' }, { k: 'Oss', v: 0.7, label: '0,7%' }, { k: 'Wijchen', v: 0.7, label: '0,7%' },
+    { k: 'Rotterdam', v: 0.7, label: '0,7%' }, { k: "'s-Hertogenbosch", v: 0.5, label: '0,5%' }, { k: 'Eindhoven', v: 0.5, label: '0,5%' },
+    { k: 'Veghel', v: 0.5, label: '0,5%' },
+  ], 8);
+
+  /* diverging bars: interactions vs month median (giveaways left out) */
+  function diverging(el, rows) {
+    for (const r of rows) {
+      const row = document.createElement('div'); row.className = 'drow hoverable'; row.tabIndex = 0;
+      row.innerHTML = '<span class="k"></span><span class="t"><span class="b"></span></span><span class="v"></span>';
+      row.querySelector('.k').textContent = r.k;
+      const s = document.createElement('small'); s.textContent = r.n + ' posts'; row.querySelector('.k').appendChild(s);
+      const b = row.querySelector('.b'); const w = Math.min(50, Math.abs(r.d) * 100);
+      if (r.d >= 0) { b.classList.add('pos'); b.style.left = '50%'; b.style.width = w + '%'; }
+      else { b.classList.add('neg'); b.style.left = (50 - w) + '%'; b.style.width = w + '%'; }
+      const pct = Math.round(r.d * 100);
+      const v = row.querySelector('.v'); v.textContent = (pct > 0 ? '+' : pct < 0 ? '−' : '') + Math.abs(pct) + '%'; if (pct < 0) v.classList.add('neg');
+      const t = `${r.k} (${r.n} posts): interacties ${v.textContent}, weergaven ${(r.vr > 0 ? '+' : '−') + Math.abs(Math.round(r.vr * 100))}%`;
+      const on = () => { const [px, py] = pageXY(row.querySelector('.t'), row.querySelector('.t').offsetWidth / 2, 0); showTip(t, px, py); };
+      row.addEventListener('pointerenter', on); row.addEventListener('focus', on);
+      row.addEventListener('pointerleave', hideTip); row.addEventListener('blur', hideTip);
+      el.appendChild(row);
+    }
+  }
+  diverging(document.getElementById('format'), [
+    { k: 'Video (reel)', n: 12, d: 0.35, vr: 0.19 },
+    { k: 'Carrousel', n: 9, d: 0.31, vr: 0.31 },
+    { k: 'Losse foto', n: 27, d: -0.16, vr: -0.09 },
+  ]);
+  diverging(document.getElementById('topic'), [
+    { k: 'Actie, korting', n: 5, d: 0.34, vr: 0.08 },
+    { k: 'Uitleg behandeling', n: 20, d: 0.16, vr: 0.18 },
+    { k: 'Laserontharing', n: 7, d: 0.06, vr: -0.01 },
+    { k: 'Pure en het team', n: 6, d: -0.13, vr: -0.12 },
+    { k: 'Huidverzorgingstips', n: 7, d: -0.15, vr: -0.05 },
+    { k: 'Product', n: 2, d: -0.18, vr: -0.06 },
+  ]);
+})();
+</script>
+
+</body>
+</html>

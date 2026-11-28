@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Pure Clinics · Werknotities</title>
+    <script src="../lang.js"></script>
+    <script>PureLang.route({ nl: 'index.html', tr: 'tr.html', en: 'en.html' });</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@200;300;400;500&family=Lexend+Peta:wght@200;300&display=swap" />
+    <style>
+      /* Work notes for Pure Clinics: day by day, the social media report, next week, and how Huidly fits in.
+         Pure's cream and walnut, Lexend (the letter of Pure's logo), the whole width of the screen. */
+      :root {
+        --bg: #f6efe6;
+        --paper: #fdfaf5;
+        --ink: #3f3128;
+        --body: #5e4c40;
+        --muted: #8a7665;
+        --line: #e5d9ca;
+        --walnut: #6f3a22;
+        --walnut-soft: #efe2d4;
+        --pad: clamp(20px, 4vw, 64px);
+        --text: 'Lexend', ui-sans-serif, system-ui, sans-serif;
+        --wide: 'Lexend Peta', 'Lexend', ui-sans-serif, system-ui, sans-serif;
+      }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--body);
+        font: 300 16px/1.6 var(--text);
+        -webkit-font-smoothing: antialiased;
+      }
+      a { color: var(--walnut); }
+      img { display: block; max-width: 100%; }
+      h1, h2, h3 { color: var(--ink); font-weight: 200; margin: 0; }
+      .cap { font: 300 11px/1.4 var(--wide); letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); }
+
+      /* Top bar */
+      .top {
+        position: sticky; top: 0; z-index: 5;
+        display: flex; align-items: center; justify-content: space-between; gap: 20px;
+        padding: 14px var(--pad);
+        background: color-mix(in srgb, var(--bg) 92%, transparent);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--line);
+      }
+      .mark { font: 300 15px/1 var(--wide); letter-spacing: 0.32em; color: var(--ink); text-decoration: none; white-space: nowrap; }
+      .mark b { font-weight: 400; }
+      .top nav { display: flex; gap: clamp(12px, 2.4vw, 32px); flex-wrap: wrap; justify-content: flex-end; }
+      .top nav a { color: var(--body); text-decoration: none; font-size: 14px; }
+      .top nav a:hover { color: var(--walnut); }
+      .top .end { display: flex; align-items: center; gap: clamp(16px, 2.4vw, 32px); }
+      .langs { display: inline-flex; gap: 2px; padding: 3px; border: 1px solid var(--line); background: var(--paper); }
+      .langs a { font-size: 12px; letter-spacing: 0.08em; line-height: 1; padding: 6px 9px; color: var(--muted); text-decoration: none; }
+      .langs a:hover { color: var(--walnut); }
+      .langs a[aria-current] { background: var(--ink); color: var(--bg); }
+
+      /* Opening */
+      .intro {
+        display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: var(--pad);
+        padding: clamp(40px, 7vw, 96px) var(--pad) clamp(32px, 5vw, 64px);
+        align-items: end;
+      }
+      .intro h1 { font-size: clamp(40px, 6.2vw, 92px); line-height: 1.02; letter-spacing: -0.02em; margin-top: 18px; }
+      .intro h1 em { font-style: normal; color: var(--walnut); }
+      .intro .lead { margin: 26px 0 0; max-width: 620px; font-size: clamp(16px, 1.4vw, 19px); }
+      .strip { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+      .strip img { aspect-ratio: 4 / 5; object-fit: cover; border-radius: 4px; }
+      .strip figcaption { grid-column: 1 / -1; font-size: 12px; color: var(--muted); }
+      .facts { display: flex; flex-wrap: wrap; gap: 10px 28px; margin-top: 28px; font-size: 14px; color: var(--muted); }
+      .facts b { color: var(--ink); font-weight: 400; }
+
+      section.block { padding: clamp(40px, 6vw, 88px) var(--pad); border-top: 1px solid var(--line); }
+      .head { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr); gap: var(--pad); align-items: end; margin-bottom: clamp(28px, 4vw, 48px); }
+      .head h2 { font-size: clamp(30px, 4vw, 56px); line-height: 1.05; letter-spacing: -0.015em; margin-top: 12px; }
+      .head p { margin: 0; max-width: 720px; }
+
+      /* Day by day */
+      .day { display: grid; grid-template-columns: 220px minmax(0, 1fr) 240px; gap: 0 var(--pad); padding: 28px 0; border-top: 1px solid var(--line); }
+      .day:first-of-type { border-top: 0; }
+      .when { position: sticky; top: 72px; align-self: start; }
+      .when .d { font-size: clamp(30px, 3vw, 44px); font-weight: 200; color: var(--ink); line-height: 1; }
+      .when .w { margin-top: 8px; }
+      .items { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+      .items li { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 14px; align-items: baseline; }
+      .tag { font: 300 10px/1.3 var(--wide); letter-spacing: 0.16em; text-transform: uppercase; color: var(--walnut); padding-top: 3px; }
+      .side img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 4px; }
+      .side figcaption { font-size: 12px; color: var(--muted); margin-top: 6px; }
+      .side.two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-content: start; }
+      .side.two figcaption { grid-column: 1 / -1; }
+
+      /* Social media */
+      .kpis { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); border-top: 1px solid var(--ink); border-bottom: 1px solid var(--line); }
+      .kpi { padding: 20px 16px 22px 0; }
+      .kpi + .kpi { padding-left: 16px; border-left: 1px solid var(--line); }
+      .kpi .n { font-size: clamp(28px, 3vw, 44px); font-weight: 200; color: var(--ink); line-height: 1; }
+      .kpi .c { margin-top: 6px; font-size: 13px; }
+      .kpi .up { color: var(--walnut); }
+      .kpi .down { color: var(--muted); }
+      .three { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--pad); margin-top: clamp(32px, 4vw, 56px); }
+      .three h3 { font-size: 24px; padding-bottom: 12px; border-bottom: 1px solid var(--ink); margin-bottom: 16px; }
+      .three ol { margin: 0; padding: 0; list-style: none; counter-reset: n; display: grid; gap: 16px; }
+      .three li { counter-increment: n; display: grid; grid-template-columns: 26px minmax(0, 1fr); }
+      .three li::before { content: counter(n, decimal-leading-zero); font: 300 11px/2 var(--wide); color: var(--muted); }
+      .three li b { color: var(--ink); font-weight: 400; }
+      .compare { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; margin-top: clamp(32px, 4vw, 56px); background: var(--line); border: 1px solid var(--line); }
+      .compare > div { background: var(--paper); padding: 18px; }
+      .compare .n { font-size: 28px; font-weight: 200; color: var(--ink); }
+      .more { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 12px 28px; font-size: 15px; }
+
+      /* Next week */
+      .week { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
+      .slot { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+      .slot .d { font-size: 22px; font-weight: 200; color: var(--ink); line-height: 1; }
+      .slot img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 3px; }
+      .slot p { margin: 0; font-size: 14px; }
+      .slot .st { font-size: 12px; color: var(--muted); }
+      .lanes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--pad); margin-top: clamp(32px, 4vw, 56px); }
+      .lanes h3 { font-size: 22px; padding-bottom: 10px; border-bottom: 1px solid var(--ink); margin-bottom: 14px; }
+      .lanes ul { margin: 0; padding-left: 18px; display: grid; gap: 10px; }
+
+      /* Huidly */
+      .flow { display: grid; grid-template-columns: minmax(0, 1fr) 140px minmax(0, 1.1fr) 140px minmax(0, 1fr); align-items: center; gap: 0; }
+      .box { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 20px; }
+      .box.core { background: var(--ink); color: #efe5d8; border-color: var(--ink); }
+      .box.core h3, .box.core b { color: #fff; }
+      .box h3 { font-size: 24px; margin-bottom: 8px; }
+      .box ul { margin: 10px 0 0; padding-left: 18px; font-size: 14px; display: grid; gap: 4px; }
+      .arrow { text-align: center; font-size: 12px; color: var(--muted); }
+      .arrow::before { content: ''; display: block; height: 1px; background: var(--walnut); margin: 0 10px 8px; }
+      .stack { display: grid; gap: 12px; }
+      .examples { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--pad); margin-top: clamp(32px, 4vw, 56px); }
+      .examples h3 { font-size: 20px; margin-bottom: 8px; }
+      .examples p { margin: 0; font-size: 15px; }
+      .why { margin-top: clamp(32px, 4vw, 56px); display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr); gap: var(--pad); }
+      .why ul { margin: 0; padding-left: 18px; display: grid; gap: 8px; }
+
+      footer { padding: 32px var(--pad) 48px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
+
+      @media (max-width: 1180px) {
+        .day { grid-template-columns: 160px minmax(0, 1fr); }
+        .day .side { grid-column: 2; max-width: 420px; margin-top: 16px; }
+        .kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .kpi:nth-child(4) { border-left: 0; padding-left: 0; }
+        .kpi:nth-child(n+4) { border-top: 1px solid var(--line); }
+        .week { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .lanes, .examples { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .flow { grid-template-columns: 1fr; gap: 10px; }
+        .arrow::before { width: 1px; height: 24px; margin: 0 auto 6px; }
+      }
+      @media (max-width: 760px) {
+        .top nav { display: none; }
+        .intro, .head, .why { grid-template-columns: 1fr; }
+        .day { grid-template-columns: 1fr; }
+        .when { position: static; display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px; }
+        .day .side { grid-column: 1; }
+        .items li { grid-template-columns: 1fr; gap: 2px; }
+        .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .kpi:nth-child(n) { border-left: 0; padding-left: 0; }
+        .kpi:nth-child(even) { padding-left: 16px; border-left: 1px solid var(--line); }
+        .kpi .cap { letter-spacing: 0.1em; hyphens: auto; -webkit-hyphens: auto; overflow-wrap: anywhere; }
+        .kpi:nth-child(n+3) { border-top: 1px solid var(--line); }
+        .three, .lanes, .examples { grid-template-columns: 1fr; }
+        .compare { grid-template-columns: 1fr 1fr; }
+        .week { grid-template-columns: 1fr 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="top">
+      <a class="mark" href="../"><b>PURE</b> CLINICS</a>
+      <div class="end">
+      <nav aria-label="Onderdelen">
+        <a href="#gun-gun">Dag voor dag</a>
+        <a href="#sosyal-medya">Social media</a>
+        <a href="#gelecek-hafta">Volgende week</a>
+        <a href="#huidly">Samen met Huidly</a>
+      </nav>
+      <div class="langs" role="group" aria-label="Dil · Taal · Language">
+        <a href="tr.html" data-pure-lang="tr" lang="tr" title="Türkçe">TR</a>
+        <a href="index.html?lang=nl" data-pure-lang="nl" lang="nl" title="Nederlands" aria-current="page">NL</a>
+        <a href="en.html" data-pure-lang="en" lang="en" title="English">EN</a>
+      </div>
+      </div>
+    </header>
+
+    <section class="intro">
+      <div>
+        <div class="cap">Werknotities · laatst bijgewerkt 28 november 2026</div>
+        <h1>Dag voor dag wat we deden, en wat er <em>hierna</em> komt.</h1>
+        <p class="lead">Al het werk voor Pure Clinics op één plek: website, app, beheerpaneel, Instagram, het huidscanmodel en Huidly. De nieuwste dag staat bovenaan. Daarna volgen het social-mediarapport, de planning voor volgende week en hoe Huidly en Pure samenwerken.</p>
+        <div class="facts">
+          <span><b>Sinds 26 oktober</b> 78 updates</span>
+          <span><b>26</b> behandelingen, de app kan ze allemaal aanraden</span>
+          <span><b>7 dagen</b> lang 50 modeltrainingen per dag</span>
+        </div>
+      </div>
+      <figure class="strip">
+        <img src="../instagram/img/pakket/02-1.jpg" alt="Omslag van de Black Friday-carrousel" />
+        <img src="../instagram/img/pakket/07-1.jpg" alt="Post Laser gehele benen" />
+        <img src="../instagram/img/pakket/10-1.jpg" alt="Post over de cadeaubon" />
+        <img src="../instagram/img/pakket/12-1.jpg" alt="Post Stralende kerst" />
+        <figcaption>Uit het pakket voor november en december, met foto's uit de eigen shoot van Pure.</figcaption>
+      </figure>
+    </section>
+
+    <section class="block" id="gun-gun">
+      <div class="head">
+        <div>
+          <div class="cap">Deel 1</div>
+          <h2>Dag voor dag</h2>
+        </div>
+        <p>Wat er elke dag is gedaan, met een label per onderdeel. Elke post op social media is pas ingepland nadat Neslihan akkoord gaf. Prijzen en informatie komen alleen uit de eigen teksten van Pure.</p>
+      </div>
+
+      <article class="day">
+        <div class="when"><div class="d">28 nov</div><div class="w cap">zaterdag</div></div>
+        <ul class="items">
+          <li><span class="tag">App</span><span>De huidadviseur kan nu <b>alle 26 behandelingen</b> van Pure aanraden. De eerste vraag kreeg vier nieuwe keuzes: doffe huid, tattoo, adertjes op de benen, wenkbrauwen/wimpers/nagels. Ook "Weet ik nog niet" is erbij gekomen. Past er niets, dan is het algemene advies een Facial.</span></li>
+          <li><span class="tag">Huidscan</span><span>Het nieuwe gezichtsmodel leest rimpels en de huid onder de ogen. Op gezichten die het nooit eerder zag, scoorde het 94 van de 100 op rimpels en 89 onder de ogen. De scan heeft twee nieuwe balkjes.</span></li>
+          <li><span class="tag">App</span><span>Prijzen, behandelduur, adressen en openingstijden van de vestigingen, producten, laserzones en pakketprijzen komen elke keer dat de app opent uit Huidly. De schermen zijn niet veranderd.</span></li>
+          <li><span class="tag">Beheer</span><span>"Wat gebeurt er nu?" toont de dag uit de agenda in Huidly. In de webshop staan alleen echte bestellingen. De doelgroep van campagnes komt uit de klantenlijst.</span></li>
+          <li><span class="tag">Huidscan</span><span>Alle 4.716 gezichten kregen ook een score van een tweede beoordelaar; bij rimpels is de overeenstemming tussen beide 0,93. Er kwamen 3.890 nieuwe gezichten bij. In EVREN zijn vier datasets aangemaakt en het plan van 7 dagen met 50 trainingen per dag is gestart.</span></li>
+          <li><span class="tag">Huidly</span><span>Vandaag aan Huidly toegevoegd:
+            <br />· officiële factuurnummers en een archief dat niet te wijzigen is;
+            <br />· slimme bestelvoorstellen en echte bestelmails;
+            <br />· roostervoorstellen op basis van de agenda;
+            <br />· contracten en salaris;
+            <br />· btw-aangifte per kwartaal;
+            <br />· kasboek en Z-rapport.
+            <br />De tijden die online te boeken zijn, komen nu uit de diensten en het verlof in Kliniek.</span></li>
+        </ul>
+        <div></div>
+      </article>
+
+      <article class="day">
+        <div class="when"><div class="d">27 nov</div><div class="w cap">vrijdag</div></div>
+        <ul class="items">
+          <li><span class="tag">Website</span><span>De nieuwe website heeft nu meerdere pagina's: behandelingen, resultaten, prijzen, shop, cadeaubon, over ons, veelgestelde vragen, afspraak, Mijn Pure, afrekenen. De merken staan bovenaan, bij binnenkomst een melding over de cadeaubon. Er kwamen een privacypagina en een cookiekeuze bij. Bezoekersmeting staat klaar, maar wacht op het GA4-nummer van Pure.</span></li>
+          <li><span class="tag">App</span><span>De echte gezichtsscan is er. Account, afspraken en shop lopen via Huidly. De app is op de telefoon te installeren en de voorbeelddata is weg.</span></li>
+          <li><span class="tag">Huidscan</span><span>Met de voor- en nafoto's van Pure, SCIN en PAD-UFES-20 zijn er in totaal 7.582 foto's met een score. In de app staat nu huidscan-v2; die meet pigmentvlekken samen met het model in EVREN.</span></li>
+          <li><span class="tag">Beheer</span><span>Webshopbestellingen en de social-mediaplanning komen uit Huidly. Kliniek in het menu opent het programma van Huidly.</span></li>
+          <li><span class="tag">Social media</span><span>De analyse van Black Friday en de voorstellen voor december zijn klaar; de details staan hieronder. Om 20:00 ging de laserpost online, de eerste avondtest van het jaar.</span></li>
+          <li><span class="tag">Huidly</span><span>Een klantkoppeling voor de website en de app van Pure: account, afspraakverzoek, bestelling, cadeaubon. Huidly spreekt ook Turks. Het programma heeft alleen een kliniekdeel.</span></li>
+        </ul>
+        <figure class="side"><img src="../instagram/img/pakket/07-1.jpg" alt="" /><figcaption>27 november 20:00 · laserpost</figcaption></figure>
+      </article>
+
+      <article class="day">
+        <div class="when"><div class="d">26 nov</div><div class="w cap">donderdag</div></div>
+        <ul class="items">
+          <li><span class="tag">Huidly</span><span>huidly.com is live: een programma voor huidklinieken en salons. Pure is de eerste klant; inloggen gaat met een code per e-mail.</span></li>
+          <li><span class="tag">Beheer</span><span>Het onderdeel Kliniek uit het beheerpaneel van Pure is verhuisd naar het programma van Huidly.</span></li>
+          <li><span class="tag">Social media</span><span>De Black Friday-video stond als story online om 10:00 en 20:00.</span></li>
+        </ul>
+        <div></div>
+      </article>
+
+      <article class="day">
+        <div class="when"><div class="d">25 nov</div><div class="w cap">woensdag</div></div>
+        <ul class="items">
+          <li><span class="tag">Social media</span><span>De Black Friday-carrousel met vier deals ging online en werd <b>de post met de meeste interacties van november</b>. De slides gingen dezelfde dag ook als story online.</span></li>
+          <li><span class="tag">Social media</span><span>De laserbeelden zijn vernieuwd met de foto van de laserkop die Neslihan stuurde.</span></li>
+          <li><span class="tag">Beheer</span><span>Het menu van Praktijk en Campagnes is opnieuw ingedeeld. Er kwamen logins voor beheerders, medewerkers en klanten bij, plus behandelplannen en een nieuw voorraadscherm. Op elke pagina staat hulp achter een vraagteken.</span></li>
+        </ul>
+        <figure class="side"><img src="../instagram/img/pakket/02-1.jpg" alt="" /><figcaption>25 november · Black Friday-carrousel</figcaption></figure>
+      </article>
+
+      <article class="day">
+        <div class="when"><div class="d">24 nov</div><div class="w cap">dinsdag</div></div>
+        <ul class="items">
+          <li><span class="tag">Social media</span><span>De correcties van Neslihan zijn verwerkt: PRX eerst, de tweede regels zijn weg, SkinPen 3 behandelingen €495. Na haar akkoord zijn alle posts en stories van de Black Friday-week tot 1 december ingepland in Meta.</span></li>
+          <li><span class="tag">Social media</span><span>De teaserpost ging om 10:00 online, de teaserstory om 21:00. De decemberset (kerst) is in het Nederlands gemaakt.</span></li>
+          <li><span class="tag">Website</span><span>Voor elk teamlid een eigen pagina met een loopvideo.</span></li>
+          <li><span class="tag">Beheer</span><span>Praktijk kreeg een overzichtsscherm met grafieken en een 3D-kaart van de drukte. Alle schermen passen op de telefoon.</span></li>
+        </ul>
+        <div></div>
+      </article>
+
+      <article class="day">
+        <div class="when"><div class="d">23 nov</div><div class="w cap">maandag</div></div>
+        <ul class="items">
+          <li><span class="tag">Merk</span><span>De kleurkeuze werd crème en walnootbruin. Bordeaux en poederroze zijn overal weggehaald.</span></li>
+          <li><span class="tag">Social media</span><span>De rijen voor het profiel zijn gemaakt met foto's uit de eigen shoot van Pure, met bij elke rij een stemming "Mooi / Liever niet". Neslihan koos de rijen Fluweel, Licht en Woord.</span></li>
+          <li><span class="tag">Social media</span><span>De toegang tot Meta Business Suite is er. Een analyse van de beste posttijden, op basis van 45 posts, staat nu in het Turks en het Nederlands op de site.</span></li>
+          <li><span class="tag">Social media</span><span>Op het verzoek "het mag niet naar AI ogen" is de Black Friday-teaser opnieuw gemaakt, met een echte laserfoto van Pure.</span></li>
+          <li><span class="tag">Website</span><span>De mooie delen van de eerste site zijn terug, met behoud van de wensen van Pure: de laadanimatie, de behandelkamers, de beslagen spiegel.</span></li>
+        </ul>
+        <div></div>
+      </article>
+
+      <article class="day">
+        <div class="when"><div class="d">21–22 nov</div><div class="w cap">weekend</div></div>
+        <ul class="items">
+          <li><span class="tag">Social media</span><span>Wat er met de shootfoto's van Pure is gemaakt:
+            <br />· zes behandelposts;
+            <br />· een Black Friday-set: carrousel, stories en een video van 15 seconden;
+            <br />· een kerstset;
+            <br />· een animatie voor de cadeaubon en de film "Licht".</span></li>
+          <li><span class="tag">Social media</span><span>Een reviewpakket van 32 onderdelen (PDF en 11 video's) is naar Neslihan gestuurd. Haar feedback kwam per nummer terug.</span></li>
+        </ul>
+        <figure class="side two"><img src="../instagram/img/pakket/17-1.jpg" alt="" /><img src="../instagram/img/pakket/15-1.jpg" alt="" /><figcaption>Kerstset en cadeaubon</figcaption></figure>
+      </article>
+
+      <article class="day">
+        <div class="when"><div class="d">20 nov</div><div class="w cap">vrijdag</div></div>
+        <ul class="items">
+          <li><span class="tag">Social media</span><span>Er is een plan gemaakt voor Instagram, Facebook en Mailchimp (e-mail en sms), van Black Friday tot het nieuwe jaar.</span></li>
+          <li><span class="tag">Website</span><span>De site gebruikt nu het lettertype uit het logo van Pure (Lexend). In het beheerpaneel kwam het onderdeel Campagnes met Mailchimp.</span></li>
+        </ul>
+        <div></div>
+      </article>
+
+      <article class="day">
+        <div class="when"><div class="d">14 nov</div><div class="w cap">zaterdag</div></div>
+        <ul class="items">
+          <li><span class="tag">Overleg</span><span>Wat er na het overleg met Pure is gedaan:
+            <br />· werk aan de nieuwe site en een Spaanse versie;
+            <br />· het echte team in 3D in het beheerpaneel;
+            <br />· Pure Praktijk: alle functies van SkinAdmin, 13 schermen en 178 punten.</span></li>
+        </ul>
+        <div></div>
+      </article>
+
+      <article class="day">
+        <div class="when"><div class="d">13 nov</div><div class="w cap">vrijdag</div></div>
+        <ul class="items">
+          <li><span class="tag">Social media</span><span>De pagina met voorbeeldposts voor Instagram is online: 9 posts, vier stijlen, Nederlandse teksten.</span></li>
+        </ul>
+        <div></div>
+      </article>
+
+      <article class="day">
+        <div class="when"><div class="d">1 nov</div><div class="w cap">zondag</div></div>
+        <ul class="items">
+          <li><span class="tag">Online</span><span>Al het werk is verhuisd naar pureclinics.savastana.com.</span></li>
+        </ul>
+        <div></div>
+      </article>
+
+      <article class="day">
+        <div class="when"><div class="d">26–29 okt</div><div class="w cap">start</div></div>
+        <ul class="items">
+          <li><span class="tag">App</span><span>De klantenapp en het 3D-beheerpaneel zijn gebouwd, met een uitlegvideo in het Nederlands. De demo kreeg de naam Pure Clinics.</span></li>
+          <li><span class="tag">Website</span><span>De eerste visuele website is gemaakt, met één idee van elke site die in 2026 een prijs won.</span></li>
+        </ul>
+        <div></div>
+      </article>
+    </section>
+
+    <section class="block" id="sosyal-medya">
+      <div class="head">
+        <div>
+          <div class="cap">Deel 2 · stand van 27 november</div>
+          <h2>Social-mediarapport</h2>
+        </div>
+        <p>Cijfers uit de Meta Business Suite van Pure. De laatste 28 dagen lopen van 29 oktober tot 25 november; de verandering is ten opzichte van de 28 dagen daarvoor. Het volledige rapport staat op een aparte pagina: <a href="../sosyal-medya/">analyse van Black Friday en december</a>.</p>
+      </div>
+      <div class="kpis">
+        <div class="kpi"><div class="cap">Volgers</div><div class="n">5.821</div><div class="c down">+20 / −32 in 28 dagen</div></div>
+        <div class="kpi"><div class="cap">Weergaven</div><div class="n">14.311</div><div class="c up">+9%</div></div>
+        <div class="kpi"><div class="cap">Bereik</div><div class="n">3,9 duizend</div><div class="c up">+29%</div></div>
+        <div class="kpi"><div class="cap">Interacties</div><div class="n">166</div><div class="c up">+113%</div></div>
+        <div class="kpi"><div class="cap">Linkklikken</div><div class="n">114</div><div class="c up">+57%</div></div>
+        <div class="kpi"><div class="cap">Profielbezoeken</div><div class="n">233</div><div class="c up">+14%</div></div>
+      </div>
+
+      <div class="three">
+        <div>
+          <h3>Wat goed ging</h3>
+          <ol>
+            <li><span><b>De Black Friday-carrousel werd de beste post van november:</b> 17 interacties, tegen 9 voor een doorsneepost deze maand. Met 1.738 weergaven was die dag de beste van de laatste 28 dagen.</span></li>
+            <li><span><b>Interacties zijn meer dan verdubbeld</b> (+113%). Linkklikken +57%.</span></li>
+            <li><span><b>De juiste vorm:</b> carrousels en video's worden veel beter bekeken dan losse foto's. Uitleg over behandelingen wordt het vaakst gedeeld.</span></li>
+            <li><span><b>Rustige, echte beelden:</b> eigen foto's van Pure, weinig tekst, de deals in het bijschrift. Alles is vooraf ingepland, met akkoord van Neslihan.</span></li>
+          </ol>
+        </div>
+        <div>
+          <h3>In de gaten houden</h3>
+          <ol>
+            <li><span><b>Bereik van stories:</b> de Black Friday-stories werden door 83–147 mensen gezien; eerdere stories door 234–377 mensen. We plaatsen dezelfde slides niet nog eens binnen 12 uur.</span></li>
+            <li><span><b>Avond of ochtend:</b> we vergelijken de eerste 48 uur van de post van 27 november 20:00 met de post van 25 november 10:00 (op 29 november). Op basis daarvan kiezen we het tijdstip.</span></li>
+            <li><span><b>Volgers:</b> netto 12 minder. Maar een derde van de volgers woont in Nederland, en 99% van de interacties komt van bestaande volgers. We moeten nieuwe mensen bereiken rond Nijmegen, Arnhem en Uden.</span></li>
+            <li><span><b>Afspraken:</b> Meta ziet niet welke afspraken er binnenkomen. We vragen Pure hoeveel afspraken en cadeaubonnen Black Friday heeft opgeleverd.</span></li>
+          </ol>
+        </div>
+        <div>
+          <h3>Wat we gaan verbeteren</h3>
+          <ol>
+            <li><span><b>Minder losse foto's:</b> de kitposts in december worden carrousels (doos, inhoud, prijs).</span></li>
+            <li><span><b>Vaste opbouw voor stories:</b> één reeks per dag, maximaal 5 slides. De eerste slide een vraag of prijs, de laatste slide de link.</span></li>
+            <li><span><b>Highlights:</b> "ACTIES" en "CADEAUBON", met covers in crème en walnoot.</span></li>
+            <li><span><b>Kerstwinactie half december.</b> De twee beste posts van het jaar waren winacties; die van januari kreeg 6.648 weergaven. De actievoorwaarden komen er duidelijk bij te staan.</span></li>
+            <li><span><b>Meten:</b>
+              <br />· de cadeaubonpagina op de site is klaar;
+              <br />· links krijgen een bronlabel;
+              <br />· GA4 en de Meta-pixel gaan aan op de site.</span></li>
+            <li><span><b>Facebook:</b> posts blijven daar automatisch meegaan. Extra werk aan stories is niet nodig; die worden door 0–9 mensen gezien.</span></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="compare">
+        <div><div class="cap">Carrousel</div><div class="n">+31%</div><span>weergaven, tegenover een doorsneepost</span></div>
+        <div><div class="cap">Video</div><div class="n">+19%</div><span>weergaven</span></div>
+        <div><div class="cap">Losse foto</div><div class="n">−9%</div><span>weergaven</span></div>
+        <div><div class="cap">Volgers</div><div class="n">34%</div><span>in Nederland</span></div>
+      </div>
+      <p class="more"><a href="../sosyal-medya/">Volledig rapport: hoe Black Friday ging en wat er in december anders moet</a><a href="../analyse/?lang=nl">Wanneer posten? (analyse van 45 posts)</a><a href="../instagram/">Werk voor Instagram</a></p>
+      <p class="cap" style="margin-top:22px">Let op: in de inbox van Pure staan nepberichten van "Meta Verified". Niet op klikken en nooit een wachtwoord invullen.</p>
+    </section>
+
+    <section class="block" id="gelecek-hafta">
+      <div class="head">
+        <div>
+          <div class="cap">Deel 3 · 29 november – 6 december</div>
+          <h2>Volgende week</h2>
+        </div>
+        <p>Alle tijden zijn Nederlandse tijd. Elke post gaat uiterlijk twee dagen vooraf naar Neslihan en wordt pas na haar akkoord ingepland. Posts die wachten op informatie van Pure, zoals de kitprijzen, gaan pas online als die informatie er is.</p>
+      </div>
+      <div class="week">
+        <div class="slot"><div class="d">zo 29</div><img src="../instagram/img/pakket/08-1.jpg" alt="" /><p>Video "Laatste kans" als story, 10:00 en 20:00.</p><span class="st">Ingepland · vergelijking avond/ochtend</span></div>
+        <div class="slot"><div class="d">ma 30</div><img src="../instagram/img/pakket/10-1.jpg" alt="" /><p>Cadeaubon: €15 cadeau bij een bon van €100. Carrousel of video van 10 seconden, dezelfde dag een story met link.</p><span class="st">Wacht op akkoord</span></div>
+        <div class="slot"><div class="d">di 1</div><img src="../instagram/img/pakket/11-1.jpg" alt="" /><p>Story voor de laatste dag van Black Friday.</p><span class="st">Ingepland</span></div>
+        <div class="slot"><div class="d">wo 2</div><img src="../instagram/img/pakket/12-1.jpg" alt="" /><p>Stralende kerst: kits van ZO Skin Health, als carrousel.</p><span class="st">Wacht op kitprijzen</span></div>
+        <div class="slot"><div class="d">do–vr</div><img src="../instagram/img/pakket/15-1.jpg" alt="" /><p>"Nog een cadeau voor pakjesavond?": cadeaubon, vlak voor Sinterklaas.</p><span class="st">Wacht op akkoord</span></div>
+        <div class="slot"><div class="d">za 5</div><img src="../instagram/img/pakket/16-1.jpg" alt="" /><p>Fijne pakjesavond: story.</p><span class="st">Wacht op akkoord</span></div>
+      </div>
+
+      <div class="lanes">
+        <div>
+          <h3>Social media</h3>
+          <ul>
+            <li>Highlights: na Black Friday gaat "ACTIES" over op de kerstkits en komt er een nieuwe "CADEAUBON" bij.</li>
+            <li>Eén storyreeks per dag, maximaal 5 slides.</li>
+            <li>Het voorstel voor de kerstwinactie gaat naar Neslihan.</li>
+            <li>Aan het eind van de week kijken we naar bereik, keren opgeslagen en linkklikken.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Huidscanmodel</h3>
+          <ul>
+            <li>Van 29 november tot en met 5 december elke dag minstens 50 trainingen in EVREN (met gratis credits).</li>
+            <li>Elke ochtend meten we de resultaten op dezelfde moeilijke testset, met een kort rapport.</li>
+            <li>Op deze Mac wordt ook een model getraind dat 12 keer zo groot is.</li>
+            <li>Komt er een beter model uit, dan gaat dat pas na akkoord de app in.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Website, app, Huidly</h3>
+          <ul>
+            <li>Kerstkits op de site en in de app, zodra de prijzen zijn goedgekeurd.</li>
+            <li>GA4 en de Meta-pixel op de site (we wachten op de nummers).</li>
+            <li>Huidly naar de echte bedrijfsmodus en de gegevens uit SkinAdmin overzetten.</li>
+            <li>Facturen in Huidly als PDF en per e-mail.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Wat we nog van Pure nodig hebben</h3>
+          <ul>
+            <li>Kitprijzen: Clear Skin €125 of €99? Wat is het "extraatje" bij Ultimate Glow?</li>
+            <li>De voorwaarden van de cadeaubon en de openingstijden rond de feestdagen.</li>
+            <li>Het aantal afspraken en cadeaubonnen van Black Friday.</li>
+            <li>Het GA4-nummer en een exportbestand uit SkinAdmin.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="huidly">
+      <div class="head">
+        <div>
+          <div class="cap">Deel 4</div>
+          <h2>Hoe werken Huidly en Pure Clinics samen?</h2>
+        </div>
+        <p><a href="https://huidly.com" target="_blank" rel="noopener">huidly.com</a> is een programma voor klinieken en gaat SkinAdmin vervangen. Pure is de eerste klant. De website, de app en het beheerpaneel van Pure blijven onder het eigen merk van Pure, maar halen hun gegevens uit Huidly en schrijven ze ook terug naar Huidly. Ze houden geen eigen, aparte kopie bij.</p>
+      </div>
+
+      <div class="flow">
+        <div class="stack">
+          <div class="box"><h3>Website van Pure</h3>Behandelingen, prijzen, shop, cadeaubon, account, afspraakverzoek.</div>
+          <div class="box"><h3>Pure-app</h3>Huidscan en huidadviseur, afspraken, bestellingen, account.</div>
+        </div>
+        <div class="arrow">leest en schrijft</div>
+        <div class="box core">
+          <h3>Huidly</h3>
+          <b>Eén bron, één waarheid.</b>
+          <ul>
+            <li>Agenda en afspraakverzoeken</li>
+            <li>Cliëntdossiers en behandelplannen</li>
+            <li>Kassa, facturen, btw</li>
+            <li>Eén voorraad: kliniek en webshop</li>
+            <li>Team, rooster, contracten</li>
+            <li>Prijzen van behandelingen en producten</li>
+          </ul>
+        </div>
+        <div class="arrow">hier werkt het team</div>
+        <div class="stack">
+          <div class="box"><h3>Kliniek</h3>huidly.com/app · Neslihan en het team, inloggen met een code per e-mail.</div>
+          <div class="box"><h3>Beheerpaneel van Pure</h3>Campagnes, social-mediaplanning, webshop. Gegevens uit Huidly.</div>
+        </div>
+      </div>
+
+      <div class="examples">
+        <div><h3>Afspraak</h3><p>De klant vraagt in de app of op de site een dag en een tijdvak aan. Het verzoek komt in Kliniek binnen onder "Aanvragen". Het team geeft de vaste tijd door en de klant ziet de bevestiging in het eigen account.</p></div>
+        <div><h3>Bestelling</h3><p>Een webshopbestelling gaat af van de ene voorraad in Huidly: eerst bij de kliniek waar de klant ophaalt, anders bij de andere. De bestelling verschijnt tegelijk in Kliniek en in het beheerpaneel van Pure.</p></div>
+        <div><h3>Prijs en openingstijd</h3><p>Verandert een prijs of openingstijd in Kliniek, dan tonen de site en de app de nieuwe de volgende keer dat ze openen. Dat geldt ook voor laserzones en pakketten.</p></div>
+        <div><h3>Campagne</h3><p>De doelgroep van een campagne komt uit de klantenlijst en de facturen in Huidly. Ook de social-mediaplanning wordt in Huidly bewaard.</p></div>
+      </div>
+
+      <div class="why">
+        <div><div class="cap">Waarom zo?</div></div>
+        <ul>
+          <li>Niets hoeft twee keer te worden ingevoerd; site, app en kliniek laten hetzelfde zien.</li>
+          <li>Een abonnement op SkinAdmin is niet meer nodig. Wensen van Pure komen direct in het programma.</li>
+          <li>Het merk Pure blijft voorop: de klant ziet niet Huidly, maar Pure.</li>
+          <li>Huidly kan ook aan andere klinieken en salons worden verkocht; Pure is de eerste klant en het voorbeeld.</li>
+          <li><b>Stand van vandaag:</b> het draait live. De echte afspraken van Pure staan nog in SkinAdmin; om ze over te zetten is een exportbestand uit SkinAdmin nodig.</li>
+        </ul>
+      </div>
+    </section>
+
+    <footer>
+      <span>Pure Clinics · Werknotities · Opgesteld door Eyüp Yılmaz</span>
+      <span>Laatst bijgewerkt: 28 november 2026</span>
+    </footer>
+  </body>
+</html>

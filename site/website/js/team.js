@@ -1,6 +1,7 @@
 // One page per team member: the walk-in film (or the portrait), name and role, a booking button and the rest of the
 // team. Same palettes and seven languages as the website; the person comes from the folder (window.PERSON).
 import { LANGS, LANG_NAMES, STRINGS } from './i18n.js';
+import '../../lang.js';
 import { logoSvg } from './logo.js';
 import { TEAM } from './team-data.js';
 
@@ -28,7 +29,8 @@ const STUDIES = ['creme', 'karamel', 'walnoot'];
 const pick = (list, ...v) => v.find((x) => list.includes(x)) ?? list[0];
 const renamed = (v) => (v === 'bordeaux' ? 'walnoot' : v);
 const study = pick(STUDIES, renamed(params.get('studie')), renamed(store.get('pure-web-study')));
-let lang = pick(LANGS, params.get('lang'), store.get('pure-web-lang'));
+// A ?lang= link, the visitor's own choice (here or on another Pure page, ../../lang.js), else Dutch.
+let lang = pick(LANGS, params.get('lang'), store.get('pure-web-lang'), window.PureLang?.pick(LANGS));
 const S = (key, vars = {}) => {
   let s = STRINGS[lang]?.[key] ?? STRINGS.nl[key] ?? key;
   for (const [k, v] of Object.entries(vars)) s = s.replaceAll(`{${k}}`, v);
@@ -74,6 +76,7 @@ function render() {
 sel.addEventListener('change', () => {
   lang = sel.value;
   store.set('pure-web-lang', lang);
+  window.PureLang?.choose(lang);
   const u = new URL(location.href);
   u.searchParams.set('lang', lang);
   history.replaceState(null, '', u);

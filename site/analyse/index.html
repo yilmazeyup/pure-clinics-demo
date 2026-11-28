@@ -296,23 +296,22 @@
     <p>Zo hebben we gerekend: van elke Instagram-feedpost in Meta Business Suite namen we de weergaven en de interacties (likes, reacties, delen, opslaan). De post van 23 november, de winactie van januari en de video van 4 februari laten we weg, zodat ze het gemiddelde niet vertekenen. Stories tellen hier niet mee.</p>
   </footer>
 </main>
+<script src="../lang.js"></script>
 <script>
-  // Language: ?lang= or #tr / #nl first, then the last choice, then the browser (Turkish browsers get Turkish, others Dutch).
+  // Language: #tr / #nl, then the shared Pure rule (lang.js): a ?lang= link, the visitor's own choice, else Dutch.
+  // Only a click here is remembered.
   (function () {
     var root = document.documentElement;
     var pick = function (v) { return v === 'tr' || v === 'nl' ? v : null; };
-    var stored = null;
-    try { stored = localStorage.getItem('pure-analyse-lang'); } catch (e) {}
-    var q = null;
-    try { q = new URLSearchParams(location.search).get('lang'); } catch (e) {}
-    var lang = pick(q) || pick(location.hash.slice(1)) || pick(stored) || (/^tr/i.test(navigator.language || '') ? 'tr' : 'nl');
+    var lang = pick(location.hash.slice(1)) || PureLang.pick(['tr', 'nl']);
     var set = function (l) {
       root.dataset.lang = l;
       root.lang = l;
       document.querySelectorAll('.switch button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.set === l)); });
-      try { localStorage.setItem('pure-analyse-lang', l); } catch (e) {}
     };
-    document.querySelectorAll('.switch button').forEach(function (b) { b.addEventListener('click', function () { set(b.dataset.set); }); });
+    document.querySelectorAll('.switch button').forEach(function (b) {
+      b.addEventListener('click', function () { PureLang.choose(b.dataset.set); set(b.dataset.set); });
+    });
     set(lang);
   })();
 </script>

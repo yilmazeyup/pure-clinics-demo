@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Pure Instagram Analizi</title>
+<script src="../lang.js"></script>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@200;300;400;500&family=Lexend+Peta:wght@300&display=swap">
+<style>
+  /* Layout: one reading column in Pure's cream and walnut, the same family as the posting-time report.
+     Plain answers first, then Black Friday item by item, then the year, the audience, and December. */
+  :root {
+    --bg: #f6efe6;
+    --surface: #fdfaf5;
+    --ink: #3f3128;
+    --body: #5e4c40;
+    --muted: #8a7665;
+    --line: #e5d9ca;
+    --walnut: #6f3a22;
+    --walnut-soft: #efe2d4;
+    --down: #9a8270;
+    --display: 'Lexend', ui-sans-serif, system-ui, sans-serif;
+    --text: 'Lexend', ui-sans-serif, system-ui, sans-serif;
+    --wide: 'Lexend Peta', 'Lexend', ui-sans-serif, system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1d1612; --surface: #261d18; --ink: #f3e9de; --body: #dccbbb; --muted: #a8937f; --line: #3a2d25;
+      --walnut: #d59a70; --walnut-soft: #35261d; --down: #8c7866; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1d1612; --surface: #261d18; --ink: #f3e9de; --body: #dccbbb; --muted: #a8937f; --line: #3a2d25;
+    --walnut: #d59a70; --walnut-soft: #35261d; --down: #8c7866; color-scheme: dark;
+  }
+  body { background: var(--bg); color: var(--ink); font-family: var(--text); font-weight: 300; font-size: 16px; line-height: 1.6; }
+  .page { max-width: 780px; margin: 0 auto; padding-block: 40px 72px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 52px; }
+  .eyebrow { font-family: var(--wide); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin: 0; }
+  h1 { font-family: var(--display); font-weight: 200; font-size: clamp(34px, 6.4vw, 52px); line-height: 1.05; letter-spacing: -.03em; margin: 10px 0 0; text-wrap: balance; }
+  h1 em { font-style: normal; color: var(--walnut); }
+  h2 { font-family: var(--display); font-weight: 300; font-size: 25px; letter-spacing: -.01em; margin: 0; text-wrap: balance; }
+  h3 { font-weight: 400; font-size: 17px; margin: 0; color: var(--ink); }
+  p { margin: 0; color: var(--body); max-width: 64ch; }
+  .lead { font-size: 18px; margin-top: 18px; }
+  .source { font-size: 13px; color: var(--muted); margin-top: 12px; }
+  section { display: grid; gap: 16px; min-width: 0; }
+  b, strong { font-weight: 400; color: var(--ink); }
+
+  .key { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13px; color: var(--muted); margin-top: 14px; }
+  .m { display: inline-block; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 0 6px; border: 1px solid var(--line); color: var(--muted); vertical-align: 2px; margin-left: 4px; white-space: nowrap; line-height: 17px; }
+  .m.calc { border-style: dashed; }
+  .m.est { border-color: var(--walnut); color: var(--walnut); }
+
+  .answers { display: grid; gap: 12px; counter-reset: a; }
+  .answer { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 14px; align-items: start; background: var(--surface); border: 1px solid var(--line); padding: 18px 18px 18px 12px; }
+  .answer::before { counter-increment: a; content: counter(a); font-family: var(--display); font-weight: 200; font-size: 32px; line-height: 1; color: var(--walnut); text-align: center; }
+  .answer h3 { margin-bottom: 4px; }
+  .answer p { font-size: 15px; }
+
+  .panel { background: var(--surface); border: 1px solid var(--line); padding: 20px 18px; display: grid; gap: 12px; min-width: 0; }
+  .note { font-size: 13px; color: var(--muted); }
+
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 14.5px; font-variant-numeric: tabular-nums; }
+  th { text-align: left; font-family: var(--wide); font-weight: 300; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); padding: 0 12px 8px 0; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  th.n, td.n { text-align: right; }
+  td { padding: 11px 12px 11px 0; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--body); }
+  td:first-child { color: var(--ink); }
+  td small { display: block; font-size: 12px; color: var(--muted); }
+  tr.wait td { color: var(--muted); }
+  td.hi { color: var(--walnut); font-weight: 400; }
+
+  /* line chart */
+  .linechart { position: relative; }
+  .linechart svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .linechart .grid { stroke: var(--line); stroke-width: 1; }
+  .linechart .axis-t { fill: var(--muted); font-size: 11px; font-family: var(--text); }
+  .linechart .area { fill: var(--walnut); opacity: .1; }
+  .linechart .ln { fill: none; stroke: var(--walnut); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+  .linechart .bf { fill: var(--walnut-soft); }
+  .linechart .bf-t { fill: var(--walnut); font-size: 11px; font-family: var(--text); font-weight: 400; }
+  .linechart .end { fill: var(--walnut); stroke: var(--surface); stroke-width: 2; }
+  .linechart .cross { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 3; }
+  .linechart .dot { fill: var(--surface); stroke: var(--walnut); stroke-width: 2; }
+  .linechart .hit { fill: transparent; cursor: crosshair; }
+
+  /* horizontal bars */
+  .bars { display: grid; gap: 8px; }
+  .brow { display: grid; grid-template-columns: 150px minmax(0, 1fr) 46px; gap: 12px; align-items: center; font-variant-numeric: tabular-nums; }
+  .brow .k { font-size: 13.5px; color: var(--ink); line-height: 1.3; }
+  .brow .k small { display: block; font-size: 11px; color: var(--muted); }
+  .brow .t { position: relative; height: 18px; }
+  .brow .b { position: absolute; left: 0; top: 2px; height: 14px; background: var(--walnut); border-radius: 0 3px 3px 0; }
+  .brow .b.own { background: var(--down); }
+  .brow .v { font-size: 13.5px; text-align: right; color: var(--ink); }
+  .group-t { font-family: var(--wide); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-top: 6px; }
+
+  /* diverging bars vs month average */
+  .drow { display: grid; grid-template-columns: 150px minmax(0, 1fr) 54px; gap: 12px; align-items: center; font-variant-numeric: tabular-nums; }
+  .drow .k { font-size: 13.5px; color: var(--ink); line-height: 1.3; }
+  .drow .k small { display: block; font-size: 11px; color: var(--muted); }
+  .drow .t { position: relative; height: 20px; }
+  .drow .t::before { content: ""; position: absolute; left: 50%; top: -3px; bottom: -3px; width: 1px; background: var(--muted); opacity: .6; }
+  .drow .b { position: absolute; top: 3px; height: 14px; background: var(--walnut); }
+  .drow .b.pos { border-radius: 0 3px 3px 0; }
+  .drow .b.neg { background: var(--down); border-radius: 3px 0 0 3px; }
+  .drow .v { font-size: 13.5px; text-align: right; color: var(--ink); }
+  .drow .v.neg { color: var(--muted); }
+  .daxis { display: grid; grid-template-columns: 150px minmax(0, 1fr) 54px; gap: 12px; font-size: 11px; color: var(--muted); }
+  .daxis span:nth-child(2) { display: flex; justify-content: space-between; }
+  .daxis i { font-style: normal; }
+  .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+
+  .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; }
+  .fact { border-top: 1px solid var(--ink); padding-top: 10px; min-width: 0; }
+  .fact b { display: block; font-family: var(--display); font-weight: 200; font-size: 32px; line-height: 1.1; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .fact span { font-size: 13.5px; color: var(--body); display: block; }
+
+  .callout { background: var(--walnut-soft); padding: 16px 18px; font-size: 15px; color: var(--ink); display: grid; gap: 6px; }
+  .callout p { color: var(--ink); font-size: 15px; }
+
+  .todo { display: grid; gap: 0; counter-reset: t; }
+  .todo li { list-style: none; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+  .todo li::before { counter-increment: t; content: counter(t); font-family: var(--display); font-weight: 200; font-size: 26px; line-height: 1; color: var(--walnut); }
+  .todo h3 { margin-bottom: 4px; }
+  .todo p { font-size: 15px; }
+  .todo .when { font-family: var(--wide); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--walnut); display: block; margin-bottom: 4px; }
+  ol.todo { padding: 0; margin: 0; }
+
+  .tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--bg); font-size: 12.5px; line-height: 1.35; padding: 7px 10px; white-space: nowrap; transform: translate(-50%, calc(-100% - 12px)); z-index: 5; font-variant-numeric: tabular-nums; }
+  .tip[hidden] { display: none; }
+  .hoverable { position: relative; }
+  .hoverable:hover .b, .hoverable:focus-visible .b { filter: brightness(1.12); }
+  .hoverable:focus-visible { outline: 2px solid var(--walnut); outline-offset: 3px; }
+
+  footer p { font-size: 13px; color: var(--muted); }
+
+  @media (max-width: 560px) {
+    .brow, .drow, .daxis { grid-template-columns: 108px minmax(0, 1fr) 44px; gap: 8px; }
+    .brow .k, .drow .k { font-size: 12.5px; }
+    .answer { grid-template-columns: 30px minmax(0, 1fr); gap: 10px; }
+    table { font-size: 13.5px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 0; padding: 14px clamp(20px, 4vw, 64px); font: 300 14px/1.4 var(--text); }
+  .topbar .back { color: var(--walnut); }
+  .langs { display: inline-flex; gap: 2px; padding: 3px; border: 1px solid var(--line); background: var(--surface); }
+  .langs a { font-size: 12px; letter-spacing: 0.08em; line-height: 1; padding: 6px 9px; color: var(--muted); text-decoration: none; }
+  .langs a:hover { color: var(--walnut); }
+  .langs a[aria-current] { background: var(--ink); color: var(--bg); }
+</style>
+</head>
+<body>
+<nav class="topbar" aria-label="Pure Clinics">
+  <a class="back" href="../notlar/tr.html">← Çalışma notları</a>
+  <span class="langs" role="group" aria-label="Dil · Taal · Language">
+    <a href="tr.html" data-pure-lang="tr" lang="tr" title="Türkçe" aria-current="page">TR</a>
+    <a href="index.html?lang=nl" data-pure-lang="nl" lang="nl" title="Nederlands">NL</a>
+    <a href="en.html" data-pure-lang="en" lang="en" title="English">EN</a>
+  </span>
+</nav>
+
+
+<main class="page">
+  <header>
+    <p class="eyebrow">Pure Clinics · Instagram ve Facebook · 27 Kasım 2026</p>
+    <h1>Black Friday nasıl gitti, <em>Aralık'ta</em> ne değişmeli?</h1>
+    <p class="lead">Meta Business Suite'te Pure'un bu yılki bütün Instagram postlarına, Kasım'daki story'lere, takipçilere ve Facebook'a baktık. Önce kısa cevaplar, sonra rakamlar, en sonda Aralık planı için öneriler.</p>
+    <p class="source">Kaynak: Pure Clinics Meta Business Suite, 27 Kasım 00:10'da (Türkiye saati) okundu. Son 28 gün = 29 Ekim – 25 Kasım. Saatler Hollanda saatidir. Story'lerin rakamı 24 saat boyunca artmaya devam eder; 26 Kasım story'leri henüz bitmedi.</p>
+    <p class="key"><span>Rakamların yanında:</span><span>işaretsiz = Meta'dan okundu</span><span><i class="m calc">hesap</i> = okunan rakamlardan bizim hesabımız</span><span><i class="m est">tahmin</i> = tahmin, kesin değil</span></p>
+  </header>
+
+  <section>
+    <h2>Kısaca</h2>
+    <div class="answers">
+      <div class="answer"><div><h3>Kaydırmalı Black Friday postu iyi gitti.</h3><p>25 Kasım'daki dört fırsatlı post Kasım'ın en çok etkileşim (beğeni, yorum, paylaşım, kaydetme) alan postu oldu: 17, ayın ortası 9. O gün Instagram'ın son 28 gündeki en iyi günüydü: 1.738 görüntülenme.</p></div></div>
+      <div class="answer"><div><h3>Story'ler zayıf kaldı.</h3><p>Black Friday story'lerinin her birini 83–147 kişi gördü. Kasım'da daha önce koyduğumuz üç story'yi 234–377 kişi görmüştü. Aynı beş kareyi 12 saat arayla iki kez koyduk; ikinci seride her karede izleyen azaldı (112'den 83'e).</p></div></div>
+      <div class="answer"><div><h3>Takipçi sayısı yerinde sayıyor.</h3><p>28 günde 20 kişi takip etti, 32 kişi takibi bıraktı: net 12 eksik. Takipçilerin sadece üçte biri Hollanda'da; geri kalanı Pure'un müşterisi olamayacak ülkelerden.</p></div></div>
+      <div class="answer"><div><h3>Yılın en iyi postları çekilişler.</h3><p>Ocak çekilişi 6.648 görüntülenme, 150 etkileşim ve 33 paylaşım aldı; yılın geri kalanındaki hiçbir post buna yaklaşmadı. Çekilişler dışında en iyi çalışan şekil kaydırmalı ve video, en iyi konu tedavi anlatımı ve kampanyalar. Tek fotoğraflar ortalamanın altında.</p></div></div>
+      <div class="answer"><div><h3>Facebook neredeyse boş.</h3><p>Sadece Facebook'a giden postları bu yıl ortalama 66 kişi gördü, ortalama 1 etkileşim aldı. Black Friday story'lerini Facebook'ta 0–9 kişi gördü. Emek Instagram'a gitmeli.</p></div></div>
+    </div>
+  </section>
+
+  <section id="bf">
+    <h2>Black Friday, tek tek</h2>
+    <p>Görüntülenme: kaç kez görüldü. Erişim: kaç farklı hesap gördü. Etkileşim: beğeni, yorum, paylaşım ve kaydetme toplamı.</p>
+    <div class="panel">
+      <div class="table-wrap"><table>
+        <thead><tr><th>Ne, ne zaman</th><th class="n">Görüntülenme</th><th class="n">Erişim</th><th class="n">Etkileşim</th><th>Not</th></tr></thead>
+        <tbody>
+          <tr><td>Teaser postu<small>Salı 24 Kas · 10:00 · tek fotoğraf</small></td><td class="n">363</td><td class="n">170</td><td class="n">8</td><td>7 beğeni. Kasım'ın en az görülen postu (ayın ortası 684).</td></tr>
+          <tr><td>Teaser story<small>Salı 24 Kas · 21:00</small></td><td class="n">147</td><td class="n">118</td><td class="n">1</td><td>1 yanıt</td></tr>
+          <tr><td>4 fırsat story'si<small>Salı 24 Kas · 21:49</small></td><td class="n">134–144</td><td class="n">105</td><td class="n">2</td><td>1 paylaşım, 1 yanıt. Lazer karesi silinip 22:22'de yenisi kondu: 110.</td></tr>
+          <tr><td>Kaydırmalı post, 5 kare<small>Çarşamba 25 Kas · 10:00</small></td><td class="n hi">862</td><td class="n">354</td><td class="n hi">17</td><td>13 beğeni, 3 paylaşım, 1 kaydetme. Kasım'ın en çok etkileşim alan postu.</td></tr>
+          <tr><td>Aynı 5 kare story olarak<small>Çarşamba 25 Kas · 10:00</small></td><td class="n">112 → 83</td><td class="n">–</td><td class="n">0</td><td>Kareler: 112, 93, 87, 85, 83.</td></tr>
+          <tr><td>15 sn video story<small>Perşembe 26 Kas · 10:00</small></td><td class="n">122</td><td class="n">–</td><td class="n">0</td><td>12 saatlik rakam, story henüz bitmedi.</td></tr>
+          <tr><td>Aynı video story<small>Perşembe 26 Kas · 20:00</small></td><td class="n">57</td><td class="n">–</td><td class="n">0</td><td>Okunduğunda 9 dakikalıktı.</td></tr>
+          <tr class="wait"><td>Lazer postu ve "Black Friday is begonnen" story'leri<small>Cuma 27 Kas · 08:00 ve 20:00</small></td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td>Okunduğunda henüz yayınlanmamıştı. Akşam 20:00 postu, yılın ilk akşam denemesi.</td></tr>
+          <tr><td>Facebook'taki aynı içerik<small>24–26 Kas</small></td><td class="n">28 · 42</td><td class="n">–</td><td class="n">2 · 1</td><td>Teaser · kaydırmalı post. Facebook story'leri 0–9 kişi.</td></tr>
+        </tbody>
+      </table></div>
+      <p class="note">Business Suite bu story'lerin ileri/geri dokunma ve çıkış sayılarını göstermiyor. Link çıkartması sadece 27 Kasım story'sinde var; o henüz yayında değil. Kaç randevu geldiğini Meta göremez: bunu Pure'a sormamız lazım.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Son 28 gün, gün gün</h2>
+    <p>Instagram'da her gün kaç görüntülenme oldu. Black Friday günleri en yüksek iki gün.</p>
+    <div class="panel">
+      <div class="linechart" id="daily" role="img" aria-label="Instagram günlük görüntülenme, 29 Ekim – 25 Kasım 2026. En yüksek 25 Kasım: 1.738."></div>
+      <p class="note">Kaynak: İstatistikler › Sonuçlar › Instagram. Bu 28 günde toplam 14.311 görüntülenme (önceki 28 güne göre +%9), 3,9 bin hesaba erişim (+%29), 166 etkileşim (+%113), 114 link tıklaması (+%57), 233 profil ziyareti (+%14).</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Story'leri kaç kişi gördü?</h2>
+    <p>Her çubuk bir story karesi. Kasım'ın başındaki kendi story'lerimiz ile Black Friday story'leri.</p>
+    <div class="panel">
+      <div class="bars" id="stories"></div>
+      <p class="note">Açık çubuklar: Black Friday'den önceki story'ler. 26 Kasım 10:00 video story'si henüz bitmedi (12 saatlik rakam). Erişim, takipçi sayısının (5.821) %2'si civarında <i class="m calc">hesap</i>.</p>
+    </div>
+    <div class="callout">
+      <p><b>Neden düşük?</b> <i class="m est">tahmin</i> Üç şey üst üste geldi. Bir: aynı kareler 12 saat içinde iki kez kondu; ikinci seriyi izleyenler kareleri zaten görmüştü. İki: tek günde 5–10 kare art arda geldi; Instagram çok story koyan hesabın story'lerini daha az kişiye gösterebilir. Üç: kareler reklam gibi; önceki story'ler daha kişiseldi.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Bu yıl ne iyi çalıştı?</h2>
+    <p>2026'daki 50 Instagram postu. Her postu kendi ayının ortasıyla karşılaştırdık, çünkü Ocak'ta her şey çok daha fazla görüldü. Çubuk sağa: o ayın ortasından daha çok etkileşim, sola: daha az. İki çekilişi ayrı tuttuk, yoksa her şeyi bozuyorlar.</p>
+    <div class="two">
+      <div class="panel">
+        <h3>Şekil</h3>
+        <div class="daxis"><span></span><span><i>−50%</i><i>ayın ortası</i><i>+50%</i></span><span></span></div>
+        <div id="format"></div>
+      </div>
+      <div class="panel">
+        <h3>Konu</h3>
+        <div class="daxis"><span></span><span><i>−50%</i><i>ayın ortası</i><i>+50%</i></span><span></span></div>
+        <div id="topic"></div>
+      </div>
+    </div>
+    <p class="note">Rakamlar <i class="m calc">hesap</i>: her postun etkileşimi ÷ o ayın ortanca etkileşimi, sonra grup ortalaması. Konuyu postun metninden biz belirledik. Görüntülenmede: kaydırmalı +%31, video +%19, tek fotoğraf −%9. Paylaşılan postların çoğu tedavi anlatımı (yılda 23 paylaşım).</p>
+    <div class="callout">
+      <p><b>Çekilişler:</b> Ocak çekilişi (2 Ocak, video) 6.648 görüntülenme, 4.082 hesaba erişim, 150 etkileşim, 25 yorum, 33 paylaşım. Şubat çekilişi (4 Şubat) 1.518 görüntülenme, 104 etkileşim, 18 yorum. Etkileşimde üçüncü sıra Ocak'taki "10 jaar Pure Clinics" indirimi: 3.204 görüntülenme, 33 etkileşim.</p>
+    </div>
+    <p>Fotoğrafın içeriğini Meta ölçmüyor; bu yüzden hangi fotoğrafın iyi gittiğini rakamla söyleyemiyoruz. Gördüğümüz: düz bej zemin üstünde yazı olan postlar ("Did you know?", "Onze ervaren huidtherapeuten") ayın ortasının altında kaldı <i class="m est">tahmin, az örnek</i>.</p>
+  </section>
+
+  <section>
+    <h2>Takipçiler kim?</h2>
+    <div class="facts">
+      <div class="fact"><b>5.821</b><span>Instagram takipçisi (25 Kas). Profil bugün 5.822 gösteriyor.</span></div>
+      <div class="fact"><b>+20 / −32</b><span>28 günde yeni takip / takibi bırakma. Net −12.</span></div>
+      <div class="fact"><b>%70,9</b><span>kadın. En büyük gruplar: kadın 25–34 (%24,7) ve 35–44 (%23,8).</span></div>
+      <div class="fact"><b>%33,8</b><span>Hollanda'da. Sonra Hindistan %5,3, Endonezya %1,9, Çin %1,6, ABD %1,5.</span></div>
+    </div>
+    <div class="panel">
+      <h3>Şehirler</h3>
+      <div class="bars" id="cities"></div>
+      <p class="note">Meta sadece ilk 10 şehri gösteriyor. Nijmegen, Arnhem, Uden, Oss, Wijchen, 's-Hertogenbosch ve Veghel birlikte takipçilerin %13,9'u <i class="m calc">hesap</i>.</p>
+    </div>
+    <div class="facts">
+      <div class="fact"><b>699</b><span>takipçiye ulaşıldı (28 günde). Takipçilerin %12'si <i class="m calc">hesap</i>.</span></div>
+      <div class="fact"><b>3.140</b><span>takipçi olmayana ulaşıldı (+%35). Yeni insanlar görüyor, ama…</span></div>
+      <div class="fact"><b>%99</b><span>…etkileşimin %99'u takipçilerden geliyor. Yeni gelenler beğenmiyor, takip etmiyor.</span></div>
+      <div class="fact"><b>0</b><span>Meta'ya göre 28 günde başlayan Instagram sohbeti. Mesajlar uygulamadan cevaplanıyorsa burada görünmeyebilir.</span></div>
+    </div>
+    <div class="callout">
+      <p><b>Ne anlama geliyor?</b> Takipçi sayısını büyütmek tek başına bir şey kazandırmaz; üçte ikisi Hollanda dışında. Önemli olan Nijmegen, Arnhem ve Uden çevresinde yeni insanlara ulaşmak ve onları randevuya getirmek.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Benzer işletmelerle ve rakiplerle</h2>
+    <div class="panel">
+      <div class="table-wrap"><table>
+        <thead><tr><th>Meta'nın karşılaştırması (28 gün)</th><th class="n">Pure</th><th class="n">Benzerleri</th></tr></thead>
+        <tbody>
+          <tr><td>Yayınlanan post ve story</td><td class="n">27</td><td class="n">23</td></tr>
+          <tr><td>Instagram takipçisi</td><td class="n">5.821</td><td class="n">1.105</td></tr>
+          <tr><td>Yeni takip</td><td class="n">20</td><td class="n">19</td></tr>
+          <tr><td>Etkileşim</td><td class="n">166</td><td class="n">218</td></tr>
+        </tbody>
+      </table></div>
+      <p class="note">Meta, Pure'u "Yaşam tarzı hizmetleri" kategorisinde, 28 günlük erişimi benzer işletmelerle kıyaslıyor ("benzerleri" = ortanca). Pure daha çok takipçiye sahip ama daha az etkileşim alıyor.</p>
+    </div>
+    <div class="panel">
+      <div class="table-wrap"><table>
+        <thead><tr><th>Herkese açık profil (27 Kas)</th><th class="n">Takipçi</th><th class="n">Post</th><th>Not</th></tr></thead>
+        <tbody>
+          <tr><td>soap.socials</td><td class="n">42 B</td><td class="n">874</td><td>17 şubeli zincir. Neslihan Hanım'ın beğendiği hediye kartı videosu buradan.</td></tr>
+          <tr><td>uma.clinic.amsterdam</td><td class="n">11 B</td><td class="n">369</td><td>Tek klinik, siyah-beyaz akış.</td></tr>
+          <tr><td>pureclinics_</td><td class="n">5.822</td><td class="n">160</td><td>İki klinik.</td></tr>
+        </tbody>
+      </table></div>
+      <p class="note">Rakiplerin beğeni ve erişim rakamlarını Meta bize göstermiyor; sadece profilde görünen sayılar. Business Suite'te "İzlenmesi gereken işletmeler" listesine eklenirlerse karşılaştırma oradan da izlenebilir (henüz eklenmedi).</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Instagram ve Facebook</h2>
+    <div class="panel">
+      <div class="table-wrap"><table>
+        <thead><tr><th></th><th class="n">Instagram</th><th class="n">Facebook</th></tr></thead>
+        <tbody>
+          <tr><td>Takipçi</td><td class="n">5.821</td><td class="n">1.900</td></tr>
+          <tr><td>Görüntülenme, 28 gün</td><td class="n">14.311</td><td class="n">4.900</td></tr>
+          <tr><td>Etkileşim, 28 gün</td><td class="n">166</td><td class="n">12</td></tr>
+          <tr><td>Link tıklaması, 28 gün</td><td class="n">114</td><td class="n">110</td></tr>
+          <tr><td>Yeni takipçi, 28 gün</td><td class="n">20</td><td class="n">1</td></tr>
+          <tr><td>Sadece o kanala giden postlar, 2026, ortanca</td><td class="n">689 görüntülenme · 9 etkileşim</td><td class="n">66 görüntülenme · 1 etkileşim</td></tr>
+        </tbody>
+      </table></div>
+      <p class="note">Facebook'ta tek dikkat çeken rakam link tıklamaları (110). İnsanlar Facebook sayfasındaki web sitesi linkini hâlâ kullanıyor; sayfadaki randevu linki güncel kalmalı.</p>
+    </div>
+  </section>
+
+  <section id="aralik">
+    <h2>Aralık'ta ne değişmeli?</h2>
+    <p>Aralık planı (Sinterklaas, Noel, yılbaşı) hazır ama henüz Neslihan Hanım'a gitmedi. Rakamlara göre plana şu değişiklikleri öneriyoruz.</p>
+    <ol class="todo">
+      <li><div><span class="when">30 Kasım · hediye kartı</span><h3>Tek fotoğraf yerine kaydırmalı ya da kısa video.</h3><p>Plandaki tek fotoğraf (05-cadeaubon) yerine 3 kare: kart, "€100'lük kart alana €15 hediye", nereden alınır. Ya da hazır 10 saniyelik hediye kartı videosu. Aynı gün aynı kareler bir kez story olarak, linkle. Dikkat: sitede hediye kartı sayfası henüz yok (Neslihan Hanım da istemişti). Sayfa gelene kadar story'deki link randevu sayfasına gidebilir.</p></div></li>
+      <li><div><span class="when">2 Aralık · Noel kaydırmalısı</span><h3>Şekil doğru; saat 10:00 olsun.</h3><p>Planda bütün postlar 19:30'da. Akşamı ilk kez 27 Kasım 20:00 lazer postunda deniyoruz. 29 Kasım'da o postun 48 saatlik rakamını 25 Kasım 10:00 postuyla karşılaştıralım. Akşam daha iyiyse 4 Aralık'tan itibaren akşama geçelim, değilse sabah kalsın. O zamana kadar 10:00.</p></div></li>
+      <li><div><span class="when">7 ve 11 Aralık · kit postları</span><h3>Tek fotoğrafları azaltalım.</h3><p>Aralık planında 7 tek fotoğraf var. Kit postlarını kaydırmalıya çevirelim: kutu, içindekiler, fiyat. Tebrik postları (23 ve 29 Aralık) tek fotoğraf kalabilir.</p></div></li>
+      <li><div><span class="when">Her gün · story</span><h3>Günde bir seri, en fazla 5 kare, aynı kare bir kez.</h3><p>Postun kareleri, Neslihan Hanım'ın istediği gibi, postun günü story olarak gitsin. Ama aynı kareleri 24 saat içinde ikinci kez koymayalım. İlk kare net bir soru ya da fiyat, son kare link. Arada "Hangi kit sana uygun?" gibi bir soru kartı, mesajla cevap için.</p></div></li>
+      <li><div><span class="when">Öne çıkanlar</span><h3>Fırsatlar profilde kalsın.</h3><p>Black Friday karelerini 1 Aralık'a kadar "ACTIES" öne çıkanına koyalım, sonra yerine Noel kitlerini. Hediye kartı için ayrı bir "CADEAUBON" öne çıkanı: nasıl alınır, ne kadar geçerli. Öne çıkan kapakları krem-ceviz renginde olsun. Neslihan Hanım onaylarsa.</p></div></li>
+      <li><div><span class="when">Aralık ortası</span><h3>Bir Noel çekilişi.</h3><p>Yılın en iyi iki postu çekiliş. Bir ZO kiti ya da hediye kartı için: takip et, bir arkadaşını etiketle. Yeni yerel takipçi getirmenin en hızlı yolu. Katılım koşulları yazılı olmalı (Hollanda'da çekiliş koşullarının yayınlanması gerekiyor). Neslihan Hanım'a önerilecek.</p></div></li>
+      <li><div><span class="when">Facebook</span><h3>Postlar otomatik gitsin, story'ler gitmese de olur.</h3><p>Feed postları Facebook'a otomatik paylaşılmaya devam etsin. Facebook story'leri 0–9 kişiye ulaşıyor; planlarken ayrıca uğraşmaya değmez.</p></div></li>
+      <li><div><span class="when">Ölçüm</span><h3>Randevuyu sayalım, beğeniyi değil.</h3><p>Meta, Black Friday'den kaç randevu geldiğini göremez. Neslihan Hanım'dan BF boyunca kaç randevu ve kaç hediye kartı geldiğini öğrenelim. Linklere kaynak etiketi ekleyelim ki Instagram'dan gelenler ayrı sayılsın.</p></div></li>
+    </ol>
+    <div class="callout">
+      <p><b>Ayrıca:</b> Pure'un gelen kutusunda "sayfanız ücretsiz Meta Verified rozeti kazandı" diyen, tanımadık hesaplardan mesajlar var. Bunlar sahte; tıklanmamalı, şifre girilmemeli. Neslihan Hanım'a ve ekibe söylemekte fayda var.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>Nasıl hesapladık: Meta Business Suite › İstatistikler › İçerik (Instagram, "Bu yıl", sadece postlar) ve Sonuçlar, Hedef kitle, Kıyaslama sayfaları. Facebook'a da paylaşılan postlarda görüntülenme iki kanalın toplamı. Etkileşim = beğeni + yorum + paylaşım + kaydetme. Ham veriler: marketing/analyse/sosyal-medya-2026-11-27.py ve .json. Hiçbir şey paylaşılmadı, planlanmadı ya da değiştirilmedi; sadece okundu.</p>
+  </footer>
+</main>
+
+<div class="tip" id="tip" hidden></div>
+
+<script>
+(function () {
+  const tip = document.getElementById('tip');
+  function showTip(text, x, y) { tip.textContent = text; tip.style.left = x + 'px'; tip.style.top = y + 'px'; tip.hidden = false; }
+  function hideTip() { tip.hidden = true; }
+  function pageXY(el, dx, dy) { const r = el.getBoundingClientRect(); return [r.left + window.scrollX + dx, r.top + window.scrollY + dy]; }
+  const fmt = n => n.toLocaleString('nl-NL');
+
+  /* daily views, 29 Oct – 25 Nov */
+  const views = [287, 359, 727, 318, 318, 733, 591, 295, 785, 220, 204, 296, 277, 971, 274, 239, 184, 1070, 286, 455, 629, 182, 779, 187, 292, 597, 1052, 1738];
+  const inter = [1, 12, 8, 1, 4, 8, 12, 2, 9, 0, 0, 0, 1, 16, 2, 0, 0, 13, 1, 2, 4, 1, 9, 2, 0, 8, 12, 38];
+  const start = new Date(2026, 9, 29);
+  const months = ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
+  const day = i => { const d = new Date(start); d.setDate(d.getDate() + i); return d.getDate() + ' ' + months[d.getMonth()]; };
+  const W = 700, H = 240, L = 40, R = 14, T = 22, B = 28, ymax = 2000;
+  const x = i => L + (W - L - R) * i / (views.length - 1);
+  const y = v => T + (H - T - B) * (1 - v / ymax);
+  const ns = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(ns, 'svg');
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  const add = (tag, attrs, parent = svg) => { const e = document.createElementNS(ns, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; };
+  // Black Friday band (24–25 Nov = index 26–27)
+  const bx = x(25.5);
+  add('rect', { x: bx, y: T, width: x(27) - bx + 6, height: H - T - B, class: 'bf' });
+  const bft = add('text', { x: x(26.5) - 4, y: T - 7, 'text-anchor': 'end', class: 'bf-t' }); bft.textContent = 'Black Friday';
+  for (const v of [0, 500, 1000, 1500, 2000]) {
+    add('line', { x1: L, x2: W - R, y1: y(v), y2: y(v), class: 'grid' });
+    const t = add('text', { x: L - 8, y: y(v) + 4, 'text-anchor': 'end', class: 'axis-t' }); t.textContent = v === 0 ? '0' : fmt(v);
+  }
+  for (const i of [0, 7, 14, 21, 27]) {
+    const t = add('text', { x: x(i), y: H - 8, 'text-anchor': i === 0 ? 'start' : i === 27 ? 'end' : 'middle', class: 'axis-t' }); t.textContent = day(i);
+  }
+  const pts = views.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`);
+  add('path', { d: `M${x(0)},${y(0)} L${pts.join(' L')} L${x(views.length - 1)},${y(0)} Z`, class: 'area' });
+  add('path', { d: `M${pts.join(' L')}`, class: 'ln' });
+  add('circle', { cx: x(27), cy: y(1738), r: 5, class: 'end' });
+  const lab = add('text', { x: x(27) - 10, y: y(1738) + 4, 'text-anchor': 'end', class: 'bf-t' }); lab.textContent = '1.738';
+  const cross = add('line', { x1: 0, x2: 0, y1: T, y2: H - B, class: 'cross', visibility: 'hidden' });
+  const dot = add('circle', { r: 5, class: 'dot', visibility: 'hidden' });
+  const hit = add('rect', { x: L, y: T, width: W - L - R, height: H - T - B, class: 'hit' });
+  const box = document.getElementById('daily');
+  box.appendChild(svg);
+  function move(ev) {
+    const r = svg.getBoundingClientRect();
+    const px = (ev.clientX - r.left) * W / r.width;
+    const i = Math.max(0, Math.min(views.length - 1, Math.round((px - L) / ((W - L - R) / (views.length - 1)))));
+    cross.setAttribute('x1', x(i)); cross.setAttribute('x2', x(i)); cross.setAttribute('visibility', 'visible');
+    dot.setAttribute('cx', x(i)); dot.setAttribute('cy', y(views[i])); dot.setAttribute('visibility', 'visible');
+    const sx = r.left + window.scrollX + x(i) * r.width / W, sy = r.top + window.scrollY + y(views[i]) * r.height / H;
+    showTip(`${day(i)}: ${fmt(views[i])} görüntülenme · ${inter[i]} etkileşim`, sx, sy);
+  }
+  hit.addEventListener('pointermove', move);
+  hit.addEventListener('pointerleave', () => { cross.setAttribute('visibility', 'hidden'); dot.setAttribute('visibility', 'hidden'); hideTip(); });
+
+  /* plain bars */
+  function bars(el, rows, max) {
+    for (const r of rows) {
+      if (r.group) { const g = document.createElement('p'); g.className = 'group-t'; g.textContent = r.group; el.appendChild(g); continue; }
+      const row = document.createElement('div'); row.className = 'brow hoverable'; row.tabIndex = 0;
+      row.innerHTML = '<span class="k"></span><span class="t"><span class="b"></span></span><span class="v"></span>';
+      row.querySelector('.k').textContent = r.k;
+      if (r.s) { const s = document.createElement('small'); s.textContent = r.s; row.querySelector('.k').appendChild(s); }
+      const b = row.querySelector('.b'); b.style.width = (100 * r.v / max) + '%'; if (r.own) b.classList.add('own');
+      row.querySelector('.v').textContent = r.label || fmt(r.v);
+      const t = r.tip || `${r.k}${r.s ? ' · ' + r.s : ''}: ${r.label || fmt(r.v)}`;
+      const on = () => { const [px, py] = pageXY(b, b.offsetWidth, 0); showTip(t, px, py); };
+      row.addEventListener('pointerenter', on); row.addEventListener('focus', on);
+      row.addEventListener('pointerleave', hideTip); row.addEventListener('blur', hideTip);
+      el.appendChild(row);
+    }
+  }
+  bars(document.getElementById('stories'), [
+    { group: 'Kasım, Black Friday öncesi' },
+    { k: '11 Kas', s: 'öğlen', v: 377, own: true },
+    { k: '20 Kas', s: 'öğlen', v: 262, own: true },
+    { k: '20 Kas', s: 'öğleden sonra', v: 234, own: true },
+    { group: 'Black Friday' },
+    { k: 'Teaser', s: '24 Kas 21:00', v: 147 },
+    { k: 'Fırsat 1–4', s: '24 Kas 21:49', v: 144, label: '134–144', tip: '24 Kas 21:49, dört kare: 134, 138, 140, 144' },
+    { k: 'Lazer, yeni', s: '24 Kas 22:22', v: 110 },
+    { k: 'Kare 1', s: '25 Kas 10:00', v: 112 },
+    { k: 'Kare 2', s: '25 Kas', v: 93 },
+    { k: 'Kare 3', s: '25 Kas', v: 87 },
+    { k: 'Kare 4', s: '25 Kas', v: 85 },
+    { k: 'Kare 5', s: '25 Kas', v: 83 },
+    { k: 'Video', s: '26 Kas 10:00 · sürüyor', v: 122 },
+  ], 400);
+  bars(document.getElementById('cities'), [
+    { k: 'Nijmegen', v: 6.8, label: '%6,8' }, { k: 'Arnhem', v: 3.2, label: '%3,2' }, { k: 'Uden', v: 1.5, label: '%1,5' },
+    { k: 'Amsterdam', v: 0.9, label: '%0,9' }, { k: 'Oss', v: 0.7, label: '%0,7' }, { k: 'Wijchen', v: 0.7, label: '%0,7' },
+    { k: 'Rotterdam', v: 0.7, label: '%0,7' }, { k: "'s-Hertogenbosch", v: 0.5, label: '%0,5' }, { k: 'Eindhoven', v: 0.5, label: '%0,5' },
+    { k: 'Veghel', v: 0.5, label: '%0,5' },
+  ], 8);
+
+  /* diverging bars: interactions vs month median (giveaways left out) */
+  function diverging(el, rows) {
+    for (const r of rows) {
+      const row = document.createElement('div'); row.className = 'drow hoverable'; row.tabIndex = 0;
+      row.innerHTML = '<span class="k"></span><span class="t"><span class="b"></span></span><span class="v"></span>';
+      row.querySelector('.k').textContent = r.k;
+      const s = document.createElement('small'); s.textContent = r.n + ' post'; row.querySelector('.k').appendChild(s);
+      const b = row.querySelector('.b'); const w = Math.min(50, Math.abs(r.d) * 100);
+      if (r.d >= 0) { b.classList.add('pos'); b.style.left = '50%'; b.style.width = w + '%'; }
+      else { b.classList.add('neg'); b.style.left = (50 - w) + '%'; b.style.width = w + '%'; }
+      const pct = Math.round(r.d * 100);
+      const v = row.querySelector('.v'); v.textContent = (pct > 0 ? '+' : pct < 0 ? '−' : '') + Math.abs(pct) + '%'; if (pct < 0) v.classList.add('neg');
+      const t = `${r.k} (${r.n} post): etkileşim ${v.textContent}, görüntülenme ${(r.vr > 0 ? '+' : '−') + Math.abs(Math.round(r.vr * 100))}%`;
+      const on = () => { const [px, py] = pageXY(row.querySelector('.t'), row.querySelector('.t').offsetWidth / 2, 0); showTip(t, px, py); };
+      row.addEventListener('pointerenter', on); row.addEventListener('focus', on);
+      row.addEventListener('pointerleave', hideTip); row.addEventListener('blur', hideTip);
+      el.appendChild(row);
+    }
+  }
+  diverging(document.getElementById('format'), [
+    { k: 'Video (reel)', n: 12, d: 0.35, vr: 0.19 },
+    { k: 'Kaydırmalı', n: 9, d: 0.31, vr: 0.31 },
+    { k: 'Tek fotoğraf', n: 27, d: -0.16, vr: -0.09 },
+  ]);
+  diverging(document.getElementById('topic'), [
+    { k: 'Kampanya, indirim', n: 5, d: 0.34, vr: 0.08 },
+    { k: 'Tedavi anlatımı', n: 20, d: 0.16, vr: 0.18 },
+    { k: 'Lazer epilasyon', n: 7, d: 0.06, vr: -0.01 },
+    { k: 'Pure ve ekip', n: 6, d: -0.13, vr: -0.12 },
+    { k: 'Cilt bakım tavsiyesi', n: 7, d: -0.15, vr: -0.05 },
+    { k: 'Ürün', n: 2, d: -0.18, vr: -0.06 },
+  ]);
+})();
+</script>
+
+</body>
+</html>

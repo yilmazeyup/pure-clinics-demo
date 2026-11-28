@@ -9,6 +9,11 @@ type Remote<T> = { data: T | undefined; error: ApiError | null; loading: boolean
 // What Pure offers changes rarely, so one answer serves every screen until the app restarts (or a screen reloads it).
 const shared = new Map<string, Promise<unknown>>();
 function once<T>(key: string, load: () => Promise<T>, fresh = false): Promise<T> {
+  return sharedLoad(key, load, fresh);
+}
+
+/** One answer per key for every screen, and for the start-up load from Huidly (state/huidlyData.ts). */
+export function sharedLoad<T>(key: string, load: () => Promise<T>, fresh = false): Promise<T> {
   if (fresh || !shared.has(key)) {
     const p = load();
     shared.set(key, p);

@@ -439,7 +439,9 @@ function Contact() {
   const { t } = useI18n();
   const { now } = useApp();
   // The left-to-right mark keeps "09:00–17:00" in order inside Arabic text.
-  const hours = (h: { open: number; close: number }) => `‎${String(h.open).padStart(2, '0')}:00–${String(h.close).padStart(2, '0')}:00`;
+  // Hours come from Huidly and may be on the half hour (9.5 = 09:30).
+  const hm = (v: number) => `${String(Math.floor(v)).padStart(2, '0')}:${String(Math.round((v % 1) * 60)).padStart(2, '0')}`;
+  const hours = (h: { open: number; close: number }) => `‎${hm(h.open)}–${hm(h.close)}`;
   return (
     <Section title={t('clinic.contact.title')}>
       <List>

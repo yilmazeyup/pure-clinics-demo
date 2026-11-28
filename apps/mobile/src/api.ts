@@ -2,7 +2,8 @@ import type { L10n, LocationId } from '@pure-clinics/shared';
 
 import { KEYS, storage } from './storage';
 
-// The app talks to Huidly, the program Pure's team works in: client accounts (sign-in with a code by e-mail),
+// The app talks to Huidly, the program Pure's team works in: what Pure offers (treatments, prices, clinics and their
+// hours, products; loaded at every start, state/huidlyData.ts), client accounts (sign-in with a code by e-mail),
 // appointment requests that land in the clinic's agenda, and webshop and gift card orders. The contract is
 // docs/customer-api.md in the huidly repository; Pure's website uses the same calls (site/website/js/site/api.js).
 

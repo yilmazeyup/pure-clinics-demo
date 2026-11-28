@@ -25,6 +25,7 @@ import { useLayout } from '@/layout';
 import { addHomeScreenLinks } from '@/pwa';
 import { AccountProvider } from '@/state/account';
 import { AppProvider, useApp } from '@/state/app';
+import { keepFromHuidly, loadFromHuidly } from '@/state/huidlyData';
 import { useTheme } from '@/theme';
 
 SplashScreen.preventAutoHideAsync();
@@ -46,11 +47,19 @@ export default function RootLayout() {
     Amiri_700Bold,
   });
 
+  // Pure's offer (prices, opening hours, addresses, products) comes from Huidly, asked for while the splash still shows.
+  const [offer, setOffer] = useState(false);
   useEffect(() => {
-    if (loaded || error) SplashScreen.hideAsync();
-  }, [loaded, error]);
+    loadFromHuidly().finally(() => setOffer(true));
+    keepFromHuidly();
+  }, []);
 
-  if (!loaded && !error) return null;
+  const ready = (loaded || error) && offer;
+  useEffect(() => {
+    if (ready) SplashScreen.hideAsync();
+  }, [ready]);
+
+  if (!ready) return null;
 
   return (
     <SafeAreaProvider>

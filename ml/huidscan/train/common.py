@@ -44,23 +44,33 @@ ZONES: list[str] = list(ZONE_POINTS)
 FLIP_ZONE: dict[str, str] = {
     "forehead": "forehead", "nose": "nose", "chin": "chin",
     "cheekL": "cheekR", "cheekR": "cheekL", "underEyeL": "underEyeR", "underEyeR": "underEyeL",
-    "patch": "patch",
+    "patch": "patch", "face": "face",
 }
 ZONE_NL: dict[str, str] = {
     "forehead": "voorhoofd", "cheekL": "wang (links op de foto)", "cheekR": "wang (rechts op de foto)",
     "nose": "neus", "chin": "kin", "underEyeL": "onder het oog (links op de foto)",
     "underEyeR": "onder het oog (rechts op de foto)", "patch": "huidvlak (geen gezicht gevonden)",
+    "face": "hele gezicht",
 }
 
 # --- Concerns --------------------------------------------------------------------------------------------------------
 # Zone grades 0-3. Which zones a concern is graded in; elsewhere the label is "not applicable" and ignored in the loss.
 CONCERNS: list[str] = ["redness", "pigmentation", "fine_lines", "under_eye_dark"]
 APPLIES: dict[str, list[str]] = {
-    "redness": ["forehead", "cheekL", "cheekR", "nose", "chin", "patch"],
-    "pigmentation": ["forehead", "cheekL", "cheekR", "nose", "chin", "patch"],
+    "redness": ["forehead", "cheekL", "cheekR", "nose", "chin", "patch", "face"],
+    "pigmentation": ["forehead", "cheekL", "cheekR", "nose", "chin", "patch", "face"],
     "fine_lines": ["forehead", "underEyeL", "underEyeR"],
     "under_eye_dark": ["underEyeL", "underEyeR"],
+    # Graded per photo for the whole face (train/import_faces.py): acne/blemishes, lines and wrinkles, dark circles
+    # and bags under the eyes; texture (pores, scars) on close-ups.
+    "acne": ["face", "patch"],
+    "lines": ["face"],
+    "eyes": ["face"],
+    "texture": ["patch"],
 }
+# The whole face as one zone, for the face model: MediaPipe's face oval.
+FACE_OVAL: list[int] = [10, 338, 297, 332, 284, 251, 389, 356, 454, 323, 361, 288, 397, 365, 379, 378, 400, 377, 152,
+                        148, 176, 149, 150, 136, 172, 58, 132, 93, 234, 127, 162, 21, 54, 103, 67, 109]
 # Wording the app may show (EU MDR: describe what is visible, never name a condition).
 CONCERN_NL: dict[str, str] = {
     "redness": "roodheid",

@@ -35,7 +35,19 @@ export type TreatmentId =
   | 'brows'
   | 'nails';
 export type SpecialistId = 'loubna' | 'margot' | 'maud' | 'hawin' | 'nadila' | 'sam';
-export type ConcernId = 'removal' | 'acne' | 'scars' | 'pigment' | 'redness' | 'aging' | 'eyes' | 'hairloss';
+export type ConcernId =
+  | 'removal'
+  | 'acne'
+  | 'scars'
+  | 'pigment'
+  | 'redness'
+  | 'aging'
+  | 'eyes'
+  | 'hairloss'
+  | 'glow'
+  | 'tattoo'
+  | 'legveins'
+  | 'beauty';
 export type LocationId = 'nijmegen' | 'uden';
 
 export type Treatment = {
@@ -604,12 +616,17 @@ export const TREATMENTS: Treatment[] = [
 export const CONCERNS: Concern[] = [
   { id: 'removal', photo: 'pc-smooth', treatments: ['laser', 'epilation'] },
   { id: 'acne', photo: 'pc-acne-skin', treatments: ['acne', 'deepclean', 'peel', 'ipl', 'skinpen', 'prx'] },
-  { id: 'scars', photo: 'pc-skinpen', treatments: ['skinpen', 'sylfirm', 'tixel', 'tca', 'pdrn', 'exosomes', 'camouflage'] },
-  { id: 'pigment', photo: 'pc-pigment', treatments: ['pigment', 'ipl', 'tca', 'skinpen', 'prx', 'camouflage'] },
-  { id: 'redness', photo: 'pc-couperose', treatments: ['couperose', 'ipl', 'legveins', 'camouflage'] },
+  { id: 'scars', photo: 'pc-skinpen', treatments: ['skinpen', 'sylfirm', 'tixel', 'tca', 'pdrn', 'exosomes', 'massage', 'camouflage'] },
+  { id: 'pigment', photo: 'pc-pigment', treatments: ['pigment', 'ipl', 'tca', 'sylfirm', 'skinpen', 'prx', 'camouflage'] },
+  { id: 'redness', photo: 'pc-couperose', treatments: ['couperose', 'ipl', 'sylfirm', 'camouflage'] },
   { id: 'aging', photo: 'pc-aging', treatments: ['tixel', 'sylfirm', 'skinpen', 'pdrn', 'exosomes', 'skinbooster', 'prx', 'massage', 'facial'] },
   { id: 'eyes', photo: 'pc-eyes', treatments: ['eyes', 'skinbooster', 'tixel'] },
   { id: 'hairloss', photo: 'pc-xlhair', treatments: ['xlhair'] },
+  // Every treatment belongs to at least one concern, so the advice can reach all of them.
+  { id: 'glow', photo: 'pc-facial', treatments: ['facial', 'skinbooster', 'prx', 'deepclean', 'peel', 'exosomes', 'pdrn'] },
+  { id: 'tattoo', photo: 'pc-tattoo', treatments: ['tattoo'] },
+  { id: 'legveins', photo: 'pc-legveins', treatments: ['legveins'] },
+  { id: 'beauty', photo: 'stock-lashes', treatments: ['brows', 'nails'] },
 ];
 
 /** Laser hair removal is priced per zone, as on pureclinics.nl/tarieven; a package gives the sixth time free. */

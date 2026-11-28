@@ -7,6 +7,8 @@ import { overallOf, type Outcome, type Pt, type Signals, type ZoneId, ZONES } fr
 // huidscan.json may list "also" models (EVREN's YOLO classifiers, one head each, their own input size): they read the
 // same zones and their reading is averaged with the main model's for that head. One is downloaded only when its
 // head's blend is above 0.
+// A second file pair, huidscan-face.json and its .onnx, is the face model: one zone, the whole face, for what the
+// colour measures cannot see (lines and wrinkles, the eye zone). Its heads with a blend above 0 go into outcome.face.
 // Training, export and the files' format: ml/huidscan/README.md. The photo never leaves the device.
 
 const ORT_VERSION = '1.31.1';
@@ -86,21 +88,24 @@ export function blendWeight(info: ModelInfo, head: string): number {
   return Math.min(1, Math.max(0, Number(v) || 0));
 }
 
-let loading: Promise<ZoneModel | null> | null = null;
+const loading: Record<string, Promise<ZoneModel | null>> = {};
 
-/** Loads the model once; resolves to null when there is none or it cannot run here. `base` is for tests. */
-export function loadZoneModel(base?: string): Promise<ZoneModel | null> {
-  if (base !== undefined) return open(base);
-  if (!loading) loading = open(appBase());
-  return loading;
+/** Loads the zone model once; resolves to null when there is none or it cannot run here. `base` is for tests. */
+export function loadZoneModel(base?: string, name = 'huidscan'): Promise<ZoneModel | null> {
+  if (base !== undefined) return open(base, name);
+  if (!loading[name]) loading[name] = open(appBase(), name);
+  return loading[name];
 }
 
-async function open(base: string): Promise<ZoneModel | null> {
+/** The face model (huidscan-face.json), loaded the same way. */
+export const loadFaceModel = (base?: string) => loadZoneModel(base, 'huidscan-face');
+
+async function open(base: string, name: string): Promise<ZoneModel | null> {
   if (typeof document === 'undefined' || typeof fetch === 'undefined') return null;
   const timeout = new Promise<null>((resolve) => setTimeout(() => resolve(null), 30000));
   const work = (async () => {
     try {
-      const res = await fetch(`${base}models/huidscan.json`, { cache: 'no-cache' });
+      const res = await fetch(`${base}models/${name}.json`, { cache: 'no-cache' });
       if (!res.ok) return null;
       const info = readInfo(await res.json().catch(() => null));
       if (!info) return null;
@@ -330,16 +335,41 @@ export function blendOutcome(outcome: Outcome, readings: ZoneReadings, info: Mod
   return { ...outcome, zones, overall: overallOf(zones), model };
 }
 
+/** The face model's heads that count (blend above 0), as outcome.face: lines, eyes, acne, 0–1. */
+export function faceSignals(readings: ZoneReadings, info: ModelInfo): Outcome['face'] {
+  const face: NonNullable<Outcome['face']> = {};
+  const r = readings.face ?? {};
+  for (const head of info.heads) {
+    const v = r[head.name];
+    if (blendWeight(info, head.name) > 0 && typeof v === 'number' && Number.isFinite(v)) {
+      face[head.name as keyof typeof face] = v;
+    }
+  }
+  return face;
+}
+
 /** The scan's hook: with a model, the blended outcome; without one (or on any error), the outcome as it was. */
 export async function withZoneModel(outcome: Outcome, source: HTMLCanvasElement, lm: Pt[]): Promise<Outcome> {
+  let out = outcome;
   try {
     const model = await loadZoneModel();
-    if (!model) return outcome;
-    const main = await readZones(model, source, lm);
-    const also = model.also.length ? await readAlso(model, source, lm).catch(() => []) : [];
-    const used = also.length ? model.also.map((a) => a.info.file) : [];
-    return blendOutcome(outcome, combineReadings(main, also), model.info, used);
+    if (model) {
+      const main = await readZones(model, source, lm);
+      const also = model.also.length ? await readAlso(model, source, lm).catch(() => []) : [];
+      const used = also.length ? model.also.map((a) => a.info.file) : [];
+      out = blendOutcome(outcome, combineReadings(main, also), model.info, used);
+    }
   } catch {
-    return outcome;
+    out = outcome;
   }
+  try {
+    const face = await loadFaceModel();
+    if (face) {
+      const readings = await readZones(face, source, lm);
+      out = { ...out, face: { ...out.face, ...faceSignals(readings, face.info) }, faceModel: face.info.version };
+    }
+  } catch {
+    // the face model is an extra: without it the scan is as before
+  }
+  return out;
 }

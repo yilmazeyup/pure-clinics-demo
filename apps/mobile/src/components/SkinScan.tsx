@@ -131,6 +131,9 @@ export function SkinScan({ width, height }: PreviewProps & { preview?: boolean }
 const SIGNALS: (keyof Signals)[] = ['redness', 'tone', 'blemish', 'shine'];
 const SIGNAL_KEY = { redness: 'sigRedness', tone: 'sigTone', blemish: 'sigBlemish', shine: 'sigShine' } as const;
 const LEVEL_KEY = { low: 'lvlLow', some: 'lvlSome', clear: 'lvlClear' } as const;
+// Only when the face model ran: what the colour measures cannot see.
+const FACE_SIGNALS = ['lines', 'eyes', 'texture'] as const;
+const FACE_KEY = { lines: 'sigLines', eyes: 'sigEyes', texture: 'sigTexture' } as const;
 const ZONE_KEY: Record<'forehead' | 'cheekL' | 'nose' | 'chin', 'zoneForehead' | 'zoneCheeks' | 'zoneNose' | 'zoneChin'> = {
   forehead: 'zoneForehead',
   cheekL: 'zoneCheeks',
@@ -297,6 +300,12 @@ export function ScanSignals({ outcome }: { outcome: Outcome }) {
       {SIGNALS.map((key, index) => (
         <Bar key={key} label={t(SIGNAL_KEY[key])} value={outcome.overall[key]} word={t(LEVEL_KEY[levelOf(outcome.overall[key])])} delay={200 + index * 120} />
       ))}
+      {FACE_SIGNALS.filter((key) => typeof outcome.face?.[key] === 'number').map((key, index) => {
+        const value = outcome.face?.[key] ?? 0;
+        return (
+          <Bar key={key} label={t(FACE_KEY[key])} value={value} word={t(LEVEL_KEY[levelOf(value)])} delay={200 + (SIGNALS.length + index) * 120} />
+        );
+      })}
       {outcome.light < 35 ? (
         <Txt variant="small" color={theme.c.muted}>
           {t('scanDark')}

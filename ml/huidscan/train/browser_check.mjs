@@ -23,6 +23,9 @@ const WebSocket = require('ws');
 const CHROME = process.env.CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
 const exportDir = path.resolve(process.argv[2] || 'runs/scin-pilot/export');
+// --app: serve the app's public/models as /models/ and scan the export's reference face with everything installed.
+const APP = process.argv.includes('--app');
+const APP_MODELS = path.resolve(ROOT, '../../apps/mobile/public/models');
 if (!fs.existsSync(path.join(exportDir, 'huidscan.json'))) {
   console.error(`no huidscan.json in ${exportDir}`);
   process.exit(2);
@@ -51,8 +54,8 @@ function serve(withModel) {
     else if (url.startsWith('/app-scan/')) {
       file = path.join(appJs, url.slice(10));
       if (!fs.existsSync(file)) file += '.js';
-    } else if (url.startsWith('/models/') && withModel) file = path.join(exportDir, url.slice(8));
-    const inside = file && (file.startsWith(ROOT) || file.startsWith(appJs) || file.startsWith(HERE));
+    } else if (url.startsWith('/models/') && withModel) file = path.join(APP ? APP_MODELS : exportDir, url.slice(8));
+    const inside = file && (file.startsWith(ROOT) || file.startsWith(appJs) || file.startsWith(HERE) || file.startsWith(APP_MODELS));
     if (!inside || !fs.existsSync(file) || fs.statSync(file).isDirectory()) {
       res.writeHead(404);
       return res.end('not found');
@@ -137,6 +140,18 @@ const check = (cond, label) => {
   if (!cond) failed = true;
 };
 try {
+  if (APP) {
+    const a = await browser.open(`http://127.0.0.1:${withModel.address().port}/check.html?app=1&export=${encodeURIComponent(exportUrl)}`);
+    if (!a.ok) throw new Error(a.error + '\n' + browser.logs.join('\n'));
+    const zone = JSON.parse(fs.readFileSync(path.join(APP_MODELS, 'huidscan.json'), 'utf8'));
+    const faceInfo = fs.existsSync(path.join(APP_MODELS, 'huidscan-face.json'))
+      ? JSON.parse(fs.readFileSync(path.join(APP_MODELS, 'huidscan-face.json'), 'utf8')) : null;
+    check(a.C.kind === 'found' && a.C.modelVersion === zone.version, `app: zone model ${a.C.modelVersion} (${a.C.ms} ms for the whole scan)`);
+    check(!faceInfo || a.C.faceModel === faceInfo.version, `app: face model ${a.C.faceModel}`);
+    check(!faceInfo || (a.C.face && Object.keys(a.C.face).length > 0), `app: face signals ${JSON.stringify(a.C.face)}`);
+    console.log('     overall:', JSON.stringify(a.C.overall), 'also:', JSON.stringify(a.C.alsoUsed));
+    throw Object.assign(new Error('app mode done'), { done: true });
+  }
   const a = await browser.open(`http://127.0.0.1:${withModel.address().port}/check.html?export=${encodeURIComponent(exportUrl)}`);
   if (!a.ok) throw new Error(a.error + '\n' + browser.logs.join('\n'));
   check(a.A.fp32.maxDiff < 1e-4, `A fp32 in onnxruntime-web = Python on ${a.A.fp32.crops} crops (max diff ${a.A.fp32.maxDiff.toExponential(1)})`);
@@ -172,8 +187,10 @@ try {
   const report = { exportDir, version: info.version, withModel: { ...a, B: { ...a.B, crops: undefined } }, withoutModel: b };
   fs.writeFileSync(path.join(exportDir, 'browser_check.json'), JSON.stringify(report, null, 2));
 } catch (e) {
-  console.error(String(e.stack || e));
-  failed = true;
+  if (!e.done) {
+    console.error(String(e.stack || e));
+    failed = true;
+  }
 } finally {
   await browser.close();
   withModel.close();

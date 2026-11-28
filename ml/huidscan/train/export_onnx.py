@@ -120,6 +120,8 @@ def main() -> None:
                     help="weights: int8 weights, fp32 arithmetic (default, safe for MobileNetV3); "
                          "static: full int8 QDQ calibrated on training crops (try with efficientnet_lite0)")
     ap.add_argument("--install", action="store_true", help="copy into apps/mobile/public/models (never for pilots)")
+    ap.add_argument("--app-name", default="huidscan",
+                    help="file names in the app: huidscan (the zone model) or huidscan-face (the face model)")
     args = ap.parse_args()
 
     ck = torch.load(args.run / "best.pt", map_location="cpu", weights_only=False)
@@ -201,7 +203,8 @@ def main() -> None:
             cv2.imwrite(str(out / "reference" / "face.jpg"), cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR), [cv2.IMWRITE_JPEG_QUALITY, 95])
             # The check decodes face.jpg again, so take the reference from the decoded file, as the browser will.
             rgb2 = load_rgb(out / "reference" / "face.jpg")
-            crops = zone_crops(lm, size)
+            crops = zone_crops(lm, size, zones=cfg["zones"], zone_points=cfg["zone_points"], shrink=cfg["shrink"],
+                               face_width=cfg["face_width"], pad=cfg["crop_pad"])
             px2 = np.stack([cut(rgb2, c, size) for c in crops]).astype(np.float32).transpose(0, 3, 1, 2) / 255.0
             per = {"fp32": s32.run(None, {"pixels": px2}), "int8": s8.run(None, {"pixels": px2})}
             face = {"file": "face.jpg", "landmarks": lm.tolist(),
@@ -242,6 +245,9 @@ def main() -> None:
     if cfg.get("public_licence") == "SCIN Data Use License" or "SCIN" in str(cfg.get("source", "")):
         info["attribution"] = ("Trained in part on the SCIN dataset (Google Research), SCIN Data Use License, "
                                "https://github.com/google-research-datasets/scin")
+    if "FairFace" in str(cfg.get("source", "")):
+        info["attribution"] = (str(info.get("attribution", "")).rstrip(". ") + ". Trained in part on FairFace "
+                               "(Kärkkäinen & Joo, 2021), CC BY 4.0, https://github.com/joojs/fairface").lstrip(". ")
     json.dump(info, open(out / "huidscan.json", "w"), indent=2)
     print(f"wrote {out} (app file: {info['file']}, {fp32.stat().st_size / 1e6:.1f} MB fp32, {int8.stat().st_size / 1e6:.1f} MB int8)")
 
@@ -249,9 +255,9 @@ def main() -> None:
         if pilot:
             sys.exit("Not installed: this is a pilot or public-data-only run. It proves the pipeline; it is not Pure's model.")
         APP_MODELS.mkdir(parents=True, exist_ok=True)
-        shutil.copy(out / info["file"], APP_MODELS / "huidscan.onnx")
-        shipped = {**info, "file": "huidscan.onnx", "files": {}}
-        json.dump(shipped, open(APP_MODELS / "huidscan.json", "w"), indent=2)
+        shutil.copy(out / info["file"], APP_MODELS / f"{args.app_name}.onnx")
+        shipped = {**info, "file": f"{args.app_name}.onnx", "files": {}}
+        json.dump(shipped, open(APP_MODELS / f"{args.app_name}.json", "w"), indent=2)
         print(f"installed into {APP_MODELS}")
 
 

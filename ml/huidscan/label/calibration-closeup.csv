@@ -1,0 +1,13 @@
+idx,A,T,L,E,why
+0,0,1,2,x,lines around eye and cheek; eye hidden by the logo
+1,0,1,3,x,deep lines around eye and cheek
+2,0,1,0,1,young face; visible pores on the nose
+4,3,2,x,x,many inflamed spots over the cheek; bumpy surface
+5,0,0,0,x,smooth cheek
+8,1,1,0,x,a few small red dots
+13,2,1,0,x,several red bumps on both cheeks
+15,2,2,0,x,red bumps and an uneven, rough surface
+480,x,x,x,x,an arm: not face or neck
+483,1,1,x,x,neck: rash of tiny red dots (redness more than spots)
+486,0,1,1,x,lower face and neck; eyes hidden
+492,2,1,x,x,neck: several inflamed bumps

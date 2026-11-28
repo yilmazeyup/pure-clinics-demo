@@ -20,7 +20,13 @@ export type Outcome = {
   /** Only when a trained model sits in public/models/ (see scan/model.ts): its own reading per zone and concern, 0–1;
    * `also`: the files of the second models averaged in. */
   model?: { version: string; zones: Record<string, Record<string, number>>; also?: string[] };
+  /** Only from a trained model: what the colour measures cannot see, for the face as a whole, 0–1 (lines and
+   * wrinkles, dark circles and bags under the eyes, pores and scars). */
+  face?: Partial<Record<FaceSignal, number>>;
+  /** The face model's version, when it ran. */
+  faceModel?: string;
 };
+export type FaceSignal = 'lines' | 'eyes' | 'texture' | 'acne';
 
 export const ZONES: ZoneId[] = ['forehead', 'cheekL', 'cheekR', 'nose', 'chin'];
 

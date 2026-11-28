@@ -1,0 +1,17 @@
+idx,R,P,A,L,E,M,why
+0,0,1,0,1,1,5,small brown spots on the cheeks; smile lines
+3,0,1,0,2,2,4,lines around eyes and mouth; dark hollows under the eyes
+4,0,0,0,0,1,4,young; slight shadow under the eyes
+5,1,1,0,2,1,4,forehead and eye lines; slight redness on the cheek
+7,x,x,x,x,x,8,looking down: face and eyes not judgeable
+8,0,1,0,3,2,5,deep wrinkles over the whole face
+9,x,x,x,x,x,x,blurred
+10,1,1,0,3,2,3,deep wrinkles; red cheeks and nose
+14,1,0,0,2,1,2,lines around eyes and mouth; pink cheeks
+17,x,x,0,1,1,x,black and white: colour not judgeable, lines and eyes are
+20,0,0,0,1,0,4,laughing lines only
+22,0,1,0,2,2,4,lines on cheeks and forehead; bags under the eyes
+25,0,0,0,1,1,3,faint forehead lines; slight dark circles
+27,x,x,0,3,2,x,black and white; very deep wrinkles
+28,0,0,0,1,1,6,smile lines; slight dark circles
+30,0,0,1,0,0,4,a few small spots on the forehead

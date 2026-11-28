@@ -1,12 +1,4 @@
-import {
-  CONCERNS,
-  CLINIC_COLORS,
-  inSentence,
-  treatmentById,
-  type ConcernId,
-  type Treatment,
-  type TreatmentId,
-} from '@pure-clinics/shared';
+import { CONCERNS, CLINIC_COLORS, inSentence, treatmentById, type ConcernId, type Treatment } from '@pure-clinics/shared';
 import * as Haptics from 'expo-haptics';
 import { router } from 'expo-router';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
@@ -23,25 +15,22 @@ import { Footer, Screen, useModalTop } from '@/components/Screen';
 import { PhotoScan, ScanSignals } from '@/components/SkinScan';
 import { Txt } from '@/components/Txt';
 import { useI18n } from '@/i18n';
-import type { Outcome } from '@/scan/analyze';
+import { findingsFromScan, recommend, type Finding, type Pick, type ScanSignal, type Skin } from '@/scan/advice';
 import { loadFaceFinder, scanPhoto, type ScanFound, type ScanPhoto } from '@/scan/run';
 import { useTheme } from '@/theme';
 
-type Skin = 'calm' | 'sensitive' | 'reactive';
 const SKINS: Skin[] = ['calm', 'sensitive', 'reactive'];
 // Three questions and, in the browser, a selfie; a phone build has no camera module, so there it is three questions.
 const QUESTIONS = FACE_SCAN_AVAILABLE ? 4 : 3;
-// Treatments that can irritate skin that reddens easily; the skin therapist decides at the intake.
-const NOT_FOR_REACTIVE: TreatmentId[] = ['tca', 'skinpen', 'tixel'];
-
-/** What the photo suggests looking at, from the scan's signals (see scan/analyze.ts); the intake decides. */
-function concernsFromScan(outcome: Outcome): ConcernId[] {
-  const found: ConcernId[] = [];
-  if (outcome.overall.redness >= 0.6) found.push('redness');
-  if (outcome.overall.tone >= 0.35) found.push('pigment');
-  if (outcome.overall.blemish >= 0.45) found.push('acne');
-  return found;
-}
+const SIGNAL_LABEL: Record<ScanSignal, 'sigRedness' | 'sigTone' | 'sigBlemish' | 'sigTexture' | 'sigLines' | 'sigEyes'> = {
+  redness: 'sigRedness',
+  tone: 'sigTone',
+  blemish: 'sigBlemish',
+  acne: 'sigBlemish',
+  texture: 'sigTexture',
+  lines: 'sigLines',
+  eyes: 'sigEyes',
+};
 
 type ScanState = 'capture' | 'working' | 'done' | 'no-face' | 'unavailable';
 
@@ -51,6 +40,8 @@ export default function AdviceScreen() {
   const { t } = useI18n();
   const [step, setStep] = useState(0);
   const [concerns, setConcerns] = useState<ConcernId[]>([]);
+  // "Not sure yet": no concern chosen, so the advice comes from the photo, or is the general one.
+  const [unsure, setUnsure] = useState(false);
   const [skin, setSkin] = useState<Skin | null>(null);
   const [treatedBefore, setTreatedBefore] = useState<boolean | null>(null);
   // The selfie step: take or choose a photo, find the face and measure it on the device, then show what it shows.
@@ -62,7 +53,7 @@ export default function AdviceScreen() {
   const { width } = useWindowDimensions();
   const scanWidth = Math.min(width - 40, 420);
 
-  const answered = [concerns.length > 0, skin !== null, treatedBefore !== null, true][step] ?? true;
+  const answered = [concerns.length > 0 || unsure, skin !== null, treatedBefore !== null, true][step] ?? true;
   const next = () => setStep((s) => s + 1);
   const result = step >= QUESTIONS;
 
@@ -152,10 +143,22 @@ export default function AdviceScreen() {
                 selected={on}
                 multi
                 leading={<Photo photo={c.photo} style={{ width: 48, height: 56, borderRadius: theme.r.small }} />}
-                onPress={() => setConcerns((list) => (on ? list.filter((x) => x !== c.id) : [...list, c.id]))}
+                onPress={() => {
+                  setUnsure(false);
+                  setConcerns((list) => (on ? list.filter((x) => x !== c.id) : [...list, c.id]));
+                }}
               />
             );
           })}
+          <Option
+            label={t('clinic.ai.unsure')}
+            selected={unsure}
+            multi
+            onPress={() => {
+              setConcerns([]);
+              setUnsure((u) => !u);
+            }}
+          />
         </Question>
       ) : null}
 
@@ -215,7 +218,7 @@ export default function AdviceScreen() {
       ) : null}
 
       {result ? (
-        <Advice concerns={concerns} fromPhoto={scan === 'done' && found ? concernsFromScan(found.outcome) : []} skin={skin} />
+        <Advice concerns={concerns} findings={scan === 'done' && found ? findingsFromScan(found.outcome) : []} skin={skin} />
       ) : null}
     </Screen>
   );
@@ -296,19 +299,22 @@ function Option({
   );
 }
 
-/** The free intake first, always; then up to three treatments for what you chose and what the photo showed. */
-function Advice({ concerns, fromPhoto, skin }: { concerns: ConcernId[]; fromPhoto: ConcernId[]; skin: Skin | null }) {
+/**
+ * The free intake first, always; then the three treatments that fit best (from what you chose and what the photo
+ * showed, see scan/advice.ts), and the others that fit too. When nothing points anywhere: the general advice.
+ */
+function Advice({ concerns, findings, skin }: { concerns: ConcernId[]; findings: Finding[]; skin: Skin | null }) {
   const theme = useTheme();
   const { t, text, euro, locale } = useI18n();
-  const picks: { treatment: Treatment; concern: ConcernId; photo: boolean }[] = [];
-  const all = [...concerns, ...fromPhoto.filter((c) => !concerns.includes(c))];
-  for (const concern of all) {
-    for (const id of CONCERNS.find((c) => c.id === concern)?.treatments ?? []) {
-      if (skin === 'reactive' && NOT_FOR_REACTIVE.includes(id)) continue;
-      if (!picks.some((p) => p.treatment.id === id)) picks.push({ treatment: treatmentById(id), concern, photo: !concerns.includes(concern) });
-    }
-  }
+  const { main, also, general } = recommend(concerns, findings, skin);
   const consult = treatmentById('consult');
+  const why = (p: Pick) => {
+    const r = p.reasons[0];
+    if (!r) return t('clinic.ai.general');
+    const what = r.fromPhoto && r.signal ? t(SIGNAL_LABEL[r.signal]) : t(`clinic.concern.${r.concern}`);
+    return t('clinic.ai.match', { concern: inSentence(what, locale) });
+  };
+  const price = (tr: Treatment) => t('clinic.price.from', { price: euro(tr.priceFrom) });
 
   return (
     <View style={{ gap: 18 }}>
@@ -320,15 +326,56 @@ function Advice({ concerns, fromPhoto, skin }: { concerns: ConcernId[]; fromPhot
       </View>
 
       <Recommendation treatment={consult} note={text(consult.description)} badge={t('clinic.book.startHere')} />
-      {picks.slice(0, 3).map(({ treatment, concern, photo }) => (
-        <Recommendation
-          key={treatment.id}
-          treatment={treatment}
-          badge={photo ? t('scanFound') : undefined}
-          tone={photo ? 'outline' : 'ink'}
-          note={`${t('clinic.ai.match', { concern: inSentence(t(`clinic.concern.${concern}`), locale) })} · ${t('clinic.price.from', { price: euro(treatment.priceFrom) })}`}
-        />
-      ))}
+      {main.map((p) => {
+        const treatment = treatmentById(p.id);
+        const photo = p.reasons.some((r) => r.fromPhoto);
+        const chosen = p.reasons.some((r) => !r.fromPhoto);
+        return (
+          <Recommendation
+            key={p.id}
+            treatment={treatment}
+            badge={photo ? t('scanFound') : undefined}
+            tone={photo && !chosen ? 'outline' : 'ink'}
+            note={`${general ? t('clinic.ai.general') : why(p)} · ${price(treatment)}`}
+          />
+        );
+      })}
+
+      {also.length ? (
+        <View style={{ gap: 8 }}>
+          <Txt variant="eyebrow" color={theme.c.muted}>
+            {t('clinic.ai.also')}
+          </Txt>
+          {also.map((p) => {
+            const treatment = treatmentById(p.id);
+            return (
+              <Pressable
+                key={p.id}
+                accessibilityRole="button"
+                onPress={() => router.replace({ pathname: '/behandeling/[id]', params: { id: treatment.id } })}
+                style={({ pressed }) => ({
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 12,
+                  paddingVertical: 12,
+                  paddingHorizontal: 14,
+                  borderRadius: theme.r.control,
+                  backgroundColor: theme.c.surface,
+                  opacity: pressed ? 0.85 : 1,
+                })}
+              >
+                <View style={{ flex: 1, gap: 2 }}>
+                  <Txt variant="bodyStrong">{text(treatment.name)}</Txt>
+                  <Txt variant="small" color={theme.c.muted}>
+                    {`${why(p)} · ${price(treatment)}`}
+                  </Txt>
+                </View>
+                <Icon name="chevron" size={16} color={theme.c.muted} />
+              </Pressable>
+            );
+          })}
+        </View>
+      ) : null}
 
       <View style={{ flexDirection: 'row', gap: 10, padding: 14, borderRadius: theme.r.control, backgroundColor: theme.c.sand }}>
         <Icon name="leaf" size={18} color={theme.c.primary} />

@@ -17,6 +17,8 @@ const ORT = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.31.1/dist/';
 const q = new URLSearchParams(location.search);
 const exp = q.get('export');
 const expectModel = q.get('model') !== 'none';
+// ?app=1: /models/ is the app's own public/models (zone model, face model, also-models); only C runs.
+const appMode = q.get('app') === '1';
 const result = { ok: false, expectModel };
 
 const loadImage = (src) => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; });
@@ -30,7 +32,7 @@ async function pixelsOf(src, size) {
 }
 
 try {
-  if (expectModel) {
+  if (expectModel && !appMode) {
     const ort = await import(ORT + 'ort.wasm.min.mjs');
     ort.env.wasm.wasmPaths = ORT; ort.env.wasm.numThreads = 1;
     const info = await (await fetch(exp + 'huidscan.json')).json();
@@ -121,6 +123,8 @@ try {
   if (scan.kind === 'found') {
     result.C.modelVersion = scan.outcome.model?.version ?? null;
     result.C.alsoUsed = scan.outcome.model?.also ?? [];
+    result.C.faceModel = scan.outcome.faceModel ?? null;
+    result.C.face = scan.outcome.face ?? null;
     result.C.overall = scan.outcome.overall;
     result.C.cheekL = scan.outcome.zones.cheekL;
     result.C.modelReadings = scan.outcome.model?.zones ?? null;

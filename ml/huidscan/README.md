@@ -1,8 +1,9 @@
 # Huidscan: Pure Clinics' own skin-scan model
 
-The pipeline to train a model on Pure's own photos that sees visible skin concerns in the app's selfie scan. Status, 27 November 2026: **huidscan-v2 and EVREN's YOLO
-pigmentation model are in the app together** for spots and uneven tone only (their mean, blended 0.5 into the colour
-measure; redness stays the colour measure's). v2 was trained here on Pure's own before/after photos and public data,
+The pipeline to train a model on Pure's own photos that sees visible skin concerns in the app's selfie scan. Status, 28 November 2026: **huidscan-v2 and EVREN's YOLO
+pigmentation model are in the app together** for spots and uneven tone only (their mean, blended 0.5 into the
+colour measure; redness stays the colour measure's), plus a **face model** for lines and the eye zone (see "Every
+treatment, and the face model"). v2 was trained here on Pure's own before/after photos and public data,
 the YOLO model on EVREN on public data only; see "In the app: v2 with EVREN's model" for how good they are.
 
 What the model does: per face zone (forehead, both cheeks, nose, chin, under both eyes) a grade 0–3 for **redness,
@@ -272,6 +273,47 @@ node train/browser_check.mjs runs/huidscan-v2/export
 - **Browser check**: everything ok; the YOLO model in onnxruntime-web is within 0.026 of Python on the reference face,
   about 330 ms for seven zones on the M1, and the scan reports `model.also: ["huidscan-pigment-evren.onnx"]`.
 
+### Every treatment, and the face model (28 November 2026)
+
+The owner asked for advice that can reach all 26 of Pure's services, with a general one when nothing fits.
+
+- **Advice** (`apps/mobile/src/scan/advice.ts`): four concerns were added (dull or dry skin, tattoo, veins on the
+  legs, brows/lashes/nails) so every treatment belongs to at least one, plus "not sure yet". A chosen concern counts 3,
+  a scan finding 1-2; per concern and per finding the best-fitting treatment comes first, then the highest scores; the
+  rest are "also suitable". Nothing chosen and nothing seen: the facial.
+- **Data**: 4,716 FairFace faces (CC BY 4.0; ages 10-70+, seven groups, balanced), graded by ten helpers on contact
+  sheets against my own grades (`label/make_face_sheets.py`, `label/calibration-face.csv`, `label/face-grades.csv`):
+  redness, pigmentation, acne, lines, eye zone, Monk tone; blurred, turned or black-and-white photos marked x.
+  SCIN's head/neck cases and Pure's halves were graded again for acne, texture, lines and the eye zone
+  (`label/closeup-grades.csv`); most SCIN "head or neck" photos turned out to be rashes on the body.
+- **Face model** (`train/import_faces.py`, one zone "face": the face oval, 192 px; MobileNetV3-large, 20 min):
+```sh
+.venv/bin/python train/import_faces.py --out data/prepared/face-v1 --size 192
+.venv/bin/python train/train_zones.py --data data/prepared/face-v1 --name face-v1 \
+    --concerns redness pigmentation acne lines eyes --backbone mobilenetv3_large_100 --epochs 40 --minutes 20 --batch 48
+.venv/bin/python train/export_onnx.py --run runs/face-v1 --blend 1.0 --blend-only lines eyes --install --app-name huidscan-face
+.venv/bin/python train/eval_face.py --onnx runs/face-v1/export/huidscan.int8.onnx --data data/prepared/face-v1
+node train/browser_check.mjs runs/face-v1/export && node train/browser_check.mjs runs/face-v1/export --app
+```
+  On 436 test faces (435 people, never trained on), `runs/face-v1/eval_face.json`:
+
+  | | AUROC visible / clear | QWK | Monk 1-3 / 4-6 / 7-10 (visible) | model vs grader / grader vs grader (QWK, 142 faces) |
+  |---|---|---|---|---|
+  | lines and wrinkles | **0.94 / 0.97** | 0.83 | 0.95 / 0.95 / 0.94 | **0.85 / 0.88** |
+  | dark circles, bags | **0.89 / 0.92** | 0.65 | 0.82 / 0.92 / – | 0.63 / 0.77 |
+  | redness | 0.85 / 0.93 | 0.08 | | 0.05 / 0.51 |
+  | pigmentation | 0.91 / 0.95 | 0.27 | | 0.28 / 0.65 |
+  | acne | 0.80 / – | 0.02 | | 0.00 / 0.80 |
+
+  Lines are read about as well as a second grader reads them; the eye zone a little less. Redness, pigmentation and
+  acne are not used from this model (blend 0): their ranking is fine but their grades are not, FairFace has almost
+  no acne (64 of 3,308), and the zone model plus EVREN already cover redness and pigmentation.
+- **In the app**: `huidscan-face.json/.onnx` (4.4 MB); `model.ts` runs it after the zone model and puts lines and eyes
+  into `outcome.face`; the scan screen shows them as two more bars. A reading of 0.5 (grade 1.5) counts as seen: on
+  the test faces that catches 88% of clear lines with 6% of faint ones flagged, and 77% / 9% for the eye zone.
+- **Not modelled**: pores and scars (too few face close-ups), hair loss, tattoos, leg veins, unwanted hair, brows and
+  nails; those come from the answers.
+
 ## The SCIN pilot (a pipeline test, not a model)
 
 `train/run_pilot.sh` does it all. What it showed:
@@ -328,3 +370,4 @@ blemish-prone face, under 2 minutes to confirm a clear one; one calibration sess
   huidscan.json and `apps/mobile/public/models/LICENSES.txt`).
 - PAD-UFES-20: CC BY 4.0, Pacheco AGC et al., Data in Brief 2020, https://data.mendeley.com/datasets/zr7vgbcyr2/1.
 - Ultralytics YOLO (EVREN's classifiers, `huidscan-*-evren.onnx` in the app): AGPL-3.0.
+- FairFace: CC BY 4.0, Kärkkäinen K, Joo J. WACV 2021, https://github.com/joojs/fairface (face model).

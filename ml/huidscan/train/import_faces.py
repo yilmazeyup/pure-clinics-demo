@@ -3,7 +3,10 @@
     python train/import_faces.py --out data/prepared/face-v1 --size 192
 
 Sources (grades 0-3 per photo; -1 = not judgeable or not graded):
-  label/face-grades.csv     FairFace faces (CC BY 4.0): redness, pigmentation, acne, lines, eyes
+  --faces CSV...            FairFace faces (CC BY 4.0): redness, pigmentation, acne, lines, eyes; default
+                            label/face-grades.csv. A face in two of the files (a second grader, label/face-grades-r2.csv)
+                            gets the consensus: the same grade, or one of the two at random when they are one apart
+                            (unbiased), and it is left out of that head when they are two or more apart
   label/closeup-grades.csv  Pure's halves and SCIN head/neck photos: acne, lines, eyes (texture stays with patches)
   label/alle-grades.csv     redness and pigmentation of those same halves
 Only photos where MediaPipe finds a face are used. The face is cut as the app will cut it (scan/model.ts, zone
@@ -42,14 +45,39 @@ def main() -> None:
     ap.add_argument("--test-share", type=float, default=0.12)
     ap.add_argument("--val-share", type=float, default=0.06)
     ap.add_argument("--test-people", type=Path, help="zones.csv of an earlier run: its test people stay the test set")
+    ap.add_argument("--faces", type=Path, nargs="+", default=[ROOT / "label/face-grades.csv"])
+    ap.add_argument("--seed", type=int, default=0)
     args = ap.parse_args()
 
     import cv2
 
     rp = {(r["file"], r["half"]): r for r in csv.DictReader(open(ROOT / "label/alle-grades.csv"))}
+    import random
+
+    rng = random.Random(args.seed)
+    by_file: dict[str, list[dict]] = {}
+    for f in args.faces:
+        for r in csv.DictReader(open(f)):
+            by_file.setdefault(r["file"], []).append(r)
     rows: list[dict] = []
-    for r in csv.DictReader(open(ROOT / "label/face-grades.csv")):
-        rows.append({**r, "img": r["file"]})
+    graders = {"one": 0, "two": 0, "dropped": 0}
+    for file, rs in by_file.items():
+        r = dict(rs[0])
+        if len(rs) > 1:
+            graders["two"] += 1
+            for h in HEADS:
+                g = [int(x[h]) for x in rs if int(x[h]) >= 0]
+                if len(g) < 2:
+                    r[h] = g[0] if g else -1
+                elif max(g) - min(g) >= 2:
+                    r[h] = -1
+                    graders["dropped"] += 1
+                else:
+                    r[h] = rng.choice(g) if g[0] != g[1] else g[0]
+            r["monk"] = next((x["monk"] for x in rs if x.get("monk")), "")
+        else:
+            graders["one"] += 1
+        rows.append({**r, "img": file})
     for r in csv.DictReader(open(ROOT / "label/closeup-grades.csv")):
         if all(int(r[h]) < 0 for h in ("acne", "lines", "eyes")):
             continue
@@ -96,7 +124,7 @@ def main() -> None:
         "source": "FairFace faces (CC BY 4.0), Pure Clinics' own before/after photos and SCIN, graded by Claude",
         "public_licence": None, "size": args.size, "face_width": FACE_WIDTH, "crop_pad": PAD, "zones": ["face"],
         "zone_points": zp, "shrink": {"face": 1.0}, "applies": {h: ["face"] for h in HEADS},
-        "report": {"faces": len(out), "skipped": skipped,
+        "report": {"faces": len(out), "skipped": skipped, "graders": graders,
                    "per_source": {s: sum(x["source"] == s for x in out) for s in sorted({x["source"] for x in out})}},
         "people_per_split": people,
     }

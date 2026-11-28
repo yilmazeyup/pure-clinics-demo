@@ -38,7 +38,7 @@ AGES = ["0-2", "3-9", "10-19", "20-29", "30-39", "40-49", "50-59", "60-69", "70+
 RACES = ["East Asian", "Indian", "Black", "White", "Middle Eastern", "Latino_Hispanic", "Southeast Asian"]
 
 
-def faces(out: Path, per_age: int, seed: int) -> list[dict]:
+def faces(out: Path, per_age: int, seed: int, exclude: set[str] | None = None) -> list[dict]:
     import pyarrow.parquet as pq
     from PIL import Image
 
@@ -52,7 +52,7 @@ def faces(out: Path, per_age: int, seed: int) -> list[dict]:
         t = pq.read_table(s, columns=["age", "gender", "race"])
         for i, (a, g, r) in enumerate(zip(t.column("age").to_pylist(), t.column("gender").to_pylist(),
                                           t.column("race").to_pylist())):
-            if a >= 2:  # 10 and older
+            if a >= 2 and f"fairface/images/ff_{offset + i:06d}.jpg" not in (exclude or set()):  # 10 and older, new
                 cells[(a, r, g)].append((s, i, offset + i))
         offset += t.num_rows
     # Per age group the same number of faces, spread evenly over race x gender; small cells give way to larger ones.
@@ -132,6 +132,7 @@ def main() -> None:
     ap.add_argument("--per-age", type=int, default=700)
     ap.add_argument("--per-sheet", type=int, default=16)
     ap.add_argument("--seed", type=int, default=7)
+    ap.add_argument("--exclude", type=Path, nargs="*", default=[], help="list.csv files whose faces are left out")
     args = ap.parse_args()
 
     if args.what == "calibration":
@@ -144,7 +145,8 @@ def main() -> None:
               args.out / "calibration.jpg", tile=300)
         print("wrote", args.out / "calibration.jpg")
         return
-    rows = faces(args.out, args.per_age, args.seed) if args.what == "faces" else closeups(args.out)
+    exclude = {r["file"] for f in args.exclude for r in csv.DictReader(open(f))}
+    rows = faces(args.out, args.per_age, args.seed, exclude) if args.what == "faces" else closeups(args.out)
     (args.out / "sheets").mkdir(parents=True, exist_ok=True)
     (args.out / "grades").mkdir(parents=True, exist_ok=True)
     fields = ["idx"] + list(rows[0].keys())

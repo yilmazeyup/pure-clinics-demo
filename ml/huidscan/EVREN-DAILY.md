@@ -32,12 +32,19 @@ hyperparameters, GPU); replace text fields with triple_click + cmd+a + type.
    (308 and 353 are the old "huidpatches" sets: never). The "Mevcut veri ile" switch (1072,191) must be on
    (version line ends "(otomatik versiyon)"); it stays on when the dataset changes.
 4. Family: YOLO26 (441,482), YOLO11 (613,482), YOLOv8 (787,482); then size x=1012, y: Nano 475, Small 499,
-   Medium 523, Large 548, XLarge 572. "Başlangıç Ağırlığı (Fine-tune)" below the family can start from one of our
-   earlier EVREN models.
+   Medium 523, Large 548, XLarge 572. Changing the family resets the size to Medium: click the size again after it.
+   "Başlangıç Ağırlığı (Fine-tune)" below the family can start from one of our earlier EVREN models; it is not shown
+   for Nano, YOLO11 or YOLOv8 (the lower part of the form moves up, the coordinates here still work).
 5. Tab "Hiperparametre" (748,110): Epoch (450,190), image size (846,190), Patience (1043,190), Seed (648,242),
    LR0 (648,383); back with tab "Genel" (490,110). K-fold is not available for classification.
 6. Check with a zoom of (356,130,1146,600); start (1094,739); wait 5; confirm "Bu Ayarlarla Devam Et" (1066,738).
-7. The new job is the top row of the list; "Detay" shows P/R/F1 when done. A job costs about 0.2-1.5 credits.
+7. The new job is the top row of the list; "Detay" shows P/R/F1 when done.
+8. **At most five jobs at a time per user** (queued ones count): with five active the form says "Aynı anda en fazla 5
+   eğitim işiniz olabilir" and the start button stays grey. Watch the "Aktif" count and start the next job when a slot
+   opens; a job takes about 4-14 minutes, so 50 jobs take well over an hour (28 Nov: 46 jobs in about 75 minutes).
+   Keep each wait under about two minutes per tool call (longer browser batches time out).
+9. **Cost**: the form's estimate (0.2-0.6 credits) is too low. Finished jobs cost 0.7-2.1 credits each (XLarge at
+   224 px about 1.1-1.6, YOLOv8x up to 2.1), so a day of 50 jobs is roughly 60-80 credits.
 
 ## Each day
 
@@ -48,7 +55,8 @@ hyperparameters, GPU); replace text fields with triple_click + cmd+a + type.
 3. Launch at least 50 new jobs: about half exploit (the best family/size/settings per concern with new seeds, so
    their average can be scored as an ensemble; fine-tuning from the best model), about half explore (image size 192
    or 288, 150-200 epochs, LR0 0.003 / 0.0005, YOLO11 or YOLOv8, Large vs XLarge, augmentation changes). Keep the
-   credits above 300.
+   credits above 300: read the balance first, count on about 1.5 credits a job (more for 200 epochs or 288 px), and
+   launch fewer if the day's jobs would take it below 300 (tell the user). Five run at a time (form step 8).
 4. Report to the user in Turkish, in a few lines: how many jobs ran, the best result per concern next to the app's
    baseline, and what changes tomorrow. Do not put a model into the app without the user's yes: when an ensemble
    beats the baseline clearly (AUROC and QWK), say so and ask.

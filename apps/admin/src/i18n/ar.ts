@@ -214,6 +214,7 @@ export const ar: Messages = {
   'ev.paid.title': 'دُفع عند الاستقبال',
   'ev.paid.detail': '{client} · {treatment} · {city}',
   'ev.online.detail': 'عبر الإنترنت · {city} · {time} مع {specialist}',
+  'ev.onlineDay.detail': 'عبر الإنترنت · {city} · {day} {time} مع {specialist}',
   'ev.consult.title': 'حُجزت جلسة تعارف مجانية',
   'ev.consult.detail': '{client} · {city} · {time}',
   'ev.consultTomorrow.detail': '{client} · {city} · غدًا {time}',
@@ -231,6 +232,7 @@ export const ar: Messages = {
   'ev.member.detail': '{client} · عبر التطبيق',
   'ev.order.title': 'طلب رقم {number}',
   'ev.order.detail': '{customer} · {product}',
+  'ev.order.giftDetail': '{customer} · بطاقة هدية',
   'ev.orders.title': 'طلبات جديدة: {n}',
   'ev.orders.detail': '{numbers}',
 
@@ -315,5 +317,9 @@ export const ar: Messages = {
   'hy.err.generic': 'لم ينجح ذلك. حاول مرة أخرى.',
   'hy.why.social': 'تخطيط وسائل التواصل الخاص بـ Pure موجود في Huidly. اربط هذه الإدارة مرة واحدة ببريدك الإلكتروني لترى المنشورات والقصص والريلز وتخطط لها هنا.',
   'hy.why.shop': 'الطلبات الحقيقية من الموقع والتطبيق تصل إلى Huidly. اربط هذه الإدارة مرة واحدة ببريدك الإلكتروني لتراها وتعالجها هنا.',
+  'hy.why.overview': 'تعرض النظرة العامة اليوم كما هو في Huidly: جدول المواعيد كما يديره الفريق في Kliniek، والطلبات الحقيقية والأعضاء الجدد. اربط هذه الإدارة مرة واحدة ببريدك الإلكتروني لتراه هنا.',
+  'hy.day.loading': 'جارٍ جلب اليوم من Huidly…',
+  'hy.day.failed': 'تعذّر الوصول إلى Huidly. لا يمكن تحميل النظرة العامة الآن.',
+  'hy.day.retry': 'حاول مرة أخرى',
   'nav.kliniekOut': 'تُفتح العيادة في Huidly، برنامج العيادة',
 };

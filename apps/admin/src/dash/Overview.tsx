@@ -1,6 +1,12 @@
 import { addDays, dateKey, LOCATIONS, productById, sameDay } from '@pure-clinics/shared';
 import { useEffect, useMemo, useState } from 'react';
 
+import { HuidlyConnect } from '../huidly/Connect';
+import { useHuidlyTeam } from '../huidly/client';
+import { useHuidlyDay } from '../huidly/day';
+import type { LiveStock } from '../praktijk/live/api';
+import { Card } from '../praktijk/kit';
+
 import { AgendaView } from '../components/AgendaView';
 import { ClinicsView } from '../components/ClinicsView';
 import { CoursesCard } from '../components/CoursesCard';
@@ -8,11 +14,11 @@ import { Insights, LiveFeed, type Insight } from '../components/panels';
 import { SalesView } from '../components/SalesView';
 import { ShopView } from '../components/ShopView';
 import { KpiTile, MiniBars, Sparkline, Squares, useToast, type FeedItem } from '../components/ui';
-import { clinicDay, isOpen, occupancy, phaseOf, revenueOf, ROOMS, works, type Appt } from '../data/clinics';
+import { isOpen, occupancy, phaseOf, revenueOf, ROOMS, works, type Appt } from '../data/clinics';
 import { courseState, type Course } from '../data/courses';
-import { diaryAt, happenedBy, paidBy, revenueAt, weekFrame, weekSales, type LiveEvent } from '../data/live';
+import { diaryAt, diaryOn, happenedBy, ordersOn, paidBy, revenueAt, weekFrame, weekSales, type DayChanges, type LiveEvent } from '../data/live';
 import { sendReminders, todayLive, useCourses, useReminderBatches, type ReminderBatch } from '../data/reminders';
-import { leftNow, orderTotal, ordersUntil, shopDay, type Order } from '../data/shop';
+import { orderTotal, ordersUntil, type Order } from '../data/shop';
 import { useI18n, type Line } from '../i18n';
 
 const cityOf = (clinic: Appt['clinic']) => LOCATIONS.find((l) => l.id === clinic)?.city ?? '';
@@ -20,6 +26,8 @@ const cityOf = (clinic: Appt['clinic']) => LOCATIONS.find((l) => l.id === clinic
 const sourceOf = (a: Appt | Course): FeedItem['source'] => (a.treatment.category === 'beauty' ? 'blanche' : 'clinic');
 
 function orderDetail(order: Order): Line {
+  // Only gift cards: no product to name.
+  if (!order.lines.length) return { key: 'ev.order.giftDetail', args: { customer: order.customer } };
   const extra = order.lines.reduce((n, l) => n + l.qty, 0) - 1;
   return { key: 'ev.order.detail', args: { customer: order.customer, product: { product: order.lines[0].product.id, extra } } };
 }
@@ -57,7 +65,10 @@ function feedItem(e: LiveEvent): FeedItem {
         source: sourceOf(a),
         icon: 'calendar',
         title: { key: 'ev.booking.title', args: { client: a.client, treatment: { treatment: a.treatment.id } } },
-        detail: { key: 'ev.online.detail', args: { city: cityOf(a.clinic), time: a.start, specialist: a.specialist.name } },
+        // Booked today for a later day: the day goes with the time.
+        detail: sameDay(a.start, e.at)
+          ? { key: 'ev.online.detail', args: { city: cityOf(a.clinic), time: a.start, specialist: a.specialist.name } }
+          : { key: 'ev.onlineDay.detail', args: { city: cityOf(a.clinic), day: { date: a.start }, time: a.start, specialist: a.specialist.name } },
         amount: a.price || undefined,
         accent: true,
       };
@@ -110,14 +121,37 @@ function feedItem(e: LiveEvent): FeedItem {
   }
 }
 
+type Props = { now: Date; playing: boolean; onCourses: () => void; onAgenda: () => void };
+
+/**
+ * The overview shows the day as Huidly has it (huidly/day.ts): the agenda as the team changed it in Kliniek, the real
+ * orders and new members. Without the team's Huidly connection it asks for it, and shows no day of its own.
+ */
+export function Overview(props: Props) {
+  const { t } = useI18n();
+  const team = useHuidlyTeam();
+  const day = useHuidlyDay();
+  if (!team) return <HuidlyConnect what={t('hy.why.overview')} />;
+  if (day.status === 'ready' && day.changes) return <OverviewDay {...props} changes={day.changes} stock={day.stock} />;
+  return (
+    <Card eyebrow={t('hy.eyebrow')} title={t(day.status === 'error' ? 'hy.day.failed' : 'hy.day.loading')} className="hy-connect">
+      {day.status === 'error' ? (
+        <button className="btn btn-ghost" type="button" onClick={day.retry}>
+          {t('hy.day.retry')}
+        </button>
+      ) : null}
+    </Card>
+  );
+}
+
 /** The one overview of Pure Clinics: both clinics, the treatment series, the webshop and the week, all following the clock. */
-export function Overview({ now, playing, onCourses, onAgenda }: { now: Date; playing: boolean; onCourses: () => void; onAgenda: () => void }) {
+function OverviewDay({ now, playing, onCourses, onAgenda, changes, stock }: Props & { changes: DayChanges; stock: LiveStock[] }) {
   const { t, eur, num, pct, locale, weekdayLong } = useI18n();
   const toast = useToast();
   const dayKey = dateKey(now);
   // The day's stream is fixed; the clock decides how much of it has happened. It is worked out once a day and shared
   // with the full page of treatment plans, like the reminders sent from either page.
-  const live = todayLive(now);
+  const live = todayLive(now, changes);
   const batches = useReminderBatches();
   const actions = useMemo(() => batches.filter((b) => b.day === dayKey).map(reminderItem), [batches, dayKey]);
   const [focus, setFocus] = useState<number | null>(null);
@@ -155,20 +189,20 @@ export function Overview({ now, playing, onCourses, onAgenda }: { now: Date; pla
     () =>
       [7, 14, 21, 28].map((days) => {
         const then = addDays(now, -days);
-        return { appts: clinicDay(then), orders: shopDay(then) };
+        return { appts: diaryOn(then, changes.agenda), orders: ordersOn(changes.orders, then) };
       }),
-    [dayKey],
+    [dayKey, changes],
   );
   const usual = past.reduce((total, p) => total + revenueAt(p.appts, p.orders, now), 0) / past.length;
   const history = useMemo(
     () =>
       Array.from({ length: 14 }, (_, i) => {
         const day = addDays(now, i - 13);
-        return revenueOf(clinicDay(day)) + orderTotal(shopDay(day));
+        return revenueOf(diaryOn(day, changes.agenda)) + orderTotal(ordersOn(changes.orders, day));
       }),
-    [dayKey],
+    [dayKey, changes],
   );
-  const frame = useMemo(() => weekFrame(now), [dayKey]);
+  const frame = useMemo(() => weekFrame(now, changes), [dayKey, changes]);
   const week = useMemo(() => weekSales(frame, live, now), [frame, live, now]);
 
   const running = isClinicDay ? appts.filter((a) => phaseOf(a, now) === 'now').length : 0;
@@ -184,7 +218,8 @@ export function Overview({ now, playing, onCourses, onAgenda }: { now: Date; pla
   });
   const waiting = due.filter((c) => !c.reminded);
   const aftercare = productById('zo-spf')!;
-  const aftercareLeft = leftNow(aftercare, todaysOrders);
+  // What the webshop has left of it, as Huidly counts it.
+  const aftercareLeft = stock.find((s) => s.product === aftercare.id)?.stock;
   const insights: Insight[] = [
     {
       id: 'followUp',
@@ -195,13 +230,17 @@ export function Overview({ now, playing, onCourses, onAgenda }: { now: Date; pla
       run: waiting.length ? () => remind(waiting.map((c) => c.id)) : undefined,
     },
     { id: 'season', icon: 'sun', title: t('tip.season.title'), body: t('tip.season.body'), action: t('tip.season.action') },
-    {
-      id: 'stock',
-      icon: 'bag',
-      title: t('tip.stock.title', { product: { product: aftercare.id } }),
-      body: t('tip.stock.body', { n: aftercareLeft }),
-      action: t('tip.stock.action'),
-    },
+    ...(aftercareLeft === undefined
+      ? []
+      : [
+          {
+            id: 'stock',
+            icon: 'bag' as const,
+            title: t('tip.stock.title', { product: { product: aftercare.id } }),
+            body: t('tip.stock.body', { n: aftercareLeft }),
+            action: t('tip.stock.action'),
+          },
+        ]),
     { id: 'intake', icon: 'trend', title: t('tip.intake.title'), body: t('tip.intake.body'), action: t('tip.intake.action') },
   ];
 

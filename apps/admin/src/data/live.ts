@@ -1,13 +1,14 @@
-import { addDays, dateKey, LOCATIONS, openingHours, sameDay, startOfDay, type LocationId } from '@pure-clinics/shared';
+import { addDays, dateKey, LOCATIONS, sameDay, startOfDay, type LocationId } from '@pure-clinics/shared';
 
-import { clinicDay, type Appt } from './clinics';
+import { dayAppts, onlineBookings, type AgAppt, type AgendaState } from '../praktijk/data/agenda';
+import { clinicDay, ROOMS, type Appt } from './clinics';
 import { courseState, coursesOn, type Course } from './courses';
-import { between, personName, pick, rng } from './random';
-import { clinicOfOrder, shopDay, type Order } from './shop';
+import { between, pick, rng } from './random';
+import { clinicOfOrder, type Order } from './shop';
 
 /** Something that happens at a set moment of the day; the overview plays these as the clock runs. */
 export type LiveEvent =
-  /** Booked online into a free slot of today's diary. */
+  /** Booked online today, for today or a later day, as the agenda's list of online bookings has it. */
   | { id: string; at: Date; kind: 'booking'; appt: Appt }
   /** Paid at the desk when the treatment ends. */
   | { id: string; at: Date; kind: 'payment'; appt: Appt }
@@ -23,7 +24,7 @@ export type LiveEvent =
 export type LiveDay = {
   /** The day the clinics show: today, or Monday while both clinics are closed on Sunday. */
   day: Date;
-  /** Every appointment of that day; the ones booked online today carry `bookedAt`. */
+  /** Every appointment of that day, as Kliniek's agenda has it. */
   appts: Appt[];
   /** Today's webshop orders, all day. */
   orders: Order[];
@@ -36,15 +37,44 @@ const at = (day: Date, minutes: number) => new Date(startOfDay(day).getTime() + 
 const minuteOf = (date: Date) => date.getHours() * 60 + date.getMinutes();
 
 /**
- * Today as a stream of events, the same on every load: online bookings land in free slots, every treatment is paid at
- * the desk when it ends, intake forms and reminders go out ahead of appointments, webshop orders come in, clients in a
- * series book their next session and new members join.
+ * What Huidly holds for the day (Huidly's api/src/functions/agenda.js): the agenda as the team changed it in Kliniek
+ * and, in the business's own admin, the real webshop orders and the clients who joined the app. Without it nothing is
+ * shown, so no screen can tell a day of its own.
  */
-export function liveDay(day: Date, today: Date): LiveDay {
+export type DayChanges = { agenda: AgendaState; orders: Order[]; joined: { name: string; at: Date }[] };
+
+/** No changes: the diary as it is, for the demo accounts on this computer and for screens that only need the series. */
+export const NO_CHANGES: DayChanges = {
+  agenda: { moved: {}, deleted: [], added: [], notes: {}, confirmed: [], reports: {}, rules: [], waitPlanned: [] },
+  orders: [],
+  joined: [],
+};
+
+/** An appointment of Kliniek's agenda in its specialist's room; null in a column without a room (the front desk). */
+export function asAppt(a: AgAppt, firstVisit = false): Appt | null {
+  const room = ROOMS[a.clinic].findIndex((s) => s.id === a.col);
+  if (room < 0) return null;
+  return { id: a.id, clinic: a.clinic, room, specialist: ROOMS[a.clinic][room], treatment: a.treatment, client: a.client, start: a.start, end: a.end, price: a.price, firstVisit };
+}
+
+/** A day's appointments as Kliniek's agenda shows them: the diary with every move, deletion and new appointment. */
+export function diaryOn(day: Date, agenda: AgendaState): Appt[] {
+  const first = new Map(clinicDay(day).map((a) => [a.id, a.firstVisit]));
+  return dayAppts(day, agenda).flatMap((a) => asAppt(a, first.get(a.id) ?? false) ?? []);
+}
+
+export const ordersOn = (orders: Order[], day: Date) => orders.filter((o) => sameDay(o.at, day));
+
+/**
+ * Today as a stream of events, the same on every load and on every screen: every treatment is paid at the desk when it
+ * ends, intake forms and reminders go out ahead of appointments, online bookings come in as the agenda's list of online
+ * bookings has them, webshop orders and new members as Huidly has them, and clients in a series book their next session.
+ */
+export function liveDay(day: Date, today: Date, changes: DayChanges): LiveDay {
   const r = rng(`live-${dateKey(today)}`);
   const isToday = sameDay(day, today);
-  const appts = clinicDay(day).map((a) => ({ ...a }));
-  const orders = shopDay(today);
+  const appts = diaryOn(day, changes.agenda);
+  const orders = ordersOn(changes.orders, today);
   const courses = coursesOn(today);
   const events: LiveEvent[] = [];
   const DAY_START = 7 * 60;
@@ -52,42 +82,42 @@ export function liveDay(day: Date, today: Date): LiveDay {
   if (isToday) {
     for (const appt of appts) {
       const start = minuteOf(appt.start);
-      const opens = (openingHours(day, appt.clinic)?.open ?? 9) * 60;
-      // About one in five is booked online during the day, at least an hour before it starts.
-      if (start - opens >= 90 && r() < 0.22) {
-        const latest = start - 60;
-        const earliest = Math.max(DAY_START, start - 6 * 60);
-        if (latest > earliest) {
-          appt.bookedAt = at(day, between(r, earliest, latest));
-          events.push({ id: `booking-${appt.id}`, at: appt.bookedAt, kind: 'booking', appt });
-        }
-      }
       // The free intake costs nothing, so there is nothing to pay.
       if (appt.price > 0) events.push({ id: `payment-${appt.id}`, at: appt.end, kind: 'payment', appt });
-      const ready = appt.bookedAt ? minuteOf(appt.bookedAt) + 5 : DAY_START;
-      if ((appt.firstVisit || appt.treatment.id === 'consult') && start - 40 > ready && r() < 0.7) {
-        events.push({ id: `intake-${appt.id}`, at: at(day, between(r, ready, start - 40)), kind: 'intake', appt });
-      } else if (!appt.bookedAt && start - 150 > DAY_START && r() < 0.18) {
+      if ((appt.firstVisit || appt.treatment.id === 'consult') && start - 40 > DAY_START && r() < 0.7) {
+        events.push({ id: `intake-${appt.id}`, at: at(day, between(r, DAY_START, start - 40)), kind: 'intake', appt });
+      } else if (start - 150 > DAY_START && r() < 0.18) {
         events.push({ id: `reminder-${appt.id}`, at: at(day, start - between(r, 120, 180)), kind: 'reminder', appt });
       }
     }
   }
 
+  // Booked online today, for today or a later day; a moved one shows where it is now.
+  for (const b of onlineBookings(today, at(today, 24 * 60 - 1), changes.agenda)) {
+    if (!sameDay(b.bookedAt, today) || b.changed === 'deleted') continue;
+    const m = changes.agenda.moved[b.appt.id];
+    const now = m ? { ...b.appt, col: m.col, start: new Date(m.start), end: new Date(m.start + b.appt.end.getTime() - b.appt.start.getTime()) } : b.appt;
+    const appt = asAppt(now);
+    if (appt) events.push({ id: `booking-${b.appt.id}`, at: b.bookedAt, kind: 'booking', appt });
+  }
+
   for (const order of orders) events.push({ id: `order-${order.id}`, at: order.at, kind: 'order', order });
 
-  // A handful of clients who are due book their next session, spread over the day.
+  // A handful of clients who are due book their next session, spread over the day: drawn on their own, so they stay the
+  // same whatever changes in the agenda.
+  const cr = rng(`live-courses-${dateKey(today)}`);
   const due = courses.filter((c) => {
     const state = courseState(c, today);
     return state === 'due' || state === 'late';
   });
-  for (const course of due.slice(0, between(r, 4, 7))) {
-    const planned = addDays(startOfDay(today), between(r, 2, 12));
-    planned.setHours(pick(r, [9, 10, 11, 13, 14, 15, 16, 18]), pick(r, [0, 15, 30, 45]), 0, 0);
-    events.push({ id: `course-${course.id}`, at: at(today, between(r, 8 * 60, 21 * 60)), kind: 'course', course, planned });
+  for (const course of due.slice(0, between(cr, 4, 7))) {
+    const planned = addDays(startOfDay(today), between(cr, 2, 12));
+    planned.setHours(pick(cr, [9, 10, 11, 13, 14, 15, 16, 18]), pick(cr, [0, 15, 30, 45]), 0, 0);
+    events.push({ id: `course-${course.id}`, at: at(today, between(cr, 8 * 60, 21 * 60)), kind: 'course', course, planned });
   }
-  for (let i = 0, n = between(r, 4, 6); i < n; i++) {
-    events.push({ id: `member-${i}`, at: at(today, between(r, DAY_START + 20, 22 * 60)), kind: 'member', client: personName(r) });
-  }
+  changes.joined.forEach((j, i) => {
+    if (sameDay(j.at, today)) events.push({ id: `member-${i}-${j.at.getTime()}`, at: j.at, kind: 'member', client: j.name });
+  });
 
   events.sort((a, b) => a.at.getTime() - b.at.getTime());
   return { day, appts, orders, courses, events };
@@ -126,13 +156,13 @@ function salesOf(appts: Appt[], orders: Order[], booked: Appt[]): ClinicSales[] 
 }
 
 /** The days of this week other than today: earlier days as they ended, later days with what is booked so far. */
-export function weekFrame(today: Date): DaySales[] {
+export function weekFrame(today: Date, changes: DayChanges): DaySales[] {
   const monday = addDays(startOfDay(today), -((today.getDay() + 6) % 7));
   return Array.from({ length: 7 }, (_, i) => {
     const date = addDays(monday, i);
     if (sameDay(date, today)) return { date, clinics: LOCATIONS.map(() => ({ treatments: 0, webshop: 0, booked: 0 })) };
-    const appts = clinicDay(date);
-    if (date.getTime() < today.getTime()) return { date, clinics: salesOf(appts, shopDay(date), []) };
+    const appts = diaryOn(date, changes.agenda);
+    if (date.getTime() < today.getTime()) return { date, clinics: salesOf(appts, ordersOn(changes.orders, date), []) };
     return { date, clinics: salesOf([], [], appts) };
   });
 }

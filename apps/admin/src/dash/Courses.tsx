@@ -5,7 +5,9 @@ import { useCourseStatus } from '../components/CoursesCard';
 import { Icon } from '../components/Icon';
 import { useToast } from '../components/ui';
 import { byUrgency, COURSE_PLAN, courseState, type Course, type CourseState } from '../data/courses';
-import { sendReminders, useCourses } from '../data/reminders';
+import { NO_CHANGES } from '../data/live';
+import { sendReminders, todayLive, useCourses } from '../data/reminders';
+import { useHuidlyDay } from '../huidly/day';
 import { Accent, useI18n } from '../i18n';
 
 // Every client partway through a series on one page (…/#trajecten), opened from the card on the overview. The tiles
@@ -28,7 +30,9 @@ export function CoursesPage({ now, onBack }: { now: Date; onBack: () => void }) 
   const { t, text, dateShort, clock, num } = useI18n();
   const toast = useToast();
   const status = useCourseStatus(now);
-  const courses = useCourses(now);
+  // The series are Pure's own; the day comes from Huidly when the connection is there, so the page and the overview share it.
+  const huidly = useHuidlyDay();
+  const courses = useCourses(now, todayLive(now, huidly.changes ?? NO_CHANGES));
   const listTop = useRef<HTMLDivElement>(null);
 
   const [state, setState] = useState<StateFilter>('all');

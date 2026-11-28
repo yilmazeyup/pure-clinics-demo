@@ -213,6 +213,7 @@ export const en: Messages = {
   'ev.paid.title': 'Paid at the desk',
   'ev.paid.detail': '{client} · {treatment} · {city}',
   'ev.online.detail': 'Online · {city} · {time} with {specialist}',
+  'ev.onlineDay.detail': 'Online · {city} · {day} {time} with {specialist}',
   'ev.consult.title': 'Free intake booked',
   'ev.consult.detail': '{client} · {city} · {time}',
   'ev.consultTomorrow.detail': '{client} · {city} · tomorrow {time}',
@@ -230,6 +231,7 @@ export const en: Messages = {
   'ev.member.detail': '{client} · via the app',
   'ev.order.title': 'Order #{number}',
   'ev.order.detail': '{customer} · {product}',
+  'ev.order.giftDetail': '{customer} · gift card',
   'ev.orders.title': '{n} new orders',
   'ev.orders.detail': '{numbers}',
 
@@ -314,5 +316,9 @@ export const en: Messages = {
   'hy.err.generic': 'That did not work. Try again.',
   'hy.why.social': 'Pure’s social planning lives in Huidly. Connect this admin once with your email address to see and plan the posts, stories and reels here.',
   'hy.why.shop': 'The real orders from the site and the app come in at Huidly. Connect this admin once with your email address to see and handle them here.',
+  'hy.why.overview': 'The overview shows the day as Huidly has it: the agenda as the team keeps it in Kliniek, the real orders and new members. Connect this admin once with your email address to see it here.',
+  'hy.day.loading': 'Fetching the day from Huidly…',
+  'hy.day.failed': 'Huidly cannot be reached. The overview cannot be loaded right now.',
+  'hy.day.retry': 'Try again',
   'nav.kliniekOut': 'The clinic opens in Huidly, the clinic’s program',
 };

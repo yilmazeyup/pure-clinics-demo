@@ -47,6 +47,8 @@ export type AgAppt = {
   noteKey: MessageKey | null;
   /** True for appointments made in the module (booking, planner, waiting list). */
   added?: boolean;
+  /** When the client asked for it online, for a request from the business's own site or app (ms). */
+  bookedAt?: number | null;
 };
 
 export type Repeat = 'none' | 'daily' | 'weekly' | 'biweekly' | 'monthly';
@@ -325,6 +327,13 @@ export function onlineBookings(today: Date, now: Date, state: AgendaState): Onli
       const changed = state.deleted.includes(a.id) ? 'deleted' : a.id in state.moved ? 'moved' : roll < 0.05 ? 'moved' : roll < 0.08 ? 'deleted' : null;
       out.push({ appt: a, bookedAt, changed });
     }
+  }
+  // Requests from the business's own site or app that the clinic confirmed: real bookings, with their own moment.
+  for (const a of state.added) {
+    if (!a.online || !a.bookedAt) continue;
+    const bookedAt = new Date(a.bookedAt);
+    if (bookedAt < from || bookedAt > now) continue;
+    out.push({ appt: a, bookedAt, changed: state.deleted.includes(a.id) ? 'deleted' : null });
   }
   return out.sort((a, b) => b.bookedAt.getTime() - a.bookedAt.getTime());
 }

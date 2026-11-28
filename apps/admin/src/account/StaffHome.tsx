@@ -5,8 +5,11 @@ import { Icon } from '../components/Icon';
 import { CardHead, useToast } from '../components/ui';
 import { phaseOf, type Appt, type ApptPhase } from '../data/clinics';
 import { byUrgency, courseState, type Course } from '../data/courses';
-import { diaryAt } from '../data/live';
+import { diaryAt, NO_CHANGES } from '../data/live';
 import { sendReminders, todayLive, useCourses } from '../data/reminders';
+import { HuidlyConnect } from '../huidly/Connect';
+import { useHuidlyTeam } from '../huidly/client';
+import { useHuidlyDay } from '../huidly/day';
 import { Accent, useI18n } from '../i18n';
 import { cityOf, type Account } from './accounts';
 
@@ -18,7 +21,10 @@ export function StaffHome({ now, account }: { now: Date; account: Account }) {
   const { t, text, clock, dayLong } = useI18n();
   const toast = useToast();
   // The same day and the same reminders as the admin's overview: a reminder sent here shows as sent there too.
-  const live = todayLive(now);
+  // The day as Huidly has it (huidly/day.ts), the same as the agenda in Kliniek; without the connection, no day at all.
+  const team = useHuidlyTeam();
+  const huidly = useHuidlyDay();
+  const live = todayLive(now, huidly.changes ?? NO_CHANGES);
   const all = useCourses(now, live);
   const isToday = sameDay(live.day, now);
   const city = cityOf(account.locationId);
@@ -48,6 +54,15 @@ export function StaffHome({ now, account }: { now: Date; account: Account }) {
     const sent = sendReminders(all, [c.id], now);
     if (sent.length) toast(t('courses.toast', { n: sent.length }));
   };
+
+  if (!team) return <HuidlyConnect what={t('hy.why.overview')} />;
+  if (!huidly.changes) {
+    return (
+      <div className="acc-page">
+        <p className="muted">{t(huidly.status === 'error' ? 'hy.day.failed' : 'hy.day.loading')}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="acc-page">

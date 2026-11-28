@@ -213,6 +213,7 @@ export const de: Messages = {
   'ev.paid.title': 'An der Rezeption bezahlt',
   'ev.paid.detail': '{client} · {treatment} · {city}',
   'ev.online.detail': 'Online · {city} · {time} bei {specialist}',
+  'ev.onlineDay.detail': 'Online · {city} · {day} {time} bei {specialist}',
   'ev.consult.title': 'Kostenloses Erstgespräch geplant',
   'ev.consult.detail': '{client} · {city} · {time}',
   'ev.consultTomorrow.detail': '{client} · {city} · morgen {time}',
@@ -230,6 +231,7 @@ export const de: Messages = {
   'ev.member.detail': '{client} · über die App',
   'ev.order.title': 'Bestellung #{number}',
   'ev.order.detail': '{customer} · {product}',
+  'ev.order.giftDetail': '{customer} · Gutschein',
   'ev.orders.title': '{n} neue Bestellungen',
   'ev.orders.detail': '{numbers}',
 
@@ -314,5 +316,9 @@ export const de: Messages = {
   'hy.err.generic': 'Das hat nicht geklappt. Versuch es noch einmal.',
   'hy.why.social': 'Die Social-Planung von Pure liegt in Huidly. Verbinde diese Verwaltung einmal mit deiner E-Mail-Adresse, um Posts, Stories und Reels hier zu sehen und zu planen.',
   'hy.why.shop': 'Die echten Bestellungen von Website und App kommen in Huidly an. Verbinde diese Verwaltung einmal mit deiner E-Mail-Adresse, um sie hier zu sehen und zu bearbeiten.',
+  'hy.why.overview': 'Die Übersicht zeigt den Tag so, wie Huidly ihn hat: den Kalender, wie das Team ihn in Kliniek führt, die echten Bestellungen und neue Mitglieder. Verbinde diese Verwaltung einmal mit deiner E-Mail-Adresse, um ihn hier zu sehen.',
+  'hy.day.loading': 'Der Tag wird von Huidly geladen…',
+  'hy.day.failed': 'Huidly ist nicht erreichbar. Die Übersicht kann gerade nicht geladen werden.',
+  'hy.day.retry': 'Erneut versuchen',
   'nav.kliniekOut': 'Die Klinik öffnet sich in Huidly, dem Programm der Klinik',
 };

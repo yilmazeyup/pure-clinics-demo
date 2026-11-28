@@ -213,6 +213,7 @@ export const it: Messages = {
   'ev.paid.title': 'Pagato alla reception',
   'ev.paid.detail': '{client} · {treatment} · {city}',
   'ev.online.detail': 'Online · {city} · {time} con {specialist}',
+  'ev.onlineDay.detail': 'Online · {city} · {day} {time} con {specialist}',
   'ev.consult.title': 'Consulenza gratuita fissata',
   'ev.consult.detail': '{client} · {city} · {time}',
   'ev.consultTomorrow.detail': '{client} · {city} · domani {time}',
@@ -230,6 +231,7 @@ export const it: Messages = {
   'ev.member.detail': '{client} · tramite l’app',
   'ev.order.title': 'Ordine n. {number}',
   'ev.order.detail': '{customer} · {product}',
+  'ev.order.giftDetail': '{customer} · buono regalo',
   'ev.orders.title': '{n} nuovi ordini',
   'ev.orders.detail': '{numbers}',
 
@@ -314,5 +316,9 @@ export const it: Messages = {
   'hy.err.generic': 'Non ha funzionato. Riprova.',
   'hy.why.social': 'La pianificazione social di Pure è su Huidly. Collega questa gestione una volta con il tuo indirizzo e-mail per vedere e pianificare qui post, storie e reel.',
   'hy.why.shop': 'Gli ordini veri dal sito e dall’app arrivano su Huidly. Collega questa gestione una volta con il tuo indirizzo e-mail per vederli e gestirli qui.',
+  'hy.why.overview': 'La panoramica mostra la giornata come la ha Huidly: l’agenda come la tiene il team in Kliniek, gli ordini veri e i nuovi membri. Collega questa gestione una volta con il tuo indirizzo e-mail per vederla qui.',
+  'hy.day.loading': 'Caricamento della giornata da Huidly…',
+  'hy.day.failed': 'Huidly non è raggiungibile. Ora la panoramica non si può caricare.',
+  'hy.day.retry': 'Riprova',
   'nav.kliniekOut': 'La clinica si apre su Huidly, il programma della clinica',
 };

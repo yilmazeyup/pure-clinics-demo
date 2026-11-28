@@ -213,6 +213,7 @@ export const nl = {
   'ev.paid.title': 'Betaald aan de balie',
   'ev.paid.detail': '{client} · {treatment} · {city}',
   'ev.online.detail': 'Online · {city} · {time} met {specialist}',
+  'ev.onlineDay.detail': 'Online · {city} · {day} {time} met {specialist}',
   'ev.consult.title': 'Gratis intake gepland',
   'ev.consult.detail': '{client} · {city} · {time}',
   'ev.consultTomorrow.detail': '{client} · {city} · morgen {time}',
@@ -230,6 +231,7 @@ export const nl = {
   'ev.member.detail': '{client} · via de app',
   'ev.order.title': 'Bestelling #{number}',
   'ev.order.detail': '{customer} · {product}',
+  'ev.order.giftDetail': '{customer} · cadeaubon',
   'ev.orders.title': '{n} nieuwe bestellingen',
   'ev.orders.detail': '{numbers}',
 
@@ -314,6 +316,10 @@ export const nl = {
   'hy.err.generic': 'Dat lukte niet. Probeer het opnieuw.',
   'hy.why.social': 'De social-planning van Pure staat in Huidly. Verbind dit beheer één keer met je e-mailadres om de posts, stories en reels hier te zien en te plannen.',
   'hy.why.shop': 'De echte bestellingen van de site en de app komen binnen in Huidly. Verbind dit beheer één keer met je e-mailadres om ze hier te zien en af te handelen.',
+  'hy.why.overview': 'Het overzicht laat de dag zien zoals Huidly hem heeft: de agenda zoals het team hem in Kliniek bijhoudt, de echte bestellingen en nieuwe members. Verbind dit beheer één keer met je e-mailadres om hem hier te zien.',
+  'hy.day.loading': 'De dag wordt bij Huidly opgehaald…',
+  'hy.day.failed': 'Huidly is niet bereikbaar. Het overzicht kan nu niet worden geladen.',
+  'hy.day.retry': 'Opnieuw proberen',
   'nav.kliniekOut': 'Kliniek opent in Huidly, het programma van de kliniek',
 };
 

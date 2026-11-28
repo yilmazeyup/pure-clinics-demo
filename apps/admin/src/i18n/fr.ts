@@ -213,6 +213,7 @@ export const fr: Messages = {
   'ev.paid.title': 'Payé à l’accueil',
   'ev.paid.detail': '{client} · {treatment} · {city}',
   'ev.online.detail': 'En ligne · {city} · {time} avec {specialist}',
+  'ev.onlineDay.detail': 'En ligne · {city} · {day} {time} avec {specialist}',
   'ev.consult.title': 'Consultation gratuite planifiée',
   'ev.consult.detail': '{client} · {city} · {time}',
   'ev.consultTomorrow.detail': '{client} · {city} · demain {time}',
@@ -230,6 +231,7 @@ export const fr: Messages = {
   'ev.member.detail': '{client} · via l’app',
   'ev.order.title': 'Commande n° {number}',
   'ev.order.detail': '{customer} · {product}',
+  'ev.order.giftDetail': '{customer} · carte cadeau',
   'ev.orders.title': '{n} nouvelles commandes',
   'ev.orders.detail': '{numbers}',
 
@@ -314,5 +316,9 @@ export const fr: Messages = {
   'hy.err.generic': 'Cela n’a pas marché. Réessaie.',
   'hy.why.social': 'La planification des réseaux sociaux de Pure se trouve dans Huidly. Connecte cette gestion une fois avec ton adresse e-mail pour voir et planifier ici les posts, stories et reels.',
   'hy.why.shop': 'Les vraies commandes du site et de l’app arrivent dans Huidly. Connecte cette gestion une fois avec ton adresse e-mail pour les voir et les traiter ici.',
+  'hy.why.overview': 'L’aperçu montre la journée telle que Huidly l’a : l’agenda tenu par l’équipe dans Kliniek, les vraies commandes et les nouveaux membres. Connecte cette gestion une fois avec ton adresse e-mail pour la voir ici.',
+  'hy.day.loading': 'Chargement de la journée depuis Huidly…',
+  'hy.day.failed': 'Huidly est injoignable. L’aperçu ne peut pas être chargé pour l’instant.',
+  'hy.day.retry': 'Réessayer',
   'nav.kliniekOut': 'La clinique s’ouvre dans Huidly, le programme de la clinique',
 };
